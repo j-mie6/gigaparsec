@@ -112,4 +112,10 @@ test-suite gigaparsec-test
     build-depends:
         gigaparsec,
         tasty,
+        tasty-expected-failure,
         tasty-hunit
+        --TODO: property based testing will be useful when we optimise combinators
+        --      to test against their base implementations
+        --tasty-quickcheck
+        --TODO: performance testing with tasty-bench?
+        -- we'd need to keep the basefile files somewhere, cache in CI or keep in repo?
