@@ -57,7 +57,7 @@ extra-doc-files:    CHANGELOG.md
 
 common warnings
     ghc-options: -Weverything -Wno-unsafe -Wno-implicit-prelude
-    default-extensions: ScopedTypeVariables, RankNTypes, BangPatterns
+    default-extensions: ScopedTypeVariables, RankNTypes, BangPatterns, TypeApplications, MultiWayIf
 
 library
     -- Import common warning flags.
@@ -72,9 +72,9 @@ library
     -- LANGUAGE extensions used by modules in this package.
     -- other-extensions:
 
-    -- This is GHC 8.8, is that still wise or should it be min-bumped to 8.10/9.0?
     -- Other library packages from which modules are imported.
-    build-depends:    base ^>=4.13.0.0
+    -- 4.14 is GHC 8.10 (the 2022 State of Haskell indicates 41% still use 8.10)
+    build-depends:    base ^>=4.14.0.0
 
     -- Directories containing source files.
     hs-source-dirs:   src

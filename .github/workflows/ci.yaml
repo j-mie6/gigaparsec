@@ -1,0 +1,56 @@
+name: CI
+
+on: [push, pull_request]
+
+jobs:
+  validate:
+    name: GHC ${{ matrix.ghc }}, Cabal ${{ matrix.cabal }}
+    runs-on: ubuntu-20.04
+    strategy:
+      fail-fast: false
+      matrix:
+        # In 2022 State of Haskell:
+        #   41% 8.10
+        #   25% 9.0
+        #   48% 9.2
+        #   26% 9.4
+        #   10% 9.6
+        # As such, we'll keep supporting 8.10 as an LTS of sorts for now.
+        ghc: ['8.10', '9.2', '9.4', '9.6']
+        cabal: ['3.6', '3.10']
+    env:
+      CONFIG: "--enable-tests --enable-doc"
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2.3.4
+
+      - name: Setup Haskell
+        uses: haskell/actions/setup@v2
+        with:
+          ghc-version: ${{ matrix.ghc }}
+          cabal-version: ${{ matrix.cabal }}
+
+      - name: Determine Dependencies
+        run: |
+          cabal update
+          cabal freeze
+
+      - name: Check Cache
+        uses: actions/cache@v2
+        with:
+          path: |
+            ~/.cabal/store
+            dist-newstyle
+          key: ${{ runner.os }}-${{ matrix.ghc }}-${{ matrix.cabal }}-${{ hashFiles('cabal.project.freeze') }}
+          restore-keys: |
+            ${{ runner.os }}-${{ matrix.ghc }}-${{ matrix.cabal }}-
+
+      - name: Build
+        run: cabal build gigaparsec $CONFIG
+
+      - name: Test
+        run: |
+          cabal test $CONFIG
+
+      - name: Doc
+        run: cabal haddock gigaparsec $CONFIG
