@@ -49,7 +49,7 @@ instance Applicative Parsec where
   liftA2 = undefined -- TODO:
 
   (*>) :: Parsec a -> Parsec b -> Parsec b
-  (*>) = liftA2 (flip const)
+  (*>) = liftA2 (const id)
 
   (<*) :: Parsec a -> Parsec b -> Parsec a
   (<*) = liftA2 const
@@ -80,6 +80,9 @@ instance Monad Parsec where
 
   (>>=) :: Parsec a -> (a -> Parsec b) -> Parsec b
   (>>=) = undefined -- TODO:
+
+  (>>) :: Parsec a -> Parsec b -> Parsec b
+  (>>) = (*>)
 
   {-# INLINE return #-}
   {-# INLINE (>>=) #-}
