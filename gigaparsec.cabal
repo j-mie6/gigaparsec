@@ -57,11 +57,18 @@ extra-doc-files:    CHANGELOG.md
 
 common warnings
     ghc-options: -Weverything -Wno-unsafe -Wno-implicit-prelude
+
+common extensions
+    -- Extensions we want enabled without having to specify them
     default-extensions: ScopedTypeVariables, RankNTypes, BangPatterns, TypeApplications, MultiWayIf
 
+common base
+    -- Other library packages from which modules are imported.
+    -- 4.14 is GHC 8.10 (the 2022 State of Haskell indicates 41% still use 8.10)
+    build-depends:    base >=4.14
+
 library
-    -- Import common warning flags.
-    import:           warnings
+    import:           warnings, extensions, base
 
     -- Modules exported by the library.
     exposed-modules:  Text.Gigaparsec, Text.Gigaparsec.Internal
@@ -72,9 +79,7 @@ library
     -- LANGUAGE extensions used by modules in this package.
     -- other-extensions:
 
-    -- Other library packages from which modules are imported.
-    -- 4.14 is GHC 8.10 (the 2022 State of Haskell indicates 41% still use 8.10)
-    build-depends:    base ^>=4.14.0.0
+
 
     -- Directories containing source files.
     hs-source-dirs:   src
@@ -83,8 +88,7 @@ library
     default-language: Haskell2010
 
 test-suite gigaparsec-test
-    -- Import common warning flags.
-    import:           warnings
+    import:           warnings, extensions, base
 
     -- Base language which the package is written in.
     default-language: Haskell2010
@@ -106,7 +110,6 @@ test-suite gigaparsec-test
 
     -- Test dependencies.
     build-depends:
-        base ^>=4.13.0.0,
         gigaparsec,
         tasty,
         tasty-hunit
