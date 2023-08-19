@@ -56,11 +56,11 @@ extra-doc-files:    CHANGELOG.md
 -- extra-source-files:
 
 common warnings
-    ghc-options: -Weverything -Wno-unsafe -Wno-implicit-prelude -Wno-missing-local-signatures
+    ghc-options: -Weverything -Wno-unsafe -Wno-implicit-prelude -Wno-missing-local-signatures -Wno-star-is-type
 
 common extensions
     -- Extensions we want enabled without having to specify them
-    default-extensions: ScopedTypeVariables, RankNTypes, BangPatterns, TypeApplications, MultiWayIf, DerivingStrategies, InstanceSigs
+    default-extensions: ScopedTypeVariables, RankNTypes, BangPatterns, TypeApplications, MultiWayIf, DerivingStrategies, InstanceSigs, StandaloneKindSignatures
 
 common base
     -- Other library packages from which modules are imported.

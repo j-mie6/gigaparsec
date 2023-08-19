@@ -11,6 +11,7 @@ module Text.Gigaparsec (Parsec, Result(..), parse, atomic, lookAhead, notFollowe
 
 import Text.Gigaparsec.Internal (Parsec(unParsec), emptyState)
 
+type Result :: * -> *
 data Result a = Success a | Failure deriving stock (Show, Eq)
 
 parse :: Parsec a -> String -> Result a

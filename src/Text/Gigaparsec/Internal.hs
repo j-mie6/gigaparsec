@@ -15,7 +15,7 @@ own risk.
 -}
 module Text.Gigaparsec.Internal (module Text.Gigaparsec.Internal) where
 
-import Control.Applicative (Applicative(liftA2), Alternative(empty, (<|>), many, some))
+import Control.Applicative (Applicative(liftA2), Alternative(empty, (<|>), many, some)) -- liftA2 required until 9.6
 import Control.Selective (Selective(select))
 
 {-
@@ -31,10 +31,11 @@ investigation and benchmarking to be sure about this however. We'll get a
 core representation settled before doing any "hard" work (the composite
 combinator API, however, can be done whenever).
 -}
+type Parsec :: * -> *
 newtype Parsec a = Parsec {
     unParsec :: forall r. State
-             -> (a -> State -> r) -- ^ the good continuation
-             -> (State -> r)                -- ^ the bad continuation
+             -> (a -> State -> r) -- the good continuation
+             -> (State -> r)      -- the bad continuation
              -> r
   }
 
@@ -101,6 +102,7 @@ instance Alternative Parsec where
   {-# INLINE many #-}
   {-# INLINE some #-}
 
+type State :: *
 data State = State {
     -- | the input string, in future this may be generalised
     input :: !String,
