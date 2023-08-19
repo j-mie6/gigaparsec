@@ -68,8 +68,8 @@ instance Selective Parsec where
 {-# INLINE _branch #-}
 {-|
 This is an internal implementation of `branch`, which is more efficient than
-the Selective default `branch`. We should be using this internally, and possibly
-ask Andrey to add `branch` to `Selective` like @liftA2@/@(<*>)@
+the Selective default `branch`. We should be using this internally, and it
+can be dropped if https://github.com/snowleopard/selective/issues/74 is implemented.
 -}
 _branch :: Parsec (Either a b) -> Parsec (a -> c) -> Parsec (b -> c) -> Parsec c
 _branch = undefined -- TODO:
