@@ -38,7 +38,7 @@ notFollowedBy = undefined --TODO:
 
 -- the empty set is weird here, do we require non-empty or just make it id?
 label :: Set String -> Parsec a -> Parsec a
-label ls = require (not (any null ls)) "Labels cannot be empty" id
+label ls = require (not (any null ls)) "labels cannot be empty" id
 
 {-# INLINE (<?>) #-}
 infix 0 <?>

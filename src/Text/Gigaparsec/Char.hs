@@ -3,8 +3,8 @@
 -- needs to be explicit for the docs later
 module Text.Gigaparsec.Char (module Text.Gigaparsec.Char) where
 
--- We want to use this to make the docs point to the right definition for users.
 import Text.Gigaparsec (Parsec, (<?>), atomic)
+-- We want to use this to make the docs point to the right definition for users.
 import Text.Gigaparsec.Internal qualified as Internal (Parsec(Parsec))
 import Text.Gigaparsec.Internal.Require (require)
 
@@ -34,7 +34,7 @@ char c = satisfy (== c)
 
 -- Needs to be primitive for the raw expected item and wide caret down the line
 string :: String -> Parsec String
-string s = require (not (null s)) "Cannot pass empty string to `string`" $
+string s = require (not (null s)) "cannot pass empty string to `string`" $
   traverse char s
 
 -------------------------------------------------
@@ -89,8 +89,8 @@ strings = trie . Map.fromSet pure
 
 -- Departure from original naming, but no overloading, so oh well
 trie :: Map String (Parsec a) -> Parsec a
-trie strs = require (not (Map.member "" strs)) "Cannot pass empty string to `strings` or `trie`" $
-  getAlt $ foldMap combineSameLeading (groupWith (head . fst) (Map.toAscList strs))
+trie strs = require (not (Map.member "" strs)) "cannot pass empty string to `strings` or `trie`" $
+  getAlt $ foldMap combineSameLeading (NonEmpty.groupWith (head . fst) (Map.toAscList strs))
   where -- When combining these parsers it is important to make sure the
         -- longest ones parse first. All but the last parser need an `atomic`.
         combineSameLeading :: NonEmpty (String, Parsec a) -> Alt Parsec a
