@@ -60,18 +60,27 @@ common warnings
 
 common extensions
     -- Extensions we want enabled without having to specify them
-    default-extensions: ScopedTypeVariables, RankNTypes, BangPatterns, TypeApplications, MultiWayIf, DerivingStrategies, InstanceSigs, StandaloneKindSignatures
+    default-extensions: ScopedTypeVariables, RankNTypes, BangPatterns, TypeApplications,
+                        MultiWayIf, DerivingStrategies, InstanceSigs, StandaloneKindSignatures,
+                        ImportQualifiedPost
 
 common base
     -- Other library packages from which modules are imported.
     -- 4.14 is GHC 8.10 (the 2022 State of Haskell indicates 41% still use 8.10)
-    build-depends:    base >=4.14
+    build-depends:    base >=4.14 && < 5
 
 library
     import:           warnings, extensions, base
 
     -- Modules exported by the library.
-    exposed-modules:  Text.Gigaparsec, Text.Gigaparsec.Internal
+    exposed-modules:  Text.Gigaparsec,
+                      Text.Gigaparsec.Char,
+
+                      -- Internals
+                      Text.Gigaparsec.Internal,
+                      Text.Gigaparsec.Internal.Require
+
+    build-depends:    containers >= 0.6 && < 0.7
 
     -- Modules included in this library but not exported.
     -- other-modules:
