@@ -1,7 +1,8 @@
 {-# LANGUAGE Safe #-}
 {-# LANGUAGE OverloadedLists #-}
+{-# OPTIONS_GHC -Wno-all-missed-specialisations #-}
 {-|
-Module      : Text.Gigaparsec.Internal
+Module      : Text.Gigaparsec.Char
 Description : Contains the combinators needed to read characters and strings, as well as combinators
               to match specific sub-sets of characters.
 License     : BSD-3-Clause
@@ -41,18 +42,17 @@ module Text.Gigaparsec.Char (
   -- * Whitespace Skipping Parsers
   -- | These parsers are designed to skip chunks of whitespace, for very rudimentary lexing tasks. It
   -- is probably better to use the functionality of "Gigaparsec.Token".
-    spaces, whitespaces
+    spaces, whitespaces,
   ) where
 
-import Text.Gigaparsec (Parsec, (<?>), atomic)
+import Text.Gigaparsec (Parsec, atomic, empty, (<|>), many, void)
+import Text.Gigaparsec.Errors.Combinator ((<?>))
 -- We want to use this to make the docs point to the right definition for users.
 import Text.Gigaparsec.Internal qualified as Internal (Parsec(Parsec))
 import Text.Gigaparsec.Internal.Require (require)
 
-import Control.Applicative (empty, (<|>), many)
 import Data.Char (ord)
 import Data.Char qualified as Char
-import Data.Functor (void)
 import Data.List.NonEmpty as NonEmpty (NonEmpty((:|)), groupWith, sortBy)
 import Data.Maybe (isJust, fromJust)
 import Data.Monoid (Alt(Alt, getAlt))

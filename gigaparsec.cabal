@@ -75,6 +75,7 @@ library
     -- Modules exported by the library.
     exposed-modules:  Text.Gigaparsec,
                       Text.Gigaparsec.Char,
+                      Text.Gigaparsec.Errors.Combinator,
 
                       -- Internals
                       Text.Gigaparsec.Internal,

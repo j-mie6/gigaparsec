@@ -1,4 +1,5 @@
 {-# LANGUAGE Safe #-}
+{-# OPTIONS_HADDOCK hide #-}
 module Text.Gigaparsec.Internal.Require (require) where
 
 import GHC.Stack (HasCallStack)

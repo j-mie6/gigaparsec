@@ -1,5 +1,6 @@
 {-# LANGUAGE Trustworthy #-}
 {-# LANGUAGE DeriveFunctor, StandaloneDeriving #-}
+{-# OPTIONS_HADDOCK hide #-}
 {-|
 Module      : Text.Gigaparsec.Internal
 Description : Internals of Gigaparsec
