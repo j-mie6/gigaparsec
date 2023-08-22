@@ -106,6 +106,18 @@ instance Alternative Parsec where
   {-# INLINE many #-}
   {-# INLINE some #-}
 
+instance Semigroup m => Semigroup (Parsec m) where
+  (<>) :: Parsec m -> Parsec m -> Parsec m
+  (<>) = liftA2 (<>)
+
+  {-# INLINE (<>) #-}
+
+instance Monoid m => Monoid (Parsec m) where
+  mempty :: Parsec m
+  mempty = pure mempty
+
+  {-# INLINE mempty #-}
+
 type State :: *
 data State = State {
     -- | the input string, in future this may be generalised
