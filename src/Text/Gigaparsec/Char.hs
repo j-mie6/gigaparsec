@@ -45,7 +45,8 @@ module Text.Gigaparsec.Char (
     spaces, whitespaces,
   ) where
 
-import Text.Gigaparsec (Parsec, atomic, empty, (<|>), many, void)
+import Text.Gigaparsec (Parsec, atomic, empty, (<|>))
+import Text.Gigaparsec.Combinator (skipMany)
 import Text.Gigaparsec.Errors.Combinator ((<?>))
 -- We want to use this to make the docs point to the right definition for users.
 import Text.Gigaparsec.Internal qualified as Internal (Parsec(Parsec))
@@ -149,7 +150,7 @@ string s = require (not (null s)) "cannot pass empty string to `string`" $
 -------------------------------------------------
 
 -- Could be optimised to remove the partiality
-{-|
+{-
 TODO:
 
 @since 0.1.0.0
@@ -237,7 +238,7 @@ noneOf cs
 {-|
 This combinator tries to parse each of the strings @strs@, until one of them succeeds.
 
-Unlike `Gigaparsec.Combinator.choice`, this combinator will not necessarily parse the strings in the
+Unlike `Text.Gigaparsec.Combinator.choice`, this combinator will not necessarily parse the strings in the
 order provided. It will avoid strings that have another string as a prefix first, so that it has
 /Longest Match/ semantics. It will try to minimise backtracking too, making it a much more efficient
 option than @choice . map atomic@.
@@ -265,7 +266,7 @@ strings = trie . Map.fromSet pure
 
 -- Departure from original naming, but no overloading, so oh well
 {-|
-This combinator tries to parse each of the key-value pairs `kvs`, until one of them succeeds.
+This combinator tries to parse each of the key-value pairs @kvs@, until one of them succeeds.
 
 Each key-value pair in the map provided to this combinator is a string and a parser to perform if
 that string can be parsed. Keys that are a prefix of another key are avoided, so that the parser
@@ -339,7 +340,7 @@ This parser skips zero or more space characters using `space`.
 @since 0.1.0.0
 -}
 spaces :: Parsec ()
-spaces = void (many space) -- TODO: skipMany
+spaces = skipMany space
 
 {-|
 This parser tries to parse a whitespace character, and returns it if successful.
@@ -357,7 +358,7 @@ This parser skips zero or more space characters using `whitespace`.
 @since 0.1.0.0
 -}
 whitespaces :: Parsec ()
-whitespaces = void (many whitespace) -- TODO: skipMany
+whitespaces = skipMany whitespace
 
 {-|
 This parser tries to parse a line feed newline (@\'\\n\'@) character, and returns it if successful.
@@ -441,7 +442,7 @@ letter = satisfy Char.isAlpha <?> ["letter"]
 {-|
 This parser tries to parse a digit, and returns it if successful.
 
-TODO: what is a digit?
+A digit is one of @\'0\'@ to @\'9\'@ (inclusive).
 
 @since 0.1.0.0
 -}
