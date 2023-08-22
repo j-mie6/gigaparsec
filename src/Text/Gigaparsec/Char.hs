@@ -452,6 +452,7 @@ digit = satisfy Char.isDigit <?> ["digit"]
 This parser tries to parse a hexadecimal digit, and returns it if successful.
 
 A hexadecimal digit is one of (all inclusive ranges):
+
   1. the digits @\'0\'@ through @\'9\'@
   1. the letters @\'a\'@ through @\'f\'@
   1. the letters @\'A\'@ through @\'Z\'@
