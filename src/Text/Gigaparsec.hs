@@ -129,6 +129,7 @@ whilst parsing @p@. If @p@ fails, however, then the whole combinator fails and
 any input consumed __remains consumed__. If this behaviour is not desirable,
 consider pairing `lookAhead` with `atomic`.
 
+==== __Examples__
 >>> parse (lookAhead (string "aaa") *> string "aaa") "aaa"
 Success "aaa"
 >>> parse (lookAhead (string "abc") <|> string "abd" "abd"
@@ -148,7 +149,8 @@ If the parser @p@ succeeds, then @notFollowedBy p@ will fail, consuming no input
 Otherwise, should @p@ fail, then @notFollowedBy p@ will succeed, consuming no input
 and returning @()@.
 
-__Example:__ One use for this combinator is to allow for \"longest-match\" behaviour.
+==== __Examples__
+One use for this combinator is to allow for \"longest-match\" behaviour.
 For instance, keywords are normally only considered keywords if they are not
 part of some larger valid identifier (i.e. the keyword \"if\" should not parse
 successfully given \"ifp\"). This can be accomplished as follows:
