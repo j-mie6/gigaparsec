@@ -24,7 +24,7 @@ version:            0.1.0.0
 
 -- A short (one-line) description of the package.
 synopsis:
-    Refreshed parsec-style library for compatiblity with Scala Parsley
+    Refreshed @parsec@-style library for compatiblity with Scala @parsley@
 
 -- A longer description of the package.
 -- description:
@@ -77,21 +77,22 @@ library
     exposed-modules:  Text.Gigaparsec,
                       Text.Gigaparsec.Char,
                       Text.Gigaparsec.Combinator,
+                      Text.Gigaparsec.Combinator.NonEmpty,
                       Text.Gigaparsec.Errors.Combinator,
 
                       -- Internals
                       Text.Gigaparsec.Internal,
                       Text.Gigaparsec.Internal.Require
 
-    build-depends:    containers >= 0.6 && < 0.7
+    -- this can probably be loosened?
+    build-depends:    containers >= 0.6 && < 0.7,
+                      selective
 
     -- Modules included in this library but not exported.
     -- other-modules:
 
     -- LANGUAGE extensions used by modules in this package.
     -- other-extensions:
-
-    build-depends: selective
 
     -- Directories containing source files.
     hs-source-dirs:   src

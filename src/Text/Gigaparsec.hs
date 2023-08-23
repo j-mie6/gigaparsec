@@ -41,15 +41,15 @@ module Text.Gigaparsec (
   -- will be executed first, then the second argument second. The results of both parsers are
   -- combined in some way (depending on the individual combinator). If one of the parsers fails, the
   -- combinator as a whole fails.
-    (<~>),
+    (<~>), (<:>),
   -- *** Re-exported from "Control.Applicative"
-    (<*>), liftA2,
+    (<*>), liftA2, (*>), (<*),
   -- * Branching Combinators
   -- | These combinators allow for parsing one alternative or another. All of these combinators are
   -- /left-biased/, which means that the left-hand side of the combinator is tried first: the
   -- right-hand side of the combinator will only be tried when the left-hand one failed (and did not
   -- consume input in the process).
-
+    (<+>),
   -- *** Re-exported from "Control.Applicative"
     (<|>),
   -- * Selective Combinators
@@ -174,12 +174,21 @@ successfully returned. It has no other effect on the state of the parser.
 
 @since 0.1.0.0
 -}
-unit :: Applicative f => f ()
+unit :: Parsec ()
 unit = pure ()
 
--- TODO: infixl declaration
-(<~>) :: Applicative f => f a -> f b -> f (a, b)
+infixl 4 <~>
+(<~>) :: Parsec a -> Parsec b -> Parsec (a, b)
 (<~>) = liftA2 (,)
 
-($>) :: Functor f => f a -> b -> f b
+infixl 4 $>
+($>) :: Parsec a -> b -> Parsec b
 ($>) = flip (<$)
+
+infixl 4 <:>
+(<:>) :: Parsec a -> Parsec [a] -> Parsec [a]
+(<:>) = liftA2 (:)
+
+infixl 3 <+>
+(<+>) :: Parsec a -> Parsec b -> Parsec (Either a b)
+p <+> q = Left <$> p <|> Right <$> q
