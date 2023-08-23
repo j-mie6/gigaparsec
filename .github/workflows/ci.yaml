@@ -16,8 +16,8 @@ jobs:
         #   26% 9.4
         #   10% 9.6
         # As such, we'll keep supporting 8.10 as an LTS of sorts for now.
-        ghc: [8.10, 9.2, 9.4, 9.6]
-        cabal: [3.6, 3.10]
+        ghc: ['8.10', '9.2', '9.4', '9.6']
+        cabal: ['3.6', '3.10']
     env:
       CONFIG: "--enable-tests --enable-doc"
     steps:
@@ -62,8 +62,8 @@ jobs:
     runs-on: ubuntu-20.04
     strategy:
       matrix:
-        ghc: [9.6]
-        cabal: [3.10]
+        ghc: ['9.6']
+        cabal: ['3.10']
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
