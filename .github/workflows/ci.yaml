@@ -22,7 +22,7 @@ jobs:
       CONFIG: "--enable-tests --enable-doc"
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2.3.4
+        uses: actions/checkout@v3
 
       - name: Setup Haskell
         uses: haskell/actions/setup@v2
@@ -53,4 +53,4 @@ jobs:
           cabal test $CONFIG
 
       - name: Doc
-        run: cabal haddock gigaparsec $CONFIG --haddock-hyperlink-source --haddock-quickjump
+        run: cabal haddock gigaparsec $CONFIG
