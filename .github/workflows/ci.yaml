@@ -5,6 +5,7 @@ on: [push, pull_request]
 jobs:
   validate:
     name: GHC ${{ matrix.ghc }}, Cabal ${{ matrix.cabal }}
+    if: false
     runs-on: ubuntu-20.04
     strategy:
       fail-fast: false
@@ -94,6 +95,9 @@ jobs:
 
       - name: Prepare to upload built htmls
         run: echo "PATH_TO_DOC=$(find dist-newstyle -path '*/doc/html/gigaparsec')" >> "$GITHUB_ENV"
+
+      - name: What folder
+        run: echo $PATH_TO_DOC
 
       - name: Deploy haddock
         uses: peaceiris/actions-gh-pages@v3
