@@ -182,6 +182,7 @@ whilst parsing @p@. If @p@ fails, however, then the whole combinator fails and
 any input consumed __remains consumed__. If this behaviour is not desirable,
 consider pairing `lookAhead` with `atomic`.
 
+==== __Examples__
 &gt;&gt;&gt; parse (lookAhead (string &quot;aaa&quot;) *&gt; string &quot;aaa&quot;) &quot;aaa&quot;
 Success &quot;aaa&quot;
 &gt;&gt;&gt; parse (lookAhead (string &quot;abc&quot;) &lt;|&gt; string &quot;abd&quot; &quot;abd&quot;
@@ -189,14 +190,14 @@ Failure .. -- lookAhead does not roll back input consumed on failure
 
 @since 0.1.0.0
 -}</span></span><span>
-</span><span id="line-139"></span><span id="local-6989586621679049994"><span class="annot"><a href="Text.Gigaparsec.html#lookAhead"><span class="hs-identifier hs-type">lookAhead</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679049994"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="annot"><span class="hs-comment">-- ^ the parser, @p@, to execute</span></span><span>
-</span><span id="line-140"></span><span>          </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679049994"><span class="hs-identifier hs-type">a</span></a></span></span><span> </span><span class="annot"><span class="hs-comment">-- ^ a parser that parses @p@ and never consumes input if it succeeds.</span></span><span>
-</span><span id="line-141"></span><span id="lookAhead"><span class="annot"><span class="annottext">lookAhead :: forall a. Parsec a -&gt; Parsec a
+</span><span id="line-140"></span><span id="local-6989586621679049994"><span class="annot"><a href="Text.Gigaparsec.html#lookAhead"><span class="hs-identifier hs-type">lookAhead</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679049994"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="annot"><span class="hs-comment">-- ^ the parser, @p@, to execute</span></span><span>
+</span><span id="line-141"></span><span>          </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679049994"><span class="hs-identifier hs-type">a</span></a></span></span><span> </span><span class="annot"><span class="hs-comment">-- ^ a parser that parses @p@ and never consumes input if it succeeds.</span></span><span>
+</span><span id="line-142"></span><span id="lookAhead"><span class="annot"><span class="annottext">lookAhead :: forall a. Parsec a -&gt; Parsec a
 </span><a href="Text.Gigaparsec.html#lookAhead"><span class="hs-identifier hs-var hs-var">lookAhead</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Parsec a -&gt; Parsec a
 forall a. HasCallStack =&gt; a
 </span><span class="hs-identifier hs-var">undefined</span></span><span> </span><span class="hs-comment">--TODO:</span><span>
-</span><span id="line-142"></span><span>
-</span><span id="line-143"></span><span class="annot"><span class="hs-comment">{-|
+</span><span id="line-143"></span><span>
+</span><span id="line-144"></span><span class="annot"><span class="hs-comment">{-|
 This combinator parses its argument @p@, and succeeds when @p@ fails and vice-versa, never consuming
 input.
 
@@ -204,7 +205,8 @@ If the parser @p@ succeeds, then @notFollowedBy p@ will fail, consuming no input
 Otherwise, should @p@ fail, then @notFollowedBy p@ will succeed, consuming no input
 and returning @()@.
 
-__Example:__ One use for this combinator is to allow for \&quot;longest-match\&quot; behaviour.
+==== __Examples__
+One use for this combinator is to allow for \&quot;longest-match\&quot; behaviour.
 For instance, keywords are normally only considered keywords if they are not
 part of some larger valid identifier (i.e. the keyword \&quot;if\&quot; should not parse
 successfully given \&quot;ifp\&quot;). This can be accomplished as follows:
@@ -216,14 +218,14 @@ keyword kw = atomic $ string kw *&gt; notFollowedBy letterOrDigit
 
 @since 0.1.0.0
 -}</span></span><span>
-</span><span id="line-163"></span><span id="local-6989586621679049913"><span class="annot"><a href="Text.Gigaparsec.html#notFollowedBy"><span class="hs-identifier hs-type">notFollowedBy</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679049913"><span class="hs-identifier hs-type">a</span></a></span><span>  </span><span class="annot"><span class="hs-comment">-- ^ the parser, @p@, to execute, it must fail in order for this combinator to succeed.</span></span><span>
-</span><span id="line-164"></span><span>              </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span></span><span> </span><span class="annot"><span class="hs-comment">-- ^ a parser which fails when @p@ succeeds and succeeds otherwise, never consuming input.</span></span><span>
-</span><span id="line-165"></span><span id="notFollowedBy"><span class="annot"><span class="annottext">notFollowedBy :: forall a. Parsec a -&gt; Parsec ()
+</span><span id="line-165"></span><span id="local-6989586621679049913"><span class="annot"><a href="Text.Gigaparsec.html#notFollowedBy"><span class="hs-identifier hs-type">notFollowedBy</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679049913"><span class="hs-identifier hs-type">a</span></a></span><span>  </span><span class="annot"><span class="hs-comment">-- ^ the parser, @p@, to execute, it must fail in order for this combinator to succeed.</span></span><span>
+</span><span id="line-166"></span><span>              </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span></span><span> </span><span class="annot"><span class="hs-comment">-- ^ a parser which fails when @p@ succeeds and succeeds otherwise, never consuming input.</span></span><span>
+</span><span id="line-167"></span><span id="notFollowedBy"><span class="annot"><span class="annottext">notFollowedBy :: forall a. Parsec a -&gt; Parsec ()
 </span><a href="Text.Gigaparsec.html#notFollowedBy"><span class="hs-identifier hs-var hs-var">notFollowedBy</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Parsec a -&gt; Parsec ()
 forall a. HasCallStack =&gt; a
 </span><span class="hs-identifier hs-var">undefined</span></span><span> </span><span class="hs-comment">--TODO:</span><span>
-</span><span id="line-166"></span><span>
-</span><span id="line-167"></span><span class="annot"><span class="hs-comment">{-|
+</span><span id="line-168"></span><span>
+</span><span id="line-169"></span><span class="annot"><span class="hs-comment">{-|
 This parser produces @()@ without having any other effect.
 
 When this parser is ran, no input is required, nor consumed, and the given value will always be
@@ -231,29 +233,29 @@ successfully returned. It has no other effect on the state of the parser.
 
 @since 0.1.0.0
 -}</span></span><span>
-</span><span id="line-175"></span><span id="local-6989586621679049915"><span class="annot"><a href="Text.Gigaparsec.html#unit"><span class="hs-keyword hs-type">unit</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Applicative</span></span><span> </span><span class="annot"><a href="#local-6989586621679049915"><span class="hs-identifier hs-type">f</span></a></span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><a href="#local-6989586621679049915"><span class="hs-identifier hs-type">f</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span></span><span>
-</span><span id="line-176"></span><span id="unit"><span class="annot"><span class="annottext">unit :: forall (f :: * -&gt; *). Applicative f =&gt; f ()
+</span><span id="line-177"></span><span id="local-6989586621679049915"><span class="annot"><a href="Text.Gigaparsec.html#unit"><span class="hs-keyword hs-type">unit</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Applicative</span></span><span> </span><span class="annot"><a href="#local-6989586621679049915"><span class="hs-identifier hs-type">f</span></a></span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><a href="#local-6989586621679049915"><span class="hs-identifier hs-type">f</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span></span><span>
+</span><span id="line-178"></span><span id="unit"><span class="annot"><span class="annottext">unit :: forall (f :: * -&gt; *). Applicative f =&gt; f ()
 </span><a href="Text.Gigaparsec.html#unit"><span class="hs-keyword hs-var hs-var">unit</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">() -&gt; f ()
 forall a. a -&gt; f a
 forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
 </span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span>
-</span><span id="line-177"></span><span>
-</span><span id="line-178"></span><span class="hs-comment">-- TODO: infixl declaration</span><span>
-</span><span id="line-179"></span><span id="local-6989586621679049919"><span id="local-6989586621679049920"><span id="local-6989586621679049921"><span class="annot"><a href="Text.Gigaparsec.html#%3C~%3E"><span class="hs-operator hs-type">(&lt;~&gt;)</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Applicative</span></span><span> </span><span class="annot"><a href="#local-6989586621679049919"><span class="hs-identifier hs-type">f</span></a></span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><a href="#local-6989586621679049919"><span class="hs-identifier hs-type">f</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679049920"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="#local-6989586621679049919"><span class="hs-identifier hs-type">f</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679049921"><span class="hs-identifier hs-type">b</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="#local-6989586621679049919"><span class="hs-identifier hs-type">f</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="#local-6989586621679049920"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><a href="#local-6989586621679049921"><span class="hs-identifier hs-type">b</span></a></span><span class="hs-special">)</span></span></span></span><span>
-</span><span id="line-180"></span><span id="%3C~%3E"><span class="annot"><span class="annottext">&lt;~&gt; :: forall (f :: * -&gt; *) a b. Applicative f =&gt; f a -&gt; f b -&gt; f (a, b)
+</span><span id="line-179"></span><span>
+</span><span id="line-180"></span><span class="hs-comment">-- TODO: infixl declaration</span><span>
+</span><span id="line-181"></span><span id="local-6989586621679049919"><span id="local-6989586621679049920"><span id="local-6989586621679049921"><span class="annot"><a href="Text.Gigaparsec.html#%3C~%3E"><span class="hs-operator hs-type">(&lt;~&gt;)</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Applicative</span></span><span> </span><span class="annot"><a href="#local-6989586621679049919"><span class="hs-identifier hs-type">f</span></a></span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><a href="#local-6989586621679049919"><span class="hs-identifier hs-type">f</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679049920"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="#local-6989586621679049919"><span class="hs-identifier hs-type">f</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679049921"><span class="hs-identifier hs-type">b</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="#local-6989586621679049919"><span class="hs-identifier hs-type">f</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="#local-6989586621679049920"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><a href="#local-6989586621679049921"><span class="hs-identifier hs-type">b</span></a></span><span class="hs-special">)</span></span></span></span><span>
+</span><span id="line-182"></span><span id="%3C~%3E"><span class="annot"><span class="annottext">&lt;~&gt; :: forall (f :: * -&gt; *) a b. Applicative f =&gt; f a -&gt; f b -&gt; f (a, b)
 </span><a href="Text.Gigaparsec.html#%3C~%3E"><span class="hs-operator hs-var hs-var">(&lt;~&gt;)</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">(a -&gt; b -&gt; (a, b)) -&gt; f a -&gt; f b -&gt; f (a, b)
 forall a b c. (a -&gt; b -&gt; c) -&gt; f a -&gt; f b -&gt; f c
 forall (f :: * -&gt; *) a b c.
 Applicative f =&gt;
 (a -&gt; b -&gt; c) -&gt; f a -&gt; f b -&gt; f c
 </span><span class="hs-identifier hs-var">liftA2</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">,</span><span class="hs-special">)</span><span>
-</span><span id="line-181"></span><span>
-</span><span id="line-182"></span><span id="local-6989586621679049930"><span id="local-6989586621679049931"><span id="local-6989586621679049932"><span class="annot"><a href="Text.Gigaparsec.html#%24%3E"><span class="hs-operator hs-type">($&gt;)</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Functor</span></span><span> </span><span class="annot"><a href="#local-6989586621679049930"><span class="hs-identifier hs-type">f</span></a></span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><a href="#local-6989586621679049930"><span class="hs-identifier hs-type">f</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679049931"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="#local-6989586621679049932"><span class="hs-identifier hs-type">b</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="#local-6989586621679049930"><span class="hs-identifier hs-type">f</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679049932"><span class="hs-identifier hs-type">b</span></a></span></span></span></span><span>
-</span><span id="line-183"></span><span id="%24%3E"><span class="annot"><span class="annottext">$&gt; :: forall (f :: * -&gt; *) a b. Functor f =&gt; f a -&gt; b -&gt; f b
+</span><span id="line-183"></span><span>
+</span><span id="line-184"></span><span id="local-6989586621679049930"><span id="local-6989586621679049931"><span id="local-6989586621679049932"><span class="annot"><a href="Text.Gigaparsec.html#%24%3E"><span class="hs-operator hs-type">($&gt;)</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Functor</span></span><span> </span><span class="annot"><a href="#local-6989586621679049930"><span class="hs-identifier hs-type">f</span></a></span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><a href="#local-6989586621679049930"><span class="hs-identifier hs-type">f</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679049931"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="#local-6989586621679049932"><span class="hs-identifier hs-type">b</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="#local-6989586621679049930"><span class="hs-identifier hs-type">f</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679049932"><span class="hs-identifier hs-type">b</span></a></span></span></span></span><span>
+</span><span id="line-185"></span><span id="%24%3E"><span class="annot"><span class="annottext">$&gt; :: forall (f :: * -&gt; *) a b. Functor f =&gt; f a -&gt; b -&gt; f b
 </span><a href="Text.Gigaparsec.html#%24%3E"><span class="hs-operator hs-var hs-var">($&gt;)</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">(b -&gt; f a -&gt; f b) -&gt; f a -&gt; b -&gt; f b
 forall a b c. (a -&gt; b -&gt; c) -&gt; b -&gt; a -&gt; c
 </span><span class="hs-identifier hs-var">flip</span></span><span> </span><span class="annot"><span class="annottext">b -&gt; f a -&gt; f b
 forall a b. a -&gt; f b -&gt; f a
 forall (f :: * -&gt; *) a b. Functor f =&gt; a -&gt; f b -&gt; f a
 </span><span class="hs-operator hs-var">(&lt;$)</span></span><span>
-</span><span id="line-184"></span></pre></body></html>
+</span><span id="line-186"></span></pre></body></html>
