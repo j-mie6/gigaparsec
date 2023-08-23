@@ -57,7 +57,7 @@ jobs:
 
   deploy:
     name: Deploy Docs
-    needs: [validate]
+    #needs: [validate]
     if: github.event_name != 'pull_request' && (startsWith(github.ref, 'refs/tags/v') || github.ref == 'refs/heads/main')
     runs-on: ubuntu-20.04
     strategy:
@@ -93,10 +93,10 @@ jobs:
         run: cabal haddock gigaparsec --enable-doc --haddock-hyperlink-source --haddock-quickjump
 
       - name: Prepare to upload built htmls
-        run: export PATH_TO_DOC="$(find dist-newstyle -path '*/doc/html/gigaparsec')"
+        run: echo "PATH_TO_DOC=$(find dist-newstyle -path '*/doc/html/gigaparsec')" >> "$GITHUB_ENV"
 
       - name: Deploy haddock
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: $PATH_TO_DOC
+          publish_dir: ./$PATH_TO_DOC
