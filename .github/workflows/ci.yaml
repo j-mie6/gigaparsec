@@ -64,6 +64,8 @@ jobs:
       matrix:
         ghc: ['9.6']
         cabal: ['3.10']
+    env:
+      CONFIG: "--enable-tests --enable-doc"
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
