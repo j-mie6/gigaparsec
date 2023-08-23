@@ -53,4 +53,4 @@ jobs:
           cabal test $CONFIG
 
       - name: Doc
-        run: cabal haddock gigaparsec $CONFIG --haddock-for-hackage
+        run: cabal haddock gigaparsec $CONFIG --haddock-hyperlink-source --haddock-quickjump
