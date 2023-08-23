@@ -1,4 +1,4 @@
-# `Gigaparsec`
+# Gigaparsec ![GitHub Workflow Status][Badge-Status] [![GitHub license][Badge-License]][License] [![Badge-Haddock]][Link-Haddock] ![Semantic Versioning: pvp][Badge-PVP]
 
 `Gigaparsec` is a refreshed implementation of a parser combinator library in the `parsec` style.
 It has the following aims:
@@ -8,7 +8,7 @@ It has the following aims:
 1. Be **complete**, with a well-rounded API including
   support for *highly-configurable* lexing combinators,
   and generic expression parsing functionality.
-1. Be **modern**, with first-class support for the patterns outlined in [*Design Patterns for Parser Combinators (Functional Pearl)*](https://dl.acm.org/doi/10.1145/3471874.3472984). It also strives for API compatibility with Scala [`parsley`](https://github.com/j-mie6/parsley), to allow for easy porting of both
+1. Be **modern**, with first-class support for the patterns outlined in [*Design Patterns for Parser Combinators (Functional Pearl)*][DPfPC]. It also strives for API compatibility with Scala [`parsley`][Scala-Parsley], to allow for easy porting of both
 parsers, knowledge, and learning materials.
 1. Be **efficient** -- while it may not be quite as fast as `megaparsec`, we hope that it will still remain reasonably efficient, as least more than `parsec`, whilst still providing additional benefits.
 
@@ -24,5 +24,14 @@ from many of the classic `parsec`-style implementations:
   named as the `atomic` combinator: this is consistent with the `parsley` naming, and we believe that this name is more true to the combinators purpose.
 * Creating new primitive combinators is not endorsed by the libary: while the capacities to make them have been exposed, they are not made part of the public API to allow freedom for the maintainers to continue to innovate and improve the internals -- this includes continued optimisation.
 
-Current `HEAD` documentation can be found [here](j-mie6.github.io/gigaparsec): for
+Current `HEAD` documentation can be found [here][Link-Haddock]: for
 stable documentation please consult Hackage directly.
+
+[DPfPC]: https://dl.acm.org/doi/10.1145/3471874.3472984
+[Scala-Parsley]: https://github.com/j-mie6/parsley
+[Link-Haddock]: https://j-mie6.github.io/gigaparsec
+[Badge-Haddock]: https://img.shields.io/badge/documentation-available-green
+[Badge-Status]: https://img.shields.io/github/actions/workflow/status/j-mie6/gigaparsec/ci.yaml?branch=main
+[Badge-License]: https://img.shields.io/github/license/j-mie6/parsley.svg
+[License]: https://github.com/j-mie6/gigaparsec/blob/main/LICENSE
+[Badge-PVP]: https://img.shields.io/badge/version%20policy-pvp-blue
