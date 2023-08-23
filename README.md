@@ -1,6 +1,6 @@
 # Gigaparsec ![GitHub Workflow Status][Badge-Status] [![GitHub license][Badge-License]][License] [![Badge-Haddock]][Link-Haddock] ![Semantic Versioning: pvp][Badge-PVP]
 
-`Gigaparsec` is a refreshed implementation of a parser combinator library in the `parsec` style.
+`gigaparsec` is a refreshed implementation of a parser combinator library in the `parsec` style.
 It has the following aims:
 
 1. Be **approachable** for beginners -- both those new
