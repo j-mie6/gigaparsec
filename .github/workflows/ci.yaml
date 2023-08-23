@@ -16,8 +16,8 @@ jobs:
         #   26% 9.4
         #   10% 9.6
         # As such, we'll keep supporting 8.10 as an LTS of sorts for now.
-        ghc: ['8.10', '9.2', '9.4', '9.6']
-        cabal: ['3.6', '3.10']
+        ghc: [8.10, 9.2, 9.4, 9.6]
+        cabal: [3.6, 3.10]
     env:
       CONFIG: "--enable-tests --enable-doc"
     steps:
@@ -54,3 +54,52 @@ jobs:
 
       - name: Doc
         run: cabal haddock gigaparsec $CONFIG
+
+  deploy:
+    name: Deploy Docs
+    needs: [validate]
+    if: github.event_name != 'pull_request' && (startsWith(github.ref, 'refs/tags/v') || github.ref == 'refs/heads/main')
+    runs-on: ubuntu-20.04
+    strategy:
+      matrix:
+        ghc: [9.6]
+        cabal: [3.10]
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Setup Haskell
+        uses: haskell/actions/setup@v2
+        with:
+          ghc-version: ${{ matrix.ghc }}
+          cabal-version: ${{ matrix.cabal }}
+
+      - name: Determine Dependencies
+        run: |
+          cabal update
+          cabal freeze
+
+      - name: Check Cache
+        uses: actions/cache@v2
+        with:
+          path: |
+            ~/.cabal/store
+            dist-newstyle
+          key: ${{ runner.os }}-${{ matrix.ghc }}-${{ matrix.cabal }}-${{ hashFiles('cabal.project.freeze') }}
+          restore-keys: |
+            ${{ runner.os }}-${{ matrix.ghc }}-${{ matrix.cabal }}-
+
+      - name: Doc
+        run: cabal haddock gigaparsec $CONFIG --haddock-hyperlink-source --haddock-quickjump
+
+      - name: Prepare to upload built htmls
+        run: |
+          mkdir html
+          find dist-newstyle -path '*/doc/html/gigaparsec' -type d -exec cp -R {} html/docs \;
+          ls -R html
+
+      - name: Deploy haddock
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: html
