@@ -50,6 +50,7 @@ category:           Text
 build-type:         Simple
 
 -- Extra doc files to be distributed with the package, such as a CHANGELOG or a README.
+-- Don't add README.md here, because it contains stuff specific to the repo itself
 extra-doc-files:    CHANGELOG.md
 
 -- Extra source files to be distributed with the package, such as examples, or a tutorial module.
