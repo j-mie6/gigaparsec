@@ -32,7 +32,7 @@ module Text.Gigaparsec.Char (
   -- | These combinators allow for working with, or building, strings. This means that they can parse
   -- specific strings, specific sets of strings, or can read characters repeatedly to generate
   -- strings. They are united in all returning `String` as their result.
-    string, {-stringOfMany, stringOfSome,-} strings, trie,
+    string, stringOfMany, stringOfSome, strings, trie,
   -- * Specific Character Parsers
   -- | These parsers are special cases of `satisfy` or `char`. They are worth
   -- using, as they are given special error labelling, producing nicer error messages than their
@@ -45,7 +45,7 @@ module Text.Gigaparsec.Char (
     spaces, whitespaces,
   ) where
 
-import Text.Gigaparsec (Parsec, atomic, empty, (<|>))
+import Text.Gigaparsec (Parsec, atomic, empty, some, many, (<|>))
 import Text.Gigaparsec.Combinator (skipMany)
 import Text.Gigaparsec.Errors.Combinator ((<?>))
 -- We want to use this to make the docs point to the right definition for users.
@@ -233,13 +233,21 @@ noneOf cs
         --FIXME: control character safe show
         rangeLabel = "anything outside of " ++ show c1 ++ " to " ++ show c2
 
--- TODO: these four are tricky, because can't overload like in Scala
--- Megaparsec uses takeWhileP and takeWhile1P, but these don't really fit our
--- naming conventions...
--- stringOfMany :: Parsec Char -> Parsec String
--- stringOfSome :: Parsec Char -> Parsec String
--- stringOfMany :: (Char -> Bool) -> Parsec String
--- stringOfSome :: (Char -> Bool) -> Parsec String
+{-
+TODO:
+
+@since 0.1.0.0
+-}
+stringOfMany :: (Char -> Bool) -> Parsec String
+stringOfMany p = many (satisfy p)
+
+{-
+TODO:
+
+@since 0.1.0.0
+-}
+stringOfSome :: (Char -> Bool) -> Parsec String
+stringOfSome p = some (satisfy p)
 
 {-|
 This combinator tries to parse each of the strings @strs@, until one of them succeeds.
