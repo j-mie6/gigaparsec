@@ -16,6 +16,8 @@ own risk.
 -}
 module Text.Gigaparsec.Internal (module Text.Gigaparsec.Internal) where
 
+import Text.Gigaparsec.Internal.RT (RT)
+
 import Control.Applicative (Applicative(liftA2), Alternative(empty, (<|>), many, some)) -- liftA2 required until 9.6
 import Control.Selective (Selective(select))
 
@@ -35,9 +37,9 @@ combinator API, however, can be done whenever).
 type Parsec :: * -> *
 newtype Parsec a = Parsec {
     unParsec :: forall r. State
-             -> (a -> State -> r) -- the good continuation
-             -> (State -> r)      -- the bad continuation
-             -> r
+             -> (a -> State -> RT r) -- the good continuation
+             -> (State -> RT r)      -- the bad continuation
+             -> RT r
   }
 
 deriving stock instance Functor Parsec -- not clear if there is a point to implementing this

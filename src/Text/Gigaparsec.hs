@@ -83,6 +83,7 @@ module Text.Gigaparsec (
 -- `Internal`: when they are in the public API, we are locked into them!
 
 import Text.Gigaparsec.Internal (Parsec, unParsec, emptyState)
+import Text.Gigaparsec.Internal.RT (runRT)
 
 import Data.Functor (void)
 import Control.Applicative (liftA2, (<|>), empty, many, some) -- liftA2 required until 9.6
@@ -97,9 +98,9 @@ type Result :: * -> *
 data Result a = Success a | Failure deriving stock (Show, Eq)
 
 parse :: Parsec a -> String -> Result a
-parse p input = unParsec p (emptyState input) good bad
-  where good x _ = Success x
-        bad _    = Failure
+parse p input = runRT $ unParsec p (emptyState input) good bad
+  where good x _ = return (Success x)
+        bad _    = return Failure
 
 {-|
 This combinator parses its argument @p@, but rolls back any consumed input on failure.
