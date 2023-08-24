@@ -17,9 +17,9 @@ _make p f = p >>= \x -> make x f
 
 make :: a -> (forall r. Reg r a -> Parsec b) -> Parsec b
 make x f = Internal.Parsec $ \st good bad ->
-  do reg <- newReg x
-     let Internal.Parsec p = f reg
-     p st good bad
+  newReg x $ \reg ->
+    let Internal.Parsec p = f reg
+    in p st good bad
 
 get :: Reg r a -> Parsec a
 get reg = Internal.Parsec $ \st good _ ->

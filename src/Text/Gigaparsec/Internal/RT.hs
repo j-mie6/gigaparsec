@@ -9,6 +9,7 @@ import Control.Monad (liftM2)
 
 type Reg :: * -> * -> *
 type role Reg phantom representational
+-- Don't even expose the constructor, then it's pretty much safe
 data Reg r a = Reg (MutVar# RealWorld a)
 
 type RT :: * -> *
@@ -48,10 +49,10 @@ instance Monad RT where
 runRT :: RT a -> a
 runRT (RT mx) = case runRW# mx of (# _, x #) -> x
 
-newReg :: a -> RT (Reg r a)
-newReg x = RT $ \s# ->
+newReg :: a -> (forall r. Reg r a -> RT b) -> RT b
+newReg x k = RT $ \s# ->
   case newMutVar# x s# of
-    (# s'#, reg# #) -> (# s'#, Reg reg# #)
+    (# s'#, reg# #) -> let RT k' = k (Reg reg#) in k' s'#
 
 readReg :: Reg r a -> RT a
 readReg (Reg reg#) = RT $ \s# -> readMutVar# reg# s#
@@ -60,3 +61,7 @@ writeReg :: Reg r a -> a -> RT ()
 writeReg (Reg reg#) x = RT $ \s# ->
   case writeMutVar# reg# x s# of
     s'# -> (# s'#, () #)
+
+-- ioToRT?
+-- rtToIO?
+-- fromIORef?
