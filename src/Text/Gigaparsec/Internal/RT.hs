@@ -1,5 +1,6 @@
 {-# LANGUAGE Unsafe #-}
 {-# LANGUAGE DataKinds, MagicHash, RoleAnnotations, TupleSections, UnboxedTuples #-}
+{-# OPTIONS_HADDOCK hide #-}
 module Text.Gigaparsec.Internal.RT (module Text.Gigaparsec.Internal.RT) where
 
 import GHC.Base (MutVar#, RealWorld, State#, runRW#, newMutVar#, readMutVar#, writeMutVar#)
