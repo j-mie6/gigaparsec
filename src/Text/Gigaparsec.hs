@@ -82,7 +82,8 @@ module Text.Gigaparsec (
 -- Care MUST be taken to not expose /any/ implementation details from
 -- `Internal`: when they are in the public API, we are locked into them!
 
-import Text.Gigaparsec.Internal (Parsec, unParsec, emptyState)
+import Text.Gigaparsec.Internal (Parsec, Parsec(Parsec), unParsec, emptyState)
+import Text.Gigaparsec.Internal qualified as Internal.State (State(..))
 import Text.Gigaparsec.Internal.RT (runRT)
 
 import Data.Functor (void)
@@ -121,7 +122,10 @@ Success "abd" -- first parser does not consume input on failure now
 -}
 atomic :: Parsec a -- ^ the parser, @p@, to execute, if it fails, it will not have consumed input.
        -> Parsec a -- ^ a parser that tries @p@, but never consumes input if it fails.
-atomic = undefined --TODO:
+atomic (Parsec p) = Parsec $ \input ok err ->
+  -- TODO: (where/when) does input.consumed need to be reset?
+  let input' = input { Internal.State.consumed = False }
+  in  p input' ok (const $ err input')
 
 {-| This combinator parses its argument @p@, but does not consume input if it succeeds.
 
@@ -140,7 +144,9 @@ Failure .. -- lookAhead does not roll back input consumed on failure
 -}
 lookAhead :: Parsec a -- ^ the parser, @p@, to execute
           -> Parsec a -- ^ a parser that parses @p@ and never consumes input if it succeeds.
-lookAhead = undefined --TODO:
+lookAhead (Parsec p) = Parsec $ \input ok err ->
+  let input' = input { Internal.State.consumed = False }
+  in  p input' (\x _ -> ok x input') err
 
 {-|
 This combinator parses its argument @p@, and succeeds when @p@ fails and vice-versa, never consuming
@@ -165,7 +171,9 @@ keyword kw = atomic $ string kw *> notFollowedBy letterOrDigit
 -}
 notFollowedBy :: Parsec a  -- ^ the parser, @p@, to execute, it must fail in order for this combinator to succeed.
               -> Parsec () -- ^ a parser which fails when @p@ succeeds and succeeds otherwise, never consuming input.
-notFollowedBy = undefined --TODO:
+notFollowedBy (Parsec p) = Parsec $ \input ok err ->
+  let input' = input { Internal.State.consumed = False }
+  in  p input' (\_ _ -> err input') (\_ -> ok () input')
 
 {-|
 This parser produces @()@ without having any other effect.
