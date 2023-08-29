@@ -49,7 +49,7 @@ import Text.Gigaparsec (Parsec, atomic, empty, some, many, (<|>))
 import Text.Gigaparsec.Combinator (skipMany)
 import Text.Gigaparsec.Errors.Combinator ((<?>))
 -- We want to use this to make the docs point to the right definition for users.
-import Text.Gigaparsec.Internal qualified as Internal (Parsec(Parsec))
+import Text.Gigaparsec.Internal qualified as Internal (Parsec(Parsec), State(..))
 import Text.Gigaparsec.Internal.Require (require)
 
 import Data.Char (ord)
@@ -94,7 +94,10 @@ satisfy :: (Char -> Bool) -- ^ the predicate, @pred@, to test the next character
                           -- exist.
         -> Parsec Char    -- ^ a parser that tries to read a single character @c@, such that @pred c@
                           -- is true, or fails.
-satisfy _ = Internal.Parsec undefined --TODO:
+satisfy pred = Internal.Parsec $ \input ok err ->
+  case Internal.input input of
+    (x: xs) | pred x  -> ok x (input { Internal.input = xs, Internal.consumed = True })
+    _                 -> err input
 
 -- Needs to be primitive for the raw expected item down the line
 {-|

@@ -46,10 +46,16 @@ deriving stock instance Functor Parsec -- not clear if there is a point to imple
 
 instance Applicative Parsec where
   pure :: a -> Parsec a
-  pure = undefined -- TODO:
+  pure x = Parsec $ \input ok err ->
+    ok x input
+  -- Continue with x and no input consumed.
 
   liftA2 :: (a -> b -> c) -> Parsec a -> Parsec b -> Parsec c
-  liftA2 = undefined -- TODO:
+  liftA2 f (Parsec p) (Parsec q) = Parsec $ \input ok err ->
+    let ok' x input' = q input' (ok . f x) err
+    --                          ^^^^^^^^^^
+    -- continue with (f x y), where y is the output of q
+    in  p input ok' err
 
   (*>) :: Parsec a -> Parsec b -> Parsec b
   (*>) = liftA2 (const id)
@@ -75,14 +81,25 @@ the Selective default `branch`. We should be using this internally, and it
 can be dropped if https://github.com/snowleopard/selective/issues/74 is implemented.
 -}
 _branch :: Parsec (Either a b) -> Parsec (a -> c) -> Parsec (b -> c) -> Parsec c
-_branch = undefined -- TODO:
+_branch (Parsec p) (Parsec q1) (Parsec q2) = Parsec $ \input ok err ->
+  let ok' x input' = case x of
+        Left a  -> q1 input' (ok . ($ a)) err
+        --                   ^^^^^^^^^^^^
+        Right b -> q2 input' (ok . ($ b)) err
+        --                   ^^^^^^^^^^^^
+        -- feed a/b to the function of the good continuation
+  in  p input ok' err
 
 instance Monad Parsec where
   return :: a -> Parsec a
   return = pure
 
   (>>=) :: Parsec a -> (a -> Parsec b) -> Parsec b
-  (>>=) = undefined -- TODO:
+  Parsec p >>= f = Parsec $ \input ok err ->
+    let ok' x input' = (unParsec (f x)) input' ok err
+    --                 ^^^^^^^^^^^^^^^^
+    -- get the parser obtained from feeding the output of p to f
+    in  p input ok' err
 
   (>>) :: Parsec a -> Parsec b -> Parsec b
   (>>) = (*>)
@@ -92,10 +109,16 @@ instance Monad Parsec where
 
 instance Alternative Parsec where
   empty :: Parsec a
-  empty = undefined -- TODO:
+  empty = Parsec $ \input ok err ->
+    err input
 
   (<|>) :: Parsec a -> Parsec a -> Parsec a
-  (<|>) = undefined -- TODO:
+  Parsec p <|> Parsec q = Parsec $ \input ok err ->
+    p (input { consumed = False }) ok $ \input' ->
+      if consumed input'
+        -- fail if p both consumed input and failed.
+        then err input'
+        else q input' ok err
 
   many :: Parsec a -> Parsec [a]
   many p = let go = liftA2 (:) p go <|> pure [] in go
