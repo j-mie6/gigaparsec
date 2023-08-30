@@ -52,6 +52,7 @@ import Text.Gigaparsec.Errors.Combinator ((<?>))
 import Text.Gigaparsec.Internal qualified as Internal (Parsec(Parsec), State(..))
 import Text.Gigaparsec.Internal.Require (require)
 
+import Data.Bits (Bits((.&.), (.|.)))
 import Data.Char (ord)
 import Data.Char qualified as Char
 import Data.List.NonEmpty as NonEmpty (NonEmpty((:|)), groupWith, sortBy)
@@ -70,8 +71,8 @@ import Data.Map.Lazy qualified as Map (fromSet, toAscList, member)
 {-|
 This combinator tries to parse a single character from the input that matches the given predicate.
 
-Attempts to read a character from the input and tests it against the predicate @test@. If a character
-@c@ can be read and @test c@ is true, then @c@ is consumed and returned. Otherwise, no input is
+Attempts to read a character from the input and tests it against the predicate @pred@. If a character
+@c@ can be read and @pred c@ is true, then @c@ is consumed and returned. Otherwise, no input is
 consumed and this combinator will fail.
 
 ==== __Examples__
@@ -90,15 +91,22 @@ char c = satisfy (== c)
 
 @since 0.1.0.0
 -}
-satisfy :: (Char -> Bool) -- ^ the predicate, @test@, to test the next character against, should one
+satisfy :: (Char -> Bool) -- ^ the predicate, @pred@, to test the next character against, should one
                           -- exist.
-        -> Parsec Char    -- ^ a parser that tries to read a single character @c@, such that @test c@
+        -> Parsec Char    -- ^ a parser that tries to read a single character @c@, such that @pred c@
                           -- is true, or fails.
 satisfy test = Internal.Parsec $ \st ok err ->
   case Internal.input st of
     (x: xs) | test x  ->
-      ok x (st { Internal.input = xs, Internal.consumed = True })
+      ok x ((updatePos st x) { Internal.input = xs, Internal.consumed = True })
     _                 -> err st
+  where
+    updatePos st x =
+      let (l, c) = updatePos' (Internal.line st, Internal.col st) x
+      in  st { Internal.line = l, Internal.col = c }
+    updatePos' (l, _) '\n' = (l + 1, 1)
+    updatePos' (l, c) '\t' = (l, ((c + 3) .&. (-4)) .|. 1)
+    updatePos' (l, c) _    = (l, c + 1)
 
 -- Needs to be primitive for the raw expected item down the line
 {-|
