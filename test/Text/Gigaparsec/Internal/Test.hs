@@ -32,5 +32,25 @@ pureParse p = do
   pureParseWith p "a"
   pureParseWith p ":@279"
 
-consumes :: a -> Parsec a
-consumes x = Parsec $ \st good _ -> good x (st { consumed = True})
+-- TODO: could we use quick-check to generate states?
+-- | Tests to ensure that running the parser on the given string does something to the state
+impureParseWith :: HasCallStack => Parsec a -> String -> Assertion
+impureParseWith (Parsec p) inp = do
+  run initSt
+  --run (initSt { consumed = True })
+  run (initSt { line = 10, col = 20 })
+  --run (initSt { consumed = True, line = 10, col = 20 })
+  where initSt = emptyState inp
+        run :: State -> Assertion
+        run st = assertBool (show st ++ " should be altered") (runRT (p st (const return) return) /= st)
+
+-- TODO: could we use quick-check to generate inputs?
+-- | Tests to ensure that running the parser does something to the state
+impureParse :: HasCallStack => Parsec a -> Assertion
+impureParse p = do
+  impureParseWith p ""
+  impureParseWith p "a"
+  impureParseWith p ":@279"
+
+consume :: a -> Parsec a
+consume x = Parsec $ \st good _ -> good x (st { consumed = True})

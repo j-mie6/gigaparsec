@@ -127,7 +127,7 @@ test-suite gigaparsec-test
     build-depends:
         gigaparsec,
         tasty,
-        tasty-expected-failure,
+        --tasty-expected-failure,
         tasty-hunit
         --TODO: property based testing will be useful when we optimise combinators
         --      to test against their base implementations
