@@ -31,3 +31,6 @@ pureParse p = do
   pureParseWith p ""
   pureParseWith p "a"
   pureParseWith p ":@279"
+
+consumes :: a -> Parsec a
+consumes x = Parsec $ \st good _ -> good x (st { consumed = True})
