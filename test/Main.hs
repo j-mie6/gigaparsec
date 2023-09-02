@@ -1,5 +1,10 @@
-{-# LANGUAGE Safe #-}
 module Main (main) where
 
+import Test.Tasty
+
+import Text.Gigaparsec.PrimitiveTests
+
 main :: IO ()
-main = putStrLn "Test suite not yet implemented."
+main = defaultMain $ testGroup "gigaparsec"
+  [ primitiveTests
+  ]

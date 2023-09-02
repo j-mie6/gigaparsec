@@ -21,7 +21,7 @@ module Text.Gigaparsec (
   -- how a parser consumes input, or under what conditions a parser does or does not fail. These are
   -- really important for most practical parsing considerations, although lookAhead is much less
   -- well used.
-    atomic, lookAhead, notFollowedBy,
+    atomic, lookAhead, notFollowedBy, eof,
   -- * Consumptionless Parsers
   -- | These combinators and parsers do not consume input: they are the most primitive ways of
   -- producing successes and failures with the minimal possible effect on the parse. They are,
@@ -82,7 +82,7 @@ module Text.Gigaparsec (
 -- Care MUST be taken to not expose /any/ implementation details from
 -- `Internal`: when they are in the public API, we are locked into them!
 
-import Text.Gigaparsec.Internal (Parsec, unParsec, emptyState)
+import Text.Gigaparsec.Internal (Parsec(Parsec), emptyState, State(input))
 import Text.Gigaparsec.Internal.RT (runRT)
 
 import Data.Functor (void)
@@ -98,7 +98,7 @@ type Result :: * -> *
 data Result a = Success a | Failure deriving stock (Show, Eq)
 
 parse :: Parsec a -> String -> Result a
-parse p input = runRT $ unParsec p (emptyState input) good bad
+parse (Parsec p) inp = runRT $ p (emptyState inp) good bad
   where good x _ = return (Success x)
         bad _    = return Failure
 
@@ -166,6 +166,24 @@ keyword kw = atomic $ string kw *> notFollowedBy letterOrDigit
 notFollowedBy :: Parsec a  -- ^ the parser, @p@, to execute, it must fail in order for this combinator to succeed.
               -> Parsec () -- ^ a parser which fails when @p@ succeeds and succeeds otherwise, never consuming input.
 notFollowedBy = undefined --TODO:
+
+-- eof is usually `notFollowedBy item`, but this requires annoying cyclic dependencies on Char
+{- This parser only succeeds at the end of the input.
+
+Equivalent to `notFollowedBy(item)`.
+
+==== __Examples__
+>>> parse eof "a"
+Failure ..
+>>> parse eof ""
+Success ()
+
+@since 0.1.0.0
+-}
+eof :: Parsec ()
+eof = Parsec $ \st good bad -> case input st of
+  (:){} -> bad st
+  []    -> good () st
 
 {-|
 This parser produces @()@ without having any other effect.
