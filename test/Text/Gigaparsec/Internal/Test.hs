@@ -5,8 +5,11 @@ module Text.Gigaparsec.Internal.Test where
 
 import Test.Tasty.HUnit
 
+import Text.Gigaparsec
 import Text.Gigaparsec.Internal
 import Text.Gigaparsec.Internal.RT
+
+import Control.Monad (unless)
 
 -- don't @ me
 deriving stock instance Eq State
@@ -22,7 +25,11 @@ pureParseWith (Parsec p) inp = do
   run (initSt { consumed = True, line = 10, col = 20 })
   where initSt = emptyState inp
         run :: State -> Assertion
-        run st = runRT (p st (const return) return) @?= st
+        run st = do
+          let st' = runRT (p st (\ !_ -> return) return)
+          unless (st == st') $
+            assertFailure ("expected no change to internal state\n"
+                        ++ "initial state: " ++ show st ++ "\n       became: " ++ show st')
 
 -- TODO: could we use quick-check to generate inputs?
 -- | Tests to ensure that running the parser does nothing to the state
@@ -42,7 +49,9 @@ impureParseWith (Parsec p) inp = do
   --run (initSt { consumed = True, line = 10, col = 20 })
   where initSt = emptyState inp
         run :: State -> Assertion
-        run st = assertBool (show st ++ " should be altered") (runRT (p st (const return) return) /= st)
+        run st = do
+          let st' = runRT (p st (\ !_ -> return) return)
+          assertBool (show st ++ " should be altered") (st' /= st)
 
 -- TODO: could we use quick-check to generate inputs?
 -- | Tests to ensure that running the parser does something to the state
@@ -54,3 +63,8 @@ impureParse p = do
 
 consume :: a -> Parsec a
 consume x = Parsec $ \st good _ -> good x (st { consumed = True})
+
+ensureFails :: (Show a, HasCallStack) => Parsec a -> String -> Assertion
+ensureFails p inp = case parse p inp of
+  Failure{} -> return ()
+  Success x -> assertFailure ("parser must fail, but produced: " ++ show x)

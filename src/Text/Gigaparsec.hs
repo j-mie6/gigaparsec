@@ -43,7 +43,7 @@ module Text.Gigaparsec (
   -- combinator as a whole fails.
     (<~>), (<:>),
   -- *** Re-exported from "Control.Applicative"
-    (<*>), liftA2, (*>), (<*),
+    (<*>), liftA2, (*>), (<*), (<**>),
   -- * Branching Combinators
   -- | These combinators allow for parsing one alternative or another. All of these combinators are
   -- /left-biased/, which means that the left-hand side of the combinator is tried first: the
@@ -87,7 +87,7 @@ import Text.Gigaparsec.Internal qualified as Internal.State (State(..))
 import Text.Gigaparsec.Internal.RT (runRT)
 
 import Data.Functor (void)
-import Control.Applicative (liftA2, (<|>), empty, many, some) -- liftA2 required until 9.6
+import Control.Applicative (liftA2, (<|>), empty, many, some, (<**>)) -- liftA2 required until 9.6
 import Control.Selective (select, branch)
 
 -- Hiding the Internal module seems like the better bet: nobody needs to see it anyway :)

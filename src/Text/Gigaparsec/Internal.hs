@@ -46,14 +46,13 @@ deriving stock instance Functor Parsec -- not clear if there is a point to imple
 
 instance Applicative Parsec where
   pure :: a -> Parsec a
-  pure x = Parsec $ \st ok err ->
-    ok x st
+  pure x = Parsec $ \st ok _ -> ok x st
   -- Continue with x and no input consumed.
 
   liftA2 :: (a -> b -> c) -> Parsec a -> Parsec b -> Parsec c
   liftA2 f (Parsec p) (Parsec q) = Parsec $ \st ok err ->
     let ok' x st' = q st' (ok . f x) err
-    --                          ^^^^^^^^^^
+    --                    ^^^^^^^^^^
     -- continue with (f x y), where y is the output of q
     in  p st ok' err
 
@@ -84,9 +83,9 @@ _branch :: Parsec (Either a b) -> Parsec (a -> c) -> Parsec (b -> c) -> Parsec c
 _branch (Parsec p) (Parsec q1) (Parsec q2) = Parsec $ \st ok err ->
   let ok' x st' = case x of
         Left a  -> q1 st' (ok . ($ a)) err
-        --                   ^^^^^^^^^^^^
+        --                ^^^^^^^^^^^^
         Right b -> q2 st' (ok . ($ b)) err
-        --                   ^^^^^^^^^^^^
+        --                ^^^^^^^^^^^^
         -- feed a/b to the function of the good continuation
   in  p st ok' err
 
@@ -97,7 +96,7 @@ instance Monad Parsec where
   (>>=) :: Parsec a -> (a -> Parsec b) -> Parsec b
   Parsec p >>= f = Parsec $ \st ok err ->
     let ok' x st' = (unParsec (f x)) st' ok err
-    --                 ^^^^^^^^^^^^^^^^
+    --              ^^^^^^^^^^^^^^^^
     -- get the parser obtained from feeding the output of p to f
     in  p st ok' err
 
@@ -109,8 +108,7 @@ instance Monad Parsec where
 
 instance Alternative Parsec where
   empty :: Parsec a
-  empty = Parsec $ \st ok err ->
-    err st
+  empty = Parsec $ \st _ err -> err st
 
   (<|>) :: Parsec a -> Parsec a -> Parsec a
   Parsec p <|> Parsec q = Parsec $ \st ok err ->
