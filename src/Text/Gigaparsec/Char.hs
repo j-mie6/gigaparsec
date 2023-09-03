@@ -55,14 +55,13 @@ import Text.Gigaparsec.Internal.Require (require)
 import Data.Bits (Bits((.&.), (.|.)))
 import Data.Char (ord)
 import Data.Char qualified as Char
-import Data.List.NonEmpty as NonEmpty (NonEmpty((:|)), groupWith, sortBy)
+import Data.List.NonEmpty as NonEmpty (NonEmpty((:|)), groupWith, sortWith)
 import Data.Maybe (isJust, fromJust)
 import Data.Monoid (Alt(Alt, getAlt))
 import Data.Set (Set)
 import Data.Set qualified as Set (member, size, findMin, findMax, mapMonotonic)
-import Data.Ord (Down(Down), comparing)
-import Data.Map.Lazy (Map)
-import Data.Map.Lazy qualified as Map (fromSet, toAscList, member)
+import Data.Map (Map)
+import Data.Map qualified as Map (fromSet, toAscList, member)
 
 -------------------------------------------------
 -- Primitives
@@ -158,7 +157,7 @@ Failure ..
 string :: String        -- ^ the string, @s@, to be parsed from the input
        -> Parsec String -- ^ a parser that either parses the string @s@ or fails at the first
                         -- mismatched character.
-string s = require (not (null s)) "cannot pass empty string to `string`" $
+string s = require (not (null s)) "Text.Gigaparsec.Char.string" "cannot pass empty string" $
   traverse char s
 
 -------------------------------------------------
@@ -198,12 +197,12 @@ Failure ..
 oneOf :: Set Char    -- ^ the set of character, @cs@, to check.
       -> Parsec Char -- ^ a parser that parses one of the member of the set @cs@.
 oneOf cs
-  | sz == 0                 = empty
-  | sz == 1                 = char c1
+  | sz == 0                     = empty
+  | sz == 1                     = char c1
   -- if the smallest and largest characters are as far apart
   -- as the size of the set, it must be contiguous
-  | sz == (ord c2 - ord c1) = satisfy (\c -> c1 <= c && c <= c2) <?> Set.mapMonotonic show cs
-  | otherwise               = satisfy (`Set.member` cs) <?> [rangeLabel]
+  | sz == (ord c2 - ord c1 + 1) = satisfy (\c -> c1 <= c && c <= c2) <?> Set.mapMonotonic show cs
+  | otherwise                   = satisfy (`Set.member` cs) <?> [rangeLabel]
   where !sz = Set.size cs
         -- must be left lazy until sz known not to be 0
         c1 = Set.findMin cs
@@ -234,10 +233,10 @@ Failure ..
 noneOf :: Set Char    -- ^ the set, @cs@, of characters to check.
        -> Parsec Char -- ^ a parser that parses one character that is not a member of the set @cs@.
 noneOf cs
-  | sz == 0                 = item
-  | sz == 1                 = satisfy (/= c1) <?> ["anything except " ++ show c1]
-  | sz == (ord c2 - ord c1) = satisfy (\c -> c < c1 || c2 < c) <?> [rangeLabel]
-  | otherwise               = satisfy (not . (`Set.member` cs))
+  | sz == 0                     = item
+  | sz == 1                     = satisfy (/= c1) <?> ["anything except " ++ show c1]
+  | sz == (ord c2 - ord c1 + 1) = satisfy (\c -> c < c1 || c2 < c) <?> [rangeLabel]
+  | otherwise                   = satisfy (not . (`Set.member` cs))
   where !sz = Set.size cs
         -- must be left lazy until sz known not to be 0
         c1 = Set.findMin cs
@@ -289,7 +288,7 @@ Failure ..
 strings :: Set String    -- ^ the strings to try to parse.
         -> Parsec String -- ^ a parser that tries to parse all the given strings returning the
                          -- longest one that matches.
-strings = trie . Map.fromSet pure
+strings = _trie "Text.Gigaparsec.Char.strings" . Map.fromSet pure
 
 -- Departure from original naming, but no overloading, so oh well
 {-|
@@ -329,18 +328,17 @@ trie :: Map String (Parsec a) -- ^ the key-value pairs to try to parse.
      -> Parsec a              -- ^ a parser that tries to parse all the given key-value pairs,
                               -- returning the (possibly failing) result of the value that
                               -- corresponds to the longest matching key.
-trie strs = require (not (Map.member "" strs)) "cannot pass empty string to `strings` or `trie`" $
+trie = _trie "Text.Gigaparsec.Char.trie"
+
+_trie :: String -> Map String (Parsec a) -> Parsec a
+_trie func strs = require (not (Map.member "" strs)) func "the empty string is not a valid key" $
   getAlt $ foldMap combineSameLeading (NonEmpty.groupWith (head . fst) (Map.toAscList strs))
   where -- When combining these parsers it is important to make sure the
         -- longest ones parse first. All but the last parser need an `atomic`.
         combineSameLeading :: NonEmpty (String, Parsec a) -> Alt Parsec a
         combineSameLeading group = foldMap (\(str, p) -> Alt $ atomic (string str) *> p) (reverse rest)
-                               <|> Alt (string longest *> longP)
-          where (longest, longP) :| rest = sortOnInverse (length . fst) group
-
-        sortOnInverse :: Ord b => (a -> b) -> NonEmpty a -> NonEmpty a
-        sortOnInverse f =
-          fmap snd . NonEmpty.sortBy (comparing (Down . fst)) . fmap (\x -> let !y = f x in (y, x))
+                               <|> Alt (string shortest *> shortP)
+          where (shortest, shortP) :| rest = NonEmpty.sortWith (length . fst) group
 
 -------------------------------------------------
 -- Specific Character Parsers

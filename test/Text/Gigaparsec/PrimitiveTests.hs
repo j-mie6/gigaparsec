@@ -13,8 +13,8 @@ emptyAndPure, emptyPureAndAp :: String
 emptyAndPure = "/primitives.pure/ || /primitives.empty/"
 emptyPureAndAp = emptyAndPure ++ " || /primitives.(<*>)/"
 
-primitiveTests :: TestTree
-primitiveTests = testGroup "primitives"
+tests :: TestTree
+tests = testGroup "primitives"
   [ eofTests
   , pureTests
   , emptyTests

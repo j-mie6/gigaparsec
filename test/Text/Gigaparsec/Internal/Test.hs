@@ -1,5 +1,5 @@
 -- A collection of test helpers
-{-# LANGUAGE StandaloneDeriving #-}
+{-# LANGUAGE StandaloneDeriving, AllowAmbiguousTypes #-}
 {-# OPTIONS_GHC -Wno-orphans #-}
 module Text.Gigaparsec.Internal.Test where
 
@@ -9,7 +9,9 @@ import Text.Gigaparsec
 import Text.Gigaparsec.Internal
 import Text.Gigaparsec.Internal.RT
 
+import Control.Exception (catches, evaluate, Exception, SomeException(..), Handler(..))
 import Control.Monad (unless)
+import Type.Reflection (typeOf, typeRep)
 
 -- don't @ me
 deriving stock instance Eq State
@@ -68,3 +70,11 @@ ensureFails :: (Show a, HasCallStack) => Parsec a -> String -> Assertion
 ensureFails p inp = case parse p inp of
   Failure{} -> return ()
   Success x -> assertFailure ("parser must fail, but produced: " ++ show x)
+
+throws :: forall e a. Exception e => a -> Assertion
+throws x = do
+  catches (evaluate x >> assertFailure ("expected: " ++ show (typeRep @e)))
+    [ Handler $ \ (!_ :: e) -> return ()
+    , Handler $ \ (SomeException ex) -> assertFailure ("expected: " ++ show (typeRep @e) ++ "\n"
+                                                    ++ " but got: " ++ show (typeOf ex))
+    ]

@@ -95,8 +95,8 @@ instance Monad Parsec where
 
   (>>=) :: Parsec a -> (a -> Parsec b) -> Parsec b
   Parsec p >>= f = Parsec $ \st ok err ->
-    let ok' x st' = (unParsec (f x)) st' ok err
-    --              ^^^^^^^^^^^^^^^^
+    let ok' x st' = unParsec (f x) st' ok err
+    --              ^^^^^^^^^^^^^^
     -- get the parser obtained from feeding the output of p to f
     in  p st ok' err
 

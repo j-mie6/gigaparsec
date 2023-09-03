@@ -10,7 +10,8 @@ import Data.Set (Set)
 
 -- the empty set is weird here, do we require non-empty or just make it id?
 label :: Set String -> Parsec a -> Parsec a
-label ls = require (not (any null ls)) "labels cannot be empty" id --TODO:
+label ls =
+  require (not (any null ls)) "Text.Gigaparsec.Errors.Combinator.label" "labels cannot be empty" id --TODO:
 
 {-# INLINE (<?>) #-}
 infix 0 <?>
