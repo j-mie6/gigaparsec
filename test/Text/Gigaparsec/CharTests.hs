@@ -60,7 +60,7 @@ charTests =
 stringTests :: TestTree
 stringTests =
   testGroup "string should"
-    [ testCase "reject the empty string" (throws @RequirementUnsatisfied (string ""))
+    [ testCase "reject the empty string" (throws @RequirementUnsatisfied (parse (string "") "")) -- don't ask why `string ""` doesn't work all the time
     , testCase "be pure if it cannot read at all" $ do
         pureParseWith (string "abc") ""
         pureParseWith (string "abc") "123"
