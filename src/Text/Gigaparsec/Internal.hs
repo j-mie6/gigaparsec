@@ -112,11 +112,16 @@ instance Alternative Parsec where
 
   (<|>) :: Parsec a -> Parsec a -> Parsec a
   Parsec p <|> Parsec q = Parsec $ \st ok err ->
-    p (st { consumed = False }) ok $ \st' ->
-      if consumed st'
-        -- fail if p both consumed input and failed.
-        then err st'
-        else q st' ok err
+    let ok' x st'
+          | consumed st' = ok x st'
+          | otherwise    = ok x st
+          --  ^ revert to old st.consumed if p didn't consume
+        err' st'
+          | consumed st' = err st'
+          --  ^ fail if p failed *and* consumed
+          | otherwise    = q st ok err
+
+    in  p (st { consumed = False }) ok' err'
 
   many :: Parsec a -> Parsec [a]
   many p = let go = liftA2 (:) p go <|> pure [] in go
