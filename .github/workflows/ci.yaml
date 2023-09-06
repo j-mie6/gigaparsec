@@ -22,7 +22,7 @@ jobs:
       CONFIG: "--enable-tests --enable-doc"
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Setup Haskell
         uses: haskell/actions/setup@v2
