@@ -118,7 +118,7 @@ instance Alternative Parsec where
         err' st'
           | consumed st' = err st'
           --  ^ fail if p failed *and* consumed
-          | otherwise    = q st' ok err
+          | otherwise    = q (st' { consumed = initConsumed }) ok err
 
     in  p (st { consumed = False }) ok' err'
 
