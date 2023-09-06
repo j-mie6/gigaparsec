@@ -123,9 +123,7 @@ Success "abd" -- first parser does not consume input on failure now
 atomic :: Parsec a -- ^ the parser, @p@, to execute, if it fails, it will not have consumed input.
        -> Parsec a -- ^ a parser that tries @p@, but never consumes input if it fails.
 atomic (Parsec p) = Parsec $ \st ok err ->
-  -- TODO: (where/when) does st.consumed need to be reset?
-  let st' = st { Internal.State.consumed = False }
-  in  p st' ok (const $ err st')
+  p st ok (const $ err st)
 
 {-| This combinator parses its argument @p@, but does not consume input if it succeeds.
 
