@@ -82,7 +82,7 @@ module Text.Gigaparsec (
 -- Care MUST be taken to not expose /any/ implementation details from
 -- `Internal`: when they are in the public API, we are locked into them!
 
-import Text.Gigaparsec.Internal (Parsec(Parsec), emptyState, State(input))
+import Text.Gigaparsec.Internal (Parsec(Parsec), emptyState)
 import Text.Gigaparsec.Internal qualified as Internal.State (State(..))
 import Text.Gigaparsec.Internal.RT (runRT)
 
@@ -185,7 +185,7 @@ Success ()
 @since 0.1.0.0
 -}
 eof :: Parsec ()
-eof = Parsec $ \st good bad -> case input st of
+eof = Parsec $ \st good bad -> case Internal.State.input st of
   (:){} -> bad st
   []    -> good () st
 
