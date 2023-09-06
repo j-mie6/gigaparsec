@@ -100,12 +100,10 @@ satisfy test = Internal.Parsec $ \st ok err ->
       ok x ((updatePos st x) { Internal.input = xs, Internal.consumed = True })
     _                 -> err st
   where
-    updatePos st x =
-      let (l, c) = updatePos' (Internal.line st, Internal.col st) x
-      in  st { Internal.line = l, Internal.col = c }
-    updatePos' (l, _) '\n' = (l + 1, 1)
-    updatePos' (l, c) '\t' = (l, ((c + 3) .&. (-4)) .|. 1)
-    updatePos' (l, c) _    = (l, c + 1)
+  updatePos st x
+    | x == '\n' = st { Internal.line = Internal.line st + 1, Internal.col = 1 }
+    | x == '\t' = st { Internal.col = (((Internal.col st) + 3) .&. (-4)) .|. 1 }
+    | otherwise = st { Internal.col = Internal.col st + 1 }
 
 -- Needs to be primitive for the raw expected item down the line
 {-|
