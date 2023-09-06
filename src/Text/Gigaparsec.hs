@@ -169,8 +169,7 @@ keyword kw = atomic $ string kw *> notFollowedBy letterOrDigit
 notFollowedBy :: Parsec a  -- ^ the parser, @p@, to execute, it must fail in order for this combinator to succeed.
               -> Parsec () -- ^ a parser which fails when @p@ succeeds and succeeds otherwise, never consuming input.
 notFollowedBy (Parsec p) = Parsec $ \st ok err ->
-  let st' = st { Internal.State.consumed = False }
-  in  p st' (\_ _ -> err st') (\_ -> ok () st')
+  p st (\_ _ -> err st) (\_ -> ok () st)
 
 -- eof is usually `notFollowedBy item`, but this requires annoying cyclic dependencies on Char
 {- This parser only succeeds at the end of the input.
