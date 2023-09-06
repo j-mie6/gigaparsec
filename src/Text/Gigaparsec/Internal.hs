@@ -112,14 +112,13 @@ instance Alternative Parsec where
 
   (<|>) :: Parsec a -> Parsec a -> Parsec a
   Parsec p <|> Parsec q = Parsec $ \st ok err ->
-    let ok' x st'
-          | consumed st' = ok x st'
-          | otherwise    = ok x st
+    let !initConsumed = consumed st
+        ok' x st' = ok x (st' { consumed = initConsumed || consumed st' })
           --  ^ revert to old st.consumed if p didn't consume
         err' st'
           | consumed st' = err st'
           --  ^ fail if p failed *and* consumed
-          | otherwise    = q st ok err
+          | otherwise    = q st' ok err
 
     in  p (st { consumed = False }) ok' err'
 
