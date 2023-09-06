@@ -50,7 +50,7 @@ jobs:
 
       - name: Test
         run: |
-          cabal test $CONFIG
+          cabal test $CONFIG --test-options="--color always"
 
       - name: Doc
         run: cabal haddock gigaparsec $CONFIG

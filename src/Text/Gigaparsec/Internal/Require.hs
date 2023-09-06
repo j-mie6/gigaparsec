@@ -1,9 +1,22 @@
 {-# LANGUAGE Safe #-}
+{-# LANGUAGE RecordWildCards #-}
 {-# OPTIONS_HADDOCK hide #-}
-module Text.Gigaparsec.Internal.Require (require) where
+{-# OPTIONS_GHC -Wno-all-missed-specialisations #-}
+module Text.Gigaparsec.Internal.Require (require, RequirementUnsatisfied) where
 
-import GHC.Stack (HasCallStack)
+import Control.Exception (Exception, throw)
 
-require :: HasCallStack => Bool -> String -> a -> a
-require True _ = id
-require False msg = error ("Requirement unsatisfied: " ++ msg)
+type RequirementUnsatisfied :: *
+data RequirementUnsatisfied = RequirementUnsatisfied { func :: !String
+                                                     , msg :: !String
+                                                     }
+
+instance Show RequirementUnsatisfied where
+  show :: RequirementUnsatisfied -> String
+  show RequirementUnsatisfied{..} = "requirement unsatisfied, " ++ msg ++ " (" ++ func ++ ")"
+
+instance Exception RequirementUnsatisfied
+
+require :: Bool -> String -> String -> a -> a
+require True _ _ = id
+require False func msg = throw (RequirementUnsatisfied func msg)

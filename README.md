@@ -35,3 +35,9 @@ stable documentation please consult Hackage directly.
 [Badge-License]: https://img.shields.io/github/license/j-mie6/parsley.svg
 [License]: https://github.com/j-mie6/gigaparsec/blob/main/LICENSE
 [Badge-PVP]: https://img.shields.io/badge/version%20policy-pvp-blue
+
+## Development
+`gigaparsec` is built with [cabal](https://www.haskell.org/cabal/).
+Use `cabal build` to build, and `cabal test` for testing.
+
+

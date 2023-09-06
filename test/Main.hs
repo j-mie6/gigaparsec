@@ -2,9 +2,11 @@ module Main (main) where
 
 import Test.Tasty
 
-import Text.Gigaparsec.PrimitiveTests
+import Text.Gigaparsec.PrimitiveTests qualified as Primitive
+import Text.Gigaparsec.CharTests qualified as Char
 
 main :: IO ()
 main = defaultMain $ testGroup "gigaparsec"
-  [ primitiveTests
+  [ Primitive.tests
+  , Char.tests
   ]

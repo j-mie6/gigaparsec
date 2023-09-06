@@ -43,7 +43,7 @@ module Text.Gigaparsec (
   -- combinator as a whole fails.
     (<~>), (<:>),
   -- *** Re-exported from "Control.Applicative"
-    (<*>), liftA2, (*>), (<*),
+    (<*>), liftA2, (*>), (<*), (<**>),
   -- * Branching Combinators
   -- | These combinators allow for parsing one alternative or another. All of these combinators are
   -- /left-biased/, which means that the left-hand side of the combinator is tried first: the
@@ -82,11 +82,12 @@ module Text.Gigaparsec (
 -- Care MUST be taken to not expose /any/ implementation details from
 -- `Internal`: when they are in the public API, we are locked into them!
 
-import Text.Gigaparsec.Internal (Parsec(Parsec), emptyState, State(input))
+import Text.Gigaparsec.Internal (Parsec(Parsec), emptyState)
+import Text.Gigaparsec.Internal qualified as Internal.State (State(..))
 import Text.Gigaparsec.Internal.RT (runRT)
 
 import Data.Functor (void)
-import Control.Applicative (liftA2, (<|>), empty, many, some) -- liftA2 required until 9.6
+import Control.Applicative (liftA2, (<|>), empty, many, some, (<**>)) -- liftA2 required until 9.6
 import Control.Selective (select, branch)
 
 -- Hiding the Internal module seems like the better bet: nobody needs to see it anyway :)
@@ -121,7 +122,8 @@ Success "abd" -- first parser does not consume input on failure now
 -}
 atomic :: Parsec a -- ^ the parser, @p@, to execute, if it fails, it will not have consumed input.
        -> Parsec a -- ^ a parser that tries @p@, but never consumes input if it fails.
-atomic = undefined --TODO:
+atomic (Parsec p) = Parsec $ \st ok err ->
+  p st ok (const $ err st)
 
 {-| This combinator parses its argument @p@, but does not consume input if it succeeds.
 
@@ -140,7 +142,8 @@ Failure .. -- lookAhead does not roll back input consumed on failure
 -}
 lookAhead :: Parsec a -- ^ the parser, @p@, to execute
           -> Parsec a -- ^ a parser that parses @p@ and never consumes input if it succeeds.
-lookAhead = undefined --TODO:
+lookAhead (Parsec p) = Parsec $ \st ok err ->
+  p st (\x _ -> ok x st) err
 
 {-|
 This combinator parses its argument @p@, and succeeds when @p@ fails and vice-versa, never consuming
@@ -165,7 +168,8 @@ keyword kw = atomic $ string kw *> notFollowedBy letterOrDigit
 -}
 notFollowedBy :: Parsec a  -- ^ the parser, @p@, to execute, it must fail in order for this combinator to succeed.
               -> Parsec () -- ^ a parser which fails when @p@ succeeds and succeeds otherwise, never consuming input.
-notFollowedBy = undefined --TODO:
+notFollowedBy (Parsec p) = Parsec $ \st ok err ->
+  p st (\_ _ -> err st) (\_ -> ok () st)
 
 -- eof is usually `notFollowedBy item`, but this requires annoying cyclic dependencies on Char
 {- This parser only succeeds at the end of the input.
@@ -181,7 +185,7 @@ Success ()
 @since 0.1.0.0
 -}
 eof :: Parsec ()
-eof = Parsec $ \st good bad -> case input st of
+eof = Parsec $ \st good bad -> case Internal.State.input st of
   (:){} -> bad st
   []    -> good () st
 
