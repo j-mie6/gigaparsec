@@ -143,8 +143,7 @@ Failure .. -- lookAhead does not roll back input consumed on failure
 lookAhead :: Parsec a -- ^ the parser, @p@, to execute
           -> Parsec a -- ^ a parser that parses @p@ and never consumes input if it succeeds.
 lookAhead (Parsec p) = Parsec $ \st ok err ->
-  let st' = st { Internal.State.consumed = False }
-  in  p st' (\x _ -> ok x st') err
+  p st (const . (`ok` st)) err
 
 {-|
 This combinator parses its argument @p@, and succeeds when @p@ fails and vice-versa, never consuming
