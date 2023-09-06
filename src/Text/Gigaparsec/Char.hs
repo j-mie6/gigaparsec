@@ -96,14 +96,21 @@ satisfy :: (Char -> Bool) -- ^ the predicate, @pred@, to test the next character
                           -- is true, or fails.
 satisfy test = Internal.Parsec $ \st ok err ->
   case Internal.input st of
-    (x: xs) | test x  ->
-      ok x ((updatePos st x) { Internal.input = xs, Internal.consumed = True })
+    c: cs | test c  ->
+      ok c (updateState st c cs)
     _                 -> err st
   where
-  updatePos st x
-    | x == '\n' = st { Internal.line = Internal.line st + 1, Internal.col = 1 }
-    | x == '\t' = st { Internal.col = (((Internal.col st) + 3) .&. (-4)) .|. 1 }
-    | otherwise = st { Internal.col = Internal.col st + 1 }
+  -- The duplicated input & consumed update avoids double allocation
+  -- that occurs if they were done separately to the line and col updates.
+  updateState st '\n' cs = st
+    { Internal.line = Internal.line st + 1, Internal.col = 1,
+      Internal.input = cs, Internal.consumed = True }
+  updateState st '\t' cs = st
+    { Internal.col = ((Internal.col st + 3) .&. (-4)) .|. 1,
+      Internal.input = cs, Internal.consumed = True }
+  updateState st _ cs = st
+    { Internal.col = Internal.col st + 1,
+      Internal.input = cs, Internal.consumed = True }
 
 -- Needs to be primitive for the raw expected item down the line
 {-|
