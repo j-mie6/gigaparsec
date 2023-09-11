@@ -36,8 +36,18 @@ stable documentation please consult Hackage directly.
 [License]: https://github.com/j-mie6/gigaparsec/blob/main/LICENSE
 [Badge-PVP]: https://img.shields.io/badge/version%20policy-pvp-blue
 
+## Library Evolution
+`gigaparsec` adheres strictly to Haskell PVP, with the following `early-semver`esque caveat:
+
+* Versions `0.M.m.p` are to be treated as pre-release, with high-volatility. While the major
+  component `M` will still be bumped for every major change, it is likely that there will be high
+  turnover for these major bumps until the library hits `1.0.0.0`, which will be considered more
+  stable. Changes in these bumps are likely to be more disruptive than usual.
+* Additionally, anything within `Text.Gigaparsec.Internal` and its submodules is excempt from the
+  PVP policy, and may change at any time. While you are free to rely on these internals if you need
+  to, this is *strongly* discouraged, and we will make no attempt to keep them internally consistent,
+  *especially* within the `0.M.n.p` series.
+
 ## Development
 `gigaparsec` is built with [cabal](https://www.haskell.org/cabal/).
 Use `cabal build` to build, and `cabal test` for testing.
-
-
