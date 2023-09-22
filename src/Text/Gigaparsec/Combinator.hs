@@ -77,6 +77,7 @@ optionalAs x p = p $> x <|> pure x
 decide :: Parsec (Maybe a) -> Parsec a
 decide p = p >>= maybe empty pure
 
+-- this is decide overload
 fromMaybeS :: Parsec a -> Parsec (Maybe a) -> Parsec a
 fromMaybeS q p = select (maybe (Left ()) Right <$> p) (const <$> q)
 
@@ -124,17 +125,21 @@ manyTill p end = let go = end $> [] <|> p <:> go in go
 someTill :: Parsec a -> Parsec end -> Parsec [a]
 someTill p end = notFollowedBy end *> (p <:> manyTill p end)
 
+-- this is ifP
 ifS :: Parsec Bool -> Parsec a -> Parsec a -> Parsec a
 ifS cond t e = branch (bool <$> cond) (const <$> e) (const <$> t)
   where bool True = Right ()
         bool False = Left ()
 
+-- this is when
 whenS :: Parsec Bool -> Parsec () -> Parsec ()
 whenS cond p = ifS cond p unit
 
+-- this is guard
 guardS :: Parsec Bool -> Parsec ()
 guardS cond = ifS cond unit empty
 
+-- this is whileP
 whileS :: Parsec Bool -> Parsec ()
 whileS c = let go = whenS c go in go
 
@@ -151,6 +156,7 @@ range_ 0 0 _ = unit
 range_ 0 mx p = optional (p *> range_ 0 (mx - 1) p)
 range_ mn mx p = p *> range_ (mn - 1) mx p
 
+-- this is count overloading
 countRange :: Int -> Int -> Parsec a -> Parsec Int
 countRange 0 0 _ = pure 0
 countRange 0 mx p = liftA2 (const (+ 1)) p (countRange 0 (mx - 1) p) <|> pure 0
