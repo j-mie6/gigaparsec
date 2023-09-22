@@ -18,6 +18,11 @@ jobs:
         # As such, we'll keep supporting 8.10 as an LTS of sorts for now.
         ghc: ['8.10', '9.2', '9.4', latest]
         cabal: ['3.6', latest]
+        exclude:
+            - ghc: '9.4'
+              cabal: '3.6'
+            - ghc: 'latest'
+              cabal: '3.6'
     env:
       CONFIG: "--enable-tests --enable-doc"
     steps:
@@ -58,7 +63,7 @@ jobs:
   deploy:
     name: Deploy Docs
     needs: [validate]
-    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-20.04
     strategy:
       matrix:
@@ -66,7 +71,7 @@ jobs:
         cabal: [latest]
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Setup Haskell
         uses: haskell/actions/setup@v2
