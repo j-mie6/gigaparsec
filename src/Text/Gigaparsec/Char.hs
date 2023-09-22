@@ -170,12 +170,26 @@ string s = require (not (null s)) "Text.Gigaparsec.Char.string" "cannot pass emp
 -------------------------------------------------
 
 -- Could be optimised to remove the partiality
-{-
-TODO:
+{-|
+This combinator tries to parse and process a character from the input if it is defined for the given function.
+
+Attempts to read a character from the input and tests to see if it is in the domain of @f@. If a character
+@c@ can be read and @f c@ returns a @Just@, then @c@ is consumed and @Just (f c)@ is returned. Otherwise,
+no input is consumed and this combinator will fail.
+
+==== __Examples__
+>>> let digit = satisfyMap (\c -> if isDigit c then Just (digitToInt c) else Nothing)
+>>> parse digit ""
+Failure ..
+>>> parse digit "7"
+Success 7
+>>> parse digit "a5"
+Failure ..
 
 @since 0.1.0.0
 -}
-satisfyMap :: (Char -> Maybe a) -> Parsec a
+satisfyMap :: (Char -> Maybe a) -- ^ the function to test the next character against and transform it with, should one exist.
+           -> Parsec a
 satisfyMap f = fromJust . f <$> satisfy (isJust . f)
 
 -- Use RangeSet internally?
@@ -249,16 +263,54 @@ noneOf cs
         --FIXME: control character safe show
         rangeLabel = "anything outside of " ++ show c1 ++ " to " ++ show c2
 
-{-
-TODO:
+{-|
+This combinator parses characters matching the given predicate __zero__ or more times, collecting
+the results into a string.
+
+Repeatly reads characters that satisfy the given predicate @pred@. When no more characters
+can be successfully read, the results are stitched together into a @String@ and returned.
+This combinator can never fail, since @satisfy@ can never fail having consumed input.
+
+==== __Examples__
+>>> let ident = letter <:> stringOfMany isAlphaNum
+>>> parse ident "abdc9d"
+Success "abdc9d"
+>>> parse ident "a"
+Success "a"
+>>> parser ident "9"
+Failure ..
+
+==== Notes
+* this acts exactly like @stringOfMany (satisfy pred)@, but may be more efficient.
+* analogous to the @megaparsec@ @takeWhileP@ combinator.
 
 @since 0.1.0.0
 -}
-stringOfMany :: (Char -> Bool) -> Parsec String
+stringOfMany :: (Char -> Bool) -- ^ the predicate, @pred@, to test characters against.
+             -> Parsec String  -- ^ a parser that returns the span of characters satisfying @pred@
 stringOfMany p = many (satisfy p)
 
-{-
-TODO:
+{-|
+This combinator parses characters matching the given predicate __one__ or more times, collecting
+the results into a string.
+
+Repeatly reads characters that satisfy the given predicate @pred@. When no more characters
+can be successfully read, the results are stitched together into a @String@ and returned.
+This combinator can never fail having consumed input, since @satisfy@ can never fail having
+consumed input.
+
+==== __Examples__
+>>> let ident = stringOfSome isAlpha
+>>> parse ident "abdc9d"
+Success "abdc"
+>>> parse ident "a"
+Success "a"
+>>> parser ident "9"
+Failure ..
+
+==== Notes
+* this acts exactly like @stringOfMany (satisfy pred)@, but may be more efficient.
+* analogous to the @megaparsec@ @takeWhileP@ combinator.
 
 @since 0.1.0.0
 -}
