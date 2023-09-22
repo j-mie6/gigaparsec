@@ -429,7 +429,15 @@ spaces = skipMany space
 {-|
 This parser tries to parse a whitespace character, and returns it if successful.
 
-TODO: what is whitespace?
+Whitespace is any one of the following:
+
+1. a space (@' '@)
+1. a tab (@'\t'@)
+1. a line feed (@'\n'@)
+1. a carriage return (@'\r'@)
+1. a form feed (@'\f'@)
+1. a vertical tab (@'\v'@)
+1. any other character with /General Category/ Space (@Zs@)
 
 @since 0.1.0.0
 -}
@@ -486,7 +494,13 @@ tab = char '\t' <?> ["tab"]
 {-|
 This parser tries to parse an uppercase letter, and returns it if successful.
 
-TODO: what is an uppercase letter?
+An uppercase letter is any character whose Unicode /Category Type/ is Uppercase Letter (@Lu@).
+Examples of characters within this category include:
+  * the Latin letters @'A'@ through @'Z'@
+  * Latin special character such as @'Å'@, @'Ç'@, @'Õ'@
+  * Cryillic letters
+  * Greek letters
+  * Coptic letters
 
 @since 0.1.0.0
 -}
@@ -496,7 +510,15 @@ upper = satisfy Char.isUpper <?> ["uppercase letter"]
 {-|
 This parser tries to parse an lowercase letter, and returns it if successful.
 
-TODO: what is an lowercase letter?
+A lowercase letter is any character whose Unicode /Category Type/ is Lowercase
+Letter (@Ll@).
+
+Examples of characters within this category include:
+  * the Latin letters @'a'@ through @'z'@
+  * Latin special character such as @'é'@, @'ß'@, @'ð'@
+  * Cryillic letters
+  * Greek letters
+  * Coptic letters
 
 @since 0.1.0.0
 -}
@@ -516,7 +538,13 @@ letterOrDigit = satisfy Char.isAlphaNum <?> ["alpha-numeric character"]
 {-|
 This parser tries to parse a letter, and returns it if successful.
 
-TODO: what is a letter?
+A letter is a character within the following Unicode General Categories:
+
+1. Uppercase Letter (@Lu@)
+1. Lowercase Letter (@Ll@)
+1. Titlecase Letter (@Lt@)
+1. Modifier Letter (@Lm@)
+1. Other Letter (@Lo@)
 
 @since 0.1.0.0
 -}
