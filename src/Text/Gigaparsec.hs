@@ -220,15 +220,15 @@ manyl :: (b -> a -> b) -> b -> Parsec a -> Parsec b
 manyl f k = _repl f (pure k)
 
 manyr :: (a -> b -> b) -> b -> Parsec a -> Parsec b
-manyr f k p = let go = f <$> p <*> go <|> pure k in go
+manyr f k p = let go = liftA2 f p go <|> pure k in go
 
 somel :: (b -> a -> b) -> b -> Parsec a -> Parsec b
 somel f k p = _repl f (f k <$> p) p
 
 _repl :: (b -> a -> b) -> Parsec b -> Parsec a -> Parsec b
-_repl f k p = k <**> (let go = (\x next acc -> next (f acc x)) <$> p <*> go
+_repl f k p = k <**> (let go = liftA2 (\x next acc -> next (f acc x)) p go
                              <|> pure id
                       in go)
 
 somer :: (a -> b -> b) -> b -> Parsec a -> Parsec b
-somer f k p = f <$> p <*> manyr f k p
+somer f k p = liftA2 f p (manyr f k p)
