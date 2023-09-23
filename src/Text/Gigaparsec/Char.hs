@@ -432,12 +432,12 @@ This parser tries to parse a whitespace character, and returns it if successful.
 Whitespace is any one of the following:
 
 1. a space (@' '@)
-1. a tab (@'\t'@)
-1. a line feed (@'\n'@)
-1. a carriage return (@'\r'@)
-1. a form feed (@'\f'@)
-1. a vertical tab (@'\v'@)
-1. any other character with /General Category/ Space (@Zs@)
+2. a tab (@'\t'@)
+3. a line feed (@'\n'@)
+4. a carriage return (@'\r'@)
+5. a form feed (@'\f'@)
+6. a vertical tab (@'\v'@)
+7. any other character with /General Category/ Space (@Zs@)
 
 @since 0.1.0.0
 -}

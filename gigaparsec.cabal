@@ -111,6 +111,7 @@ test-suite gigaparsec-test
     -- Modules included in this executable, other than Main.
     other-modules: Text.Gigaparsec.PrimitiveTests,
                    Text.Gigaparsec.CharTests,
+                   Text.Gigaparsec.CombinatorTests,
                    Text.Gigaparsec.Internal.Test
 
     ghc-options: -Wno-missing-export-lists -Wno-missing-safe-haskell-mode -Wno-safe
