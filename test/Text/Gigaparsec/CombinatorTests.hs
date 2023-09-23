@@ -4,7 +4,7 @@ module Text.Gigaparsec.CombinatorTests where
 import Test.Tasty
 import Test.Tasty.HUnit
 
---import Control.Monad
+import Control.Monad
 
 import Text.Gigaparsec
 import Text.Gigaparsec.Char
@@ -88,11 +88,25 @@ optionalTests = testGroup "optional should"
 
 manyNTests :: TestTree
 manyNTests = testGroup "manyN should"
-  []
+  [ testCase "ensure that n are parsed" do
+      forM_ [0..10] \n -> do
+        parse (manyN n item) (replicate n 'a') @?= Success (replicate n 'a')
+        ensureFails (manyN (n + 1) item) (replicate n 'a')
+  , testCase "not care if more are present" do
+      forM_ [0..10] \n ->
+        parse (manyN n item) (replicate (n + 1) 'a') @?= Success (replicate (n + 1) 'a')
+  ]
 
 skipManyNTests :: TestTree
 skipManyNTests = testGroup "skipManyN should"
-  []
+  [ testCase "ensure that n are parsed" do
+      forM_ [0..10] \n -> do
+        parse (skipManyN n item) (replicate n 'a') @?= Success ()
+        ensureFails (skipManyN (n + 1) item) (replicate n 'a')
+  , testCase "not care if more are present" do
+      forM_ [0..10] \n ->
+        parse (skipManyN n item) (replicate (n + 1) 'a') @?= Success ()
+  ]
 
 sepByTests :: TestTree
 sepByTests = testGroup "sepBy should"

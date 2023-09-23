@@ -54,7 +54,7 @@ module Text.Gigaparsec.Combinator (
     ifS, whenS, guardS, whileS,
   ) where
 
-import Text.Gigaparsec (Parsec, void, many, some, (<|>), ($>), (<:>), select,
+import Text.Gigaparsec (Parsec, many, some, (<|>), ($>), (<:>), select,
                         branch, empty, unit, manyl, somel, notFollowedBy, liftA2)
 import Data.Foldable (asum, sequenceA_)
 
@@ -83,16 +83,18 @@ fromMaybeS q p = select (maybe (Left ()) Right <$> p) (const <$> q)
 
 manyN :: Int -> Parsec a -> Parsec [a]
 manyN 0 p = many p
+manyN 1 p = some p
 manyN n p = p <:> manyN (n - 1) p
 
 skipMany :: Parsec a -> Parsec ()
-skipMany = void . many
+skipMany p = let go = p *> go <|> unit in go
 
 skipSome :: Parsec a -> Parsec ()
-skipSome = void . some
+skipSome p = p *> skipMany p
 
 skipManyN :: Int -> Parsec a -> Parsec ()
 skipManyN 0 p = skipMany p
+skipManyN 1 p = skipSome p
 skipManyN n p = p *> skipManyN (n - 1) p
 
 count :: Parsec a -> Parsec Int
