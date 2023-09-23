@@ -72,7 +72,7 @@ module Text.Gigaparsec (
   -- or the first successful result is the initial accumulator (for the reduces). These are
   -- implemented efficiently and do not need to construct any intermediate list with which to store
   -- the results.
-    many, some, -- TODO: these need to be properly categorised
+    many, some, manyl, manyr, somel, somer, -- TODO: these need to be properly categorised
   ) where
 
 -- NOTE:
@@ -82,7 +82,7 @@ module Text.Gigaparsec (
 -- Care MUST be taken to not expose /any/ implementation details from
 -- `Internal`: when they are in the public API, we are locked into them!
 
-import Text.Gigaparsec.Internal (Parsec(Parsec), emptyState)
+import Text.Gigaparsec.Internal (Parsec(Parsec), emptyState, manyr, somer)
 import Text.Gigaparsec.Internal qualified as Internal.State (State(..))
 import Text.Gigaparsec.Internal.RT (runRT)
 
@@ -215,3 +215,12 @@ infixl 4 <:>
 infixl 3 <+>
 (<+>) :: Parsec a -> Parsec b -> Parsec (Either a b)
 p <+> q = Left <$> p <|> Right <$> q
+
+manyl :: (b -> a -> b) -> b -> Parsec a -> Parsec b
+manyl f k = _repl f (pure k)
+
+somel :: (b -> a -> b) -> b -> Parsec a -> Parsec b
+somel f k p = _repl f (f k <$> p) p
+
+_repl :: (b -> a -> b) -> Parsec b -> Parsec a -> Parsec b
+_repl f k p = k <**> manyr (\x next !acc -> next (f acc x)) id p

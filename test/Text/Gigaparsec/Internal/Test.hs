@@ -10,7 +10,7 @@ import Text.Gigaparsec.Internal
 import Text.Gigaparsec.Internal.RT
 
 import Control.Exception (catches, evaluate, Exception, SomeException(..), Handler(..), throwIO)
-import Control.Monad (unless)
+import Control.Monad (unless, forM_)
 import Type.Reflection (typeOf, typeRep)
 
 -- don't @ me
@@ -44,7 +44,7 @@ pureParse p = do
 -- TODO: could we use quick-check to generate states?
 -- | Tests to ensure that running the parser on the given string does something to the state
 impureParseWith :: HasCallStack => Parsec a -> String -> Assertion
-impureParseWith (Parsec p) inp = do
+impureParseWith p inp = do
   run initSt
   --run (initSt { consumed = True })
   run (initSt { line = 10, col = 20 })
@@ -52,7 +52,7 @@ impureParseWith (Parsec p) inp = do
   where initSt = emptyState inp
         run :: State -> Assertion
         run st = do
-          let st' = runRT (p st (\ !_ -> return) return)
+          let st' = parseState p st
           assertBool (show st ++ " should be altered") (st' /= st)
 
 -- TODO: could we use quick-check to generate inputs?
@@ -79,3 +79,19 @@ throws x = do
     , Handler $ \ (SomeException ex) -> assertFailure ("expected: " ++ show (typeRep @e) ++ "\n"
                                                     ++ " but got: " ++ show (typeOf ex))
     ]
+
+-- TODO: we want result/error comparison later down the line
+(~~) :: HasCallStack => Parsec a -> Parsec a -> [String] -> Assertion
+(p ~~ q) inps =
+  forM_ inps $ \inp -> do
+    let st = emptyState inp
+        pSt = parseState p st
+        qSt = parseState q st
+    unless (pSt == qSt) $
+      assertFailure ("expected both parsers have the same effect on the state"
+                  ++ "\ninitial state: " ++ show st
+                  ++ "\n          got: " ++ show pSt
+                  ++ "\n     expected: " ++ show qSt)
+
+parseState :: Parsec a -> State -> State
+parseState (Parsec p) st = runRT (p st (\ !_ -> return) return)
