@@ -82,7 +82,7 @@ module Text.Gigaparsec (
 -- Care MUST be taken to not expose /any/ implementation details from
 -- `Internal`: when they are in the public API, we are locked into them!
 
-import Text.Gigaparsec.Internal (Parsec(Parsec), emptyState)
+import Text.Gigaparsec.Internal (Parsec(Parsec), emptyState, manyr, somer)
 import Text.Gigaparsec.Internal qualified as Internal.State (State(..))
 import Text.Gigaparsec.Internal.RT (runRT)
 
@@ -219,16 +219,8 @@ p <+> q = Left <$> p <|> Right <$> q
 manyl :: (b -> a -> b) -> b -> Parsec a -> Parsec b
 manyl f k = _repl f (pure k)
 
-manyr :: (a -> b -> b) -> b -> Parsec a -> Parsec b
-manyr f k p = let go = liftA2 f p go <|> pure k in go
-
 somel :: (b -> a -> b) -> b -> Parsec a -> Parsec b
 somel f k p = _repl f (f k <$> p) p
 
 _repl :: (b -> a -> b) -> Parsec b -> Parsec a -> Parsec b
-_repl f k p = k <**> (let go = liftA2 (\x next acc -> next (f acc x)) p go
-                             <|> pure id
-                      in go)
-
-somer :: (a -> b -> b) -> b -> Parsec a -> Parsec b
-somer f k p = liftA2 f p (manyr f k p)
+_repl f k p = k <**> manyr (\x next !acc -> next (f acc x)) id p

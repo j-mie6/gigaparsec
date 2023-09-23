@@ -123,15 +123,23 @@ instance Alternative Parsec where
     in  p (st { consumed = False }) ok' err'
 
   many :: Parsec a -> Parsec [a]
-  many p = let go = liftA2 (:) p go <|> pure [] in go
+  many = manyr (:) []
 
   some :: Parsec a -> Parsec [a]
-  some p = liftA2 (:) p (many p)
+  some = somer (:) []
 
   {-# INLINE empty #-}
   {-# INLINE (<|>) #-}
   {-# INLINE many #-}
   {-# INLINE some #-}
+
+{-# INLINE manyr #-}
+manyr :: (a -> b -> b) -> b -> Parsec a -> Parsec b
+manyr f k p = let go = liftA2 f p go <|> pure k in go
+
+{-# INLINE somer #-}
+somer :: (a -> b -> b) -> b -> Parsec a -> Parsec b
+somer f k p = liftA2 f p (manyr f k p)
 
 instance Semigroup m => Semigroup (Parsec m) where
   (<>) :: Parsec m -> Parsec m -> Parsec m

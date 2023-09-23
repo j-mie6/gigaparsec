@@ -146,20 +146,32 @@ whileS :: Parsec Bool -> Parsec ()
 whileS c = let go = whenS c go in go
 
 exactly :: Int -> Parsec a -> Parsec [a]
-exactly n p = traverse (const p) [1..n]
+exactly n = range n n
 
 range :: Int -> Int -> Parsec a -> Parsec [a]
-range 0 0 _ = pure []
-range 0 mx p = p <:> range 0 (mx - 1) p <|> pure []
-range mn mx p = p <:> range (mn - 1) mx p
+range mn mx p
+  | mn < 0 || mx < mn = pure []
+  | otherwise = go mn mx
+  where
+    go 0 0 = pure []
+    go 0 n = p <:> go 0 (n - 1) <|> pure []
+    go m n = p <:> go (m - 1) (n - 1)
 
 range_ :: Int -> Int -> Parsec a -> Parsec ()
-range_ 0 0 _ = unit
-range_ 0 mx p = optional (p *> range_ 0 (mx - 1) p)
-range_ mn mx p = p *> range_ (mn - 1) mx p
+range_ mn mx p
+  | mn < 0 || mx < mn = unit
+  | otherwise = go mn mx
+  where
+    go 0 0 = unit
+    go 0 n = optional (p *> go 0 (n - 1))
+    go m n = p *> go (m - 1) (n - 1)
 
 -- this is count overloading
 countRange :: Int -> Int -> Parsec a -> Parsec Int
-countRange 0 0 _ = pure 0
-countRange 0 mx p = liftA2 (const (+ 1)) p (countRange 0 (mx - 1) p) <|> pure 0
-countRange mn mx p = liftA2 (const (+ 1)) p (countRange (mn - 1) mx p)
+countRange mn mx p
+  | mn < 0 || mx < mn = pure 0
+  | otherwise = go mn mx
+  where
+    go 0 0 = pure 0
+    go 0 n = liftA2 (const (+ 1)) p (go 0 (n - 1)) <|> pure 0
+    go m n = liftA2 (const (+ 1)) p (go (m - 1) (n - 1))
