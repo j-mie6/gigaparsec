@@ -1,10 +1,11 @@
 {-# LANGUAGE Safe #-}
 {-# LANGUAGE GADTs #-}
-module Text.Gigaparsec.Expr.Prec (module Text.Gigaparsec.Expr.Prec) where
+module Text.Gigaparsec.Expr (module Text.Gigaparsec.Expr) where
 
 import Text.Gigaparsec (Parsec)
 import Text.Gigaparsec.Combinator (choice)
 import Text.Gigaparsec.Expr.Infix (infixl1, infixr1, infixn1, prefix, postfix)
+import Text.Gigaparsec.Expr.Subtype (Subtype(upcast))
 
 import Data.List (foldl')
 
@@ -51,6 +52,5 @@ gops fixity wrap = Op fixity wrap . choice
 ops :: Fixity a a sig -> [Parsec sig] -> Op a a
 ops fixity = gops fixity id
 
--- TODO:
---sops :: Subtype a b => Fixity a b sig -> [Parsec sig] -> Op a b
---sops fixity = gops fixity upcast
+sops :: Subtype a b => Fixity a b sig -> [Parsec sig] -> Op a b
+sops fixity = gops fixity upcast
