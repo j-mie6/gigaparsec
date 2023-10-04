@@ -79,6 +79,8 @@ library
                       Text.Gigaparsec.Combinator,
                       Text.Gigaparsec.Combinator.NonEmpty,
                       Text.Gigaparsec.Errors.Combinator,
+                      Text.Gigaparsec.Expr.Chain,
+                      Text.Gigaparsec.Expr.Infix,
                       Text.Gigaparsec.Registers,
 
                       -- Internals
