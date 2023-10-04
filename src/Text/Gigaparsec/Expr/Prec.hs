@@ -6,6 +6,8 @@ import Text.Gigaparsec (Parsec)
 import Text.Gigaparsec.Combinator (choice)
 import Text.Gigaparsec.Expr.Infix (infixl1, infixr1, infixn1, prefix, postfix)
 
+import Data.List (foldl')
+
 type Fixity :: * -> * -> * -> *
 data Fixity a b sig where
   InfixL  :: Fixity a b (b -> a -> b)
@@ -40,6 +42,9 @@ precedence (Level lvls lvl) = con (precedence lvls) lvl
         con p (Op Prefix wrap op) = prefix wrap op p
         con p (Op Postfix wrap op) = postfix wrap p op
 
+precedence' :: Parsec a -> [Op a a] -> Parsec a
+precedence' atom = precedence . foldl' (>+) (Atom atom)
+
 gops :: Fixity a b sig -> (a -> b) -> [Parsec sig] -> Op a b
 gops fixity wrap = Op fixity wrap . choice
 
@@ -47,5 +52,5 @@ ops :: Fixity a a sig -> [Parsec sig] -> Op a a
 ops fixity = gops fixity id
 
 -- TODO:
---sops :: Sub a b => Fixity a b sig -> [Parsec sig] -> Op a b
+--sops :: Subtype a b => Fixity a b sig -> [Parsec sig] -> Op a b
 --sops fixity = gops fixity upcast
