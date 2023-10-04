@@ -81,6 +81,7 @@ library
                       Text.Gigaparsec.Errors.Combinator,
                       Text.Gigaparsec.Expr.Chain,
                       Text.Gigaparsec.Expr.Infix,
+                      Text.Gigaparsec.Expr.Prec,
                       Text.Gigaparsec.Registers,
 
                       -- Internals
