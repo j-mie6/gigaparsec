@@ -1,4 +1,3 @@
-{-# LANGUAGE BlockArguments #-}
 module Text.Gigaparsec.CombinatorTests where
 
 import Test.Tasty

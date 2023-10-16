@@ -1,4 +1,3 @@
-{-# LANGUAGE BlockArguments #-}
 {-# OPTIONS_GHC -Wno-unrecognised-pragmas #-}
 {-# HLINT ignore "Alternative law, right identity" #-}
 {-# HLINT ignore "Alternative law, left identity" #-}

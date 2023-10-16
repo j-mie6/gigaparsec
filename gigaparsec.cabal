@@ -109,6 +109,8 @@ library
 test-suite gigaparsec-test
     import:           warnings, extensions, base
 
+    default-extensions: OverloadedStrings, TypeOperators, BlockArguments, GADTs
+
     -- Base language which the package is written in.
     default-language: Haskell2010
 
@@ -123,7 +125,7 @@ test-suite gigaparsec-test
 
     ghc-options: -Wno-missing-export-lists -Wno-missing-safe-haskell-mode -Wno-safe
                  -Wno-missing-import-lists -Wno-all-missed-specialisations -Wno-type-defaults
-                 -Wno-missing-kind-signatures
+                 -Wno-missing-kind-signatures -Wno-orphans -Wno-monomorphism-restriction
 
     -- The interface type and version of the test suite.
     type:             exitcode-stdio-1.0

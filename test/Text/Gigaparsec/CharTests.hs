@@ -1,4 +1,4 @@
-{-# LANGUAGE OverloadedLists, BlockArguments #-}
+{-# LANGUAGE OverloadedLists #-}
 module Text.Gigaparsec.CharTests where
 
 import Test.Tasty

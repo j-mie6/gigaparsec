@@ -1,17 +1,16 @@
-{-# LANGUAGE OverloadedStrings, TypeOperators, BlockArguments, GADTs #-}
-{-# OPTIONS_GHC -Wno-orphans #-}
 module Text.Gigaparsec.Expr.ChainTests where
 
 import Test.Tasty
 import Test.Tasty.HUnit
 
 import Text.Gigaparsec
-import Text.Gigaparsec.Char (string)
+import Text.Gigaparsec.Char (string, digit)
 import Text.Gigaparsec.Expr.Chain
 
 import Text.Gigaparsec.Internal.Test (parseAll, ensureFails)
 
 import Data.String
+import Data.Char (digitToInt)
 
 instance s ~ String => IsString (Parsec s) where fromString = string
 
@@ -72,16 +71,50 @@ prefix1Tests = testGroup "prefix1 should"
 chainr1Tests :: TestTree
 chainr1Tests = testGroup "chainr1 should"
   [ testCase "require an initial value" do
-      parseAll (chainr1 ("11" $> 1) ("+" $> (+))) "11" @?= Success 1
-      ensureFails (chainr1 ("11" $> 1) ("+" $> (+))) "1"
-      ensureFails (chainr1 ("11" $> 1) ("+" $> (+))) "2"
+      let p = chainr1 ("11" $> 1) ("+" $> (+))
+      parseAll p "11" @?= Success 1
+      ensureFails p "1"
+      ensureFails p "2"
+  , testCase "parse all operators and values that follow" do
+      parseAll (chainr1 ("11" $> 1) ("+" $> (+))) "11+11+11+11+11" @?= Success 5
+  , testCase "apply the functions with the correct associativity" do
+      parseAll (chainr1 (digitToInt <$> digit) ("%" $> mod)) "6%5%2%7" @?= Success 0
+  , testCase "fail if an operator or p fails after consuming input" do
+      let p = chainr1 ("11" $> 1) ("++" $> (+))
+      ensureFails p "11+11+11+11+11"
+      ensureFails p "11++11++11++1++11"
   ]
 
 chainrTests :: TestTree
-chainrTests = testGroup "chainr should" []
+chainrTests = testGroup "chainr should"
+  [ testCase "allow for no initial value" do
+      let p = chainr ("11" $> 1) ("+" $> (+)) 0
+      parseAll p "" @?= Success 0
+      ensureFails p "1"
+  ]
 
 chainl1Tests :: TestTree
-chainl1Tests = testGroup "chainl1 should" []
+chainl1Tests = testGroup "chainl1 should"
+  [ testCase "require an initial value" do
+      let p = chainl1 ("11" $> 1) ("+" $> (+))
+      parseAll p "11" @?= Success 1
+      ensureFails p "1"
+      ensureFails p "2"
+  , testCase "parse all operators and values that follow" do
+      parseAll (chainl1 ("11" $> 1) ("+" $> (+))) "11+11+11+11+11" @?= Success 5
+  , testCase "apply the functions with the correct associativity" do
+      parseAll (chainl1 (digitToInt <$> digit) ("%" $> mod)) "6%5%2%7" @?= Success 1
+  , testCase "fail if an operator or p fails after consuming input" do
+      let p = chainl1 ("11" $> 1) ("++" $> (+))
+      ensureFails p "11+11+11+11+11"
+      ensureFails p "11++11++11++1++11"
+  ]
 
 chainlTests :: TestTree
-chainlTests = testGroup "chainl should" []
+chainlTests = testGroup "chainl should"
+  [ testCase "allow for no initial value" do
+      let p = chainl ("11" $> 1) ("+" $> (+)) 0
+      parseAll p "" @?= Success 0
+      ensureFails p "1"
+      parse p "2" @?= Success 0
+  ]

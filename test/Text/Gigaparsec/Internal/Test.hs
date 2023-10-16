@@ -1,6 +1,5 @@
 -- A collection of test helpers
 {-# LANGUAGE StandaloneDeriving, AllowAmbiguousTypes #-}
-{-# OPTIONS_GHC -Wno-orphans #-}
 module Text.Gigaparsec.Internal.Test where
 
 import Test.Tasty.HUnit
