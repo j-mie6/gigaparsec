@@ -17,6 +17,9 @@ import Type.Reflection (typeOf, typeRep)
 deriving stock instance Eq State
 deriving stock instance Show State
 
+parseAll :: Parsec a -> String -> Result a
+parseAll p inp = parse (p <* eof) inp
+
 -- TODO: could we use quick-check to generate states?
 -- | Tests to ensure that running the parser on the given string does nothing to the state
 pureParseWith :: HasCallStack => Parsec a -> String -> Assertion

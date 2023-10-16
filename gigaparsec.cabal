@@ -116,6 +116,9 @@ test-suite gigaparsec-test
     other-modules: Text.Gigaparsec.PrimitiveTests,
                    Text.Gigaparsec.CharTests,
                    Text.Gigaparsec.CombinatorTests,
+                   Text.Gigaparsec.ExprTests,
+                   Text.Gigaparsec.Expr.ChainTests,
+                   Text.Gigaparsec.Expr.InfixTests,
                    Text.Gigaparsec.Internal.Test
 
     ghc-options: -Wno-missing-export-lists -Wno-missing-safe-haskell-mode -Wno-safe
