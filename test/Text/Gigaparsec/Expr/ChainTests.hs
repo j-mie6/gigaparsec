@@ -1,4 +1,4 @@
-{-# LANGUAGE OverloadedStrings, TypeOperators, BlockArguments #-}
+{-# LANGUAGE OverloadedStrings, TypeOperators, BlockArguments, GADTs #-}
 {-# OPTIONS_GHC -Wno-orphans #-}
 module Text.Gigaparsec.Expr.ChainTests where
 
