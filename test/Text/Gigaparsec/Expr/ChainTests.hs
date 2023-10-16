@@ -4,15 +4,13 @@ import Test.Tasty
 import Test.Tasty.HUnit
 
 import Text.Gigaparsec
-import Text.Gigaparsec.Char (string, digit)
+import Text.Gigaparsec.Char (digit)
 import Text.Gigaparsec.Expr.Chain
 
 import Text.Gigaparsec.Internal.Test (parseAll, ensureFails)
+import Text.Gigaparsec.Internal.PlainString ()
 
-import Data.String
 import Data.Char (digitToInt)
-
-instance s ~ String => IsString (Parsec s) where fromString = string
 
 tests :: TestTree
 tests = testGroup "Chain"

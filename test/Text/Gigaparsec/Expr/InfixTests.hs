@@ -4,14 +4,10 @@ import Test.Tasty
 import Test.Tasty.HUnit
 
 import Text.Gigaparsec
-import Text.Gigaparsec.Char (string)
 import Text.Gigaparsec.Expr.Infix
 
 import Text.Gigaparsec.Internal.Test (parseAll)
-
-import Data.String
-
-instance s ~ String => IsString (Parsec s) where fromString = string
+import Text.Gigaparsec.Internal.PlainString ()
 
 data Expr = Add Int Expr | Sub Expr Int | Num Int deriving stock (Eq, Show)
 

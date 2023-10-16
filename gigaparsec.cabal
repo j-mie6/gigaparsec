@@ -121,7 +121,8 @@ test-suite gigaparsec-test
                    Text.Gigaparsec.ExprTests,
                    Text.Gigaparsec.Expr.ChainTests,
                    Text.Gigaparsec.Expr.InfixTests,
-                   Text.Gigaparsec.Internal.Test
+                   Text.Gigaparsec.Internal.Test,
+                   Text.Gigaparsec.Internal.PlainString
 
     ghc-options: -Wno-missing-export-lists -Wno-missing-safe-haskell-mode -Wno-safe
                  -Wno-missing-import-lists -Wno-all-missed-specialisations -Wno-type-defaults
