@@ -79,6 +79,10 @@ library
                       Text.Gigaparsec.Combinator,
                       Text.Gigaparsec.Combinator.NonEmpty,
                       Text.Gigaparsec.Errors.Combinator,
+                      Text.Gigaparsec.Expr,
+                      Text.Gigaparsec.Expr.Chain,
+                      Text.Gigaparsec.Expr.Infix,
+                      Text.Gigaparsec.Expr.Subtype,
                       Text.Gigaparsec.Registers,
 
                       -- Internals
@@ -105,6 +109,8 @@ library
 test-suite gigaparsec-test
     import:           warnings, extensions, base
 
+    default-extensions: OverloadedStrings, TypeOperators, BlockArguments, GADTs
+
     -- Base language which the package is written in.
     default-language: Haskell2010
 
@@ -112,11 +118,15 @@ test-suite gigaparsec-test
     other-modules: Text.Gigaparsec.PrimitiveTests,
                    Text.Gigaparsec.CharTests,
                    Text.Gigaparsec.CombinatorTests,
-                   Text.Gigaparsec.Internal.Test
+                   Text.Gigaparsec.ExprTests,
+                   Text.Gigaparsec.Expr.ChainTests,
+                   Text.Gigaparsec.Expr.InfixTests,
+                   Text.Gigaparsec.Internal.Test,
+                   Text.Gigaparsec.Internal.PlainString
 
     ghc-options: -Wno-missing-export-lists -Wno-missing-safe-haskell-mode -Wno-safe
                  -Wno-missing-import-lists -Wno-all-missed-specialisations -Wno-type-defaults
-                 -Wno-missing-kind-signatures
+                 -Wno-missing-kind-signatures -Wno-orphans -Wno-monomorphism-restriction
 
     -- The interface type and version of the test suite.
     type:             exitcode-stdio-1.0
