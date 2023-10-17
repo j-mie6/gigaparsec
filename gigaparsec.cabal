@@ -27,7 +27,11 @@ synopsis:
     Refreshed parsec-style library for compatiblity with Scala parsley
 
 -- A longer description of the package.
--- description:
+description:
+    This is a monadic parser combinator designed to be easy to use,
+    especially for beginners, and have API parity with the
+    @[parsley](https://github.com/j-mie6/parsley)@ library. It supports
+    design patterns introduced in /Design Patterns for Parser Combinators/.
 
 -- URL for the project homepage or repository.
 homepage:           https://github.com/j-mie6/gigaparsec
@@ -52,6 +56,7 @@ build-type:         Simple
 -- Extra doc files to be distributed with the package, such as a CHANGELOG or a README.
 -- Don't add README.md here, because it contains stuff specific to the repo itself
 extra-doc-files:    CHANGELOG.md
+stability:          alpha
 
 -- Extra source files to be distributed with the package, such as examples, or a tutorial module.
 -- extra-source-files:
@@ -92,7 +97,7 @@ library
 
     -- this can probably be loosened?
     build-depends:    containers >= 0.6 && < 0.7,
-                      selective
+                      selective >= 0.6 && < 0.8
 
     -- Modules included in this library but not exported.
     -- other-modules:
@@ -140,10 +145,10 @@ test-suite gigaparsec-test
     -- Test dependencies.
     build-depends:
         gigaparsec,
-        containers,
-        tasty,
+        containers >= 0.6 && < 0.7,
+        tasty >=1.1 && <1.6,
         --tasty-expected-failure,
-        tasty-hunit
+        tasty-hunit >=0.9 && <0.11
         --TODO: property based testing will be useful when we optimise combinators
         --      to test against their base implementations
         --tasty-quickcheck
