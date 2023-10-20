@@ -155,7 +155,7 @@ data State = State {
     -- | the input string, in future this may be generalised
     input :: !String,
     -- | has the parser consumed input since the last relevant handler?
-    consumed :: !Int, -- this could be an Int offset instead, perhaps?
+    consumed :: {-# UNPACK #-} !Int,
     -- | the current line number (incremented by \n)
     line :: {-# UNPACK #-} !Int,
     -- | the current column number (have to settle on a tab handling scheme)
