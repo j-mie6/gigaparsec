@@ -169,8 +169,8 @@ benchmark perf-test
     hs-source-dirs:  benchmarks
     build-depends:
         gigaparsec,
-        containers >= 0.6 && < 0.7,
+        --containers >= 0.6 && < 0.7,
         gauge >= 0.1 && < 0.3,
-        deepseq
+        deepseq >= 1.4 && < 1.6
 
     main-is:          Main.hs
