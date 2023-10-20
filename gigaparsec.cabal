@@ -92,6 +92,7 @@ library
 
                       -- Internals
                       Text.Gigaparsec.Internal,
+                      Text.Gigaparsec.Internal.Errors,
                       Text.Gigaparsec.Internal.RT,
                       Text.Gigaparsec.Internal.Require
 

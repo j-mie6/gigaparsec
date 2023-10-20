@@ -1,9 +1,21 @@
 {-# LANGUAGE Safe #-}
-module Text.Gigaparsec.Errors.Combinator (module Text.Gigaparsec.Errors.Combinator) where
+{-# OPTIONS_GHC -Wno-missing-import-lists #-}
+module Text.Gigaparsec.Errors.Combinator (
+    label, (<?>),
+    emptyWide,
+    fail, failWide,
+    unexpected, unexpectedWide,
+    amend, partialAmend, entrench, dislodge, dislodgeBy,
+    amendThenDislodge, amendThenDislodgeBy, partialAmendThenDislodge, partialAmendThenDislodgeBy,
+    markAsToken
+  ) where
 
-import Text.Gigaparsec (Parsec)
+import Prelude hiding (fail)
+
+import Text.Gigaparsec (Parsec, empty)
 -- We want to use this to make the docs point to the right definition for users.
 --import Text.Gigaparsec.Internal qualified as Internal (Parsec(Parsec))
+import Text.Gigaparsec.Internal.Errors (CaretWidth(FlexibleCaret, RigidCaret))
 import Text.Gigaparsec.Internal.Require (require)
 
 import Data.Set (Set)
@@ -12,6 +24,58 @@ import Data.Set (Set)
 label :: Set String -> Parsec a -> Parsec a
 label ls =
   require (not (any null ls)) "Text.Gigaparsec.Errors.Combinator.label" "labels cannot be empty" id --TODO:
+
+emptyWide :: Int -> Parsec a
+emptyWide _ = empty --TODO:
+
+fail :: [String] -> Parsec a
+fail = _fail "Text.Gigaparsec.Errors.Combinator.fail" (FlexibleCaret 1)
+
+failWide :: Int -> [String] -> Parsec a
+failWide = _fail "Text.Gigaparsec.Errors.Combinator.failWide" . RigidCaret
+
+_fail :: String -> CaretWidth -> [String] -> Parsec a
+_fail name _ msgs =
+  require (not (null msgs)) name "messages cannot be empty" empty --TODO:
+
+unexpected :: String -> Parsec a
+unexpected = _unexpected (FlexibleCaret 1)
+
+unexpectedWide :: Int -> String -> Parsec a
+unexpectedWide = _unexpected . RigidCaret
+
+_unexpected :: CaretWidth -> String -> Parsec a
+_unexpected _ _ = empty --TODO:
+
+amend :: Parsec a -> Parsec a
+amend = id --TODO:
+
+partialAmend :: Parsec a -> Parsec a
+partialAmend = id --TODO:
+
+entrench :: Parsec a -> Parsec a
+entrench = id --TODO:
+
+dislodge :: Parsec a -> Parsec a
+dislodge = dislodgeBy maxBound --TODO:
+
+dislodgeBy :: Int -> Parsec a -> Parsec a
+dislodgeBy _ = id --TODO:
+
+amendThenDislodge :: Parsec a -> Parsec a
+amendThenDislodge = dislodge . amend
+
+amendThenDislodgeBy :: Int -> Parsec a -> Parsec a
+amendThenDislodgeBy n = dislodgeBy n . amend
+
+partialAmendThenDislodge :: Parsec a -> Parsec a
+partialAmendThenDislodge = dislodge . partialAmend
+
+partialAmendThenDislodgeBy :: Int -> Parsec a -> Parsec a
+partialAmendThenDislodgeBy n = dislodgeBy n . partialAmend
+
+markAsToken :: Parsec a -> Parsec a
+markAsToken = id --TODO:
 
 {-# INLINE (<?>) #-}
 infix 0 <?>
