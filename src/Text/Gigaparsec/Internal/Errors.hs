@@ -1,4 +1,5 @@
 {-# LANGUAGE Safe #-}
+{-# LANGUAGE RecordWildCards #-}
 {-# OPTIONS_GHC -Wno-partial-fields -Wno-all-missed-specialisations #-}
 {-# OPTIONS_HADDOCK hide #-}
 module Text.Gigaparsec.Internal.Errors (module Text.Gigaparsec.Internal.Errors) where
@@ -6,7 +7,7 @@ module Text.Gigaparsec.Internal.Errors (module Text.Gigaparsec.Internal.Errors) 
 import Data.List.NonEmpty (NonEmpty)
 import Data.Set (Set)
 
-import Text.Gigaparsec.Errors.ErrorBuilder (formatDefault, formatPosDefault)
+import Text.Gigaparsec.Errors.ErrorBuilder (formatDefault, formatPosDefault, vanillaErrorDefault, specialisedErrorDefault, combineMessagesDefault)
 
 type CaretWidth :: *
 data CaretWidth = FlexibleCaret { width :: {-# UNPACK #-} !Word }
@@ -53,4 +54,6 @@ data ExpectItem = ExpectRaw !String
 
 instance Show ParseError where
   show err = formatDefault (formatPosDefault (line err) (col err)) Nothing
-                           [] -- TODO:
+                           (formatErr err)
+    where formatErr VanillaError{..} = vanillaErrorDefault Nothing Nothing (combineMessagesDefault reasons) []
+          formatErr SpecialisedError{..} = specialisedErrorDefault (combineMessagesDefault msgs) []

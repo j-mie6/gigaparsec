@@ -8,6 +8,8 @@ import Prelude hiding (lines)
 import Data.Monoid (Endo(Endo))
 import Data.String (IsString(fromString))
 import Data.List (intersperse)
+import Data.Maybe (mapMaybe)
+import Data.Foldable (toList)
 
 -- For now, this is the home of the default formatting functions
 
@@ -27,6 +29,23 @@ from = StringBuilder . shows
 formatDefault :: StringBuilder -> Maybe StringBuilder -> [StringBuilder] -> String
 formatDefault pos source lines = toString (blockError header lines 2)
   where header = maybe mempty (\src -> "In " <> src <> " ") source <> pos
+
+vanillaErrorDefault :: Foldable t => Maybe StringBuilder -> Maybe StringBuilder -> t StringBuilder -> [StringBuilder] -> [StringBuilder]
+vanillaErrorDefault unexpected expected reasons =
+  combineInfoWithLines (maybe id (:) unexpected (maybe id (:) expected (toList reasons)))
+
+specialisedErrorDefault :: [StringBuilder] -> [StringBuilder] -> [StringBuilder]
+specialisedErrorDefault = combineInfoWithLines
+
+combineInfoWithLines :: [StringBuilder] -> [StringBuilder] -> [StringBuilder]
+combineInfoWithLines [] lines = "unknown parse error" : lines
+combineInfoWithLines info lines = info ++ lines
+
+messageDefault :: String -> String
+messageDefault = id
+
+combineMessagesDefault :: Foldable t => t String -> [StringBuilder]
+combineMessagesDefault = mapMaybe (\msg -> if null msg then Nothing else Just (fromString msg)) . toList
 
 blockError :: StringBuilder -> [StringBuilder] -> Int -> StringBuilder
 blockError header lines indent = header <> ":\n" <> indentAndUnlines lines indent
