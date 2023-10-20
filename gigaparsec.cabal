@@ -84,6 +84,7 @@ library
                       Text.Gigaparsec.Combinator,
                       Text.Gigaparsec.Combinator.NonEmpty,
                       Text.Gigaparsec.Errors.Combinator,
+                      Text.Gigaparsec.Errors.ErrorBuilder,
                       Text.Gigaparsec.Expr,
                       Text.Gigaparsec.Expr.Chain,
                       Text.Gigaparsec.Expr.Infix,

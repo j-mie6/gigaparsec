@@ -155,11 +155,11 @@ data State = State {
     -- | the input string, in future this may be generalised
     input :: !String,
     -- | has the parser consumed input since the last relevant handler?
-    consumed :: {-# UNPACK #-} !Int,
+    consumed :: {-# UNPACK #-} !Word,
     -- | the current line number (incremented by \n)
-    line :: {-# UNPACK #-} !Int,
+    line :: {-# UNPACK #-} !Word,
     -- | the current column number (have to settle on a tab handling scheme)
-    col  :: {-# UNPACK #-} !Int
+    col  :: {-# UNPACK #-} !Word
   }
 
 emptyState :: String -> State

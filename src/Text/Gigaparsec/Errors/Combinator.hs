@@ -25,13 +25,13 @@ label :: Set String -> Parsec a -> Parsec a
 label ls =
   require (not (any null ls)) "Text.Gigaparsec.Errors.Combinator.label" "labels cannot be empty" id --TODO:
 
-emptyWide :: Int -> Parsec a
+emptyWide :: Word -> Parsec a
 emptyWide _ = empty --TODO:
 
 fail :: [String] -> Parsec a
 fail = _fail "Text.Gigaparsec.Errors.Combinator.fail" (FlexibleCaret 1)
 
-failWide :: Int -> [String] -> Parsec a
+failWide :: Word -> [String] -> Parsec a
 failWide = _fail "Text.Gigaparsec.Errors.Combinator.failWide" . RigidCaret
 
 _fail :: String -> CaretWidth -> [String] -> Parsec a
@@ -41,7 +41,7 @@ _fail name _ msgs =
 unexpected :: String -> Parsec a
 unexpected = _unexpected (FlexibleCaret 1)
 
-unexpectedWide :: Int -> String -> Parsec a
+unexpectedWide :: Word -> String -> Parsec a
 unexpectedWide = _unexpected . RigidCaret
 
 _unexpected :: CaretWidth -> String -> Parsec a
@@ -59,19 +59,19 @@ entrench = id --TODO:
 dislodge :: Parsec a -> Parsec a
 dislodge = dislodgeBy maxBound --TODO:
 
-dislodgeBy :: Int -> Parsec a -> Parsec a
+dislodgeBy :: Word -> Parsec a -> Parsec a
 dislodgeBy _ = id --TODO:
 
 amendThenDislodge :: Parsec a -> Parsec a
 amendThenDislodge = dislodge . amend
 
-amendThenDislodgeBy :: Int -> Parsec a -> Parsec a
+amendThenDislodgeBy :: Word -> Parsec a -> Parsec a
 amendThenDislodgeBy n = dislodgeBy n . amend
 
 partialAmendThenDislodge :: Parsec a -> Parsec a
 partialAmendThenDislodge = dislodge . partialAmend
 
-partialAmendThenDislodgeBy :: Int -> Parsec a -> Parsec a
+partialAmendThenDislodgeBy :: Word -> Parsec a -> Parsec a
 partialAmendThenDislodgeBy n = dislodgeBy n . partialAmend
 
 markAsToken :: Parsec a -> Parsec a
