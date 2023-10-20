@@ -104,13 +104,13 @@ satisfy test = Internal.Parsec $ \st ok err ->
   -- that occurs if they were done separately to the line and col updates.
   updateState st '\n' cs = st
     { Internal.line = Internal.line st + 1, Internal.col = 1,
-      Internal.input = cs, Internal.consumed = True }
+      Internal.input = cs, Internal.consumed = Internal.consumed st + 1 }
   updateState st '\t' cs = st
     { Internal.col = ((Internal.col st + 3) .&. (-4)) .|. 1,
-      Internal.input = cs, Internal.consumed = True }
+      Internal.input = cs, Internal.consumed = Internal.consumed st + 1 }
   updateState st _ cs = st
     { Internal.col = Internal.col st + 1,
-      Internal.input = cs, Internal.consumed = True }
+      Internal.input = cs, Internal.consumed = Internal.consumed st + 1 }
 
 -- Needs to be primitive for the raw expected item down the line
 {-|

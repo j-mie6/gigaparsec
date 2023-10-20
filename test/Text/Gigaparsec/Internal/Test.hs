@@ -17,16 +17,16 @@ deriving stock instance Eq State
 deriving stock instance Show State
 
 parseAll :: Parsec a -> String -> Result a
-parseAll p inp = parse (p <* eof) inp
+parseAll p = parse (p <* eof)
 
 -- TODO: could we use quick-check to generate states?
 -- | Tests to ensure that running the parser on the given string does nothing to the state
 pureParseWith :: HasCallStack => Parsec a -> String -> Assertion
 pureParseWith (Parsec p) inp = do
   run initSt
-  run (initSt { consumed = True })
+  run (initSt { consumed = 1 })
   run (initSt { line = 10, col = 20 })
-  run (initSt { consumed = True, line = 10, col = 20 })
+  run (initSt { consumed = 200, line = 10, col = 20 })
   where initSt = emptyState inp
         run :: State -> Assertion
         run st = do
@@ -66,7 +66,7 @@ impureParse p = do
   impureParseWith p ":@279"
 
 consume :: a -> Parsec a
-consume x = Parsec $ \st good _ -> good x (st { consumed = True})
+consume x = Parsec $ \st good _ -> good x (st { consumed = consumed st + 1})
 
 ensureFails :: (Show a, HasCallStack) => Parsec a -> String -> Assertion
 ensureFails p inp = case parse p inp of

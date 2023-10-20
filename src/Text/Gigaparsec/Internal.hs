@@ -112,15 +112,12 @@ instance Alternative Parsec where
 
   (<|>) :: Parsec a -> Parsec a -> Parsec a
   Parsec p <|> Parsec q = Parsec $ \st ok err ->
-    let !initConsumed = consumed st
-        ok' x st' = ok x (st' { consumed = initConsumed || consumed st' })
-          --  ^ revert to old st.consumed if p didn't consume
-        err' st'
-          | consumed st' = err st'
+    let err' st'
+          | consumed st' > consumed st = err st'
           --  ^ fail if p failed *and* consumed
-          | otherwise    = q (st' { consumed = initConsumed }) ok err
+          | otherwise    = q st' ok err
 
-    in  p (st { consumed = False }) ok' err'
+    in  p st ok err'
 
   many :: Parsec a -> Parsec [a]
   many = manyr (:) []
@@ -158,7 +155,7 @@ data State = State {
     -- | the input string, in future this may be generalised
     input :: !String,
     -- | has the parser consumed input since the last relevant handler?
-    consumed :: !Bool, -- this could be an Int offset instead, perhaps?
+    consumed :: {-# UNPACK #-} !Int,
     -- | the current line number (incremented by \n)
     line :: {-# UNPACK #-} !Int,
     -- | the current column number (have to settle on a tab handling scheme)
@@ -167,7 +164,7 @@ data State = State {
 
 emptyState :: String -> State
 emptyState !str = State { input = str
-                        , consumed = False
+                        , consumed = 0
                         , line = 1
                         , col = 1
                         }
