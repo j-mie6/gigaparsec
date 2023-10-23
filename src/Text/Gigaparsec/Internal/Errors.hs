@@ -5,14 +5,18 @@
 module Text.Gigaparsec.Internal.Errors (module Text.Gigaparsec.Internal.Errors) where
 
 import Data.List.NonEmpty (NonEmpty)
+import Data.List.NonEmpty qualified as NonEmpty (take)
 import Data.Set (Set)
 import Data.Set qualified as Set (toList)
 
-import Text.Gigaparsec.Errors.ErrorBuilder (formatDefault, formatPosDefault, vanillaErrorDefault, specialisedErrorDefault, combineMessagesDefault, disjunct, endOfInputDefault, namedDefault, rawDefault, unexpectedDefault)
+import Text.Gigaparsec.Errors.ErrorBuilder (formatDefault, formatPosDefault, vanillaErrorDefault, specialisedErrorDefault, combineMessagesDefault, disjunct, endOfInputDefault, namedDefault, rawDefault, unexpectedDefault, expectedDefault)
+
+type Span :: *
+type Span = Word
 
 type CaretWidth :: *
-data CaretWidth = FlexibleCaret { width :: {-# UNPACK #-} !Word }
-                | RigidCaret { width :: {-# UNPACK #-} !Word }
+data CaretWidth = FlexibleCaret { width :: {-# UNPACK #-} !Span }
+                | RigidCaret { width :: {-# UNPACK #-} !Span }
                 deriving stock Eq
 
 isFlexible :: CaretWidth -> Bool
@@ -36,7 +40,7 @@ data ParseError = VanillaError { offset :: {-# UNPACK #-} !Word
                                    , line :: {-# UNPACK #-} !Word
                                    , col :: {-# UNPACK #-} !Word
                                    , msgs :: ![String]
-                                   , caretWidth :: {-# UNPACK #-} !Word
+                                   , caretWidth :: {-# UNPACK #-} !Span
                                    }
                 deriving stock Eq
 
@@ -53,13 +57,16 @@ data ExpectItem = ExpectRaw !String
                 | ExpectEndOfInput
                 deriving stock (Eq, Ord)
 
+--FIXME: in future, this goes, and we are interacting with the typeclass properly
+-- remember that input needs to be processed, and we don't have the residual stream
+-- inside show!
 instance Show ParseError where
   show :: ParseError -> String
   show err = formatDefault (formatPosDefault (line err) (col err)) Nothing
                            (formatErr err)
     where formatErr VanillaError{..} =
-            vanillaErrorDefault (unexpectedDefault Nothing)
-                                (disjunct True (map formatExpectItem (Set.toList expecteds)))
+            vanillaErrorDefault (unexpectedDefault (either (const Nothing) (Just . fst . formatUnexpect) unexpected))
+                                (expectedDefault (disjunct True (map formatExpectItem (Set.toList expecteds))))
                                 (combineMessagesDefault reasons)
                                 []
           formatErr SpecialisedError{..} =
@@ -70,4 +77,9 @@ instance Show ParseError where
           formatExpectItem (ExpectNamed name) = namedDefault name
           formatExpectItem ExpectEndOfInput = endOfInputDefault
 
-          --formatUnexpectItem (UnexpectRaw raw) = rawDefault raw
+formatUnexpect :: UnexpectItem -> (String, Span)
+formatUnexpect (UnexpectRaw cs demanded) =
+  -- TODO: this is MatchParserDemand, but needs to be configurable properly
+  (rawDefault (NonEmpty.take (fromIntegral demanded) cs), demanded)
+formatUnexpect (UnexpectNamed name caretWidth) = (namedDefault name, width caretWidth)
+formatUnexpect UnexpectEndOfInput = (endOfInputDefault, 1)
