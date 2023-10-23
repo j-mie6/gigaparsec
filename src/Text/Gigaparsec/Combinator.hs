@@ -1,6 +1,4 @@
 {-# LANGUAGE Safe #-}
-{-# OPTIONS_GHC -Wno-unrecognised-pragmas #-}
-{-# HLINT ignore "Use optional" #-}
 {-|
 Module      : Text.Gigaparsec.Combinator
 Description : This module contains a huge number of pre-made combinators that are
