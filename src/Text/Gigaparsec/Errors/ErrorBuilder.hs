@@ -7,9 +7,10 @@ import Prelude hiding (lines)
 
 import Data.Monoid (Endo(Endo))
 import Data.String (IsString(fromString))
-import Data.List (intersperse)
+import Data.List (intersperse, sortBy)
 import Data.Maybe (mapMaybe)
 import Data.Foldable (toList)
+import Data.Ord (comparing, Down (Down))
 
 -- For now, this is the home of the default formatting functions
 
@@ -18,6 +19,7 @@ newtype StringBuilder = StringBuilder (String -> String)
   deriving (Semigroup, Monoid) via Endo String
 
 instance IsString StringBuilder where
+  fromString :: String -> StringBuilder
   fromString str = StringBuilder (str ++)
 
 toString :: StringBuilder -> String
@@ -41,8 +43,47 @@ combineInfoWithLines :: [StringBuilder] -> [StringBuilder] -> [StringBuilder]
 combineInfoWithLines [] lines = "unknown parse error" : lines
 combineInfoWithLines info lines = info ++ lines
 
+--TODO: this needs to deal with whitespace and unprintables
+rawDefault :: String -> String
+rawDefault n = "\"" <> n <> "\""
+
+namedDefault :: String -> String
+namedDefault = id
+
+endOfInputDefault :: String
+endOfInputDefault = "end of input"
+
 messageDefault :: String -> String
 messageDefault = id
+
+expectedDefault :: Maybe StringBuilder -> Maybe StringBuilder
+expectedDefault = fmap ("expected " <>)
+
+unexpectedDefault :: Maybe String -> Maybe StringBuilder
+unexpectedDefault = fmap (("unexpected " <>) . fromString)
+
+disjunct :: Bool -> [String] -> Maybe StringBuilder
+disjunct oxford elems = junct oxford elems "or"
+
+junct :: Bool -> [String] -> String -> Maybe StringBuilder
+junct oxford elems junction = junct' (sortBy (comparing Down) elems)
+  where
+    j :: StringBuilder
+    j = fromString junction
+
+    junct' [] = Nothing
+    junct' [alt] = Just (fromString alt)
+    junct' [alt1, alt2] = Just (fromString alt1 <> " " <> fromString junction <> " " <> fromString alt2)
+    junct' as@(alt:alts)
+      -- use a semi-colon here, it is more correct
+      | any (elem ',') as = Just (junct'' (reverse alts) alt "; ")
+      | otherwise         = Just (junct'' (reverse alts) alt ", ")
+
+    junct'' is l delim = front <> back
+      where front = intercalate (fromString delim) (map fromString is) :: StringBuilder
+            back
+              | oxford    = fromString delim <> j <> " " <> fromString l
+              | otherwise = " " <> j <> " " <> fromString l
 
 combineMessagesDefault :: Foldable t => t String -> [StringBuilder]
 combineMessagesDefault = mapMaybe (\msg -> if null msg then Nothing else Just (fromString msg)) . toList
@@ -51,8 +92,7 @@ blockError :: StringBuilder -> [StringBuilder] -> Int -> StringBuilder
 blockError header lines indent = header <> ":\n" <> indentAndUnlines lines indent
 
 indentAndUnlines :: [StringBuilder] -> Int -> StringBuilder
-indentAndUnlines lines indent =
-  mconcat (fromString pre : intersperse (fromString ('\n' : pre)) lines)
+indentAndUnlines lines indent = fromString pre <> intercalate (fromString ('\n' : pre)) lines
   where pre = replicate indent ' '
 
 formatPosDefault :: Word -> Word -> StringBuilder
@@ -61,3 +101,6 @@ formatPosDefault line col = "(line "
                          <> ", column "
                          <> from col
                          <> ")"
+
+intercalate :: Monoid m => m -> [m] -> m
+intercalate x xs = mconcat (intersperse x xs)

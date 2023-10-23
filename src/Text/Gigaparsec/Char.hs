@@ -1,6 +1,6 @@
 {-# LANGUAGE Safe #-}
 {-# LANGUAGE OverloadedLists #-}
-{-# OPTIONS_GHC -Wno-all-missed-specialisations #-}
+{-# OPTIONS_GHC -Wno-all-missed-specialisations -Wno-overflowed-literals #-}
 {-|
 Module      : Text.Gigaparsec.Char
 Description : Contains the combinators needed to read characters and strings, as well as combinators

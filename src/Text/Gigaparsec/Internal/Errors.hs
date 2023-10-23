@@ -6,8 +6,9 @@ module Text.Gigaparsec.Internal.Errors (module Text.Gigaparsec.Internal.Errors) 
 
 import Data.List.NonEmpty (NonEmpty)
 import Data.Set (Set)
+import Data.Set qualified as Set (toList)
 
-import Text.Gigaparsec.Errors.ErrorBuilder (formatDefault, formatPosDefault, vanillaErrorDefault, specialisedErrorDefault, combineMessagesDefault)
+import Text.Gigaparsec.Errors.ErrorBuilder (formatDefault, formatPosDefault, vanillaErrorDefault, specialisedErrorDefault, combineMessagesDefault, disjunct, endOfInputDefault, namedDefault, rawDefault, unexpectedDefault)
 
 type CaretWidth :: *
 data CaretWidth = FlexibleCaret { width :: {-# UNPACK #-} !Word }
@@ -43,17 +44,30 @@ type Input :: *
 type Input = NonEmpty Char
 type UnexpectItem :: *
 data UnexpectItem = UnexpectRaw !Input {-# UNPACK #-} !Word
-                  | UnexpectDesc !String !CaretWidth
+                  | UnexpectNamed !String !CaretWidth
                   | UnexpectEndOfInput
                   deriving stock Eq
 type ExpectItem :: *
 data ExpectItem = ExpectRaw !String
-                | ExpectDesc !String
+                | ExpectNamed !String
                 | ExpectEndOfInput
-                deriving stock Eq
+                deriving stock (Eq, Ord)
 
 instance Show ParseError where
+  show :: ParseError -> String
   show err = formatDefault (formatPosDefault (line err) (col err)) Nothing
                            (formatErr err)
-    where formatErr VanillaError{..} = vanillaErrorDefault Nothing Nothing (combineMessagesDefault reasons) []
-          formatErr SpecialisedError{..} = specialisedErrorDefault (combineMessagesDefault msgs) []
+    where formatErr VanillaError{..} =
+            vanillaErrorDefault (unexpectedDefault Nothing)
+                                (disjunct True (map formatExpectItem (Set.toList expecteds)))
+                                (combineMessagesDefault reasons)
+                                []
+          formatErr SpecialisedError{..} =
+            specialisedErrorDefault (combineMessagesDefault msgs)
+                                    []
+
+          formatExpectItem (ExpectRaw raw) = rawDefault raw
+          formatExpectItem (ExpectNamed name) = namedDefault name
+          formatExpectItem ExpectEndOfInput = endOfInputDefault
+
+          --formatUnexpectItem (UnexpectRaw raw) = rawDefault raw
