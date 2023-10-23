@@ -7,7 +7,7 @@ module Text.Gigaparsec.Internal.Errors (module Text.Gigaparsec.Internal.Errors) 
 import Data.List.NonEmpty (NonEmpty, nonEmpty)
 import Data.List.NonEmpty qualified as NonEmpty (take)
 import Data.Set (Set)
-import Data.Set qualified as Set (toList, empty)
+import Data.Set qualified as Set (toList, empty, map)
 
 import Text.Gigaparsec.Errors.ErrorBuilder (formatDefault, formatPosDefault, vanillaErrorDefault, specialisedErrorDefault, combineMessagesDefault, disjunct, endOfInputDefault, namedDefault, rawDefault, unexpectedDefault, expectedDefault)
 
@@ -28,7 +28,7 @@ isFlexible _               = False
 -- this will be improved when the error builder is introduced.
 
 type ParseError :: *
-data ParseError = VanillaError { offset :: {-# UNPACK #-} !Word
+data ParseError = VanillaError { presentationOffset :: {-# UNPACK #-} !Word
                                , line :: {-# UNPACK #-} !Word
                                , col :: {-# UNPACK #-} !Word
                                , unexpected :: !(Either Word UnexpectItem)
@@ -36,7 +36,7 @@ data ParseError = VanillaError { offset :: {-# UNPACK #-} !Word
                                , reasons :: !(Set String)
                                , lexicalError :: !Bool
                                }
-                | SpecialisedError { offset :: {-# UNPACK #-} !Word
+                | SpecialisedError { presentationOffset :: {-# UNPACK #-} !Word
                                    , line :: {-# UNPACK #-} !Word
                                    , col :: {-# UNPACK #-} !Word
                                    , msgs :: ![String]
@@ -85,8 +85,8 @@ formatUnexpect (UnexpectNamed name caretWidth) = (namedDefault name, width caret
 formatUnexpect UnexpectEndOfInput = (endOfInputDefault, 1)
 
 emptyErr :: Word -> Word -> Word -> Word -> ParseError
-emptyErr offset line col width = VanillaError {
-    offset = offset,
+emptyErr presentationOffset line col width = VanillaError {
+    presentationOffset = presentationOffset,
     line = line,
     col = col,
     unexpected = Left width,
@@ -96,8 +96,8 @@ emptyErr offset line col width = VanillaError {
   }
 
 expectedErr :: String -> Word -> Word -> Word -> Set ExpectItem -> Word -> ParseError
-expectedErr input offset line col expecteds width = VanillaError {
-    offset = offset,
+expectedErr input presentationOffset line col expecteds width = VanillaError {
+    presentationOffset = presentationOffset,
     line = line,
     col = col,
     unexpected = case nonEmpty input of
@@ -107,3 +107,10 @@ expectedErr input offset line col expecteds width = VanillaError {
     reasons = Set.empty,
     lexicalError = False
 }
+
+labelErr :: Word -> Set String -> ParseError -> ParseError
+labelErr offset expecteds err@VanillaError{}
+  | offset == presentationOffset err = err {
+      expecteds = Set.map ExpectNamed expecteds
+  }
+labelErr _ _ err = err

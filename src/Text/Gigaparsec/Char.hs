@@ -50,6 +50,7 @@ import Text.Gigaparsec.Combinator (skipMany)
 import Text.Gigaparsec.Errors.Combinator ((<?>))
 -- We want to use this to make the docs point to the right definition for users.
 import Text.Gigaparsec.Internal qualified as Internal (Parsec(Parsec), State(..), expectedErr)
+import Text.Gigaparsec.Internal.Errors qualified as Internal (ExpectItem(ExpectRaw))
 import Text.Gigaparsec.Internal.Require (require)
 
 import Data.Bits (Bits((.&.), (.|.)))
@@ -59,13 +60,31 @@ import Data.List.NonEmpty as NonEmpty (NonEmpty((:|)), groupWith, sortWith)
 import Data.Maybe (isJust, fromJust)
 import Data.Monoid (Alt(Alt, getAlt))
 import Data.Set (Set)
-import Data.Set qualified as Set (empty, member, size, findMin, findMax, mapMonotonic)
+import Data.Set qualified as Set (empty, member, size, findMin, findMax, mapMonotonic, singleton)
 import Data.Map (Map)
 import Data.Map qualified as Map (fromSet, toAscList, member)
 
 -------------------------------------------------
 -- Primitives
 -------------------------------------------------
+
+_satisfy :: Set Internal.ExpectItem -> (Char -> Bool) -> Parsec Char
+_satisfy expecteds test = Internal.Parsec $ \st ok bad ->
+  case Internal.input st of
+    c:cs | test c -> ok c (updateState st c cs)
+    _             -> bad (Internal.expectedErr st expecteds 1) st
+  where
+  -- The duplicated input & consumed update avoids double allocation
+  -- that occurs if they were done separately to the line and col updates.
+  updateState st '\n' cs = st
+    { Internal.line = Internal.line st + 1, Internal.col = 1,
+      Internal.input = cs, Internal.consumed = Internal.consumed st + 1 }
+  updateState st '\t' cs = st
+    { Internal.col = ((Internal.col st + 3) .&. (-4)) .|. 1,
+      Internal.input = cs, Internal.consumed = Internal.consumed st + 1 }
+  updateState st _ cs = st
+    { Internal.col = Internal.col st + 1,
+      Internal.input = cs, Internal.consumed = Internal.consumed st + 1 }
 
 {-|
 This combinator tries to parse a single character from the input that matches the given predicate.
@@ -94,22 +113,7 @@ satisfy :: (Char -> Bool) -- ^ the predicate, @pred@, to test the next character
                           -- exist.
         -> Parsec Char    -- ^ a parser that tries to read a single character @c@, such that @pred c@
                           -- is true, or fails.
-satisfy test = Internal.Parsec $ \st ok bad ->
-  case Internal.input st of
-    c:cs | test c -> ok c (updateState st c cs)
-    _             -> bad (Internal.expectedErr st Set.empty 1) st
-  where
-  -- The duplicated input & consumed update avoids double allocation
-  -- that occurs if they were done separately to the line and col updates.
-  updateState st '\n' cs = st
-    { Internal.line = Internal.line st + 1, Internal.col = 1,
-      Internal.input = cs, Internal.consumed = Internal.consumed st + 1 }
-  updateState st '\t' cs = st
-    { Internal.col = ((Internal.col st + 3) .&. (-4)) .|. 1,
-      Internal.input = cs, Internal.consumed = Internal.consumed st + 1 }
-  updateState st _ cs = st
-    { Internal.col = Internal.col st + 1,
-      Internal.input = cs, Internal.consumed = Internal.consumed st + 1 }
+satisfy = _satisfy Set.empty
 
 -- Needs to be primitive for the raw expected item down the line
 {-|
@@ -131,7 +135,7 @@ Failure ..
 -}
 char :: Char        -- ^ the character to parse, @c@.
      -> Parsec Char -- ^ a parser that tries to read a single @c@, or fails.
-char c = satisfy (== c)
+char c = _satisfy (Set.singleton (Internal.ExpectRaw (pure c))) (== c)
 
 -- Needs to be primitive for the raw expected item and wide caret down the line
 {-|
@@ -162,7 +166,7 @@ string :: String        -- ^ the string, @s@, to be parsed from the input
        -> Parsec String -- ^ a parser that either parses the string @s@ or fails at the first
                         -- mismatched character.
 string s = require (not (null s)) "Text.Gigaparsec.Char.string" "cannot pass empty string" $
-  traverse char s
+  traverse char s --TODO: remake for error message
 
 -------------------------------------------------
 -- Composite Combinators

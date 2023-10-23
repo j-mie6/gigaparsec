@@ -14,7 +14,7 @@ import Prelude hiding (fail)
 
 import Text.Gigaparsec (Parsec, empty)
 -- We want to use this to make the docs point to the right definition for users.
---import Text.Gigaparsec.Internal qualified as Internal (Parsec(Parsec))
+import Text.Gigaparsec.Internal qualified as Internal (Parsec(Parsec), labelErr, emptyErr, raise)
 import Text.Gigaparsec.Internal.Errors (CaretWidth(FlexibleCaret, RigidCaret))
 import Text.Gigaparsec.Internal.Require (require)
 
@@ -22,11 +22,13 @@ import Data.Set (Set)
 
 -- the empty set is weird here, do we require non-empty or just make it id?
 label :: Set String -> Parsec a -> Parsec a
-label ls =
-  require (not (any null ls)) "Text.Gigaparsec.Errors.Combinator.label" "labels cannot be empty" id --TODO:
+label ls (Internal.Parsec p) =
+  require (not (any null ls)) "Text.Gigaparsec.Errors.Combinator.label" "labels cannot be empty" $
+    -- TODO: hints on good!
+    Internal.Parsec $ \st good bad -> p st good (\err st' -> bad (Internal.labelErr st' ls err) st')
 
 emptyWide :: Word -> Parsec a
-emptyWide _ = empty --TODO:
+emptyWide width = Internal.raise (flip Internal.emptyErr width)
 
 fail :: [String] -> Parsec a
 fail = _fail "Text.Gigaparsec.Errors.Combinator.fail" (FlexibleCaret 1)

@@ -18,7 +18,7 @@ module Text.Gigaparsec.Internal (module Text.Gigaparsec.Internal) where
 
 import Text.Gigaparsec.Internal.RT (RT)
 import Text.Gigaparsec.Internal.Errors (ParseError, ExpectItem)
-import Text.Gigaparsec.Internal.Errors qualified as Errors (emptyErr, expectedErr)
+import Text.Gigaparsec.Internal.Errors qualified as Errors (emptyErr, expectedErr, labelErr)
 
 import Control.Applicative (Applicative(liftA2), Alternative(empty, (<|>), many, some)) -- liftA2 required until 9.6
 import Control.Selective (Selective(select))
@@ -110,9 +110,12 @@ instance Monad Parsec where
   {-# INLINE return #-}
   {-# INLINE (>>=) #-}
 
+raise :: (State -> ParseError) -> Parsec a
+raise mkErr = Parsec $ \st _ bad -> bad (mkErr st) st
+
 instance Alternative Parsec where
   empty :: Parsec a
-  empty = Parsec $ \st _ bad -> bad (emptyErr st 0) st
+  empty = raise (flip emptyErr 0)
 
   (<|>) :: Parsec a -> Parsec a -> Parsec a
   Parsec p <|> Parsec q = Parsec $ \st ok bad ->
@@ -177,3 +180,6 @@ emptyErr State{..} = Errors.emptyErr consumed line col
 
 expectedErr :: State -> Set ExpectItem -> Word -> ParseError
 expectedErr State{..} = Errors.expectedErr input consumed line col
+
+labelErr :: State -> Set String -> ParseError -> ParseError
+labelErr State{..} = Errors.labelErr consumed
