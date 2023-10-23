@@ -1,5 +1,5 @@
 {-# LANGUAGE Trustworthy #-}
-{-# LANGUAGE DeriveFunctor, StandaloneDeriving #-}
+{-# LANGUAGE DeriveFunctor, StandaloneDeriving, RecordWildCards #-}
 {-# OPTIONS_HADDOCK hide #-}
 {-|
 Module      : Text.Gigaparsec.Internal
@@ -17,9 +17,13 @@ own risk.
 module Text.Gigaparsec.Internal (module Text.Gigaparsec.Internal) where
 
 import Text.Gigaparsec.Internal.RT (RT)
+import Text.Gigaparsec.Internal.Errors (ParseError, ExpectItem)
+import Text.Gigaparsec.Internal.Errors qualified as Errors (emptyErr, expectedErr)
 
 import Control.Applicative (Applicative(liftA2), Alternative(empty, (<|>), many, some)) -- liftA2 required until 9.6
 import Control.Selective (Selective(select))
+
+import Data.Set (Set)
 
 {-
 Notes:
@@ -38,7 +42,7 @@ type Parsec :: * -> *
 newtype Parsec a = Parsec {
     unParsec :: forall r. State
              -> (a -> State -> RT r) -- the good continuation
-             -> (State -> RT r)      -- the bad continuation
+             -> (ParseError -> State -> RT r)      -- the bad continuation
              -> RT r
   }
 
@@ -108,16 +112,15 @@ instance Monad Parsec where
 
 instance Alternative Parsec where
   empty :: Parsec a
-  empty = Parsec $ \st _ err -> err st
+  empty = Parsec $ \st _ bad -> bad (emptyErr st 0) st
 
   (<|>) :: Parsec a -> Parsec a -> Parsec a
-  Parsec p <|> Parsec q = Parsec $ \st ok err ->
-    let err' st'
-          | consumed st' > consumed st = err st'
+  Parsec p <|> Parsec q = Parsec $ \st ok bad ->
+    let bad' err st'
+          | consumed st' > consumed st = bad err st'
           --  ^ fail if p failed *and* consumed
-          | otherwise    = q st' ok err
-
-    in  p st ok err'
+          | otherwise    = q st' ok bad -- TODO: merge errors!
+    in  p st ok bad'
 
   many :: Parsec a -> Parsec [a]
   many = manyr (:) []
@@ -168,3 +171,9 @@ emptyState !str = State { input = str
                         , line = 1
                         , col = 1
                         }
+
+emptyErr :: State -> Word -> ParseError
+emptyErr State{..} = Errors.emptyErr consumed line col
+
+expectedErr :: State -> Set ExpectItem -> Word -> ParseError
+expectedErr State{..} = Errors.expectedErr input consumed line col

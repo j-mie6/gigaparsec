@@ -4,10 +4,10 @@
 {-# OPTIONS_HADDOCK hide #-}
 module Text.Gigaparsec.Internal.Errors (module Text.Gigaparsec.Internal.Errors) where
 
-import Data.List.NonEmpty (NonEmpty)
+import Data.List.NonEmpty (NonEmpty, nonEmpty)
 import Data.List.NonEmpty qualified as NonEmpty (take)
 import Data.Set (Set)
-import Data.Set qualified as Set (toList)
+import Data.Set qualified as Set (toList, empty)
 
 import Text.Gigaparsec.Errors.ErrorBuilder (formatDefault, formatPosDefault, vanillaErrorDefault, specialisedErrorDefault, combineMessagesDefault, disjunct, endOfInputDefault, namedDefault, rawDefault, unexpectedDefault, expectedDefault)
 
@@ -31,7 +31,7 @@ type ParseError :: *
 data ParseError = VanillaError { offset :: {-# UNPACK #-} !Word
                                , line :: {-# UNPACK #-} !Word
                                , col :: {-# UNPACK #-} !Word
-                               , unexpected :: !(Either Int UnexpectItem)
+                               , unexpected :: !(Either Word UnexpectItem)
                                , expecteds :: !(Set ExpectItem)
                                , reasons :: !(Set String)
                                , lexicalError :: !Bool
@@ -83,3 +83,27 @@ formatUnexpect (UnexpectRaw cs demanded) =
   (rawDefault (NonEmpty.take (fromIntegral demanded) cs), demanded)
 formatUnexpect (UnexpectNamed name caretWidth) = (namedDefault name, width caretWidth)
 formatUnexpect UnexpectEndOfInput = (endOfInputDefault, 1)
+
+emptyErr :: Word -> Word -> Word -> Word -> ParseError
+emptyErr offset line col width = VanillaError {
+    offset = offset,
+    line = line,
+    col = col,
+    unexpected = Left width,
+    expecteds = Set.empty,
+    reasons = Set.empty,
+    lexicalError = False
+  }
+
+expectedErr :: String -> Word -> Word -> Word -> Set ExpectItem -> Word -> ParseError
+expectedErr input offset line col expecteds width = VanillaError {
+    offset = offset,
+    line = line,
+    col = col,
+    unexpected = case nonEmpty input of
+      Nothing -> Right UnexpectEndOfInput
+      Just cs -> Right (UnexpectRaw cs width),
+    expecteds = expecteds,
+    reasons = Set.empty,
+    lexicalError = False
+}

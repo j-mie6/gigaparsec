@@ -82,13 +82,16 @@ module Text.Gigaparsec (
 -- Care MUST be taken to not expose /any/ implementation details from
 -- `Internal`: when they are in the public API, we are locked into them!
 
-import Text.Gigaparsec.Internal (Parsec(Parsec), emptyState, manyr, somer)
+import Text.Gigaparsec.Internal (Parsec(Parsec), emptyState, manyr, somer, expectedErr)
 import Text.Gigaparsec.Internal qualified as Internal.State (State(..))
 import Text.Gigaparsec.Internal.RT (runRT)
+import Text.Gigaparsec.Internal.Errors (ExpectItem(ExpectEndOfInput))
 
 import Data.Functor (void)
 import Control.Applicative (liftA2, (<|>), empty, many, some, (<**>)) -- liftA2 required until 9.6
 import Control.Selective (select, branch)
+
+import Data.Set qualified as Set (singleton, empty)
 
 -- Hiding the Internal module seems like the better bet: nobody needs to see it anyway :)
 -- re-expose like this to prevent hlint suggesting import refinement into internal
@@ -96,12 +99,12 @@ import Control.Selective (select, branch)
 --type Parsec = Internal.Parsec
 
 type Result :: * -> *
-data Result a = Success a | Failure deriving stock (Show, Eq)
+data Result a = Success a | Failure String deriving stock (Show, Eq)
 
 parse :: Parsec a -> String -> Result a
 parse (Parsec p) inp = runRT $ p (emptyState inp) good bad
-  where good x _ = return (Success x)
-        bad _    = return Failure
+  where good x _  = return (Success x)
+        bad err _ = return (Failure (show err))
 
 {-|
 This combinator parses its argument @p@, but rolls back any consumed input on failure.
@@ -122,8 +125,8 @@ Success "abd" -- first parser does not consume input on failure now
 -}
 atomic :: Parsec a -- ^ the parser, @p@, to execute, if it fails, it will not have consumed input.
        -> Parsec a -- ^ a parser that tries @p@, but never consumes input if it fails.
-atomic (Parsec p) = Parsec $ \st ok err ->
-  p st ok (const $ err st)
+atomic (Parsec p) = Parsec $ \st ok bad ->
+  p st ok (\err -> const (bad err st))
 
 {-| This combinator parses its argument @p@, but does not consume input if it succeeds.
 
@@ -168,8 +171,9 @@ keyword kw = atomic $ string kw *> notFollowedBy letterOrDigit
 -}
 notFollowedBy :: Parsec a  -- ^ the parser, @p@, to execute, it must fail in order for this combinator to succeed.
               -> Parsec () -- ^ a parser which fails when @p@ succeeds and succeeds otherwise, never consuming input.
-notFollowedBy (Parsec p) = Parsec $ \st ok err ->
-  p st (\_ _ -> err st) (\_ -> ok () st)
+notFollowedBy (Parsec p) = Parsec $ \st ok bad ->
+  p st (\_ st' -> bad (expectedErr st Set.empty (Internal.State.consumed st' - Internal.State.consumed st)) st)
+       (\_ _ -> ok () st)
 
 -- eof is usually `notFollowedBy item`, but this requires annoying cyclic dependencies on Char
 {- This parser only succeeds at the end of the input.
@@ -186,7 +190,7 @@ Success ()
 -}
 eof :: Parsec ()
 eof = Parsec $ \st good bad -> case Internal.State.input st of
-  (:){} -> bad st
+  (:){} -> bad (expectedErr st (Set.singleton ExpectEndOfInput) 1) st
   []    -> good () st
 
 {-|

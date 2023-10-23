@@ -30,7 +30,7 @@ pureParseWith (Parsec p) inp = do
   where initSt = emptyState inp
         run :: State -> Assertion
         run st = do
-          let st' = runRT (p st (\ !_ -> return) return)
+          let st' = runRT (p st (\ !_ -> return) (\ !_ -> return))
           unless (st == st') $
             assertFailure ("expected no change to internal state\n"
                         ++ "initial state: " ++ show st ++ "\n       became: " ++ show st')
@@ -96,4 +96,4 @@ throws x = do
                   ++ "\n     expected: " ++ show qSt)
 
 parseState :: Parsec a -> State -> State
-parseState (Parsec p) st = runRT (p st (\ !_ -> return) return)
+parseState (Parsec p) st = runRT (p st (\ !_ -> return) (\ !_ -> return))

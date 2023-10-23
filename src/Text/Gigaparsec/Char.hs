@@ -49,7 +49,7 @@ import Text.Gigaparsec (Parsec, atomic, empty, some, many, (<|>))
 import Text.Gigaparsec.Combinator (skipMany)
 import Text.Gigaparsec.Errors.Combinator ((<?>))
 -- We want to use this to make the docs point to the right definition for users.
-import Text.Gigaparsec.Internal qualified as Internal (Parsec(Parsec), State(..))
+import Text.Gigaparsec.Internal qualified as Internal (Parsec(Parsec), State(..), expectedErr)
 import Text.Gigaparsec.Internal.Require (require)
 
 import Data.Bits (Bits((.&.), (.|.)))
@@ -59,7 +59,7 @@ import Data.List.NonEmpty as NonEmpty (NonEmpty((:|)), groupWith, sortWith)
 import Data.Maybe (isJust, fromJust)
 import Data.Monoid (Alt(Alt, getAlt))
 import Data.Set (Set)
-import Data.Set qualified as Set (member, size, findMin, findMax, mapMonotonic)
+import Data.Set qualified as Set (empty, member, size, findMin, findMax, mapMonotonic)
 import Data.Map (Map)
 import Data.Map qualified as Map (fromSet, toAscList, member)
 
@@ -94,11 +94,10 @@ satisfy :: (Char -> Bool) -- ^ the predicate, @pred@, to test the next character
                           -- exist.
         -> Parsec Char    -- ^ a parser that tries to read a single character @c@, such that @pred c@
                           -- is true, or fails.
-satisfy test = Internal.Parsec $ \st ok err ->
+satisfy test = Internal.Parsec $ \st ok bad ->
   case Internal.input st of
-    c: cs | test c  ->
-      ok c (updateState st c cs)
-    _                 -> err st
+    c:cs | test c -> ok c (updateState st c cs)
+    _             -> bad (Internal.expectedErr st Set.empty 1) st
   where
   -- The duplicated input & consumed update avoids double allocation
   -- that occurs if they were done separately to the line and col updates.
