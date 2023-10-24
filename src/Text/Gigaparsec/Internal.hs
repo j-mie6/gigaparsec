@@ -19,12 +19,16 @@ module Text.Gigaparsec.Internal (module Text.Gigaparsec.Internal) where
 
 import Text.Gigaparsec.Internal.RT (RT)
 import Text.Gigaparsec.Internal.Errors (ParseError, ExpectItem, CaretWidth)
-import Text.Gigaparsec.Internal.Errors qualified as Errors (emptyErr, expectedErr, labelErr, specialisedErr, mergeErr, unexpectedErr)
+import Text.Gigaparsec.Internal.Errors qualified as Errors (
+    emptyErr, expectedErr, labelErr, specialisedErr, mergeErr, unexpectedErr,
+    expecteds, isExpectedEmpty, presentationOffset
+  )
 
 import Control.Applicative (Applicative(liftA2), Alternative(empty, (<|>), many, some)) -- liftA2 required until 9.6
 import Control.Selective (Selective(select))
 
 import Data.Set (Set)
+import Data.Set qualified as Set (empty, union)
 
 CPP_import_PortableUnlifted
 
@@ -125,7 +129,7 @@ instance Alternative Parsec where
     let bad' err st'
           | consumed st' > consumed st = bad err st'
           --  ^ fail if p failed *and* consumed
-          | otherwise    = q st' ok (\err' -> bad (Errors.mergeErr err err'))
+          | otherwise    = q st' (\x st'' -> ok x (errorToHints st'' err)) (\err' -> bad (Errors.mergeErr err err'))
     in  p st ok bad'
 
   many :: Parsec a -> Parsec [a]
@@ -168,7 +172,11 @@ data State = State {
     -- | the current line number (incremented by \n)
     line :: {-# UNPACK #-} !Word,
     -- | the current column number (have to settle on a tab handling scheme)
-    col  :: {-# UNPACK #-} !Word
+    col  :: {-# UNPACK #-} !Word,
+    -- | the valid for which hints can be used
+    hintValidOffset :: {-# UNPACK #-} !Word,
+    -- | the hints at this point in time
+    hints :: !(Set ExpectItem)
   }
 
 emptyState :: String -> State
@@ -176,6 +184,8 @@ emptyState !str = State { input = str
                         , consumed = 0
                         , line = 1
                         , col = 1
+                        , hintValidOffset = 0
+                        , hints = Set.empty
                         }
 
 emptyErr :: State -> Word -> ParseError
@@ -192,3 +202,11 @@ specialisedErr State{..} = Errors.specialisedErr consumed line col
 
 unexpectedErr :: State -> Set ExpectItem -> String -> CaretWidth -> ParseError
 unexpectedErr State{..} = Errors.unexpectedErr consumed line col
+
+errorToHints :: State -> ParseError -> State
+errorToHints st@State{..} err
+  | consumed == Errors.presentationOffset err
+  , not (Errors.isExpectedEmpty err) =
+    if hintValidOffset < consumed then st { hints = Errors.expecteds err, hintValidOffset = consumed }
+    else                               st { hints = Set.union hints (Errors.expecteds err) }
+errorToHints st _ = st

@@ -8,7 +8,7 @@ module Text.Gigaparsec.Internal.Errors (module Text.Gigaparsec.Internal.Errors) 
 import Data.List.NonEmpty (NonEmpty, nonEmpty)
 import Data.List.NonEmpty qualified as NonEmpty (take)
 import Data.Set (Set)
-import Data.Set qualified as Set (toList, empty, map, union)
+import Data.Set qualified as Set (toList, empty, map, union, null)
 
 import Text.Gigaparsec.Errors.ErrorBuilder (formatDefault, formatPosDefault, vanillaErrorDefault, specialisedErrorDefault, combineMessagesDefault, disjunct, endOfInputDefault, namedDefault, rawDefault, unexpectedDefault, expectedDefault)
 
@@ -58,7 +58,7 @@ type ExpectItem :: *
 data ExpectItem = ExpectRaw !String
                 | ExpectNamed !String
                 | ExpectEndOfInput
-                deriving stock (Eq, Ord)
+                deriving stock (Eq, Ord, Show)
 
 --FIXME: in future, this goes, and we are interacting with the typeclass properly
 -- remember that input needs to be processed, and we don't have the residual stream
@@ -177,3 +177,7 @@ mergeUnexpect (Right item1) (Right item2) = Right (mergeItem item1 item2)
         mergeItem item@UnexpectNamed{} _ = item
         mergeItem _ item@UnexpectNamed{} = item
         mergeItem (UnexpectRaw cs w1) (UnexpectRaw _ w2) = UnexpectRaw cs (max w1 w2)
+
+isExpectedEmpty :: ParseError -> Bool
+isExpectedEmpty VanillaError{expecteds} = Set.null expecteds
+isExpectedEmpty _                       = True
