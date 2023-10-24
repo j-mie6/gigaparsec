@@ -18,7 +18,7 @@ module Text.Gigaparsec.Internal (module Text.Gigaparsec.Internal) where
 
 import Text.Gigaparsec.Internal.RT (RT)
 import Text.Gigaparsec.Internal.Errors (ParseError, ExpectItem, CaretWidth)
-import Text.Gigaparsec.Internal.Errors qualified as Errors (emptyErr, expectedErr, labelErr, specialisedErr, mergeErr)
+import Text.Gigaparsec.Internal.Errors qualified as Errors (emptyErr, expectedErr, labelErr, specialisedErr, mergeErr, unexpectedErr)
 
 import Control.Applicative (Applicative(liftA2), Alternative(empty, (<|>), many, some)) -- liftA2 required until 9.6
 import Control.Selective (Selective(select))
@@ -186,3 +186,6 @@ labelErr State{..} = Errors.labelErr consumed
 
 specialisedErr :: State -> [String] -> CaretWidth -> ParseError
 specialisedErr State{..} = Errors.specialisedErr consumed line col
+
+unexpectedErr :: State -> Set ExpectItem -> String -> CaretWidth -> ParseError
+unexpectedErr State{..} = Errors.unexpectedErr consumed line col

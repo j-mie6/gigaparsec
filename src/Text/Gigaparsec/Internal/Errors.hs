@@ -112,6 +112,17 @@ expectedErr input presentationOffset line col expecteds width = VanillaError {
 specialisedErr :: Word -> Word -> Word -> [String] -> CaretWidth -> ParseError
 specialisedErr presentationOffset line col msgs caretWidth = SpecialisedError {..}
 
+unexpectedErr :: Word -> Word -> Word -> Set ExpectItem -> String -> CaretWidth -> ParseError
+unexpectedErr presentationOffset line col expecteds name caretWidth = VanillaError {
+    presentationOffset = presentationOffset,
+    line = line,
+    col = col,
+    expecteds = expecteds,
+    unexpected = Right (UnexpectNamed name caretWidth),
+    reasons = Set.empty,
+    lexicalError = False
+  }
+
 labelErr :: Word -> Set String -> ParseError -> ParseError
 labelErr offset expecteds err@VanillaError{}
   | offset == presentationOffset err = err {

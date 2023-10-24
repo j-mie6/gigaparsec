@@ -12,13 +12,14 @@ module Text.Gigaparsec.Errors.Combinator (
 
 import Prelude hiding (fail)
 
-import Text.Gigaparsec (Parsec, empty)
+import Text.Gigaparsec (Parsec)
 -- We want to use this to make the docs point to the right definition for users.
-import Text.Gigaparsec.Internal qualified as Internal (Parsec(Parsec), labelErr, emptyErr, specialisedErr, raise)
+import Text.Gigaparsec.Internal qualified as Internal (Parsec(Parsec), labelErr, emptyErr, specialisedErr, raise, unexpectedErr)
 import Text.Gigaparsec.Internal.Errors (CaretWidth(FlexibleCaret, RigidCaret))
 import Text.Gigaparsec.Internal.Require (require)
 
 import Data.Set (Set)
+import Data.Set qualified as Set (empty)
 
 -- the empty set is weird here, do we require non-empty or just make it id?
 label :: Set String -> Parsec a -> Parsec a
@@ -48,7 +49,8 @@ unexpectedWide :: Word -> String -> Parsec a
 unexpectedWide = _unexpected . RigidCaret
 
 _unexpected :: CaretWidth -> String -> Parsec a
-_unexpected _ _ = empty --TODO:
+_unexpected width name = Internal.raise $ \st ->
+  Internal.unexpectedErr st Set.empty name width
 
 amend :: Parsec a -> Parsec a
 amend = id --TODO:
