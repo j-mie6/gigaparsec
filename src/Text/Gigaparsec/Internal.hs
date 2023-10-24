@@ -26,7 +26,7 @@ import Control.Selective (Selective(select))
 
 import Data.Set (Set)
 
-import PortableUnlifted
+CPP_import_PortableUnlifted
 
 {-
 Notes:

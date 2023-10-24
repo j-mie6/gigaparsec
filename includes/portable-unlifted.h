@@ -14,11 +14,12 @@
 #if __GLASGOW_HASKELL__ >= 902
 {-# LANGUAGE UnliftedDatatypes #-}
 
-#define PortableUnlifted GHC.Exts (TYPE, RuntimeRep(BoxedRep), Levity(Unlifted))
+#define CPP_import_PortableUnlifted import GHC.Exts (TYPE, RuntimeRep(BoxedRep), Levity(Unlifted))
 #define UnliftedDatatype (TYPE ('BoxedRep 'Unlifted))
 
 #else
 
+#define CPP_import_PortableUnlifted
 #define UnliftedDatatype *
 
 #endif
