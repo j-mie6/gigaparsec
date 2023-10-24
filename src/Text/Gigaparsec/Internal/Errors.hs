@@ -1,5 +1,6 @@
-{-# LANGUAGE Safe #-}
-{-# LANGUAGE RecordWildCards, BangPatterns, NamedFieldPuns #-}
+{-# LANGUAGE Trustworthy #-}
+{-# LANGUAGE RecordWildCards, BangPatterns, NamedFieldPuns, CPP #-}
+#include "portable-unlifted.h"
 {-# OPTIONS_GHC -Wno-partial-fields -Wno-all-missed-specialisations #-}
 {-# OPTIONS_HADDOCK hide #-}
 module Text.Gigaparsec.Internal.Errors (module Text.Gigaparsec.Internal.Errors) where
@@ -11,13 +12,14 @@ import Data.Set qualified as Set (toList, empty, map, union)
 
 import Text.Gigaparsec.Errors.ErrorBuilder (formatDefault, formatPosDefault, vanillaErrorDefault, specialisedErrorDefault, combineMessagesDefault, disjunct, endOfInputDefault, namedDefault, rawDefault, unexpectedDefault, expectedDefault)
 
+CPP_import_PortableUnlifted
+
 type Span :: *
 type Span = Word
 
-type CaretWidth :: *
+type CaretWidth :: UnliftedDatatype
 data CaretWidth = FlexibleCaret { width :: {-# UNPACK #-} !Span }
                 | RigidCaret { width :: {-# UNPACK #-} !Span }
-                deriving stock Eq
 
 isFlexible :: CaretWidth -> Bool
 isFlexible FlexibleCaret{} = True
@@ -27,31 +29,31 @@ isFlexible _               = False
 -- and the tests will use a different parse that exposes the underlying datatype.
 -- this will be improved when the error builder is introduced.
 
-type ParseError :: *
+type ParseError :: UnliftedDatatype
 data ParseError = VanillaError { presentationOffset :: {-# UNPACK #-} !Word
                                , line :: {-# UNPACK #-} !Word
                                , col :: {-# UNPACK #-} !Word
-                               , unexpected :: !(Either Word UnexpectItem)
+                               , unexpected :: !(Either Word UnexpectItem) -- TODO: unlift this!
+                               -- sadly, this prevents unlifting of ExpectItem
+                               -- perhaps we should make an unlifted+levity polymorphic Set?
                                , expecteds :: !(Set ExpectItem)
                                , reasons :: !(Set String)
-                               , lexicalError :: !Bool
+                               , lexicalError :: !Bool -- TODO: strict bools
                                }
                 | SpecialisedError { presentationOffset :: {-# UNPACK #-} !Word
                                    , line :: {-# UNPACK #-} !Word
                                    , col :: {-# UNPACK #-} !Word
                                    , msgs :: ![String]
                                    --, caretWidth :: {-# UNPACK #-} !Span --FIXME: need defunc before this goes away
-                                   , caretWidth :: !CaretWidth
+                                   , caretWidth :: CaretWidth
                                    }
-                deriving stock Eq
 
 type Input :: *
 type Input = NonEmpty Char
 type UnexpectItem :: *
 data UnexpectItem = UnexpectRaw !Input {-# UNPACK #-} !Word
-                  | UnexpectNamed !String !CaretWidth
+                  | UnexpectNamed !String CaretWidth
                   | UnexpectEndOfInput
-                  deriving stock Eq
 type ExpectItem :: *
 data ExpectItem = ExpectRaw !String
                 | ExpectNamed !String
@@ -61,22 +63,22 @@ data ExpectItem = ExpectRaw !String
 --FIXME: in future, this goes, and we are interacting with the typeclass properly
 -- remember that input needs to be processed, and we don't have the residual stream
 -- inside show!
-instance Show ParseError where
-  show :: ParseError -> String
-  show err = formatDefault (formatPosDefault (line err) (col err)) Nothing
-                           (formatErr err)
-    where formatErr VanillaError{..} =
-            vanillaErrorDefault (unexpectedDefault (either (const Nothing) (Just . fst . formatUnexpect) unexpected))
-                                (expectedDefault (disjunct True (map formatExpectItem (Set.toList expecteds))))
-                                (combineMessagesDefault reasons)
-                                []
-          formatErr SpecialisedError{..} =
-            specialisedErrorDefault (combineMessagesDefault msgs)
-                                    []
+showErr :: ParseError -> String
+showErr err = formatDefault (formatPosDefault (line err) (col err)) Nothing
+                         (formatErr err)
+  where formatErr VanillaError{..} =
+          vanillaErrorDefault (unexpectedDefault (either (const Nothing) (Just . fst . formatUnexpect) unexpected))
+                              (expectedDefault (disjunct True (map formatExpectItem (Set.toList expecteds))))
+                              (combineMessagesDefault reasons)
+                              []
 
-          formatExpectItem (ExpectRaw raw) = rawDefault raw
-          formatExpectItem (ExpectNamed name) = namedDefault name
-          formatExpectItem ExpectEndOfInput = endOfInputDefault
+        formatErr SpecialisedError{..} =
+          specialisedErrorDefault (combineMessagesDefault msgs)
+                                  []
+
+        formatExpectItem (ExpectRaw raw) = rawDefault raw
+        formatExpectItem (ExpectNamed name) = namedDefault name
+        formatExpectItem ExpectEndOfInput = endOfInputDefault
 
 formatUnexpect :: UnexpectItem -> (String, Span)
 formatUnexpect (UnexpectRaw cs demanded) =
@@ -131,7 +133,7 @@ labelErr offset expecteds err@VanillaError{}
 labelErr _ _ err = err
 
 mergeErr :: ParseError -> ParseError -> ParseError
-mergeErr !err1 !err2
+mergeErr err1 err2
   -- TODO: underlyingOffset comparison
   | presentationOffset err1 > presentationOffset err2 = err1
   | presentationOffset err1 < presentationOffset err2 = err2

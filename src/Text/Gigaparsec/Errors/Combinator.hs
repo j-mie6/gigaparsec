@@ -35,7 +35,7 @@ fail :: [String] -> Parsec a
 fail = _fail "Text.Gigaparsec.Errors.Combinator.fail" (FlexibleCaret 1)
 
 failWide :: Word -> [String] -> Parsec a
-failWide = _fail "Text.Gigaparsec.Errors.Combinator.failWide" . RigidCaret
+failWide width = _fail "Text.Gigaparsec.Errors.Combinator.failWide" (RigidCaret width)
 
 _fail :: String -> CaretWidth -> [String] -> Parsec a
 _fail name width msgs =
@@ -46,7 +46,7 @@ unexpected :: String -> Parsec a
 unexpected = _unexpected (FlexibleCaret 1)
 
 unexpectedWide :: Word -> String -> Parsec a
-unexpectedWide = _unexpected . RigidCaret
+unexpectedWide width = _unexpected (RigidCaret width)
 
 _unexpected :: CaretWidth -> String -> Parsec a
 _unexpected width name = Internal.raise $ \st ->

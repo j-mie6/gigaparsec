@@ -125,7 +125,7 @@ instance Alternative Parsec where
     let bad' err st'
           | consumed st' > consumed st = bad err st'
           --  ^ fail if p failed *and* consumed
-          | otherwise    = q st' ok (bad . Errors.mergeErr err)
+          | otherwise    = q st' ok (\err' -> bad (Errors.mergeErr err err'))
     in  p st ok bad'
 
   many :: Parsec a -> Parsec [a]

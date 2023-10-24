@@ -7,7 +7,7 @@
 
 // This file enables the use of `UnliftedDatatypes` from 9.2 in a portable way
 // include this file at the top underneath the requisite `CPP` extension, then
-// have a `import PortableUnlifted` import; `UnliftedDatatype` is now a kind
+// have a `CPP_import_PortableUnlifted` import; `UnliftedDatatype` is now a kind
 // that can be freely used.
 #endif
 
