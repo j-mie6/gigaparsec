@@ -14,7 +14,7 @@ import Prelude hiding (fail)
 
 import Text.Gigaparsec (Parsec, empty)
 -- We want to use this to make the docs point to the right definition for users.
-import Text.Gigaparsec.Internal qualified as Internal (Parsec(Parsec), labelErr, emptyErr, raise)
+import Text.Gigaparsec.Internal qualified as Internal (Parsec(Parsec), labelErr, emptyErr, specialisedErr, raise)
 import Text.Gigaparsec.Internal.Errors (CaretWidth(FlexibleCaret, RigidCaret))
 import Text.Gigaparsec.Internal.Require (require)
 
@@ -37,8 +37,9 @@ failWide :: Word -> [String] -> Parsec a
 failWide = _fail "Text.Gigaparsec.Errors.Combinator.failWide" . RigidCaret
 
 _fail :: String -> CaretWidth -> [String] -> Parsec a
-_fail name _ msgs =
-  require (not (null msgs)) name "messages cannot be empty" empty --TODO:
+_fail name width msgs =
+  require (not (null msgs)) name "messages cannot be empty" $
+    Internal.raise (\st -> Internal.specialisedErr st msgs width)
 
 unexpected :: String -> Parsec a
 unexpected = _unexpected (FlexibleCaret 1)

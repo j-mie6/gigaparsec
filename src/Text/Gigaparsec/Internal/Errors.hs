@@ -109,6 +109,9 @@ expectedErr input presentationOffset line col expecteds width = VanillaError {
     lexicalError = False
 }
 
+specialisedErr :: Word -> Word -> Word -> [String] -> CaretWidth -> ParseError
+specialisedErr presentationOffset line col msgs caretWidth = SpecialisedError {..}
+
 labelErr :: Word -> Set String -> ParseError -> ParseError
 labelErr offset expecteds err@VanillaError{}
   | offset == presentationOffset err = err {
