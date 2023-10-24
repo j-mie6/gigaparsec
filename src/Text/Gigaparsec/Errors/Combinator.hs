@@ -29,7 +29,7 @@ label ls (Internal.Parsec p) =
     Internal.Parsec $ \st good bad -> p st good (\err st' -> bad (Internal.labelErr st' ls err) st')
 
 emptyWide :: Word -> Parsec a
-emptyWide width = Internal.raise (flip Internal.emptyErr width)
+emptyWide width = Internal.raise (`Internal.emptyErr` width)
 
 fail :: [String] -> Parsec a
 fail = _fail "Text.Gigaparsec.Errors.Combinator.fail" (FlexibleCaret 1)

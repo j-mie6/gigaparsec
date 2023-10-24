@@ -1,5 +1,6 @@
 {-# LANGUAGE Trustworthy #-}
-{-# LANGUAGE DeriveFunctor, StandaloneDeriving, RecordWildCards #-}
+{-# LANGUAGE DeriveFunctor, StandaloneDeriving, RecordWildCards, CPP #-}
+#include "portable-unlifted.h"
 {-# OPTIONS_HADDOCK hide #-}
 {-|
 Module      : Text.Gigaparsec.Internal
@@ -24,6 +25,8 @@ import Control.Applicative (Applicative(liftA2), Alternative(empty, (<|>), many,
 import Control.Selective (Selective(select))
 
 import Data.Set (Set)
+
+import PortableUnlifted
 
 {-
 Notes:
@@ -115,7 +118,7 @@ raise mkErr = Parsec $ \st _ bad -> bad (mkErr st) st
 
 instance Alternative Parsec where
   empty :: Parsec a
-  empty = raise (flip emptyErr 0)
+  empty = raise (`emptyErr` 0)
 
   (<|>) :: Parsec a -> Parsec a -> Parsec a
   Parsec p <|> Parsec q = Parsec $ \st ok bad ->
@@ -156,7 +159,7 @@ instance Monoid m => Monoid (Parsec m) where
 
   {-# INLINE mempty #-}
 
-type State :: *
+type State :: UnliftedDatatype
 data State = State {
     -- | the input string, in future this may be generalised
     input :: !String,

@@ -1,17 +1,19 @@
+{-# LANGUAGE Trustworthy #-}
 {-# LANGUAGE StandaloneDeriving, DeriveAnyClass, DeriveGeneric #-}
-module Main where
+{-# OPTIONS_GHC -Wno-orphans #-}
+module Main (main) where
 
 import Gauge (defaultMain, bench, nf)
-import Text.Gigaparsec (Parsec, Result(..), parse, atomic, (<|>))
+import Text.Gigaparsec (Parsec, Result(Success, Failure), parse, atomic, (<|>))
 import Text.Gigaparsec.Char (string)
-import Control.DeepSeq
-import GHC.Generics
+import Control.DeepSeq (NFData)
+import GHC.Generics (Generic)
 
 p :: Parsec String
 p = atomic (string "hello wold") <|> atomic (string "hi") <|> string "hello world"
 
-deriving instance Generic (Result a)
-deriving instance NFData a => NFData (Result a)
+deriving stock instance Generic (Result a)
+deriving anyclass instance NFData a => NFData (Result a)
 
 main :: IO ()
 main = defaultMain [

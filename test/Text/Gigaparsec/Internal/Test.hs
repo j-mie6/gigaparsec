@@ -1,5 +1,7 @@
 -- A collection of test helpers
-{-# LANGUAGE StandaloneDeriving, AllowAmbiguousTypes #-}
+{-# LANGUAGE AllowAmbiguousTypes, RecordWildCards #-}
+{-# OPTIONS_GHC -Wno-unrecognised-pragmas #-}
+{-# HLINT ignore "Use newtype instead of data" #-}
 module Text.Gigaparsec.Internal.Test where
 
 import Test.Tasty.HUnit
@@ -12,9 +14,7 @@ import Control.Exception (catches, evaluate, Exception, SomeException(..), Handl
 import Control.Monad (unless, forM_)
 import Type.Reflection (typeOf, typeRep)
 
--- don't @ me
-deriving stock instance Eq State
-deriving stock instance Show State
+data LiftedState = Lifted State
 
 parseAll :: Parsec a -> String -> Result a
 parseAll p = parse (p <* eof)
@@ -30,10 +30,10 @@ pureParseWith (Parsec p) inp = do
   where initSt = emptyState inp
         run :: State -> Assertion
         run st = do
-          let st' = runRT (p st (\ !_ -> return) (\ !_ -> return))
-          unless (st == st') $
+          let st' = runRT (p st (\ !_ s -> return (Lifted s)) (\ !_ s -> return (Lifted s)))
+          unless (Lifted st == st') $
             assertFailure ("expected no change to internal state\n"
-                        ++ "initial state: " ++ show st ++ "\n       became: " ++ show st')
+                        ++ "initial state: " ++ show (Lifted st) ++ "\n       became: " ++ show st')
 
 -- TODO: could we use quick-check to generate inputs?
 -- | Tests to ensure that running the parser does nothing to the state
@@ -55,7 +55,7 @@ impureParseWith p inp = do
         run :: State -> Assertion
         run st = do
           let st' = parseState p st
-          assertBool (show st ++ " should be altered") (st' /= st)
+          assertBool (show (Lifted st) ++ " should be altered") (st' /= Lifted st)
 
 -- TODO: could we use quick-check to generate inputs?
 -- | Tests to ensure that running the parser does something to the state
@@ -91,9 +91,26 @@ throws x = do
         qSt = parseState q st
     unless (pSt == qSt) $
       assertFailure ("expected both parsers have the same effect on the state"
-                  ++ "\ninitial state: " ++ show st
+                  ++ "\ninitial state: " ++ show (Lifted st)
                   ++ "\n          got: " ++ show pSt
                   ++ "\n     expected: " ++ show qSt)
 
-parseState :: Parsec a -> State -> State
-parseState (Parsec p) st = runRT (p st (\ !_ -> return) (\ !_ -> return))
+parseState :: Parsec a -> State -> LiftedState
+parseState (Parsec p) st = runRT (p st (\ !_ st' -> return (Lifted st')) (\ !_ st' -> return (Lifted st')))
+
+-- don't @ me
+instance Eq LiftedState where
+  (==) :: LiftedState -> LiftedState -> Bool
+  Lifted (State input1 consumed1 line1 col1) == Lifted (State input2 consumed2 line2 col2) =
+    consumed1 == consumed2 && line1 == line2 && col1 == col2 && input1 == input2
+instance Show LiftedState where
+  showsPrec :: Int -> LiftedState -> ShowS
+  showsPrec p (Lifted State{..}) = showParen (p > 10) $ showString "State { input = "
+                                                      . shows input
+                                                      . showString ", consumed = "
+                                                      . shows consumed
+                                                      . showString ", line = "
+                                                      . shows line
+                                                      . showString ", col = "
+                                                      . shows col
+                                                      . showChar '}'

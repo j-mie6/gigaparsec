@@ -83,9 +83,9 @@ module Text.Gigaparsec (
 -- `Internal`: when they are in the public API, we are locked into them!
 
 import Text.Gigaparsec.Internal (Parsec(Parsec), emptyState, manyr, somer, expectedErr)
-import Text.Gigaparsec.Internal qualified as Internal.State (State(..))
-import Text.Gigaparsec.Internal.RT (runRT)
-import Text.Gigaparsec.Internal.Errors (ExpectItem(ExpectEndOfInput))
+import Text.Gigaparsec.Internal qualified as Internal (State(..))
+import Text.Gigaparsec.Internal.RT qualified as Internal (RT, runRT)
+import Text.Gigaparsec.Internal.Errors qualified as Internal (ParseError, ExpectItem(ExpectEndOfInput))
 
 import Data.Functor (void)
 import Control.Applicative (liftA2, (<|>), empty, many, some, (<**>)) -- liftA2 required until 9.6
@@ -102,8 +102,10 @@ type Result :: * -> *
 data Result a = Success a | Failure String deriving stock (Show, Eq)
 
 parse :: Parsec a -> String -> Result a
-parse (Parsec p) inp = runRT $ p (emptyState inp) good bad
-  where good x _  = return (Success x)
+parse (Parsec p) inp = Internal.runRT $ p (emptyState inp) good bad
+  where good :: a -> Internal.State -> Internal.RT (Result a)
+        good x _  = return (Success x)
+        bad :: Internal.ParseError -> Internal.State -> Internal.RT (Result a)
         bad err _ = return (Failure (show err))
 
 {-|
@@ -126,7 +128,7 @@ Success "abd" -- first parser does not consume input on failure now
 atomic :: Parsec a -- ^ the parser, @p@, to execute, if it fails, it will not have consumed input.
        -> Parsec a -- ^ a parser that tries @p@, but never consumes input if it fails.
 atomic (Parsec p) = Parsec $ \st ok bad ->
-  p st ok (\err -> const (bad err st))
+  p st ok (\err _ -> bad err st)
 
 {-| This combinator parses its argument @p@, but does not consume input if it succeeds.
 
@@ -172,7 +174,7 @@ keyword kw = atomic $ string kw *> notFollowedBy letterOrDigit
 notFollowedBy :: Parsec a  -- ^ the parser, @p@, to execute, it must fail in order for this combinator to succeed.
               -> Parsec () -- ^ a parser which fails when @p@ succeeds and succeeds otherwise, never consuming input.
 notFollowedBy (Parsec p) = Parsec $ \st ok bad ->
-  p st (\_ st' -> bad (expectedErr st Set.empty (Internal.State.consumed st' - Internal.State.consumed st)) st)
+  p st (\_ st' -> bad (expectedErr st Set.empty (Internal.consumed st' - Internal.consumed st)) st)
        (\_ _ -> ok () st)
 
 -- eof is usually `notFollowedBy item`, but this requires annoying cyclic dependencies on Char
@@ -189,8 +191,8 @@ Success ()
 @since 0.1.0.0
 -}
 eof :: Parsec ()
-eof = Parsec $ \st good bad -> case Internal.State.input st of
-  (:){} -> bad (expectedErr st (Set.singleton ExpectEndOfInput) 1) st
+eof = Parsec $ \st good bad -> case Internal.input st of
+  (:){} -> bad (expectedErr st (Set.singleton Internal.ExpectEndOfInput) 1) st
   []    -> good () st
 
 {-|
