@@ -18,7 +18,7 @@ module Text.Gigaparsec.Internal (module Text.Gigaparsec.Internal) where
 
 import Text.Gigaparsec.Internal.RT (RT)
 import Text.Gigaparsec.Internal.Errors (ParseError, ExpectItem)
-import Text.Gigaparsec.Internal.Errors qualified as Errors (emptyErr, expectedErr, labelErr)
+import Text.Gigaparsec.Internal.Errors qualified as Errors (emptyErr, expectedErr, labelErr, mergeErr)
 
 import Control.Applicative (Applicative(liftA2), Alternative(empty, (<|>), many, some)) -- liftA2 required until 9.6
 import Control.Selective (Selective(select))
@@ -122,7 +122,7 @@ instance Alternative Parsec where
     let bad' err st'
           | consumed st' > consumed st = bad err st'
           --  ^ fail if p failed *and* consumed
-          | otherwise    = q st' ok bad -- TODO: merge errors!
+          | otherwise    = q st' ok (bad . Errors.mergeErr err)
     in  p st ok bad'
 
   many :: Parsec a -> Parsec [a]

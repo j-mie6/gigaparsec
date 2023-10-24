@@ -73,7 +73,7 @@ junct oxford elems junction = junct' (sortBy (comparing Down) elems)
 
     junct' [] = Nothing
     junct' [alt] = Just (fromString alt)
-    junct' [alt1, alt2] = Just (fromString alt1 <> " " <> fromString junction <> " " <> fromString alt2)
+    junct' [alt1, alt2] = Just (fromString alt2 <> " " <> fromString junction <> " " <> fromString alt1)
     junct' as@(alt:alts)
       -- use a semi-colon here, it is more correct
       | any (elem ',') as = Just (junct'' (reverse alts) alt "; ")
