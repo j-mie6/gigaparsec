@@ -49,7 +49,7 @@ import Text.Gigaparsec (Parsec, atomic, empty, some, many, (<|>))
 import Text.Gigaparsec.Combinator (skipMany)
 import Text.Gigaparsec.Errors.Combinator ((<?>))
 -- We want to use this to make the docs point to the right definition for users.
-import Text.Gigaparsec.Internal qualified as Internal (Parsec(Parsec), State(..), expectedErr)
+import Text.Gigaparsec.Internal qualified as Internal (Parsec(Parsec), State(..), expectedErr, useHints)
 import Text.Gigaparsec.Internal.Errors qualified as Internal (ExpectItem(ExpectRaw))
 import Text.Gigaparsec.Internal.Require (require)
 
@@ -72,7 +72,7 @@ _satisfy :: Set Internal.ExpectItem -> (Char -> Bool) -> Parsec Char
 _satisfy expecteds test = Internal.Parsec $ \st ok bad ->
   case Internal.input st of
     c:cs | test c -> ok c (updateState st c cs)
-    _             -> bad (Internal.expectedErr st expecteds 1) st
+    _             -> Internal.useHints bad (Internal.expectedErr st expecteds 1) st
   where
   -- The duplicated input & consumed update avoids double allocation
   -- that occurs if they were done separately to the line and col updates.

@@ -82,8 +82,8 @@ module Text.Gigaparsec (
 -- Care MUST be taken to not expose /any/ implementation details from
 -- `Internal`: when they are in the public API, we are locked into them!
 
-import Text.Gigaparsec.Internal (Parsec(Parsec), emptyState, manyr, somer, expectedErr)
-import Text.Gigaparsec.Internal qualified as Internal (State(..))
+import Text.Gigaparsec.Internal (Parsec(Parsec), emptyState, manyr, somer)
+import Text.Gigaparsec.Internal qualified as Internal (State(..), useHints, expectedErr)
 import Text.Gigaparsec.Internal.RT qualified as Internal (RT, runRT)
 import Text.Gigaparsec.Internal.Errors qualified as Internal (ParseError, ExpectItem(ExpectEndOfInput), showErr)
 
@@ -174,7 +174,8 @@ keyword kw = atomic $ string kw *> notFollowedBy letterOrDigit
 notFollowedBy :: Parsec a  -- ^ the parser, @p@, to execute, it must fail in order for this combinator to succeed.
               -> Parsec () -- ^ a parser which fails when @p@ succeeds and succeeds otherwise, never consuming input.
 notFollowedBy (Parsec p) = Parsec $ \st ok bad ->
-  p st (\_ st' -> bad (expectedErr st Set.empty (Internal.consumed st' - Internal.consumed st)) st)
+  p st (\_ st' -> let !width = Internal.consumed st' - Internal.consumed st
+                  in Internal.useHints bad (Internal.expectedErr st Set.empty width) st)
        (\_ _ -> ok () st)
 
 -- eof is usually `notFollowedBy item`, but this requires annoying cyclic dependencies on Char
@@ -192,7 +193,8 @@ Success ()
 -}
 eof :: Parsec ()
 eof = Parsec $ \st good bad -> case Internal.input st of
-  (:){} -> bad (expectedErr st (Set.singleton Internal.ExpectEndOfInput) 1) st
+  (:){} -> Internal.useHints bad
+             (Internal.expectedErr st (Set.singleton Internal.ExpectEndOfInput) 1) st
   []    -> good () st
 
 {-|

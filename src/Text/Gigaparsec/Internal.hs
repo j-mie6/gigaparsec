@@ -1,5 +1,5 @@
 {-# LANGUAGE Trustworthy #-}
-{-# LANGUAGE DeriveFunctor, StandaloneDeriving, RecordWildCards, CPP #-}
+{-# LANGUAGE DeriveFunctor, StandaloneDeriving, RecordWildCards, NamedFieldPuns, CPP #-}
 #include "portable-unlifted.h"
 {-# OPTIONS_HADDOCK hide #-}
 {-|
@@ -20,8 +20,8 @@ module Text.Gigaparsec.Internal (module Text.Gigaparsec.Internal) where
 import Text.Gigaparsec.Internal.RT (RT)
 import Text.Gigaparsec.Internal.Errors (ParseError, ExpectItem, CaretWidth)
 import Text.Gigaparsec.Internal.Errors qualified as Errors (
-    emptyErr, expectedErr, labelErr, specialisedErr, mergeErr, unexpectedErr,
-    expecteds, isExpectedEmpty, presentationOffset
+    emptyErr, expectedErr, specialisedErr, mergeErr, unexpectedErr,
+    expecteds, isExpectedEmpty, presentationOffset, useHints
   )
 
 import Control.Applicative (Applicative(liftA2), Alternative(empty, (<|>), many, some)) -- liftA2 required until 9.6
@@ -118,18 +118,21 @@ instance Monad Parsec where
   {-# INLINE (>>=) #-}
 
 raise :: (State -> ParseError) -> Parsec a
-raise mkErr = Parsec $ \st _ bad -> bad (mkErr st) st
+raise mkErr = Parsec $ \st _ bad -> useHints bad (mkErr st) st
 
 instance Alternative Parsec where
   empty :: Parsec a
   empty = raise (`emptyErr` 0)
 
+  -- FIXME: I feel like there is something missing here with hint merging from ctx.mergeHints
+  -- if the hint stack is not real then it lives in the continuation trace, but I don't know... which
   (<|>) :: Parsec a -> Parsec a -> Parsec a
   Parsec p <|> Parsec q = Parsec $ \st ok bad ->
     let bad' err st'
           | consumed st' > consumed st = bad err st'
           --  ^ fail if p failed *and* consumed
-          | otherwise    = q st' (\x st'' -> ok x (errorToHints st'' err)) (\err' -> bad (Errors.mergeErr err err'))
+          | otherwise    = q st' (\x st'' -> ok x (errorToHints st'' err))
+                                 (\err' -> bad (Errors.mergeErr err err'))
     in  p st ok bad'
 
   many :: Parsec a -> Parsec [a]
@@ -194,9 +197,6 @@ emptyErr State{..} = Errors.emptyErr consumed line col
 expectedErr :: State -> Set ExpectItem -> Word -> ParseError
 expectedErr State{..} = Errors.expectedErr input consumed line col
 
-labelErr :: State -> Set String -> ParseError -> ParseError
-labelErr State{..} = Errors.labelErr consumed
-
 specialisedErr :: State -> [String] -> CaretWidth -> ParseError
 specialisedErr State{..} = Errors.specialisedErr consumed line col
 
@@ -210,3 +210,9 @@ errorToHints st@State{..} err
     if hintValidOffset < consumed then st { hints = Errors.expecteds err, hintValidOffset = consumed }
     else                               st { hints = Set.union hints (Errors.expecteds err) }
 errorToHints st _ = st
+
+useHints :: (ParseError -> State -> RT r) -> (ParseError -> State -> RT r)
+useHints bad err st@State{hintValidOffset, hints}
+  | presentationOffset == hintValidOffset = bad (Errors.useHints hints err) st
+  | otherwise                             = bad err st{hintValidOffset = presentationOffset, hints = Set.empty}
+  where !presentationOffset = Errors.presentationOffset err

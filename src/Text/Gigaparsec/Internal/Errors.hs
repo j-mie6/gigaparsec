@@ -88,7 +88,7 @@ formatUnexpect (UnexpectNamed name caretWidth) = (namedDefault name, width caret
 formatUnexpect UnexpectEndOfInput = (endOfInputDefault, 1)
 
 emptyErr :: Word -> Word -> Word -> Word -> ParseError
-emptyErr presentationOffset line col width = VanillaError {
+emptyErr !presentationOffset !line !col !width = VanillaError {
     presentationOffset = presentationOffset,
     line = line,
     col = col,
@@ -99,7 +99,7 @@ emptyErr presentationOffset line col width = VanillaError {
   }
 
 expectedErr :: String -> Word -> Word -> Word -> Set ExpectItem -> Word -> ParseError
-expectedErr input presentationOffset line col expecteds width = VanillaError {
+expectedErr !input !presentationOffset !line !col !expecteds !width = VanillaError {
     presentationOffset = presentationOffset,
     line = line,
     col = col,
@@ -112,10 +112,10 @@ expectedErr input presentationOffset line col expecteds width = VanillaError {
 }
 
 specialisedErr :: Word -> Word -> Word -> [String] -> CaretWidth -> ParseError
-specialisedErr presentationOffset line col msgs caretWidth = SpecialisedError {..}
+specialisedErr !presentationOffset !line !col !msgs caretWidth = SpecialisedError {..}
 
 unexpectedErr :: Word -> Word -> Word -> Set ExpectItem -> String -> CaretWidth -> ParseError
-unexpectedErr presentationOffset line col expecteds name caretWidth = VanillaError {
+unexpectedErr !presentationOffset !line !col !expecteds !name caretWidth = VanillaError {
     presentationOffset = presentationOffset,
     line = line,
     col = col,
@@ -126,11 +126,15 @@ unexpectedErr presentationOffset line col expecteds name caretWidth = VanillaErr
   }
 
 labelErr :: Word -> Set String -> ParseError -> ParseError
-labelErr offset expecteds err@VanillaError{}
+labelErr !offset expecteds err@VanillaError{}
   | offset == presentationOffset err = err {
       expecteds = Set.map ExpectNamed expecteds
   }
 labelErr _ _ err = err
+
+useHints :: Set ExpectItem -> ParseError -> ParseError
+useHints !hints err@VanillaError{expecteds} = err { expecteds = Set.union hints expecteds }
+useHints _ err = err
 
 mergeErr :: ParseError -> ParseError -> ParseError
 mergeErr err1 err2

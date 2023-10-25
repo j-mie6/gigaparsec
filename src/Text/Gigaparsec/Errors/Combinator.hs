@@ -14,19 +14,24 @@ import Prelude hiding (fail)
 
 import Text.Gigaparsec (Parsec)
 -- We want to use this to make the docs point to the right definition for users.
-import Text.Gigaparsec.Internal qualified as Internal (Parsec(Parsec), labelErr, emptyErr, specialisedErr, raise, unexpectedErr)
-import Text.Gigaparsec.Internal.Errors (CaretWidth(FlexibleCaret, RigidCaret))
+import Text.Gigaparsec.Internal qualified as Internal (Parsec(Parsec), emptyErr, specialisedErr, raise, unexpectedErr, hints, consumed, useHints)
+import Text.Gigaparsec.Internal.Errors (CaretWidth(FlexibleCaret, RigidCaret), ExpectItem(ExpectNamed), labelErr)
 import Text.Gigaparsec.Internal.Require (require)
 
 import Data.Set (Set)
-import Data.Set qualified as Set (empty)
+import Data.Set qualified as Set (empty, map)
 
 -- the empty set is weird here, do we require non-empty or just make it id?
 label :: Set String -> Parsec a -> Parsec a
 label ls (Internal.Parsec p) =
   require (not (any null ls)) "Text.Gigaparsec.Errors.Combinator.label" "labels cannot be empty" $
-    -- TODO: hints on good!
-    Internal.Parsec $ \st good bad -> p st good (\err st' -> bad (Internal.labelErr st' ls err) st')
+    Internal.Parsec $ \st good bad ->
+      let !origConsumed = Internal.consumed st
+          good' x st'
+            | Internal.consumed st' /= origConsumed = good x st'
+            | otherwise = good x st'{Internal.hints = Set.map ExpectNamed ls}
+          bad' err = Internal.useHints bad (labelErr origConsumed ls err)
+      in p st good' bad'
 
 emptyWide :: Word -> Parsec a
 emptyWide width = Internal.raise (`Internal.emptyErr` width)
