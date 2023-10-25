@@ -9,7 +9,7 @@ import Text.Gigaparsec.Char (digit)
 import Text.Gigaparsec.Expr
 import Text.Gigaparsec.Expr.Subtype
 
-import Text.Gigaparsec.Internal.Test (parseAll)
+import Text.Gigaparsec.Internal.Test (testParseAll)
 import Text.Gigaparsec.Internal.PlainString ()
 
 import Data.Char (digitToInt)
@@ -46,47 +46,47 @@ precTests = testGroup "precedence should"
   [ testCase "result in correct precedence" do
       let expr = precedence' (digitToInt <$> digit) [ ops InfixL ["*" $> (*)]
                                                     , ops InfixL ["+" $> (+)]]
-      parseAll expr "1+2*3+4" @?= Success 11
-      parseAll expr "1*2+3*4" @?= Success 14
+      testParseAll expr "1+2*3+4" @?= Success 11
+      testParseAll expr "1*2+3*4" @?= Success 14
   , testCase "work for multiple operators at the same level" do
       let expr = precedence' (digitToInt <$> digit) [ops InfixL ["+" $> (+), "-" $> (-)]]
-      parseAll expr "1+2-3+4" @?= Success 4
-      parseAll expr "1-2+3-4" @?= Success (-2)
+      testParseAll expr "1+2-3+4" @?= Success 4
+      testParseAll expr "1-2+3-4" @?= Success (-2)
   , testCase "work for mixed associativity operators" do
       let expr = precedence' (digitToInt <$> digit) [ ops InfixL ["*" $> (*)]
                                                     , ops InfixR ["+" $> (+)]]
-      parseAll expr "1+2*3+4" @?= Success 11
-      parseAll expr "1*2+3*4" @?= Success 14
+      testParseAll expr "1+2*3+4" @?= Success 11
+      testParseAll expr "1*2+3*4" @?= Success 14
   , testCase "parse mathematical expressions" do
       let expr = precedence' (digitToInt <$> digit <|> "(" *> expr <* ")")
                              [ ops Prefix ["-" $> negate]
                              , ops InfixL ["/" $> div]
                              , ops InfixR ["*" $> (*)]
                              , ops InfixL ["+" $> (+), "-" $> (-)]]
-      parseAll expr "(2+3)*8" @?= Success 40
-      parseAll expr "-3+4" @?= Success 1
-      parseAll expr "-(3+4)" @?= Success (-7)
-      parseAll expr "(3+-7)*(-2--4)/2" @?= Success (-4)
+      testParseAll expr "(2+3)*8" @?= Success 40
+      testParseAll expr "-3+4" @?= Success 1
+      testParseAll expr "-(3+4)" @?= Success (-7)
+      testParseAll expr "(3+-7)*(-2--4)/2" @?= Success (-4)
   , testCase "parse prefix operators mixed with infix operators" do
       let expr = precedence' (digitToInt <$> digit <|> "(" *> expr <* ")")
                              [ ops Prefix ["-" $> negate]
                              , ops InfixL ["-" $> (-)]]
-      parseAll expr "-1" @?= Success (-1)
-      parseAll expr "2-1" @?= Success 1
-      parseAll expr "-2-1" @?= Success (-3)
-      parseAll expr "-(2-1)" @?= Success (-1)
-      parseAll expr "(-0)-1" @?= Success (-1)
+      testParseAll expr "-1" @?= Success (-1)
+      testParseAll expr "2-1" @?= Success 1
+      testParseAll expr "-2-1" @?= Success (-3)
+      testParseAll expr "-(2-1)" @?= Success (-1)
+      testParseAll expr "(-0)-1" @?= Success (-1)
   , testCase "be able to parse prefix operators weaker than an infix" do
       let expr = precedence' ("." $> Unit) [ ops InfixL [";" $> Bin]
                                            , ops Prefix ["~" $> Un]]
-      parseAll expr "~.;." @?= Success (Un (Bin Unit Unit))
+      testParseAll expr "~.;." @?= Success (Un (Bin Unit Unit))
   , testCase "generalise to sub-typed structures" do
       let expr = precedence $  sops InfixN ["<" $> Less]
                             +< sops InfixL ["+" $> Add]
                             +< sops InfixR ["*" $> Mul]
                             +< sops Prefix ["-" $> Neg]
                             +< Atom (Num . digitToInt <$> digit <|> "(" *> (Parens <$> expr) <* ")")
-      parseAll expr "(7+8)*2+3+6*2" @?=
+      testParseAll expr "(7+8)*2+3+6*2" @?=
         Success (upcast (Add (Add (upcast (Mul (upcast (Parens (upcast (Add (upcast (Num 7))
                                                                             (upcast (Num 8))))))
                                                (upcast (Num 2))))
@@ -98,7 +98,7 @@ precTests = testGroup "precedence should"
                             +< gops InfixR OfFactor ["*" $> Mul]
                             +< gops Prefix OfAtom ["-" $> Neg]
                             +< Atom (Num . digitToInt <$> digit <|> "(" *> (Parens <$> expr) <* ")")
-      parseAll expr "(7+8)*2+3+6*2<4" @?=
+      testParseAll expr "(7+8)*2+3+6*2<4" @?=
         Success (Less (Add (Add (upcast (Mul (upcast (Parens (upcast (Add (upcast (Num 7))
                                                                           (upcast (Num 8))))))
                                                (upcast (Num 2))))
@@ -111,7 +111,7 @@ precTests = testGroup "precedence should"
                             >+ gops InfixL OfFactor ["*" $> Mul']
                             >+ gops InfixL OfTerm ["+" $> Add]
                             >+ gops InfixN OfExpr ["<" $> Less]
-      parseAll expr "1*(2+3)" @?=
+      testParseAll expr "1*(2+3)" @?=
         Success (upcast (Mul' (upcast (Num 1))
                               (upcast (Parens (upcast (Add (upcast (Num 2))
                                                            (upcast (Num 3))))))))

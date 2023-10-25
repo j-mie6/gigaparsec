@@ -98,14 +98,14 @@ import Data.Set qualified as Set (singleton, empty)
 --type Parsec :: * -> *
 --type Parsec = Internal.Parsec
 
-type Result :: * -> *
-data Result a = Success a | Failure String deriving stock (Show, Eq)
+type Result :: * -> * -> *
+data Result e a = Success a | Failure e deriving stock (Show, Eq)
 
-parse :: Parsec a -> String -> Result a
+parse :: Parsec a -> String -> Result String a
 parse (Parsec p) inp = Internal.runRT $ p (emptyState inp) good bad
-  where good :: a -> Internal.State -> Internal.RT (Result a)
+  where good :: a -> Internal.State -> Internal.RT (Result String a)
         good x _  = return (Success x)
-        bad :: Internal.ParseError -> Internal.State -> Internal.RT (Result a)
+        bad :: Internal.ParseError -> Internal.State -> Internal.RT (Result String a)
         bad err _ = return (Failure (Internal.showErr err))
 
 {-|

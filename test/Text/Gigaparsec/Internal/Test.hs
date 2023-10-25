@@ -6,8 +6,11 @@ module Text.Gigaparsec.Internal.Test where
 
 import Test.Tasty.HUnit
 
+import Text.Gigaparsec.Internal.TestError
+
 import Text.Gigaparsec
 import Text.Gigaparsec.Internal
+import Text.Gigaparsec.Internal.Errors (ParseError)
 import Text.Gigaparsec.Internal.RT
 
 import Control.Exception (catches, evaluate, Exception, SomeException(..), Handler(..), throwIO)
@@ -16,8 +19,15 @@ import Type.Reflection (typeOf, typeRep)
 
 data LiftedState = Lifted State
 
-parseAll :: Parsec a -> String -> Result a
-parseAll p = parse (p <* eof)
+testParse :: Parsec a -> String -> Result TestError a
+testParse (Parsec p) inp = runRT $ p (emptyState inp) good bad
+  where good :: a -> State -> RT (Result TestError a)
+        good x _  = return (Success x)
+        bad :: ParseError -> State -> RT (Result TestError a)
+        bad err _ = return (Failure (parseErrorToTestError err))
+
+testParseAll :: Parsec a -> String -> Result TestError a
+testParseAll p = testParse (p <* eof)
 
 -- TODO: could we use quick-check to generate states?
 -- | Tests to ensure that running the parser on the given string does nothing to the state
