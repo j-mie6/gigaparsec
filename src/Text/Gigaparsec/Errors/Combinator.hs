@@ -1,7 +1,7 @@
 {-# LANGUAGE Safe #-}
 {-# OPTIONS_GHC -Wno-missing-import-lists #-}
 module Text.Gigaparsec.Errors.Combinator (
-    label, (<?>),
+    label, (<?>), hide,
     emptyWide,
     fail, failWide,
     unexpected, unexpectedWide,
@@ -24,7 +24,8 @@ import Data.Set qualified as Set (empty, map)
 -- the empty set is weird here, do we require non-empty or just make it id?
 label :: Set String -> Parsec a -> Parsec a
 label ls (Internal.Parsec p) =
-  require (not (any null ls)) "Text.Gigaparsec.Errors.Combinator.label" "labels cannot be empty" $
+  require (not (null ls) && not (any null ls)) "Text.Gigaparsec.Errors.Combinator.label"
+                                               "labels cannot be empty" $
     Internal.Parsec $ \st good bad ->
       let !origConsumed = Internal.consumed st
           good' x st'
@@ -32,6 +33,13 @@ label ls (Internal.Parsec p) =
             | otherwise = good x st'{Internal.hints = Set.map ExpectNamed ls}
           bad' err = Internal.useHints bad (labelErr origConsumed ls err)
       in p st good' bad'
+
+hide :: Parsec a -> Parsec a
+hide (Internal.Parsec p) =
+  Internal.Parsec $ \st good bad ->
+    p st (\x st' -> good x (st' {Internal.hints = Set.empty}))
+         -- FIXME: parsley doesn't use the hints for hiding, could this be bug?
+         (\_ st' -> {-Internal.useHints-} bad (Internal.emptyErr st' 0) st')
 
 emptyWide :: Word -> Parsec a
 emptyWide width = Internal.raise (`Internal.emptyErr` width)

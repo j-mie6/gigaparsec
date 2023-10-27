@@ -49,8 +49,8 @@ import Text.Gigaparsec (Parsec, atomic, empty, some, many, (<|>))
 import Text.Gigaparsec.Combinator (skipMany)
 import Text.Gigaparsec.Errors.Combinator ((<?>))
 -- We want to use this to make the docs point to the right definition for users.
-import Text.Gigaparsec.Internal qualified as Internal (Parsec(Parsec), State(..), expectedErr, useHints)
-import Text.Gigaparsec.Internal.Errors qualified as Internal (ExpectItem(ExpectRaw))
+import Text.Gigaparsec.Internal qualified as Internal (Parsec(Parsec, unParsec), State(..), expectedErr, useHints)
+import Text.Gigaparsec.Internal.Errors qualified as Internal (ExpectItem(ExpectRaw), ParseError)
 import Text.Gigaparsec.Internal.Require (require)
 
 import Data.Bits (Bits((.&.), (.|.)))
@@ -166,7 +166,12 @@ string :: String        -- ^ the string, @s@, to be parsed from the input
        -> Parsec String -- ^ a parser that either parses the string @s@ or fails at the first
                         -- mismatched character.
 string s = require (not (null s)) "Text.Gigaparsec.Char.string" "cannot pass empty string" $
-  traverse char s --TODO: remake for error message
+  --TODO: this could be much improved
+  Internal.Parsec $ \st ok bad ->
+    let bad' (_ :: Internal.ParseError) =
+          Internal.useHints bad (Internal.expectedErr st [Internal.ExpectRaw s]
+                                                         (fromIntegral (length s)))
+    in Internal.unParsec (traverse char s) st ok bad'
 
 -------------------------------------------------
 -- Composite Combinators
