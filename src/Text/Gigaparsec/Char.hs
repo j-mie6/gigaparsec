@@ -228,14 +228,14 @@ oneOf cs
   | sz == 1                     = char c1
   -- if the smallest and largest characters are as far apart
   -- as the size of the set, it must be contiguous
-  | sz == (ord c2 - ord c1 + 1) = satisfy (\c -> c1 <= c && c <= c2) <?> Set.mapMonotonic show cs
-  | otherwise                   = satisfy (`Set.member` cs) <?> [rangeLabel]
+  | sz == (ord c2 - ord c1 + 1) = satisfy (\c -> c1 <= c && c <= c2) <?> [rangeLabel]
+  | otherwise                   = satisfy (`Set.member` cs) <?> Set.mapMonotonic (show . (: [])) cs
   where !sz = Set.size cs
         -- must be left lazy until sz known not to be 0
         c1 = Set.findMin cs
         c2 = Set.findMax cs
         --FIXME: control character safe show (and for the map above!)
-        rangeLabel = "one of " ++ show c1 ++ " to " ++ show c2
+        rangeLabel = "one of " ++ show @String [c1] ++ " to " ++ show @String [c2]
 
 {-|
 This combinator tries to parse any character __not__ from supplied set of characters @cs@,
@@ -269,7 +269,7 @@ noneOf cs
         c1 = Set.findMin cs
         c2 = Set.findMax cs
         --FIXME: control character safe show
-        rangeLabel = "anything outside of " ++ show c1 ++ " to " ++ show c2
+        rangeLabel = "anything outside of " ++ show @String [c1] ++ " to " ++ show @String [c2]
 
 {-|
 This combinator parses characters matching the given predicate __zero__ or more times, collecting
