@@ -1,106 +1,53 @@
-{-# LANGUAGE Trustworthy #-}
-{-# LANGUAGE DerivingVia, OverloadedStrings #-}
-{-# OPTIONS_GHC -Wno-missing-import-lists #-}
+{-# LANGUAGE Safe #-}
+{-# LANGUAGE TypeFamilies, AllowAmbiguousTypes, FlexibleInstances #-}
 module Text.Gigaparsec.Errors.ErrorBuilder (module Text.Gigaparsec.Errors.ErrorBuilder) where
 
-import Prelude hiding (lines)
+import Data.Kind (Constraint)
+import Data.Set (Set)
+import Data.List.NonEmpty (NonEmpty)
 
-import Data.Monoid (Endo(Endo))
-import Data.String (IsString(fromString))
-import Data.List (intersperse, sortBy)
-import Data.Maybe (mapMaybe)
-import Data.Foldable (toList)
-import Data.Ord (comparing, Down (Down))
+import Text.Gigaparsec.Errors.Token (Token)
 
--- For now, this is the home of the default formatting functions
+type ErrorBuilder :: * -> Constraint
+class ErrorBuilder err where
+  format :: Position err -> Source err -> ErrorInfoLines err -> err
 
-type StringBuilder :: *
-newtype StringBuilder = StringBuilder (String -> String)
-  deriving (Semigroup, Monoid) via Endo String
+  type Position err
+  type Source err
+  pos :: Word -> Word -> Position err
+  source :: Maybe String -> Source err
 
-instance IsString StringBuilder where
-  fromString :: String -> StringBuilder
-  fromString str = StringBuilder (str ++)
+  type ErrorInfoLines err
+  vanillaError :: UnexpectedLine err -> ExpectedLine err -> Messages err -> LineInfo err -> ErrorInfoLines err
+  specialisedError :: Messages err -> LineInfo err -> ErrorInfoLines err
 
-toString :: StringBuilder -> String
-toString (StringBuilder build) = build mempty
+  type ExpectedItems err
+  type Messages err
 
-from :: Show a => a -> StringBuilder
-from = StringBuilder . shows
+  combineExpectedItems :: Set (Item err) -> ExpectedItems err
+  combineMessages :: [Message err] -> Messages err
 
-formatDefault :: StringBuilder -> Maybe StringBuilder -> [StringBuilder] -> String
-formatDefault pos source lines = toString (blockError header lines 2)
-  where header = maybe mempty (\src -> "In " <> src <> " ") source <> pos
+  type UnexpectedLine err
+  type ExpectedLine err
+  type Message err
+  type LineInfo err
 
-vanillaErrorDefault :: Foldable t => Maybe StringBuilder -> Maybe StringBuilder -> t StringBuilder -> [StringBuilder] -> [StringBuilder]
-vanillaErrorDefault unexpected expected reasons =
-  combineInfoWithLines (maybe id (:) unexpected (maybe id (:) expected (toList reasons)))
+  unexpected :: Maybe (Item err) -> UnexpectedLine err
+  expected :: ExpectedItems err -> ExpectedLine err
+  reason :: String -> Message err
+  message :: String -> Message err
 
-specialisedErrorDefault :: [StringBuilder] -> [StringBuilder] -> [StringBuilder]
-specialisedErrorDefault = combineInfoWithLines
+  lineInfo :: String -> [String] -> [String] -> Word -> Word -> LineInfo err
 
-combineInfoWithLines :: [StringBuilder] -> [StringBuilder] -> [StringBuilder]
-combineInfoWithLines [] lines = "unknown parse error" : lines
-combineInfoWithLines info lines = info ++ lines
+  numLinesBefore :: Int
+  numLinesAfter :: Int
 
---TODO: this needs to deal with whitespace and unprintables
-rawDefault :: String -> String
-rawDefault n = "\"" <> n <> "\""
+  type Item err
 
-namedDefault :: String -> String
-namedDefault = id
+  raw :: String -> Item err
+  named :: String -> Item err
+  endOfInput :: Item err
 
-endOfInputDefault :: String
-endOfInputDefault = "end of input"
+  unexpectedToken :: NonEmpty Char -> Word -> Bool -> Token
 
-messageDefault :: String -> String
-messageDefault = id
-
-expectedDefault :: Maybe StringBuilder -> Maybe StringBuilder
-expectedDefault = fmap ("expected " <>)
-
-unexpectedDefault :: Maybe String -> Maybe StringBuilder
-unexpectedDefault = fmap (("unexpected " <>) . fromString)
-
-disjunct :: Bool -> [String] -> Maybe StringBuilder
-disjunct oxford elems = junct oxford elems "or"
-
-junct :: Bool -> [String] -> String -> Maybe StringBuilder
-junct oxford elems junction = junct' (sortBy (comparing Down) elems)
-  where
-    j :: StringBuilder
-    j = fromString junction
-
-    junct' [] = Nothing
-    junct' [alt] = Just (fromString alt)
-    junct' [alt1, alt2] = Just (fromString alt2 <> " " <> fromString junction <> " " <> fromString alt1)
-    junct' as@(alt:alts)
-      -- use a semi-colon here, it is more correct
-      | any (elem ',') as = Just (junct'' (reverse alts) alt "; ")
-      | otherwise         = Just (junct'' (reverse alts) alt ", ")
-
-    junct'' is l delim = front <> back
-      where front = intercalate (fromString delim) (map fromString is) :: StringBuilder
-            back
-              | oxford    = fromString delim <> j <> " " <> fromString l
-              | otherwise = " " <> j <> " " <> fromString l
-
-combineMessagesDefault :: Foldable t => t String -> [StringBuilder]
-combineMessagesDefault = mapMaybe (\msg -> if null msg then Nothing else Just (fromString msg)) . toList
-
-blockError :: StringBuilder -> [StringBuilder] -> Int -> StringBuilder
-blockError header lines indent = header <> ":\n" <> indentAndUnlines lines indent
-
-indentAndUnlines :: [StringBuilder] -> Int -> StringBuilder
-indentAndUnlines lines indent = fromString pre <> intercalate (fromString ('\n' : pre)) lines
-  where pre = replicate indent ' '
-
-formatPosDefault :: Word -> Word -> StringBuilder
-formatPosDefault line col = "(line "
-                         <> from line
-                         <> ", column "
-                         <> from col
-                         <> ")"
-
-intercalate :: Monoid m => m -> [m] -> m
-intercalate x xs = mconcat (intersperse x xs)
+--instance ErrorBuilder String where

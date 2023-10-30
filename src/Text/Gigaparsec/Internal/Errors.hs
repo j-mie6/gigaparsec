@@ -10,7 +10,7 @@ import Data.List.NonEmpty qualified as NonEmpty (take)
 import Data.Set (Set)
 import Data.Set qualified as Set (toList, empty, map, union, null)
 
-import Text.Gigaparsec.Errors.ErrorBuilder (formatDefault, formatPosDefault, vanillaErrorDefault, specialisedErrorDefault, combineMessagesDefault, disjunct, endOfInputDefault, namedDefault, rawDefault, unexpectedDefault, expectedDefault)
+import Text.Gigaparsec.Errors.DefaultErrorBuilder (formatDefault, formatPosDefault, vanillaErrorDefault, specialisedErrorDefault, combineMessagesDefault, disjunct, endOfInputDefault, namedDefault, rawDefault, unexpectedDefault, expectedDefault)
 
 CPP_import_PortableUnlifted
 
