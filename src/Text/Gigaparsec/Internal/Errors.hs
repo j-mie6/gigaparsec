@@ -64,46 +64,6 @@ data ExpectItem = ExpectRaw !String
                 | ExpectEndOfInput
                 deriving stock (Eq, Ord, Show)
 
-fromParseError :: forall err. ErrorBuilder err => Maybe FilePath -> String -> ParseError -> err
-fromParseError srcFile input err =
-  Builder.format (Builder.pos @err (line err) (col err)) (Builder.source @err srcFile)
-                 (formatErr err)
-  where formatErr :: ParseError -> Builder.ErrorInfoLines err
-        formatErr VanillaError{..} =
-          Builder.vanillaError @err
-            (Builder.unexpected @err (either (const Nothing) (Just . fst) unexpectedTok))
-            (Builder.expected @err (Builder.combineExpectedItems @err (Set.map expectItem expecteds)))
-            (Builder.combineMessages @err (Set.foldr (\r -> (Builder.reason @err r :)) [] reasons))
-            (Builder.lineInfo @err curLine linesBefore linesAfter caret (trimToLine caretSize))
-          where unexpectedTok = unexpectItem lexicalError <$> unexpected
-                caretSize = either id snd unexpectedTok
-
-        formatErr SpecialisedError{..} =
-          Builder.specialisedError @err
-            (Builder.combineMessages @err (map (Builder.message @err) msgs))
-            (Builder.lineInfo @err curLine linesBefore linesAfter caret (trimToLine (width caretWidth)))
-
-        expectItem :: ExpectItem -> Builder.Item err
-        expectItem (ExpectRaw t) = Builder.raw @err t
-        expectItem (ExpectNamed n) = Builder.named @err n
-        expectItem ExpectEndOfInput = Builder.endOfInput @err
-
-        unexpectItem :: Bool -> UnexpectItem -> (Builder.Item err, Span)
-        unexpectItem lexical (UnexpectRaw cs demanded) =
-          case Builder.unexpectedToken @err cs demanded lexical of
-            t@(Token.Raw tok) -> (Builder.raw @err tok, Token.span t)
-            Token.Named name w -> (Builder.named @err name, w)
-        unexpectItem _ (UnexpectNamed name caretWidth) = (Builder.named @err name, width caretWidth)
-        unexpectItem _ UnexpectEndOfInput = (Builder.endOfInput @err, 1)
-
-        -- it is definitely the case that there are at least `line` lines
-        (allLinesBefore, curLine, allLinesAfter) = breakLines (line err - 1) (lines input)
-        linesBefore = drop (length allLinesBefore - Builder.numLinesBefore @err) allLinesBefore
-        linesAfter = take (Builder.numLinesAfter @err) allLinesAfter
-
-        caret = col err - 1
-        trimToLine width = min width (fromIntegral (length curLine) - caret + 1)
-
 emptyErr :: Word -> Word -> Word -> Word -> ParseError
 emptyErr !presentationOffset !line !col !width = VanillaError {
     presentationOffset = presentationOffset,
@@ -203,14 +163,54 @@ isExpectedEmpty :: ParseError -> Bool
 isExpectedEmpty VanillaError{expecteds} = Set.null expecteds
 isExpectedEmpty _                       = True
 
-lines :: String -> NonEmpty String
-lines [] = "" :| []
-lines ('\n':cs) = "" <| lines cs
-lines (c:cs) = let l :| ls = lines cs in (c:l) :| ls
+fromParseError :: forall err. ErrorBuilder err => Maybe FilePath -> String -> ParseError -> err
+fromParseError srcFile input err =
+  Builder.format (Builder.pos @err (line err) (col err)) (Builder.source @err srcFile)
+                 (formatErr err)
+  where formatErr :: ParseError -> Builder.ErrorInfoLines err
+        formatErr VanillaError{..} =
+          Builder.vanillaError @err
+            (Builder.unexpected @err (either (const Nothing) (Just . fst) unexpectedTok))
+            (Builder.expected @err (Builder.combineExpectedItems @err (Set.map expectItem expecteds)))
+            (Builder.combineMessages @err (Set.foldr (\r -> (Builder.reason @err r :)) [] reasons))
+            (Builder.lineInfo @err curLine linesBefore linesAfter caret (trimToLine caretSize))
+          where unexpectedTok = unexpectItem lexicalError <$> unexpected
+                caretSize = either id snd unexpectedTok
 
-breakLines :: Word -> NonEmpty String -> ([String], String, [String])
-breakLines 0 (l :| ls) = ([], l, ls)
-breakLines n (l :| ls) = case nonEmpty ls of
-  Nothing -> error "the focus line is guaranteed to exist"
-  Just ls' -> let (before, focus, after) = breakLines (n - 1) ls'
-              in (l : before, focus, after)
+        formatErr SpecialisedError{..} =
+          Builder.specialisedError @err
+            (Builder.combineMessages @err (map (Builder.message @err) msgs))
+            (Builder.lineInfo @err curLine linesBefore linesAfter caret (trimToLine (width caretWidth)))
+
+        expectItem :: ExpectItem -> Builder.Item err
+        expectItem (ExpectRaw t) = Builder.raw @err t
+        expectItem (ExpectNamed n) = Builder.named @err n
+        expectItem ExpectEndOfInput = Builder.endOfInput @err
+
+        unexpectItem :: Bool -> UnexpectItem -> (Builder.Item err, Span)
+        unexpectItem lexical (UnexpectRaw cs demanded) =
+          case Builder.unexpectedToken @err cs demanded lexical of
+            t@(Token.Raw tok) -> (Builder.raw @err tok, Token.span t)
+            Token.Named name w -> (Builder.named @err name, w)
+        unexpectItem _ (UnexpectNamed name caretWidth) = (Builder.named @err name, width caretWidth)
+        unexpectItem _ UnexpectEndOfInput = (Builder.endOfInput @err, 1)
+
+        -- it is definitely the case that there are at least `line` lines
+        (allLinesBefore, curLine, allLinesAfter) = breakLines (line err - 1) (lines input)
+        linesBefore = drop (length allLinesBefore - Builder.numLinesBefore @err) allLinesBefore
+        linesAfter = take (Builder.numLinesAfter @err) allLinesAfter
+
+        caret = col err - 1
+        trimToLine width = min width (fromIntegral (length curLine) - caret + 1)
+
+        lines :: String -> NonEmpty String
+        lines [] = "" :| []
+        lines ('\n':cs) = "" <| lines cs
+        lines (c:cs) = let l :| ls = lines cs in (c:l) :| ls
+
+        breakLines :: Word -> NonEmpty String -> ([String], String, [String])
+        breakLines 0 (l :| ls) = ([], l, ls)
+        breakLines n (l :| ls) = case nonEmpty ls of
+          Nothing -> error "the focus line is guaranteed to exist"
+          Just ls' -> let (before, focus, after) = breakLines (n - 1) ls'
+                      in (l : before, focus, after)
