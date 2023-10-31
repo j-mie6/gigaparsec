@@ -10,7 +10,7 @@ import Text.Gigaparsec.Internal.TestError
 
 import Text.Gigaparsec
 import Text.Gigaparsec.Internal
-import Text.Gigaparsec.Internal.Errors (ParseError)
+import Text.Gigaparsec.Internal.Errors (ParseError, fromParseError)
 import Text.Gigaparsec.Internal.RT
 
 import Control.Exception (catches, evaluate, Exception, SomeException(..), Handler(..), throwIO)
@@ -24,7 +24,7 @@ testParse (Parsec p) inp = runRT $ p (emptyState inp) good bad
   where good :: a -> State -> RT (Result TestError a)
         good x _  = return (Success x)
         bad :: ParseError -> State -> RT (Result TestError a)
-        bad err _ = return (Failure (parseErrorToTestError err))
+        bad err _ = return (Failure (fromParseError Nothing inp err))
 
 testParseAll :: Parsec a -> String -> Result TestError a
 testParseAll p = testParse (p <* eof)

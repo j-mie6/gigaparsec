@@ -1,5 +1,5 @@
 {-# LANGUAGE Safe #-}
-{-# LANGUAGE TypeFamilies, AllowAmbiguousTypes, FlexibleInstances #-}
+{-# LANGUAGE TypeFamilies, AllowAmbiguousTypes, FlexibleInstances, FlexibleContexts #-}
 module Text.Gigaparsec.Errors.ErrorBuilder (module Text.Gigaparsec.Errors.ErrorBuilder) where
 
 import Data.Kind (Constraint)
@@ -9,7 +9,7 @@ import Data.List.NonEmpty (NonEmpty)
 import Text.Gigaparsec.Errors.Token (Token)
 
 type ErrorBuilder :: * -> Constraint
-class ErrorBuilder err where
+class (Ord (Item err)) => ErrorBuilder err where
   format :: Position err -> Source err -> ErrorInfoLines err -> err
 
   type Position err
