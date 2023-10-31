@@ -10,7 +10,6 @@ import Text.Gigaparsec.Internal.TestError
 
 import Text.Gigaparsec
 import Text.Gigaparsec.Internal
-import Text.Gigaparsec.Internal.Errors (ParseError, fromParseError)
 import Text.Gigaparsec.Internal.RT
 
 import Control.Exception (catches, evaluate, Exception, SomeException(..), Handler(..), throwIO)
@@ -20,11 +19,7 @@ import Type.Reflection (typeOf, typeRep)
 data LiftedState = Lifted State
 
 testParse :: Parsec a -> String -> Result TestError a
-testParse (Parsec p) inp = runRT $ p (emptyState inp) good bad
-  where good :: a -> State -> RT (Result TestError a)
-        good x _  = return (Success x)
-        bad :: ParseError -> State -> RT (Result TestError a)
-        bad err _ = return (Failure (fromParseError Nothing inp err))
+testParse = parse @TestError
 
 testParseAll :: Parsec a -> String -> Result TestError a
 testParseAll p = testParse (p <* eof)
@@ -79,7 +74,7 @@ consume :: a -> Parsec a
 consume x = Parsec $ \st good _ -> good x (st { consumed = consumed st + 1})
 
 ensureFails :: (Show a, HasCallStack) => Parsec a -> String -> Assertion
-ensureFails p inp = case parse p inp of
+ensureFails p inp = case testParse p inp of
   Failure{} -> return ()
   Success x -> assertFailure ("parser must fail, but produced: " ++ show x)
 

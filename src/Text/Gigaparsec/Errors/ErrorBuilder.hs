@@ -4,9 +4,21 @@ module Text.Gigaparsec.Errors.ErrorBuilder (module Text.Gigaparsec.Errors.ErrorB
 
 import Data.Kind (Constraint)
 import Data.Set (Set)
-import Data.List.NonEmpty (NonEmpty)
+import Data.List.NonEmpty (NonEmpty((:|)))
 
-import Text.Gigaparsec.Errors.Token (Token)
+import Text.Gigaparsec.Errors.Token (Token(Named, Raw))
+import safe Text.Gigaparsec.Errors.DefaultErrorBuilder ( StringBuilder, formatDefault
+                                                       , vanillaErrorDefault, specialisedErrorDefault
+                                                       , rawDefault, namedDefault, endOfInputDefault
+                                                       , expectedDefault, unexpectedDefault
+                                                       , disjunct, combineMessagesDefault
+                                                       , formatPosDefault, lineInfoDefault
+                                                       )
+import Data.String (IsString(fromString))
+
+import Data.Set qualified as Set (toList)
+import Data.Char (isSpace, generalCategory, ord, GeneralCategory(Format, Surrogate, PrivateUse, NotAssigned, Control))
+import Numeric (showHex)
 
 type ErrorBuilder :: * -> Constraint
 class (Ord (Item err)) => ErrorBuilder err where
@@ -50,4 +62,59 @@ class (Ord (Item err)) => ErrorBuilder err where
 
   unexpectedToken :: NonEmpty Char -> Word -> Bool -> Token
 
---instance ErrorBuilder String where
+instance ErrorBuilder String where
+  format = formatDefault
+
+  type Position String = StringBuilder
+  type Source String = Maybe StringBuilder
+
+  pos = formatPosDefault
+  source = fmap fromString
+
+  type ErrorInfoLines String = [StringBuilder]
+  vanillaError = vanillaErrorDefault
+  specialisedError = specialisedErrorDefault
+
+  type ExpectedItems String = Maybe StringBuilder
+  type Messages String = [StringBuilder]
+
+  combineExpectedItems = disjunct True . Set.toList
+  combineMessages = combineMessagesDefault
+
+  type UnexpectedLine String = Maybe StringBuilder
+  type ExpectedLine String = Maybe StringBuilder
+  type Message String = String
+  type LineInfo String = [StringBuilder]
+
+  unexpected = unexpectedDefault
+  expected = expectedDefault
+  reason = id
+  message = id
+
+  lineInfo = lineInfoDefault
+
+  numLinesBefore = 1
+  numLinesAfter = 1
+
+  type Item String = String
+
+  raw = rawDefault
+  named = namedDefault
+  endOfInput = endOfInputDefault
+
+  -- TillNextWhitespace with matches parser demand
+  unexpectedToken ('\n' :| _) _ _ = Named "newline" 1
+  unexpectedToken ('\r' :| _) _ _ = Named "carriage return" 1
+  unexpectedToken ('\t' :| _) _ _ = Named "tab" 1
+  unexpectedToken (' ' :| _) _ _ = Named "space" 1
+  unexpectedToken (c :| cs) parserDemanded _
+    | isSpace c = Named "whitespace character" 1
+    | otherwise = case generalCategory c of
+                    Format -> unprintable
+                    Surrogate -> unprintable
+                    PrivateUse -> unprintable
+                    NotAssigned -> unprintable
+                    Control -> unprintable
+                    _ -> Raw (take (fromIntegral parserDemanded) (tillNextWhitespace (c:cs)))
+    where unprintable = Named ("non-printable character (\\x" ++ showHex (ord c) ")") 1
+          tillNextWhitespace = takeWhile (not . isSpace)

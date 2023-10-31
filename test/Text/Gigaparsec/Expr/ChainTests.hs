@@ -7,7 +7,7 @@ import Text.Gigaparsec
 import Text.Gigaparsec.Char (digit)
 import Text.Gigaparsec.Expr.Chain
 
-import Text.Gigaparsec.Internal.Test (testParseAll, ensureFails)
+import Text.Gigaparsec.Internal.Test (testParseAll, ensureFails, testParse)
 import Text.Gigaparsec.Internal.PlainString ()
 
 import Data.Char (digitToInt)
@@ -114,5 +114,5 @@ chainlTests = testGroup "chainl should"
       let p = chainl ("11" $> 1) ("+" $> (+)) 0
       testParseAll p "" @?= Success 0
       ensureFails p "1"
-      parse p "2" @?= Success 0
+      testParse p "2" @?= Success 0
   ]

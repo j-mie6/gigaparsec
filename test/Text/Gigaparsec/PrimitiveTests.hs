@@ -33,14 +33,14 @@ tests = testGroup "primitives"
 eofTests :: TestTree
 eofTests = testGroup "eof should"
   [ testCase "fail if input available" do ensureFails eof "a"
-  , testCase "succeed if input ended" do parse eof "" @?= Success ()
+  , testCase "succeed if input ended" do testParse eof "" @?= Success ()
   , testCase "be pure" do pureParse eof
   ]
 
 pureTests :: TestTree
 pureTests = testGroup "pure should"
   [ testCase "be pure" do pureParse unit
-  , testCase "produce the given result" do parse unit "" @?= Success ()
+  , testCase "produce the given result" do testParse unit "" @?= Success ()
   ]
 
 emptyTests :: TestTree
@@ -71,8 +71,8 @@ orTests = after AllSucceed emptyPureAndAp $
     , testCase "be impure if the left-hand side is impure and succeeds" do
         impureParse (consume () <|> empty)
     , testCase "succeed if the left-hand side succeeds" do
-        parse (unit <|> empty) "" @?= Success ()
-        parse (consume () <|> empty) "" @?= Success ()
+        testParse (unit <|> empty) "" @?= Success ()
+        testParse (consume () <|> empty) "" @?= Success ()
     , testCase "be pure if the right-hand side succeeds purely" do
         pureParse (empty <|> unit)
     , testCase "be impure if the right-hand side succeeds impurely" do
@@ -95,8 +95,8 @@ atomicTests = after AllSucceed emptyPureAndAp $
     , testCase "be pure if the argument fails, even if impure" do
         pureParse (atomic (consume () <**> empty))
     , testCase "not alter failure characteristics of argument" do
-        parse (atomic (consume ())) "" @?= Success ()
-        parse (atomic unit) "" @?= Success ()
+        testParse (atomic (consume ())) "" @?= Success ()
+        testParse (atomic unit) "" @?= Success ()
         ensureFails @Void (atomic empty) ""
         ensureFails (atomic (consume () <* empty)) ""
     ]
@@ -112,8 +112,8 @@ lookAheadTests = after AllSucceed emptyPureAndAp $
     , testCase "be impure if the argument is impure and fails" do
         impureParse (lookAhead (consume () <* empty))
     , testCase "not alter failure characteristics of argument" do
-        parse (lookAhead (pure 7)) "" @?= Success 7
-        parse (lookAhead (consume 14)) "" @?= Success 14
+        testParse (lookAhead (pure 7)) "" @?= Success 7
+        testParse (lookAhead (consume 14)) "" @?= Success 14
         ensureFails @Void (lookAhead empty) ""
         ensureFails (lookAhead (consume () <* empty)) ""
     ]
@@ -127,8 +127,8 @@ notFollowedByTests = after AllSucceed emptyPureAndAp $
         pureParse (notFollowedBy (consume ()))
         pureParse (notFollowedBy (consume () *> empty))
     , testCase "should succeed if the argument fails" do
-        parse (notFollowedBy empty) "" @?= Success ()
-        parse (notFollowedBy (consume () *> empty)) "" @?= Success ()
+        testParse (notFollowedBy empty) "" @?= Success ()
+        testParse (notFollowedBy (consume () *> empty)) "" @?= Success ()
     , testCase "should fail if the argument succeeds" do
         ensureFails (notFollowedBy unit) ""
         ensureFails (notFollowedBy (consume ())) ""

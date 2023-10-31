@@ -9,11 +9,9 @@ module Text.Gigaparsec.Internal.Errors (module Text.Gigaparsec.Internal.Errors) 
 import Prelude hiding (lines)
 
 import Data.List.NonEmpty (NonEmpty((:|)), nonEmpty, (<|))
-import Data.List.NonEmpty qualified as NonEmpty (take)
 import Data.Set (Set)
-import Data.Set qualified as Set (toList, empty, map, union, null, foldr)
+import Data.Set qualified as Set (empty, map, union, null, foldr)
 
-import Text.Gigaparsec.Errors.DefaultErrorBuilder (formatDefault, formatPosDefault, vanillaErrorDefault, specialisedErrorDefault, combineMessagesDefault, disjunct, endOfInputDefault, namedDefault, rawDefault, unexpectedDefault, expectedDefault)
 import Text.Gigaparsec.Errors.ErrorBuilder (ErrorBuilder)
 import Text.Gigaparsec.Errors.ErrorBuilder qualified as Builder (ErrorBuilder(..))
 import Text.Gigaparsec.Errors.Token qualified as Token (Token(..), span)
@@ -66,26 +64,6 @@ data ExpectItem = ExpectRaw !String
                 | ExpectEndOfInput
                 deriving stock (Eq, Ord, Show)
 
---FIXME: in future, this goes, and we are interacting with the typeclass properly
--- remember that input needs to be processed, and we don't have the residual stream
--- inside show!
-showErr :: ParseError -> String
-showErr err = formatDefault (formatPosDefault (line err) (col err)) Nothing
-                         (formatErr err)
-  where formatErr VanillaError{..} =
-          vanillaErrorDefault (unexpectedDefault (either (const Nothing) (Just . fst . formatUnexpect) unexpected))
-                              (expectedDefault (disjunct True (map formatExpectItem (Set.toList expecteds))))
-                              (combineMessagesDefault reasons)
-                              []
-
-        formatErr SpecialisedError{..} =
-          specialisedErrorDefault (combineMessagesDefault msgs)
-                                  []
-
-        formatExpectItem (ExpectRaw raw) = rawDefault raw
-        formatExpectItem (ExpectNamed name) = namedDefault name
-        formatExpectItem ExpectEndOfInput = endOfInputDefault
-
 fromParseError :: forall err. ErrorBuilder err => Maybe FilePath -> String -> ParseError -> err
 fromParseError srcFile input err =
   Builder.format (Builder.pos @err (line err) (col err)) (Builder.source @err srcFile)
@@ -125,13 +103,6 @@ fromParseError srcFile input err =
 
         caret = col err - 1
         trimToLine width = min width (fromIntegral (length curLine) - caret + 1)
-
-formatUnexpect :: UnexpectItem -> (String, Span)
-formatUnexpect (UnexpectRaw cs demanded) =
-  -- TODO: this is MatchParserDemand, but needs to be configurable properly
-  (rawDefault (NonEmpty.take (fromIntegral demanded) cs), demanded)
-formatUnexpect (UnexpectNamed name caretWidth) = (namedDefault name, width caretWidth)
-formatUnexpect UnexpectEndOfInput = (endOfInputDefault, 1)
 
 emptyErr :: Word -> Word -> Word -> Word -> ParseError
 emptyErr !presentationOffset !line !col !width = VanillaError {

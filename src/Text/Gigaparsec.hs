@@ -85,7 +85,9 @@ module Text.Gigaparsec (
 import Text.Gigaparsec.Internal (Parsec(Parsec), emptyState, manyr, somer)
 import Text.Gigaparsec.Internal qualified as Internal (State(..), useHints, expectedErr)
 import Text.Gigaparsec.Internal.RT qualified as Internal (RT, runRT)
-import Text.Gigaparsec.Internal.Errors qualified as Internal (ParseError, ExpectItem(ExpectEndOfInput), showErr)
+import Text.Gigaparsec.Internal.Errors qualified as Internal (ParseError, ExpectItem(ExpectEndOfInput), fromParseError)
+
+import Text.Gigaparsec.Errors.ErrorBuilder (ErrorBuilder)
 
 import Data.Functor (void)
 import Control.Applicative (liftA2, (<|>), empty, many, some, (<**>)) -- liftA2 required until 9.6
@@ -101,12 +103,12 @@ import Data.Set qualified as Set (singleton, empty)
 type Result :: * -> * -> *
 data Result e a = Success a | Failure e deriving stock (Show, Eq)
 
-parse :: Parsec a -> String -> Result String a
+parse :: forall err a. ErrorBuilder err => Parsec a -> String -> Result err a
 parse (Parsec p) inp = Internal.runRT $ p (emptyState inp) good bad
-  where good :: a -> Internal.State -> Internal.RT (Result String a)
+  where good :: a -> Internal.State -> Internal.RT (Result err a)
         good x _  = return (Success x)
-        bad :: Internal.ParseError -> Internal.State -> Internal.RT (Result String a)
-        bad err _ = return (Failure (Internal.showErr err))
+        bad :: Internal.ParseError -> Internal.State -> Internal.RT (Result err a)
+        bad err _ = return (Failure (Internal.fromParseError Nothing inp err))
 
 {-|
 This combinator parses its argument @p@, but rolls back any consumed input on failure.
