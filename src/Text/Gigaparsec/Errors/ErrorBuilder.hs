@@ -2,22 +2,21 @@
 {-# LANGUAGE TypeFamilies, AllowAmbiguousTypes, FlexibleInstances, FlexibleContexts #-}
 module Text.Gigaparsec.Errors.ErrorBuilder (module Text.Gigaparsec.Errors.ErrorBuilder) where
 
-import Data.Kind (Constraint)
-import Data.Set (Set)
-import Data.List.NonEmpty (NonEmpty((:|)))
-
 import Text.Gigaparsec.Errors.Token (Token(Named, Raw))
-import safe Text.Gigaparsec.Errors.DefaultErrorBuilder ( StringBuilder, formatDefault
-                                                       , vanillaErrorDefault, specialisedErrorDefault
-                                                       , rawDefault, namedDefault, endOfInputDefault
-                                                       , expectedDefault, unexpectedDefault
-                                                       , disjunct, combineMessagesDefault
-                                                       , formatPosDefault, lineInfoDefault
-                                                       )
-import Data.String (IsString(fromString))
+import Text.Gigaparsec.Errors.DefaultErrorBuilder ( StringBuilder, formatDefault
+                                                  , vanillaErrorDefault, specialisedErrorDefault
+                                                  , rawDefault, namedDefault, endOfInputDefault
+                                                  , expectedDefault, unexpectedDefault
+                                                  , disjunct, combineMessagesDefault
+                                                  , formatPosDefault, lineInfoDefault
+                                                  )
 
-import Data.Set qualified as Set (toList)
 import Data.Char (isSpace, generalCategory, ord, GeneralCategory(Format, Surrogate, PrivateUse, NotAssigned, Control))
+import Data.Kind (Constraint)
+import Data.List.NonEmpty (NonEmpty((:|)))
+import Data.Set (Set)
+import Data.Set qualified as Set (toList)
+import Data.String (IsString(fromString))
 import Numeric (showHex)
 
 type ErrorBuilder :: * -> Constraint
