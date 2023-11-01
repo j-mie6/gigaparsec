@@ -367,12 +367,11 @@ regressionTests = testGroup "thou shalt not regress"
             Failure (TestError _ (VanillaError _ expecteds _ 1)) -> do
               expecteds @?= [Named "digit"]
             err -> assertFailure $ "error message " ++ show err ++ " did not match"
-          --FIXME:
-          {-let q = amend (char 'a' *> digit)
+          let q = amend (char 'a' *> digit)
           let qarser = optional (char 'b' <?> ["b"]) *> label ["foo"] q
           case testParse qarser "aa" of
             Failure (TestError _ (VanillaError _ expecteds _ 1)) -> do
               expecteds @?= [Named "foo", Named "b"]
-            err -> assertFailure $ "error message " ++ show err ++ " did not match"-}
+            err -> assertFailure $ "error message " ++ show err ++ " did not match"
       ]
   ]
