@@ -200,16 +200,138 @@ amendTests = testGroup "amend should"
   ]
 
 entrenchTests :: TestTree
-entrenchTests = testGroup "entrench should" [] --TODO:
+entrenchTests = testGroup "entrench should"
+  [ testCase "prevent the change of error messages under it" do
+      let p = char 'a' *> amend (char 'b' *> entrench (char 'c') *> char 'd')
+      case testParse p "ab" of
+        Failure (TestError pos _) -> pos @?= (1, 3)
+        _ -> assertFailure "parser must fail"
+      case testParse p "abc" of
+        Failure (TestError pos _) -> pos @?= (1, 2)
+        _ -> assertFailure "parser must fail"
+      let q = char 'a' *> amend (char 'b' *> char 'c' *> entrench (char 'd'))
+      case testParse q "ab" of
+        Failure (TestError pos _) -> pos @?= (1, 2)
+        _ -> assertFailure "parser must fail"
+      case testParse q "abc" of
+        Failure (TestError pos _) -> pos @?= (1, 4)
+        _ -> assertFailure "parser must fail"
+  , testCase "not prevent the action of amend inside it" do
+      let p = char 'a' *> amend (char 'b' *> entrench (amend (char 'c' *> char 'd' *> entrench (char 'e'))) *> char 'f')
+      case testParse p "ab" of
+        Failure (TestError pos _) -> pos @?= (1, 3)
+        _ -> assertFailure "parser must fail"
+      case testParse p "abc" of
+        Failure (TestError pos _) -> pos @?= (1, 3)
+        _ -> assertFailure "parser must fail"
+      case testParse p "abcd" of
+        Failure (TestError pos _) -> pos @?= (1, 5)
+        _ -> assertFailure "parser must fail"
+      case testParse p "abcde" of
+        Failure (TestError pos _) -> pos @?= (1, 2)
+        _ -> assertFailure "parser must fail"
+  ]
 
 dislodgeTests :: TestTree
-dislodgeTests = testGroup "dislodge should" [] --TODO:
+dislodgeTests = testGroup "dislodge should"
+  [ testCase "undo an entrench so that amend works again" do
+      let p = char 'a' *> amend (char 'b' *> dislodge (entrench (entrench (char 'c'))) *> char 'd')
+      case testParse p "ab" of
+        Failure (TestError pos _) -> pos @?= (1, 2)
+        _ -> assertFailure "parser must fail"
+      case testParse p "abc" of
+        Failure (TestError pos _) -> pos @?= (1, 2)
+        _ -> assertFailure "parser must fail"
+  , testCase "not prevent another entrench from occurring" do
+      let p = char 'a' *> amend (char 'b' *> entrench (dislodge (entrench (char 'c'))) *> char 'd')
+      case testParse p "ab" of
+        Failure (TestError pos _) -> pos @?= (1, 3)
+        _ -> assertFailure "parser must fail"
+      case testParse p "abc" of
+        Failure (TestError pos _) -> pos @?= (1, 2)
+        _ -> assertFailure "parser must fail"
+  , testCase "only unwind as many as instructed if applicable" do
+      let p = char 'a' *> amend (char 'b' *> dislodgeBy 1 (entrench (entrench (char 'c'))) *> char 'd')
+      let q = char 'a' *> amend (char 'b' *> dislodgeBy 2 (entrench (entrench (char 'c'))) *> char 'd')
+      case testParse p "ab" of
+        Failure (TestError pos _) -> pos @?= (1, 3)
+        _ -> assertFailure "parser must fail"
+      case testParse p "abc" of
+        Failure (TestError pos _) -> pos @?= (1, 2)
+        _ -> assertFailure "parser must fail"
+      case testParse q "ab" of
+        Failure (TestError pos _) -> pos @?= (1, 2)
+        _ -> assertFailure "parser must fail"
+      case testParse q "abc" of
+        Failure (TestError pos _) -> pos @?= (1, 2)
+        _ -> assertFailure "parser must fail"
+  ]
 
 amendThenDislodgeTests :: TestTree
-amendThenDislodgeTests = testGroup "amendThenDislodge should" [] --TODO:
+amendThenDislodgeTests = testGroup "amendThenDislodge should"
+  [ testCase "amend only non-entrenched messages and dislodge those that are" do
+      let p = char 'a' *> amendThenDislodge (char 'b' *> entrench (entrench (char 'c')) *> char 'd')
+      let q = amend p
+      case testParse p "ab" of
+        Failure (TestError pos _) -> pos @?= (1, 3)
+        _ -> assertFailure "parser must fail"
+      case testParse p "abc" of
+        Failure (TestError pos _) -> pos @?= (1, 2)
+        _ -> assertFailure "parser must fail"
+      case testParse q "ab" of
+        Failure (TestError pos _) -> pos @?= (1, 1)
+        _ -> assertFailure "parser must fail"
+      case testParse q "abc" of
+        Failure (TestError pos _) -> pos @?= (1, 1)
+        _ -> assertFailure "parser must fail"
+  , testCase "only unwind as many as instructed if applicable" do
+      let p = char 'a' *> amendThenDislodgeBy 1 (char 'b' *> entrench (entrench (char 'c')) *> char 'd')
+      let q = amend p
+      let r = char 'a' *> amendThenDislodgeBy 2 (char 'b' *> entrench (entrench (char 'c')) *> char 'd')
+      let s = amend r
+      case testParse p "ab" of
+        Failure (TestError pos _) -> pos @?= (1, 3)
+        _ -> assertFailure "parser must fail"
+      case testParse p "abc" of
+        Failure (TestError pos _) -> pos @?= (1, 2)
+        _ -> assertFailure "parser must fail"
+      case testParse q "ab" of
+        Failure (TestError pos _) -> pos @?= (1, 3)
+        _ -> assertFailure "parser must fail"
+      case testParse q "abc" of
+        Failure (TestError pos _) -> pos @?= (1, 1)
+        _ -> assertFailure "parser must fail"
+      case testParse r "ab" of
+        Failure (TestError pos _) -> pos @?= (1, 3)
+        _ -> assertFailure "parser must fail"
+      case testParse r "abc" of
+        Failure (TestError pos _) -> pos @?= (1, 2)
+        _ -> assertFailure "parser must fail"
+      case testParse s "ab" of
+        Failure (TestError pos _) -> pos @?= (1, 1)
+        _ -> assertFailure "parser must fail"
+      case testParse s "abc" of
+        Failure (TestError pos _) -> pos @?= (1, 1)
+        _ -> assertFailure "parser must fail"
+  ]
 
 partialAmendTests :: TestTree
-partialAmendTests = testGroup "partialAmend should" [] --TODO:
+partialAmendTests = testGroup "partialAmend should"
+  [ testCaseSteps "perform visual amendment but allow for domination" \step -> do
+      let errorMaker n msg = atomic (exactly n (char 'a') *> (char 'b' <|> fail [msg]))
+
+      step "a regular amend should lose against an even shallower error"
+      let p = errorMaker 2 "small" <|> amend (errorMaker 3 "big")
+      testParse p (replicate 4 'a') @?= Failure (TestError (1, 3) (SpecialisedError ["small"] 1))
+
+      step "a partial amend can win against an error at a lesser offset but greater presentation"
+      let q = errorMaker 2 "small" <|> partialAmend (errorMaker 3 "big")
+      testParse q (replicate 4 'a') @?= Failure (TestError (1, 1) (SpecialisedError ["big"] 1))
+
+      step "however, they do not win at equal underlying offset"
+      let r = errorMaker 3 "first" <|> partialAmend (errorMaker 3 "second")
+      testParse r (replicate 4 'a') @?= Failure (TestError (1, 4) (SpecialisedError ["first"] 1))
+  ]
 
 --TODO: filter tests
 
@@ -245,7 +367,7 @@ regressionTests = testGroup "thou shalt not regress"
             Failure (TestError _ (VanillaError _ expecteds _ 1)) -> do
               expecteds @?= [Named "digit"]
             err -> assertFailure $ "error message " ++ show err ++ " did not match"
-          --TODO: when amend is done
+          --FIXME:
           {-let q = amend (char 'a' *> digit)
           let qarser = optional (char 'b' <?> ["b"]) *> label ["foo"] q
           case testParse qarser "aa" of

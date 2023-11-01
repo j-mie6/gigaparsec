@@ -150,7 +150,9 @@ entrenchErr err = err { entrenchment = entrenchment err + 1 }
 dislodgeErr :: Word -> ParseError -> ParseError
 dislodgeErr by err
   | entrenchment err == 0  = err
-  | otherwise              = err { entrenchment = max 0 (entrenchment err - by) }
+  -- this case is important to avoid underflow on the unsigned Word
+  | by >= entrenchment err = err { entrenchment = 0 }
+  | otherwise              = err { entrenchment = entrenchment err - by }
 
 setLexical :: ParseError -> ParseError
 setLexical err@VanillaError{} = err { lexicalError = True }
