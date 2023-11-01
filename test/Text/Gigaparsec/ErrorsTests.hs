@@ -27,6 +27,11 @@ tests = testGroup "Errors" [ labelTests
                            , unexpectedTests
                            , lookAheadTests
                            , notFollowedByTests
+                           , amendTests
+                           , entrenchTests
+                           , dislodgeTests
+                           , amendThenDislodgeTests
+                           , partialAmendTests
                            , oneOfTests
                            , noneOfTests
                            , regressionTests
@@ -101,7 +106,7 @@ emptyTests = testGroup "empty should"
   ]
 
 explainTests :: TestTree
-explainTests = ignoreTestBecause "explain not implemented" $ testGroup "explain should"
+explainTests = testGroup "explain should"
   [ testCase "provide a message but only on failure" do
       testParse @Int (explain "oops!" empty) "" @?=
         Failure (TestError (1, 1) (VanillaError Nothing [] ["oops!"] 0))
@@ -180,7 +185,32 @@ eofTests = testGroup "eof should"
         Failure (TestError (1, 1) (VanillaError (Just (Raw "a")) [Named "something more"] [] 1))
   ]
 
---TODO: amend/entrench/dislodge tests
+amendTests :: TestTree
+amendTests = testGroup "amend should"
+  [ testCase "change error messages under it" do
+      let p = char 'a' *> amend (char 'b' *> char 'c' *> char 'd')
+      case testParse p "ab" of
+        Failure (TestError pos _) -> pos @?= (1, 2)
+        _ -> assertFailure "parser must fail"
+      case testParse p "abc" of
+        Failure (TestError pos _) -> pos @?= (1, 2)
+        _ -> assertFailure "parser must fail"
+  , testCase "not affect input consumption" do
+      ensureFails (amend (char 'a' *> char 'b') <|> char 'a') "a"
+  ]
+
+entrenchTests :: TestTree
+entrenchTests = testGroup "entrench should" [] --TODO:
+
+dislodgeTests :: TestTree
+dislodgeTests = testGroup "dislodge should" [] --TODO:
+
+amendThenDislodgeTests :: TestTree
+amendThenDislodgeTests = testGroup "amendThenDislodge should" [] --TODO:
+
+partialAmendTests :: TestTree
+partialAmendTests = testGroup "partialAmend should" [] --TODO:
+
 --TODO: filter tests
 
 oneOfTests :: TestTree
