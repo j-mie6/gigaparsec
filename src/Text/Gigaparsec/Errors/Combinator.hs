@@ -14,7 +14,7 @@ import Prelude hiding (fail)
 
 import Text.Gigaparsec (Parsec)
 -- We want to use this to make the docs point to the right definition for users.
-import Text.Gigaparsec.Internal qualified as Internal (Parsec(Parsec), emptyErr, specialisedErr, raise, unexpectedErr, hints, consumed, useHints, adjustErr)
+import Text.Gigaparsec.Internal qualified as Internal (Parsec(Parsec), line, col, emptyErr, specialisedErr, raise, unexpectedErr, hints, consumed, useHints, adjustErr)
 import Text.Gigaparsec.Internal.Errors (ParseError, CaretWidth(FlexibleCaret, RigidCaret), ExpectItem(ExpectNamed))
 import Text.Gigaparsec.Internal.Errors qualified as Internal (setLexical, amendErr, entrenchErr, dislodgeErr, partialAmendErr, labelErr, explainErr)
 import Text.Gigaparsec.Internal.Require (require)
@@ -80,11 +80,13 @@ partialAmend :: Parsec a -> Parsec a
 partialAmend = _amend Internal.partialAmendErr
 
 {-# INLINE _amend #-}
-_amend :: (Word -> ParseError -> ParseError) -> Parsec a -> Parsec a
+_amend :: (Word -> Word -> Word -> ParseError -> ParseError) -> Parsec a -> Parsec a
 _amend f (Internal.Parsec p) =
   Internal.Parsec $ \st good bad ->
     let !origConsumed = Internal.consumed st
-    in p st good $ \err -> bad (f origConsumed err)
+        !origLine = Internal.line st
+        !origCol = Internal.col st
+    in p st good $ \err -> bad (f origConsumed origLine origCol err)
 
 entrench :: Parsec a -> Parsec a
 entrench = Internal.adjustErr Internal.entrenchErr

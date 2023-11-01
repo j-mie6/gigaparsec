@@ -29,10 +29,6 @@ isFlexible :: CaretWidth -> Bool
 isFlexible FlexibleCaret{} = True
 isFlexible _               = False
 
--- First pass of the error system will just use a `show` instance within parse,
--- and the tests will use a different parse that exposes the underlying datatype.
--- this will be improved when the error builder is introduced.
-
 type ParseError :: UnliftedDatatype
 data ParseError = VanillaError { presentationOffset :: {-# UNPACK #-} !Word
                                , line :: {-# UNPACK #-} !Word
@@ -71,7 +67,7 @@ data ExpectItem = ExpectRaw !String
                 deriving stock (Eq, Ord, Show)
 
 entrenched :: ParseError -> Bool
-entrenched err = entrenchment err == 0
+entrenched err = entrenchment err /= 0
 
 emptyErr :: Word -> Word -> Word -> Word -> ParseError
 emptyErr !presentationOffset !line !col !width = VanillaError {
@@ -129,15 +125,24 @@ explainErr !offset reason err@VanillaError{}
   | offset == presentationOffset err = err { reasons = Set.insert reason (reasons err) }
 explainErr _ _ err = err
 
-amendErr :: Word -> ParseError -> ParseError
-amendErr !offset err
-  | not (entrenched err) = err { presentationOffset = offset, underlyingOffset = offset }
-amendErr _ err = err
+amendErr :: Word -> Word -> Word -> ParseError -> ParseError
+amendErr !offset !line !col err
+  | not (entrenched err) = err {
+      presentationOffset = offset,
+      underlyingOffset = offset,
+      line = line,
+      col = col
+    }
+amendErr _ _ _ err = err
 
-partialAmendErr :: Word -> ParseError -> ParseError
-partialAmendErr !offset err
-  | not (entrenched err) =  err { presentationOffset = offset }
-partialAmendErr _ err = err
+partialAmendErr :: Word -> Word -> Word -> ParseError -> ParseError
+partialAmendErr !offset !line !col err
+  | not (entrenched err) =  err {
+      presentationOffset = offset,
+      line = line,
+      col = col
+    }
+partialAmendErr _ _ _ err = err
 
 entrenchErr :: ParseError -> ParseError
 entrenchErr err = err { entrenchment = entrenchment err + 1 }
