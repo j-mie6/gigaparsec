@@ -43,6 +43,9 @@ data ParseError = VanillaError { presentationOffset :: {-# UNPACK #-} !Word
                                , expecteds :: !(Set ExpectItem)
                                , reasons :: !(Set String)
                                , lexicalError :: !Bool -- TODO: strict bools
+                               -- TODO: remove:
+                               , underlyingOffset :: {-# UNPACK #-} !Word
+                               , entrenchment :: {-# UNPACK #-} !Word
                                }
                 | SpecialisedError { presentationOffset :: {-# UNPACK #-} !Word
                                    , line :: {-# UNPACK #-} !Word
@@ -50,6 +53,9 @@ data ParseError = VanillaError { presentationOffset :: {-# UNPACK #-} !Word
                                    , msgs :: ![String]
                                    --, caretWidth :: {-# UNPACK #-} !Span --FIXME: need defunc before this goes away
                                    , caretWidth :: CaretWidth
+                                   -- TODO: remove:
+                                   , underlyingOffset :: {-# UNPACK #-} !Word
+                                   , entrenchment :: {-# UNPACK #-} !Word
                                    }
 
 type Input :: *
@@ -64,6 +70,9 @@ data ExpectItem = ExpectRaw !String
                 | ExpectEndOfInput
                 deriving stock (Eq, Ord, Show)
 
+entrenched :: ParseError -> Bool
+entrenched err = entrenchment err == 0
+
 emptyErr :: Word -> Word -> Word -> Word -> ParseError
 emptyErr !presentationOffset !line !col !width = VanillaError {
     presentationOffset = presentationOffset,
@@ -72,7 +81,9 @@ emptyErr !presentationOffset !line !col !width = VanillaError {
     unexpected = Left width,
     expecteds = Set.empty,
     reasons = Set.empty,
-    lexicalError = False
+    lexicalError = False,
+    underlyingOffset = presentationOffset,
+    entrenchment = 0
   }
 
 expectedErr :: String -> Word -> Word -> Word -> Set ExpectItem -> Word -> ParseError
@@ -85,11 +96,15 @@ expectedErr !input !presentationOffset !line !col !expecteds !width = VanillaErr
       Just cs -> Right (UnexpectRaw cs width),
     expecteds = expecteds,
     reasons = Set.empty,
-    lexicalError = False
+    lexicalError = False,
+    underlyingOffset = presentationOffset,
+    entrenchment = 0
 }
 
 specialisedErr :: Word -> Word -> Word -> [String] -> CaretWidth -> ParseError
 specialisedErr !presentationOffset !line !col !msgs caretWidth = SpecialisedError {..}
+  where !underlyingOffset = presentationOffset
+        !entrenchment = 0 :: Word
 
 unexpectedErr :: Word -> Word -> Word -> Set ExpectItem -> String -> CaretWidth -> ParseError
 unexpectedErr !presentationOffset !line !col !expecteds !name caretWidth = VanillaError {
@@ -99,7 +114,9 @@ unexpectedErr !presentationOffset !line !col !expecteds !name caretWidth = Vanil
     expecteds = expecteds,
     unexpected = Right (UnexpectNamed name caretWidth),
     reasons = Set.empty,
-    lexicalError = False
+    lexicalError = False,
+    underlyingOffset = presentationOffset,
+    entrenchment = 0
   }
 
 labelErr :: Word -> Set String -> ParseError -> ParseError
@@ -113,17 +130,22 @@ explainErr !offset reason err@VanillaError{}
 explainErr _ _ err = err
 
 amendErr :: Word -> ParseError -> ParseError
--- FIXME: check for not entrenched
-amendErr !offset err = err { presentationOffset = offset }
+amendErr !offset err
+  | not (entrenched err) = err { presentationOffset = offset, underlyingOffset = offset }
+amendErr _ err = err
 
 partialAmendErr :: Word -> ParseError -> ParseError
-partialAmendErr = amendErr --TODO:
+partialAmendErr !offset err
+  | not (entrenched err) =  err { presentationOffset = offset }
+partialAmendErr _ err = err
 
 entrenchErr :: ParseError -> ParseError
-entrenchErr err = err --TODO:
+entrenchErr err = err { entrenchment = entrenchment err + 1 }
 
 dislodgeErr :: Word -> ParseError -> ParseError
-dislodgeErr _ err = err --TODO:
+dislodgeErr by err
+  | entrenchment err == 0  = err
+  | otherwise              = err { entrenchment = max 0 (entrenchment err - by) }
 
 setLexical :: ParseError -> ParseError
 setLexical err@VanillaError{} = err { lexicalError = True }
@@ -135,7 +157,8 @@ useHints _ err = err
 
 mergeErr :: ParseError -> ParseError -> ParseError
 mergeErr err1 err2
-  -- TODO: underlyingOffset comparison
+  | underlyingOffset err1 > underlyingOffset err2 = err1
+  | underlyingOffset err1 < underlyingOffset err2 = err2
   | presentationOffset err1 > presentationOffset err2 = err1
   | presentationOffset err1 < presentationOffset err2 = err2
 -- offsets are all equal, kinds must match
