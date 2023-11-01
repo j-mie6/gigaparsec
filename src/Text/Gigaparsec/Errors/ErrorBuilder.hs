@@ -62,22 +62,29 @@ class (Ord (Item err)) => ErrorBuilder err where
   unexpectedToken :: NonEmpty Char -> Word -> Bool -> Token
 
 instance ErrorBuilder String where
+  {-# INLINE format #-}
   format = formatDefault
 
   type Position String = StringBuilder
   type Source String = Maybe StringBuilder
 
+  {-# INLINE pos #-}
   pos = formatPosDefault
+  {-# INLINE source #-}
   source = fmap fromString
 
   type ErrorInfoLines String = [StringBuilder]
+  {-# INLINE vanillaError #-}
   vanillaError = vanillaErrorDefault
+  {-# INLINE specialisedError #-}
   specialisedError = specialisedErrorDefault
 
   type ExpectedItems String = Maybe StringBuilder
   type Messages String = [StringBuilder]
 
+  {-# INLINE combineExpectedItems #-}
   combineExpectedItems = disjunct True . Set.toList
+  {-# INLINE combineMessages #-}
   combineMessages = combineMessagesDefault
 
   type UnexpectedLine String = Maybe StringBuilder
@@ -85,22 +92,33 @@ instance ErrorBuilder String where
   type Message String = String
   type LineInfo String = [StringBuilder]
 
+  {-# INLINE unexpected #-}
   unexpected = unexpectedDefault
+  {-# INLINE expected #-}
   expected = expectedDefault
+  {-# INLINE reason #-}
   reason = id
+  {-# INLINE message #-}
   message = id
 
+  {-# INLINE lineInfo #-}
   lineInfo = lineInfoDefault
 
+  {-# INLINE numLinesBefore #-}
   numLinesBefore = 1
+  {-# INLINE numLinesAfter #-}
   numLinesAfter = 1
 
   type Item String = String
 
+  {-# INLINE raw #-}
   raw = rawDefault
+  {-# INLINE named #-}
   named = namedDefault
+  {-# INLINE endOfInput #-}
   endOfInput = endOfInputDefault
 
+  {-# INLINABLE unexpectedToken #-}
   -- TillNextWhitespace with matches parser demand
   unexpectedToken ('\n' :| _) _ _ = Named "newline" 1
   unexpectedToken ('\r' :| _) _ _ = Named "carriage return" 1

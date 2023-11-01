@@ -12,10 +12,10 @@ import GHC.Generics (Generic)
 p :: Parsec String
 p = atomic (string "hello wold") <|> atomic (string "hi") <|> string "hello world"
 
-deriving stock instance Generic (Result a)
-deriving anyclass instance NFData a => NFData (Result a)
+deriving stock instance Generic (Result e a)
+deriving anyclass instance (NFData a, NFData e) => NFData (Result e a)
 
 main :: IO ()
 main = defaultMain [
-    bench "consumption" $ nf (parse p) "hello world"
+    bench "consumption" $ nf (parse @String p) "hello world"
   ]

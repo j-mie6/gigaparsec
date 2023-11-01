@@ -107,6 +107,8 @@ result :: (e -> b) -> (a -> b) -> Result e a -> b
 result _ success (Success x) = success x
 result failure _ (Failure err) = failure err
 
+{-# SPECIALISE parse :: Parsec a -> String -> Result String a #-}
+{-# INLINABLE parse #-}
 parse :: forall err a. ErrorBuilder err => Parsec a -> String -> Result err a
 parse (Parsec p) inp = Internal.runRT $ p (emptyState inp) good bad
   where good :: a -> Internal.State -> Internal.RT (Result err a)

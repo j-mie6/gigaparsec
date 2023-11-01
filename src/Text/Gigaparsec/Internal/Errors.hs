@@ -183,6 +183,7 @@ isExpectedEmpty :: ParseError -> Bool
 isExpectedEmpty VanillaError{expecteds} = Set.null expecteds
 isExpectedEmpty _                       = True
 
+{-# INLINABLE fromParseError #-}
 fromParseError :: forall err. ErrorBuilder err => Maybe FilePath -> String -> ParseError -> err
 fromParseError srcFile input err =
   Builder.format (Builder.pos @err (line err) (col err)) (Builder.source @err srcFile)
