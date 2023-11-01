@@ -216,3 +216,6 @@ useHints bad err st@State{hintValidOffset, hints}
   | presentationOffset == hintValidOffset = bad (Errors.useHints hints err) st
   | otherwise                             = bad err st{hintValidOffset = presentationOffset, hints = Set.empty}
   where !presentationOffset = Errors.presentationOffset err
+
+adjustErr :: (ParseError -> ParseError) -> Parsec a -> Parsec a
+adjustErr f (Parsec p) = Parsec $ \st good bad -> p st good $ \err -> bad (f err)

@@ -10,7 +10,7 @@ import Prelude hiding (lines)
 
 import Data.List.NonEmpty (NonEmpty((:|)), nonEmpty, (<|))
 import Data.Set (Set)
-import Data.Set qualified as Set (empty, map, union, null, foldr)
+import Data.Set qualified as Set (empty, map, union, null, foldr, insert)
 
 import Text.Gigaparsec.Errors.ErrorBuilder (ErrorBuilder)
 import Text.Gigaparsec.Errors.ErrorBuilder qualified as Builder (ErrorBuilder(..))
@@ -104,10 +104,13 @@ unexpectedErr !presentationOffset !line !col !expecteds !name caretWidth = Vanil
 
 labelErr :: Word -> Set String -> ParseError -> ParseError
 labelErr !offset expecteds err@VanillaError{}
-  | offset == presentationOffset err = err {
-      expecteds = Set.map ExpectNamed expecteds
-  }
+  | offset == presentationOffset err = err { expecteds = Set.map ExpectNamed expecteds }
 labelErr _ _ err = err
+
+explainErr :: Word -> String -> ParseError -> ParseError
+explainErr !offset reason err@VanillaError{}
+  | offset == presentationOffset err = err { reasons = Set.insert reason (reasons err) }
+explainErr _ _ err = err
 
 amendErr :: Word -> ParseError -> ParseError
 -- FIXME: check for not entrenched

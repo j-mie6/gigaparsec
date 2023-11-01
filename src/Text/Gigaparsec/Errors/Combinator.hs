@@ -14,9 +14,9 @@ import Prelude hiding (fail)
 
 import Text.Gigaparsec (Parsec)
 -- We want to use this to make the docs point to the right definition for users.
-import Text.Gigaparsec.Internal qualified as Internal (Parsec(Parsec), emptyErr, specialisedErr, raise, unexpectedErr, hints, consumed, useHints)
-import Text.Gigaparsec.Internal.Errors (CaretWidth(FlexibleCaret, RigidCaret), ExpectItem(ExpectNamed), labelErr)
-import Text.Gigaparsec.Internal.Errors qualified as Internal (setLexical, amendErr, entrenchErr, dislodgeErr, partialAmendErr)
+import Text.Gigaparsec.Internal qualified as Internal (Parsec(Parsec), emptyErr, specialisedErr, raise, unexpectedErr, hints, consumed, useHints, adjustErr)
+import Text.Gigaparsec.Internal.Errors (ParseError, CaretWidth(FlexibleCaret, RigidCaret), ExpectItem(ExpectNamed))
+import Text.Gigaparsec.Internal.Errors qualified as Internal (setLexical, amendErr, entrenchErr, dislodgeErr, partialAmendErr, labelErr, explainErr)
 import Text.Gigaparsec.Internal.Require (require)
 
 import Data.Set (Set)
@@ -32,7 +32,7 @@ label ls (Internal.Parsec p) =
           good' x st'
             | Internal.consumed st' /= origConsumed = good x st'
             | otherwise = good x st'{Internal.hints = Set.map ExpectNamed ls}
-          bad' err = Internal.useHints bad (labelErr origConsumed ls err)
+          bad' err = Internal.useHints bad (Internal.labelErr origConsumed ls err)
       in p st good' bad'
 
 hide :: Parsec a -> Parsec a
@@ -43,7 +43,11 @@ hide (Internal.Parsec p) =
          (\_ st' -> {-Internal.useHints-} bad (Internal.emptyErr st' 0) st')
 
 explain :: String -> Parsec a -> Parsec a
-explain _ = id
+explain reason (Internal.Parsec p) =
+  Internal.Parsec $ \st good bad ->
+    let !origConsumed = Internal.consumed st
+        bad' err = Internal.useHints bad (Internal.explainErr origConsumed reason err)
+    in p st good bad'
 
 emptyWide :: Word -> Parsec a
 emptyWide width = Internal.raise (`Internal.emptyErr` width)
@@ -65,30 +69,31 @@ unexpected = _unexpected (FlexibleCaret 1)
 unexpectedWide :: Word -> String -> Parsec a
 unexpectedWide width = _unexpected (RigidCaret width)
 
+{-# INLINE _unexpected #-}
 _unexpected :: CaretWidth -> String -> Parsec a
-_unexpected width name = Internal.raise $ \st ->
-  Internal.unexpectedErr st Set.empty name width
+_unexpected width name = Internal.raise $ \st -> Internal.unexpectedErr st Set.empty name width
 
 amend :: Parsec a -> Parsec a
-amend (Internal.Parsec p) =
-  Internal.Parsec $ \st good bad -> p st good $ \err ->
-    bad (Internal.amendErr (Internal.consumed st) err)
+amend = _amend Internal.amendErr
 
 partialAmend :: Parsec a -> Parsec a
-partialAmend (Internal.Parsec p) =
-  Internal.Parsec $ \st good bad -> p st good $ \err ->
-    bad (Internal.partialAmendErr (Internal.consumed st) err)
+partialAmend = _amend Internal.partialAmendErr
+
+{-# INLINE _amend #-}
+_amend :: (Word -> ParseError -> ParseError) -> Parsec a -> Parsec a
+_amend f (Internal.Parsec p) =
+  Internal.Parsec $ \st good bad ->
+    let !origConsumed = Internal.consumed st
+    in p st good $ \err -> bad (f origConsumed err)
 
 entrench :: Parsec a -> Parsec a
-entrench (Internal.Parsec p) =
-  Internal.Parsec $ \st good bad -> p st good $ \err -> bad (Internal.entrenchErr err)
+entrench = Internal.adjustErr Internal.entrenchErr
 
 dislodge :: Parsec a -> Parsec a
 dislodge = dislodgeBy maxBound
 
 dislodgeBy :: Word -> Parsec a -> Parsec a
-dislodgeBy by (Internal.Parsec p) =
-  Internal.Parsec $ \st good bad -> p st good $ \err -> bad (Internal.dislodgeErr by err)
+dislodgeBy by = Internal.adjustErr (Internal.dislodgeErr by)
 
 amendThenDislodge :: Parsec a -> Parsec a
 amendThenDislodge = dislodge . amend
@@ -103,8 +108,7 @@ partialAmendThenDislodgeBy :: Word -> Parsec a -> Parsec a
 partialAmendThenDislodgeBy n = dislodgeBy n . partialAmend
 
 markAsToken :: Parsec a -> Parsec a
-markAsToken (Internal.Parsec p) =
-  Internal.Parsec $ \st good bad -> p st good $ \err -> bad (Internal.setLexical err)
+markAsToken = Internal.adjustErr Internal.setLexical
 
 {-# INLINE (<?>) #-}
 infix 0 <?>
