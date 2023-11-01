@@ -16,6 +16,7 @@ import Text.Gigaparsec (Parsec)
 -- We want to use this to make the docs point to the right definition for users.
 import Text.Gigaparsec.Internal qualified as Internal (Parsec(Parsec), emptyErr, specialisedErr, raise, unexpectedErr, hints, consumed, useHints)
 import Text.Gigaparsec.Internal.Errors (CaretWidth(FlexibleCaret, RigidCaret), ExpectItem(ExpectNamed), labelErr)
+import Text.Gigaparsec.Internal.Errors qualified as Internal (setLexical, amendErr, entrenchErr, dislodgeErr, partialAmendErr)
 import Text.Gigaparsec.Internal.Require (require)
 
 import Data.Set (Set)
@@ -69,19 +70,25 @@ _unexpected width name = Internal.raise $ \st ->
   Internal.unexpectedErr st Set.empty name width
 
 amend :: Parsec a -> Parsec a
-amend = id --TODO:
+amend (Internal.Parsec p) =
+  Internal.Parsec $ \st good bad -> p st good $ \err ->
+    bad (Internal.amendErr (Internal.consumed st) err)
 
 partialAmend :: Parsec a -> Parsec a
-partialAmend = id --TODO:
+partialAmend (Internal.Parsec p) =
+  Internal.Parsec $ \st good bad -> p st good $ \err ->
+    bad (Internal.partialAmendErr (Internal.consumed st) err)
 
 entrench :: Parsec a -> Parsec a
-entrench = id --TODO:
+entrench (Internal.Parsec p) =
+  Internal.Parsec $ \st good bad -> p st good $ \err -> bad (Internal.entrenchErr err)
 
 dislodge :: Parsec a -> Parsec a
-dislodge = dislodgeBy maxBound --TODO:
+dislodge = dislodgeBy maxBound
 
 dislodgeBy :: Word -> Parsec a -> Parsec a
-dislodgeBy _ = id --TODO:
+dislodgeBy by (Internal.Parsec p) =
+  Internal.Parsec $ \st good bad -> p st good $ \err -> bad (Internal.dislodgeErr by err)
 
 amendThenDislodge :: Parsec a -> Parsec a
 amendThenDislodge = dislodge . amend
@@ -96,7 +103,8 @@ partialAmendThenDislodgeBy :: Word -> Parsec a -> Parsec a
 partialAmendThenDislodgeBy n = dislodgeBy n . partialAmend
 
 markAsToken :: Parsec a -> Parsec a
-markAsToken = id --TODO:
+markAsToken (Internal.Parsec p) =
+  Internal.Parsec $ \st good bad -> p st good $ \err -> bad (Internal.setLexical err)
 
 {-# INLINE (<?>) #-}
 infix 0 <?>

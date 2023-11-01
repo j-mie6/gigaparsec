@@ -109,6 +109,23 @@ labelErr !offset expecteds err@VanillaError{}
   }
 labelErr _ _ err = err
 
+amendErr :: Word -> ParseError -> ParseError
+-- FIXME: check for not entrenched
+amendErr !offset err = err { presentationOffset = offset }
+
+partialAmendErr :: Word -> ParseError -> ParseError
+partialAmendErr = amendErr --TODO:
+
+entrenchErr :: ParseError -> ParseError
+entrenchErr err = err --TODO:
+
+dislodgeErr :: Word -> ParseError -> ParseError
+dislodgeErr _ err = err --TODO:
+
+setLexical :: ParseError -> ParseError
+setLexical err@VanillaError{} = err { lexicalError = True }
+setLexical err = err
+
 useHints :: Set ExpectItem -> ParseError -> ParseError
 useHints !hints err@VanillaError{expecteds} = err { expecteds = Set.union hints expecteds }
 useHints _ err = err

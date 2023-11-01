@@ -15,7 +15,7 @@ TODO: what is inside it?
 @since 0.1.0.0
 -}
 module Text.Gigaparsec (
-    Parsec, Result(..), parse,
+    Parsec, Result(..), result, parse,
   -- * Primitive Combinators
   -- | These combinators are specific to parser combinators. In one way or another, they influence
   -- how a parser consumes input, or under what conditions a parser does or does not fail. These are
@@ -103,6 +103,10 @@ import Data.Set qualified as Set (singleton, empty)
 type Result :: * -> * -> *
 data Result e a = Success a | Failure e deriving stock (Show, Eq)
 
+result :: (e -> b) -> (a -> b) -> Result e a -> b
+result _ success (Success x) = success x
+result failure _ (Failure err) = failure err
+
 parse :: forall err a. ErrorBuilder err => Parsec a -> String -> Result err a
 parse (Parsec p) inp = Internal.runRT $ p (emptyState inp) good bad
   where good :: a -> Internal.State -> Internal.RT (Result err a)
@@ -129,8 +133,7 @@ Success "abd" -- first parser does not consume input on failure now
 -}
 atomic :: Parsec a -- ^ the parser, @p@, to execute, if it fails, it will not have consumed input.
        -> Parsec a -- ^ a parser that tries @p@, but never consumes input if it fails.
-atomic (Parsec p) = Parsec $ \st ok bad ->
-  p st ok (\err _ -> bad err st)
+atomic (Parsec p) = Parsec $ \st ok bad -> p st ok (\err _ -> bad err st)
 
 {-| This combinator parses its argument @p@, but does not consume input if it succeeds.
 
@@ -149,8 +152,7 @@ Failure .. -- lookAhead does not roll back input consumed on failure
 -}
 lookAhead :: Parsec a -- ^ the parser, @p@, to execute
           -> Parsec a -- ^ a parser that parses @p@ and never consumes input if it succeeds.
-lookAhead (Parsec p) = Parsec $ \st ok err ->
-  p st (\x _ -> ok x st) err
+lookAhead (Parsec p) = Parsec $ \st ok err -> p st (\x _ -> ok x st) err
 
 {-|
 This combinator parses its argument @p@, and succeeds when @p@ fails and vice-versa, never consuming
