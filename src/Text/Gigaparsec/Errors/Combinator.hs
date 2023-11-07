@@ -31,14 +31,14 @@ label ls (Internal.Parsec p) =
       let !origConsumed = Internal.consumed st
           good' x st'
             | Internal.consumed st' /= origConsumed = good x st'
-            | otherwise = good x st'{Internal.hints = Set.map ExpectNamed ls}
+            | otherwise = good x st' { Internal.hints = Set.map ExpectNamed ls }
           bad' err = Internal.useHints bad (Internal.labelErr origConsumed ls err)
       in p st good' bad'
 
 hide :: Parsec a -> Parsec a
 hide (Internal.Parsec p) =
   Internal.Parsec $ \st good bad ->
-    p st (\x st' -> good x (st' {Internal.hints = Set.empty}))
+    p st (\x st' -> good x st' {Internal.hints = Set.empty})
          (\_ st' -> Internal.useHints bad (Internal.emptyErr st' 0) st')
 
 explain :: String -> Parsec a -> Parsec a
