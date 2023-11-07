@@ -177,7 +177,7 @@ data State = State {
     -- | the current column number (have to settle on a tab handling scheme)
     col  :: {-# UNPACK #-} !Word,
     -- | the valid for which hints can be used
-    hintValidOffset :: {-# UNPACK #-} !Word,
+    hintsValidOffset :: {-# UNPACK #-} !Word,
     -- | the hints at this point in time
     hints :: !(Set ExpectItem)
   }
@@ -187,7 +187,7 @@ emptyState !str = State { input = str
                         , consumed = 0
                         , line = 1
                         , col = 1
-                        , hintValidOffset = 0
+                        , hintsValidOffset = 0
                         , hints = Set.empty
                         }
 
@@ -207,14 +207,14 @@ errorToHints :: State -> ParseError -> State
 errorToHints st@State{..} err
   | consumed == Errors.presentationOffset err
   , not (Errors.isExpectedEmpty err) =
-    if hintValidOffset < consumed then st { hints = Errors.expecteds err, hintValidOffset = consumed }
-    else                               st { hints = Set.union hints (Errors.expecteds err) }
+    if hintsValidOffset < consumed then st { hints = Errors.expecteds err, hintsValidOffset = consumed }
+    else                                st { hints = Set.union hints (Errors.expecteds err) }
 errorToHints st _ = st
 
 useHints :: (ParseError -> State -> RT r) -> (ParseError -> State -> RT r)
-useHints bad err st@State{hintValidOffset, hints}
-  | presentationOffset == hintValidOffset = bad (Errors.useHints hints err) st
-  | otherwise                             = bad err st{hintValidOffset = presentationOffset, hints = Set.empty}
+useHints bad err st@State{hintsValidOffset, hints}
+  | presentationOffset == hintsValidOffset = bad (Errors.useHints hints err) st
+  | otherwise                              = bad err st{ hintsValidOffset = presentationOffset, hints = Set.empty }
   where !presentationOffset = Errors.presentationOffset err
 
 adjustErr :: (ParseError -> ParseError) -> Parsec a -> Parsec a

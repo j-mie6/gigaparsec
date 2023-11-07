@@ -364,13 +364,13 @@ regressionTests = testGroup "thou shalt not regress"
           let p = atomic (char 'a' *> digit)
           let parser = optional (char 'b' <?> ["b"]) *> label ["foo"] p
           case testParse parser "aa" of
-            Failure (TestError _ (VanillaError _ expecteds _ 1)) -> do
+            Failure (TestError (1, 2) (VanillaError _ expecteds _ 1)) -> do
               expecteds @?= [Named "digit"]
             err -> assertFailure $ "error message " ++ show err ++ " did not match"
           let q = amend (char 'a' *> digit)
           let qarser = optional (char 'b' <?> ["b"]) *> label ["foo"] q
           case testParse qarser "aa" of
-            Failure (TestError _ (VanillaError _ expecteds _ 1)) -> do
+            Failure (TestError (1, 1) (VanillaError _ expecteds _ 1)) -> do
               expecteds @?= [Named "foo", Named "b"]
             err -> assertFailure $ "error message " ++ show err ++ " did not match"
       ]

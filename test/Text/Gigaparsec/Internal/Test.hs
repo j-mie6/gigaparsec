@@ -122,7 +122,7 @@ instance Show LiftedState where
                                                       . showString ", col = "
                                                       . shows col
                                                       . showString ", hintsValidOffset = "
-                                                      . shows hintValidOffset
+                                                      . shows hintsValidOffset
                                                       . showString ", hints = "
                                                       . shows hints
                                                       . showChar '}'

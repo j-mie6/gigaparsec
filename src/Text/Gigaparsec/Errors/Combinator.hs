@@ -14,7 +14,7 @@ import Prelude hiding (fail)
 
 import Text.Gigaparsec (Parsec)
 -- We want to use this to make the docs point to the right definition for users.
-import Text.Gigaparsec.Internal qualified as Internal (Parsec(Parsec), line, col, emptyErr, specialisedErr, raise, unexpectedErr, hints, consumed, useHints, adjustErr)
+import Text.Gigaparsec.Internal qualified as Internal (Parsec(Parsec), line, col, emptyErr, specialisedErr, raise, unexpectedErr, hints, consumed, useHints, adjustErr, hints, hintsValidOffset)
 import Text.Gigaparsec.Internal.Errors (ParseError, CaretWidth(FlexibleCaret, RigidCaret), ExpectItem(ExpectNamed))
 import Text.Gigaparsec.Internal.Errors qualified as Internal (setLexical, amendErr, entrenchErr, dislodgeErr, partialAmendErr, labelErr, explainErr)
 import Text.Gigaparsec.Internal.Require (require)
@@ -86,7 +86,11 @@ _amend f (Internal.Parsec p) =
     let !origConsumed = Internal.consumed st
         !origLine = Internal.line st
         !origCol = Internal.col st
-    in p st good $ \err -> bad (f origConsumed origLine origCol err)
+        !origHints = Internal.hints st
+        !origHintsValidOffset = Internal.hintsValidOffset st
+    in p st good $ \err st' -> bad (f origConsumed origLine origCol err)
+                                   st' { Internal.hints = origHints
+                                       , Internal.hintsValidOffset = origHintsValidOffset }
 
 entrench :: Parsec a -> Parsec a
 entrench = Internal.adjustErr Internal.entrenchErr
