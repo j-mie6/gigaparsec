@@ -39,8 +39,7 @@ hide :: Parsec a -> Parsec a
 hide (Internal.Parsec p) =
   Internal.Parsec $ \st good bad ->
     p st (\x st' -> good x (st' {Internal.hints = Set.empty}))
-         -- FIXME: parsley doesn't use the hints for hiding, could this be bug?
-         (\_ st' -> {-Internal.useHints-} bad (Internal.emptyErr st' 0) st')
+         (\_ st' -> Internal.useHints bad (Internal.emptyErr st' 0) st')
 
 explain :: String -> Parsec a -> Parsec a
 explain reason (Internal.Parsec p) =
