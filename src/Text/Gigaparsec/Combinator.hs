@@ -65,13 +65,13 @@ fails __immediately__.
 
 ==== __Examples__
 >>> let p = choice [string "abc", string "ab", string "bc", string "d"]
->>> parse p "abc"
+>>> parse @String p "abc"
 Success "abc"
->>> parse p "ab"
+>>> parse @String p "ab"
 Failure ..
->>> parse p "bc"
+>>> parse @String p "bc"
 Success "bc"
->>> parse p "x"
+>>> parse @String p "x"
 Failure ..
 
 @since 0.1.0.0
@@ -89,9 +89,9 @@ the parsers fail, then the whole combinator fails.
 
 ==== __Examples__
 >>> let p = skip [char'a', item, char 'c']
->>> parse p "abc"
+>>> parse @String p "abc"
 Success ()
->>> parse p "ab"
+>>> parse @String p "ab"
 Failure ..
 
 @since 0.1.0.0
@@ -108,11 +108,11 @@ __without consuming input__, then @Nothing@ is returned instead.
 
 ==== __Examples__
 >>> let p = option (string "abc")
->>> parse p ""
+>>> parse @String p ""
 Success Nothing
->>> parse p "abc"
+>>> parse @String p "abc"
 Success (Just "abc")
->>> parse p "ab"
+>>> parse @String p "ab"
 Failure ..
 
 @since 0.1.0.0
@@ -129,11 +129,11 @@ having consumed input, this combinator fails.
 
 ==== __Examples__
 >>> let p = optional (string "abc")
->>> parse p ""
+>>> parse @String p ""
 Success ()
->>> parse p "abc"
+>>> parse @String p "abc"
 Success ()
->>> parse p "ab"
+>>> parse @String p "ab"
 Failure ..
 
 @since 0.1.0.0
@@ -150,11 +150,11 @@ if @p@ failed having consumed input, this combinator fails.
 
 ==== __Examples__
 >>> let p = optionalAs 7 (string "abc")
->>> parse p ""
+>>> parse @String p ""
 Success 7
->>> parse p "abc"
+>>> parse @String p "abc"
 Success 7
->>> parse p "ab"
+>>> parse @String p "ab"
 Failure ..
 
 @since 0.1.0.0
@@ -206,13 +206,13 @@ If @p@ was not successful at least @n@ times, this combinator fails.
 
 ==== __Examples__
 >>> let p = manyN 2 (string "ab")
->>> parse p ""
+>>> parse @String p ""
 Failure ..
->>> parse p "ab"
+>>> parse @String p "ab"
 Failure ..
->>> parse p "abababab"
+>>> parse @String p "abababab"
 Success ["ab", "ab", "ab", "ab"]
->>> parse p "aba"
+>>> parse @String p "aba"
 Failure ..
 
 ==== Notes
@@ -236,13 +236,13 @@ will succeed.
 
 ==== __Examples__
 >>> let p = skipMany (string "ab")
->>> parse p ""
+>>> parse @String p ""
 Success ()
->>> parse p "ab"
+>>> parse @String p "ab"
 Success ()
->>> parse p "abababab"
+>>> parse @String p "abababab"
 Success ()
->>> parse p "aba"
+>>> parse @String p "aba"
 Failure ..
 
 @since 0.1.0.0
@@ -260,13 +260,13 @@ will succeed. The parser @p@ must succeed at least once.
 
 ==== __Examples__
 >>> let p = skipSome (string "ab")
->>> parse p ""
+>>> parse @String p ""
 Failure ..
->>> parse p "ab"
+>>> parse @String p "ab"
 Success ()
->>> parse p "abababab"
+>>> parse @String p "abababab"
 Success ()
->>> parse p "aba"
+>>> parse @String p "aba"
 Failure ..
 
 @since 0.1.0.0
@@ -284,13 +284,13 @@ will succeed. The parser @p@ must succeed at least @n@ times.
 
 ==== __Examples__
 >>> let p = skipManyN 2 (string "ab")
->>> parse p ""
+>>> parse @String p ""
 Failure ..
->>> parse p "ab"
+>>> parse @String p "ab"
 Failure ..
->>> parse p "abababab"
+>>> parse @String p "abababab"
 Success ()
->>> parse p "aba"
+>>> parse @String p "aba"
 Failure ..
 
 @since 0.1.0.0
@@ -311,13 +311,13 @@ will succeed. The number of times @p@ succeeded is returned as the result.
 
 ==== __Examples__
 >>> let p = count (string "ab")
->>> parse p ""
+>>> parse @String p ""
 Success 0
->>> parse p "ab"
+>>> parse @String p "ab"
 Success 1
->>> parse p "abababab"
+>>> parse @String p "abababab"
 Success 4
->>> parse p "aba"
+>>> parse @String p "aba"
 Failure ..
 
 @since 0.1.0.0
@@ -335,13 +335,13 @@ will succeed. The parser @p@ must succeed at least once. The number of times @p@
 
 ==== __Examples__
 >>> let p = count1 (string "ab")
->>> parse p ""
+>>> parse @String p ""
 Failure ..
->>> parse p "ab"
+>>> parse @String p "ab"
 Success 1
->>> parse p "abababab"
+>>> parse @String p "abababab"
 Success 4
->>> parse p "aba"
+>>> parse @String p "aba"
 Failure ..
 
 @since 0.1.0.0
@@ -358,13 +358,13 @@ Behaves just like @sepBy1@, except does not require an initial @p@, returning th
 ==== __Examples__
 >>> ...
 >>> let args = sepBy int (string ", ")
->>> parse args "7, 3, 2"
+>>> parse @String args "7, 3, 2"
 Success [7, 3, 2]
->>> parse args ""
+>>> parse @String args ""
 Success []
->>> parse args "1"
+>>> parse @String args "1"
 Success [1]
->>> parse args "1, 2, "
+>>> parse @String args "1, 2, "
 Failure ..
 
 @since 0.1.0.0
@@ -385,13 +385,13 @@ one @p@ to have been parsed.
 ==== __Examples__
 >>> ...
 >>> let args = sepBy1 int (string ", ")
->>> parse args "7, 3, 2"
+>>> parse @String args "7, 3, 2"
 Success [7, 3, 2]
->>> parse args ""
+>>> parse @String args ""
 Failure ..
->>> parse args "1"
+>>> parse @String args "1"
 Success [1]
->>> parse args "1, 2, "
+>>> parse @String args "1, 2, "
 Failure ..
 
 @since 0.1.0.0
@@ -409,13 +409,13 @@ Behaves just like @sepEndBy1@, except does not require an initial @p@, returning
 ==== __Examples__
 >>> ...
 >>> let args = sepEndBy int (string ";\n")
->>> parse args "7;\n3;\n2"
+>>> parse @String args "7;\n3;\n2"
 Success [7, 3, 2]
->>> parse args ""
+>>> parse @String args ""
 Success Nil
->>> parse args "1"
+>>> parse @String args "1"
 Success [1]
->>> parse args "1;\n2;\n"
+>>> parse @String args "1;\n2;\n"
 Success [1, 2]
 
 @since 0.1.0.0
@@ -436,13 +436,13 @@ one @p@ to have been parsed.
 ==== __Examples__
 >>> ...
 >>> let args = sepEndBy1 int (string ";\n")
->>> parse args "7;\n3;\n2"
+>>> parse @String args "7;\n3;\n2"
 Success [7, 3, 2]
->>> parse args ""
+>>> parse @String args ""
 Failure ..
->>> parse args "1"
+>>> parse @String args "1"
 Success [1]
->>> parse args "1;\n2;\n"
+>>> parse @String args "1;\n2;\n"
 Success [1, 2]
 
 @since 0.1.0.0
@@ -460,13 +460,13 @@ Behaves just like @endBy1@, except does not require an initial @p@ and @sep@, re
 ==== __Examples__
 >>> ...
 >>> let args = endBy int (string ";\n")
->>> parse args "7;\n3;\n2"
+>>> parse @String args "7;\n3;\n2"
 Failure ..
->>> parse args ""
+>>> parse @String args ""
 Success Nil
->>> parse args "1;\n"
+>>> parse @String args "1;\n"
 Success [1]
->>> parse args "1;\n2;\n"
+>>> parse @String args "1;\n2;\n"
 Success [1, 2]
 
 @since 0.1.0.0
@@ -486,13 +486,13 @@ If @p@ or @sep@ fails having consumed input, the whole parser fails.
 ==== __Examples__
 >>> ...
 >>> let args = endBy1 int (string ";\n")
->>> parse args "7;\n3;\n2"
+>>> parse @String args "7;\n3;\n2"
 Failure ..
->>> parse args ""
+>>> parse @String args ""
 Failure ..
->>> parse args "1;\n"
+>>> parse @String args "1;\n"
 Success [1]
->>> parse args "1;\n2;\n"
+>>> parse @String args "1;\n2;\n"
 Success [1, 2]
 
 @since 0.1.0.0
@@ -512,11 +512,11 @@ list: @[x1, .., xn]@. If @end@ could be parsed immediately, the empty list is re
 ==== __Examples__
 This can be useful for scanning comments:
 >>> let comment = string "--" *> manyUntil item endOfLine
->>> parse p "--hello world"
+>>> parse @String p "--hello world"
 Failure ..
->>> parse p "--hello world\n"
+>>> parse @String p "--hello world\n"
 Success ['h', 'e', 'l', 'l', 'o', ' ', 'w', 'o', 'r', 'l', 'd']
->>> parse p "--\n"
+>>> parse @String p "--\n"
 Success Nil
 
 @since 0.1.0.0
@@ -537,13 +537,13 @@ before @end@ succeeds.
 ==== __Examples__
 This can be useful for scanning comments:
 >>> let comment = string "--" *> someUntil item endOfLine
->>> parse p "--hello world"
+>>> parse @String p "--hello world"
 Failure ..
->>> parse p "--hello world\n"
+>>> parse @String p "--hello world\n"
 Success ['h', 'e', 'l', 'l', 'o', ' ', 'w', 'o', 'r', 'l', 'd']
->>> parse p "--\n"
+>>> parse @String p "--\n"
 Failure ..
->>> parse p "--a\n"
+>>> parse @String p "--a\n"
 Success ['a']
 
 @since 0.1.0.0
@@ -644,11 +644,11 @@ fails. It is not required for @p@ to fail after the @n@th parse. The results pro
 
 ==== __Examples__
 >>> let p = exactly 3 item
->>> parse p "ab"
+>>> parse @String p "ab"
 Failure ..
->>> parse p "abc"
+>>> parse @String p "abc"
 Success ['a', 'b', 'c']
->>> parse p "abcd"
+>>> parse @String p "abcd"
 Success ['a', 'b', 'c']
 
 @since 0.1.0.0
@@ -667,15 +667,15 @@ The results produced by @p@, @xmin@ through @xmax@, are returned as @[xmin, .., 
 
 ==== __Examples__
 >>> let p = range 3 5 item
->>> parse p "ab"
+>>> parse @String p "ab"
 Failure ..
->>> parse p "abc"
+>>> parse @String p "abc"
 Success ['a', 'b', 'c']
->>> parse p "abcd"
+>>> parse @String p "abcd"
 Success ['a', 'b', 'c', 'd']
->>> parse p "abcde"
+>>> parse @String p "abcde"
 Success ['a', 'b', 'c', 'd', 'e']
->>> parse p "abcdef"
+>>> parse @String p "abcdef"
 Success ['a', 'b', 'c', 'd', 'e']
 
 @since 0.1.0.0
@@ -701,15 +701,15 @@ The results are discarded and @()@ is returned instead.
 
 ==== __Examples__
 >>> let p = range_ 3 5 item
->>> parse p "ab"
+>>> parse @String p "ab"
 Failure ..
->>> parse p "abc"
+>>> parse @String p "abc"
 Success ()
->>> parse p "abcd"
+>>> parse @String p "abcd"
 Success ()
->>> parse p "abcde"
+>>> parse @String p "abcde"
 Success ()
->>> parse p "abcdef"
+>>> parse @String p "abcdef"
 Success ()
 
 @since 0.1.0.0
@@ -737,15 +737,15 @@ The results are discarded and the number of successful parses of @p@, @n@, is re
 
 ==== __Examples__
 >>> let p = count 3 5 item
->>> parse p "ab"
+>>> parse @String p "ab"
 Failure ..
->>> parse p "abc"
+>>> parse @String p "abc"
 Success 3
->>> parse p "abcd"
+>>> parse @String p "abcd"
 Success 4
->>> parse p "abcde"
+>>> parse @String p "abcde"
 Success 5
->>> parse p "abcdef"
+>>> parse @String p "abcdef"
 Success 5
 
 @since 0.1.0.0

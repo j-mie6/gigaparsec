@@ -94,11 +94,11 @@ Attempts to read a character from the input and tests it against the predicate @
 consumed and this combinator will fail.
 
 ==== __Examples__
->>> parse (satisfy Data.Char.isDigit) ""
+>>> parse @String (satisfy Data.Char.isDigit) ""
 Failure ..
->>> parse (satisfy Data.Char.isDigit) "7"
+>>> parse @String (satisfy Data.Char.isDigit) "7"
 Success '7'
->>> parse (satisfy Data.Char.isDigit) "a5"
+>>> parse @String (satisfy Data.Char.isDigit) "a5"
 Failure ..
 
 Roughly speaking:
@@ -124,11 +124,11 @@ character can be found, it is consumed and returned. Otherwise, no input is cons
 combinator will fail.
 
 ==== __Examples__
->>> parse (char 'a') ""
+>>> parse @String (char 'a') ""
 Failure ..
->>> parse (char 'a') "a"
+>>> parse @String (char 'a') "a"
 Success 'a'
->>> parse (char 'a') "ba"
+>>> parse @String (char 'a') "ba"
 Failure ..
 
 @since 0.1.0.0
@@ -148,11 +148,11 @@ the characters matched, the parser fails. On failure, __all__ the characters tha
 matched are consumed from the input.
 
 ==== __Examples__
->>> parse (string "abc") ""
+>>> parse @String (string "abc") ""
 Failure ..
->>> parse (string "abc") "abcd"
+>>> parse @String (string "abc") "abcd"
 Success "abc"
->>> parse (string "abc") "xabc"
+>>> parse @String (string "abc") "xabc"
 Failure ..
 
 ==== Notes
@@ -187,11 +187,11 @@ no input is consumed and this combinator will fail.
 
 ==== __Examples__
 >>> let digit = satisfyMap (\c -> if isDigit c then Just (digitToInt c) else Nothing)
->>> parse digit ""
+>>> parse @String digit ""
 Failure ..
->>> parse digit "7"
+>>> parse @String digit "7"
 Success 7
->>> parse digit "a5"
+>>> parse @String digit "a5"
 Failure ..
 
 @since 0.1.0.0
@@ -212,11 +212,11 @@ Otherwise, no input is consumed and the combinator fails.
 
 ==== __Examples__
 >>> let p = oneOf (Set.fromList ['a'..'c'])
->>> parse p "a"
+>>> parse @String p "a"
 Success 'a'
->>> parse p "c"
+>>> parse @String p "c"
 Success 'c'
->>> parse p "xb"
+>>> parse @String p "xb"
 Failure ..
 
 @since 0.1.0.0
@@ -246,13 +246,13 @@ Otherwise, no input is consumed and the combinator fails.
 
 ==== __Examples__
 >>> let p = noneOf (Set.from ['a'..'c'])
->>> parse p "a"
+>>> parse @String p "a"
 Failure ..
->>> parse p "c"
+>>> parse @String p "c"
 Failure ..
->>> parse p "xb"
+>>> parse @String p "xb"
 Success 'x'
->>> parse p ""
+>>> parse @String p ""
 Failure ..
 
 @since 0.1.0.0
@@ -281,11 +281,11 @@ This combinator can never fail, since @satisfy@ can never fail having consumed i
 
 ==== __Examples__
 >>> let ident = letter <:> stringOfMany isAlphaNum
->>> parse ident "abdc9d"
+>>> parse @String ident "abdc9d"
 Success "abdc9d"
->>> parse ident "a"
+>>> parse @String ident "a"
 Success "a"
->>> parser ident "9"
+>>> parse @Stringr ident "9"
 Failure ..
 
 ==== Notes
@@ -309,11 +309,11 @@ consumed input.
 
 ==== __Examples__
 >>> let ident = stringOfSome isAlpha
->>> parse ident "abdc9d"
+>>> parse @String ident "abdc9d"
 Success "abdc"
->>> parse ident "a"
+>>> parse @String ident "a"
 Success "a"
->>> parser ident "9"
+>>> parse @Stringr ident "9"
 Failure ..
 
 ==== Notes
@@ -337,15 +337,15 @@ The longest succeeding string will be returned. If no strings match then the com
 
 ==== __Examples__
 >>> let p = strings (Set.fromList ["hell", "hello", "goodbye", "g", "abc"])
->>> parse p "hell"
+>>> parse @String p "hell"
 Success "hell"
->>> parse p "hello"
+>>> parse @String p "hello"
 Success "hello"
->>> parse p "good"
+>>> parse @String p "good"
 Success "g"
->>> parse p "goodbye"
+>>> parse @String p "goodbye"
 Success "goodbye"
->>> parse p "a"
+>>> parse @String p "a"
 Failure ..
 
 @since 0.1.0.0
@@ -371,15 +371,15 @@ efficient option.
                                 , ("g", pure 1)
                                 , ("abc", pure 3)
                                 ]
->>> parse p "hell"
+>>> parse @String p "hell"
 Success 4
->>> parse p "hello"
+>>> parse @String p "hello"
 Success 5
->>> parse p "good"
+>>> parse @String p "good"
 Success 1
->>> parse p "goodbye"
+>>> parse @String p "goodbye"
 Success 7
->>> parse p "a"
+>>> parse @String p "a"
 Failure ..
 
 ==== Notes
