@@ -374,4 +374,11 @@ regressionTests = testGroup "thou shalt not regress"
               expecteds @?= [Named "foo", Named "b"]
             err -> assertFailure $ "error message " ++ show err ++ " did not match"
       ]
+  , testGroup "amend should"
+      -- FIXME: unclear why this would be the case
+      [ expectFail $ testCase "ensure that errors pick up a new unexpected token" do
+          let greeting = string "hello world" <* char '!'
+          testParse (amend greeting <?> ["greeting"]) "hello world." @?=
+            Failure (TestError (1, 1) (VanillaError (Just (Raw "h")) [Named "greeting"] [] 1))
+      ]
   ]
