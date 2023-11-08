@@ -15,7 +15,7 @@ TODO: what is inside it?
 @since 0.1.0.0
 -}
 module Text.Gigaparsec (
-    Parsec, Result(..), result, parse,
+    Parsec, Result(..), result, parse, parseRepl,
   -- * Primitive Combinators
   -- | These combinators are specific to parser combinators. In one way or another, they influence
   -- how a parser consumes input, or under what conditions a parser does or does not fail. These are
@@ -115,6 +115,10 @@ parse (Parsec p) inp = Internal.runRT $ p (emptyState inp) good bad
         good x _  = return (Success x)
         bad :: Internal.ParseError -> Internal.State -> Internal.RT (Result err a)
         bad err _ = return (Failure (Internal.fromParseError Nothing inp err))
+
+-- TODO: documentation
+parseRepl :: Show a => Parsec a -> String -> IO ()
+parseRepl p inp = result putStrLn print (parse p inp)
 
 {-|
 This combinator parses its argument @p@, but rolls back any consumed input on failure.
