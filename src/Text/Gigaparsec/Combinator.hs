@@ -511,6 +511,7 @@ list: @[x1, .., xn]@. If @end@ could be parsed immediately, the empty list is re
 
 ==== __Examples__
 This can be useful for scanning comments:
+
 >>> let comment = string "--" *> manyUntil item endOfLine
 >>> parse @String p "--hello world"
 Failure ..
@@ -536,6 +537,7 @@ before @end@ succeeds.
 
 ==== __Examples__
 This can be useful for scanning comments:
+
 >>> let comment = string "--" *> someUntil item endOfLine
 >>> parse @String p "--hello world"
 Failure ..

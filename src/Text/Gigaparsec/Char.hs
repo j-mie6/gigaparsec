@@ -504,8 +504,9 @@ This parser tries to parse an uppercase letter, and returns it if successful.
 
 An uppercase letter is any character whose Unicode /Category Type/ is Uppercase Letter (@Lu@).
 Examples of characters within this category include:
-  * the Latin letters @'A'@ through @'Z'@
-  * Latin special character such as @'Å'@, @'Ç'@, @'Õ'@
+
+  * the Latin letters @\'A\'@ through @\'Z\'@
+  * Latin special character such as @\'Å\'@, @\'Ç\'@, @\'Õ\'@
   * Cryillic letters
   * Greek letters
   * Coptic letters
@@ -522,8 +523,9 @@ A lowercase letter is any character whose Unicode /Category Type/ is Lowercase
 Letter (@Ll@).
 
 Examples of characters within this category include:
-  * the Latin letters @'a'@ through @'z'@
-  * Latin special character such as @'é'@, @'ß'@, @'ð'@
+
+  * the Latin letters @\'a\'@ through @\'z\'@
+  * Latin special character such as @\'é\'@, @\'ß\'@, @\'ð\'@
   * Cryillic letters
   * Greek letters
   * Coptic letters
