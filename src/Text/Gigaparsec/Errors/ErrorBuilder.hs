@@ -166,15 +166,23 @@ class (Ord (Item err)) => ErrorBuilder err where
 
   -- | The representation type of the main body within the error message.
   type ErrorInfoLines err
-  -- TODO:
-  vanillaError :: UnexpectedLine err
-               -> ExpectedLine err
-               -> Messages err
-               -> LineInfo err
+  {-|
+  Vanilla errors are those produced such that they have information about
+  both @expected@ and @unexpected@ tokens. These are usually the default,
+  and are not produced by @fail@ (or any derivative) combinators.
+  -}
+  vanillaError :: UnexpectedLine err -- ^ information about which token(s) caused the error (see the 'unexpected' method).
+               -> ExpectedLine err   -- ^ information about which token(s) would have avoided the error (see the 'expected' method).
+               -> Messages err       -- ^ additional information about why the error occured (see the 'combineMessages' method).
+               -> LineInfo err       -- ^ representation of the line of input that this error occured on (see the 'lineInfo' method).
                -> ErrorInfoLines err
-  -- TODO:
-  specialisedError :: Messages err
-                   -> LineInfo err
+  {-|
+  Specialised errors are triggered by @fail@ and any combinators that are
+  implemented in terms of @fail@. These errors take precedence over
+  the vanilla errors, and contain less, more specialised, information.
+  -}
+  specialisedError :: Messages err -- ^ information detailing the error (see the 'combineMessages' method).
+                   -> LineInfo err -- ^ representation of the line of input that this error occured on (see the 'lineInfo' method).
                    -> ErrorInfoLines err
 
   -- | The representation of all the different possible tokens that could have prevented an error.
@@ -182,12 +190,18 @@ class (Ord (Item err)) => ErrorBuilder err where
   -- | The representation of the combined reasons or failure messages from the parser.
   type Messages err
 
-  -- TODO:
-  combineExpectedItems :: Set (Item err)
+  {-|
+  Details how to combine the various expected items into a single representation.
+  -}
+  combineExpectedItems :: Set (Item err) -- ^ the possible items that fix the error.
                        -> ExpectedItems err
-  -- TODO:
-  combineMessages :: [Message err]
-                     -> Messages err
+  {-|
+  Details how to combine any reasons or messages generated within a
+  single error. Reasons are used by @vanilla@ messages and messages
+  are used by @specialised@ messages.
+  -}
+  combineMessages :: [Message err] -- ^  the messages to combine (see the 'message' or 'reason' methods).
+                  -> Messages err
 
   -- | The representation of the information regarding the problematic token.
   type UnexpectedLine err
@@ -198,51 +212,85 @@ class (Ord (Item err)) => ErrorBuilder err where
   -- | The representation of the line of input where the error occurred.
   type LineInfo err
 
-  -- TODO:
-  unexpected :: Maybe (Item err)
+  {-|
+  Describes how to handle the (potentially missing) information
+  about what token(s) caused the error.
+  -}
+  unexpected :: Maybe (Item err) -- ^ the @Item@ that caused this error.
              -> UnexpectedLine err
-  -- TODO:
-  expected :: ExpectedItems err
+  {-|
+  Describes how to handle the information about the tokens that
+  could have avoided the error.
+  -}
+  expected :: ExpectedItems err -- ^ the tokens that could have prevented the error (see 'combineExpectedItems').
            -> ExpectedLine err
-  -- TODO:
-  reason :: String
+  {-|
+  Describes how to represent the reasons behind a parser fail.
+  These reasons originate from the 'Text.Gigaparsec.Errors.Combinator.explain' combinator.
+  -}
+  reason :: String -- ^ the reason produced by the parser.
          -> Message err
-  -- TODO:
-  message :: String
+  {-|
+  Describes how to represent the messages produced by the
+  'Text.Gigaparsec.Errors.Combinator.fail' combinator (or any that are implemented using it).
+  -}
+  message :: String -- ^ the message produced by the parser.
           -> Message err
 
-  -- TODO:
-  lineInfo :: String
-           -> [String]
-           -> [String]
-           -> Word
-           -> Word
+  {-|
+  Describes how to format the information about the line that the error occured on,
+  and its surrounding context.
+  -}
+  lineInfo :: String   -- ^ the full line of input that produced this error message.
+           -> [String] -- ^ the lines of input from just before the one that produced this message (up to 'numLinesBefore').
+           -> [String] -- ^ the lines of input from just after the one that produced this message (up to 'numLinesAfter').
+           -> Word     -- ^ the offset into the line that the error points at.
+           -> Word     -- ^ how wide the caret in the message should be.
            -> LineInfo err
 
-  -- TODO:
+  -- | The number of lines of input to request before an error occured.
   numLinesBefore :: Int
-  -- TODO:
+  -- | The number of lines of input to request after an error occured.
   numLinesAfter :: Int
 
   -- | The type that represents the individual items within the error. It must be
   -- orderable, as it is used within @Set@.
   type Item err
 
-  -- TODO:
-  raw :: String
+  {-|
+  Formats a raw item generated by either the input string or a input
+  reading combinator without a label.
+  -}
+  raw :: String -- ^ the raw, unprocessed input.
       -> Item err
-  -- TODO:
-  named :: String
+  -- | Formats a named item generated by a label.
+  named :: String -- ^ the name given to the label.
         -> Item err
-  -- TODO:
+  -- | Value that represents the end of the input in the error message.
   endOfInput :: Item err
 
-  -- TODO:
-  unexpectedToken :: NonEmpty Char
-                  -> Word
-                  -> Bool
-                  -> Token
+  {-|
+  Extracts an unexpected token from the remaining input.
 
+  When a parser fails, by default an error reports an unexpected token of a specific width.
+  This works well for some parsers, but often it is nice to have the illusion of a dedicated
+  lexing pass: instead of reporting the next few characters as unexpected, an unexpected token
+  can be reported instead. This can take many forms, for instance trimming the token to the
+  next whitespace, only taking one character, or even trying to lex a token out of the stream.
+
+  TODO: talk about the token extractors when they are added.
+  -}
+  unexpectedToken :: NonEmpty Char -- ^ the remaining input, @cs@, at point of failure.
+                  -> Word          -- ^ the input the parser tried to read when it failed
+                                   --   (this is __not__ guaranteed to be smaller than the length of
+                                   --    @cs@, but is __guaranteed to be greater than 0__).
+                  -> Bool          -- ^ was this error generated as part of \"lexing\", or in a wider parser (see 'Text.Gigaparsec.Errors.Combinator.markAsToken').
+                  -> Token         -- ^ a token extracted from @cs@ that will be used as part of the unexpected message.
+
+{-|
+Formats error messages as a string, using the functions found in
+"Text.Gigaparsec.Errors.DefaultErrorBuilder".
+-}
 instance ErrorBuilder String where
   {-# INLINE format #-}
   format = formatDefault
