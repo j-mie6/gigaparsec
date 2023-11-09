@@ -12,7 +12,7 @@ import Data.List.NonEmpty (NonEmpty((:|)), nonEmpty, (<|))
 import Data.Set (Set)
 import Data.Set qualified as Set (empty, map, union, null, foldr, insert)
 
-import Text.Gigaparsec.Errors.ErrorBuilder (ErrorBuilder, tokenSpan)
+import Text.Gigaparsec.Errors.ErrorBuilder (ErrorBuilder, Token)
 import Text.Gigaparsec.Errors.ErrorBuilder qualified as Builder (ErrorBuilder(..))
 import Text.Gigaparsec.Errors.ErrorBuilder qualified as Token (Token(..))
 
@@ -265,3 +265,7 @@ fromParseError srcFile input err =
           Nothing -> error "the focus line is guaranteed to exist"
           Just ls' -> let (before, focus, after) = breakLines (n - 1) ls'
                       in (l : before, focus, after)
+
+        tokenSpan :: Token -> Word
+        tokenSpan (Token.Raw cs) = fromIntegral (length cs)
+        tokenSpan (Token.Named _ w) = w

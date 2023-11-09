@@ -114,7 +114,7 @@ The overall structure of a /Specialised/ error is given in the following diagram
 
 @since 0.2.0.0
 -}
-module Text.Gigaparsec.Errors.ErrorBuilder (ErrorBuilder(..), Token(..), tokenSpan) where
+module Text.Gigaparsec.Errors.ErrorBuilder (ErrorBuilder(..), Token(..)) where
 
 import Text.Gigaparsec.Errors.DefaultErrorBuilder ( StringBuilder, formatDefault
                                                   , vanillaErrorDefault, specialisedErrorDefault
@@ -286,12 +286,18 @@ class (Ord (Item err)) => ErrorBuilder err where
                   -> Bool          -- ^ was this error generated as part of \"lexing\", or in a wider parser (see 'Text.Gigaparsec.Errors.Combinator.markAsToken').
                   -> Token         -- ^ a token extracted from @cs@ that will be used as part of the unexpected message.
 
-type Token :: *
-data Token = Raw !String | Named !String {-# UNPACK #-} !Word
+{-|
+This type represents an extracted token returned by 'unexpectedToken' in 'ErrorBuilder'.
 
-tokenSpan :: Token -> Word
-tokenSpan (Raw cs) = fromIntegral (length cs)
-tokenSpan (Named _ w) = w
+There is deliberately no analogue for @EndOfInput@ because we guarantee that non-empty
+residual input is provided to token extraction.
+-}
+type Token :: *
+data Token = Raw                   -- ^ This is a token that is directly extracted from the residual input itself.
+              !String              -- ^ the input extracted.
+           | Named                 -- ^ This is a token that has been given a name, and is treated like a labelled item.
+              !String              -- ^ the description of the token.
+              {-# UNPACK #-} !Word -- ^ the amount of residual input this token ate.
 
 {-|
 Formats error messages as a string, using the functions found in
