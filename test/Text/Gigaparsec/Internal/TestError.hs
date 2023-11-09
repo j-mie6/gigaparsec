@@ -3,8 +3,8 @@ module Text.Gigaparsec.Internal.TestError (
     TestError(..), TestErrorLines(..), TestErrorItem(..)
   ) where
 
-import Text.Gigaparsec.Errors.ErrorBuilder
-import Text.Gigaparsec.Errors.Token qualified as Token
+import Text.Gigaparsec.Errors.ErrorBuilder hiding (Token(..))
+import Text.Gigaparsec.Errors.ErrorBuilder qualified as Token
 
 import Data.Set (Set)
 import Data.List.NonEmpty (NonEmpty)

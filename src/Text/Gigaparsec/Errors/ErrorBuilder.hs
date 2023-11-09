@@ -114,9 +114,8 @@ The overall structure of a /Specialised/ error is given in the following diagram
 
 @since 0.2.0.0
 -}
-module Text.Gigaparsec.Errors.ErrorBuilder (ErrorBuilder(..)) where
+module Text.Gigaparsec.Errors.ErrorBuilder (ErrorBuilder(..), Token(..), tokenSpan) where
 
-import Text.Gigaparsec.Errors.Token (Token(Named, Raw))
 import Text.Gigaparsec.Errors.DefaultErrorBuilder ( StringBuilder, formatDefault
                                                   , vanillaErrorDefault, specialisedErrorDefault
                                                   , rawDefault, namedDefault, endOfInputDefault
@@ -286,6 +285,13 @@ class (Ord (Item err)) => ErrorBuilder err where
                                    --    @cs@, but is __guaranteed to be greater than 0__).
                   -> Bool          -- ^ was this error generated as part of \"lexing\", or in a wider parser (see 'Text.Gigaparsec.Errors.Combinator.markAsToken').
                   -> Token         -- ^ a token extracted from @cs@ that will be used as part of the unexpected message.
+
+type Token :: *
+data Token = Raw !String | Named !String {-# UNPACK #-} !Word
+
+tokenSpan :: Token -> Word
+tokenSpan (Raw cs) = fromIntegral (length cs)
+tokenSpan (Named _ w) = w
 
 {-|
 Formats error messages as a string, using the functions found in

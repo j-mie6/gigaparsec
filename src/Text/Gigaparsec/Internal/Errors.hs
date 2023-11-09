@@ -12,9 +12,9 @@ import Data.List.NonEmpty (NonEmpty((:|)), nonEmpty, (<|))
 import Data.Set (Set)
 import Data.Set qualified as Set (empty, map, union, null, foldr, insert)
 
-import Text.Gigaparsec.Errors.ErrorBuilder (ErrorBuilder)
+import Text.Gigaparsec.Errors.ErrorBuilder (ErrorBuilder, tokenSpan)
 import Text.Gigaparsec.Errors.ErrorBuilder qualified as Builder (ErrorBuilder(..))
-import Text.Gigaparsec.Errors.Token qualified as Token (Token(..), span)
+import Text.Gigaparsec.Errors.ErrorBuilder qualified as Token (Token(..))
 
 CPP_import_PortableUnlifted
 
@@ -241,7 +241,7 @@ fromParseError srcFile input err =
         unexpectItem :: Bool -> UnexpectItem -> (Builder.Item err, Span)
         unexpectItem lexical (UnexpectRaw cs demanded) =
           case Builder.unexpectedToken @err cs demanded lexical of
-            t@(Token.Raw tok) -> (Builder.raw @err tok, Token.span t)
+            t@(Token.Raw tok) -> (Builder.raw @err tok, tokenSpan t)
             Token.Named name w -> (Builder.named @err name, w)
         unexpectItem _ (UnexpectNamed name caretWidth) = (Builder.named @err name, width caretWidth)
         unexpectItem _ UnexpectEndOfInput = (Builder.endOfInput @err, 1)
