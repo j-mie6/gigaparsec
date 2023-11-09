@@ -84,6 +84,8 @@ library
                       Text.Gigaparsec.Combinator,
                       Text.Gigaparsec.Combinator.NonEmpty,
                       Text.Gigaparsec.Errors.Combinator,
+                      Text.Gigaparsec.Errors.DefaultErrorBuilder,
+                      Text.Gigaparsec.Errors.ErrorBuilder,
                       Text.Gigaparsec.Expr,
                       Text.Gigaparsec.Expr.Chain,
                       Text.Gigaparsec.Expr.Infix,
@@ -92,6 +94,7 @@ library
 
                       -- Internals
                       Text.Gigaparsec.Internal,
+                      Text.Gigaparsec.Internal.Errors,
                       Text.Gigaparsec.Internal.RT,
                       Text.Gigaparsec.Internal.Require
 
@@ -107,6 +110,8 @@ library
 
     -- Directories containing source files.
     hs-source-dirs:   src
+    --includes:         portable-unlifed.h
+    include-dirs:     includes
 
     -- Base language which the package is written in.
     default-language: Haskell2010
@@ -124,9 +129,11 @@ test-suite gigaparsec-test
                    Text.Gigaparsec.CharTests,
                    Text.Gigaparsec.CombinatorTests,
                    Text.Gigaparsec.ExprTests,
+                   Text.Gigaparsec.ErrorsTests,
                    Text.Gigaparsec.Expr.ChainTests,
                    Text.Gigaparsec.Expr.InfixTests,
                    Text.Gigaparsec.Internal.Test,
+                   Text.Gigaparsec.Internal.TestError,
                    Text.Gigaparsec.Internal.PlainString
 
     ghc-options: -Wno-missing-export-lists -Wno-missing-safe-haskell-mode -Wno-safe
@@ -146,8 +153,9 @@ test-suite gigaparsec-test
     build-depends:
         gigaparsec,
         containers >= 0.6 && < 0.7,
+        --deriving-compat >= 0.6 && < 0.7,
         tasty >=1.1 && <1.6,
-        --tasty-expected-failure,
+        tasty-expected-failure >=0.11 && <0.13,
         tasty-hunit >=0.9 && <0.11,
         --TODO: property based testing will be useful when we optimise combinators
         --      to test against their base implementations

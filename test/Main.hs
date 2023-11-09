@@ -6,6 +6,7 @@ import Text.Gigaparsec.PrimitiveTests qualified as Primitive
 import Text.Gigaparsec.CharTests qualified as Char
 import Text.Gigaparsec.CombinatorTests qualified as Combinator
 import Text.Gigaparsec.ExprTests qualified as Expr
+import Text.Gigaparsec.ErrorsTests qualified as Errors
 
 main :: IO ()
 main = defaultMain $ testGroup "gigaparsec"
@@ -13,4 +14,5 @@ main = defaultMain $ testGroup "gigaparsec"
   , Char.tests
   , Combinator.tests
   , Expr.tests
+  , Errors.tests
   ]

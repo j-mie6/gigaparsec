@@ -1,6 +1,6 @@
 {-# LANGUAGE Safe #-}
 {-# LANGUAGE OverloadedLists #-}
-{-# OPTIONS_GHC -Wno-all-missed-specialisations #-}
+{-# OPTIONS_GHC -Wno-all-missed-specialisations -Wno-overflowed-literals #-}
 {-|
 Module      : Text.Gigaparsec.Char
 Description : Contains the combinators needed to read characters and strings, as well as combinators
@@ -49,7 +49,8 @@ import Text.Gigaparsec (Parsec, atomic, empty, some, many, (<|>))
 import Text.Gigaparsec.Combinator (skipMany)
 import Text.Gigaparsec.Errors.Combinator ((<?>))
 -- We want to use this to make the docs point to the right definition for users.
-import Text.Gigaparsec.Internal qualified as Internal (Parsec(Parsec), State(..))
+import Text.Gigaparsec.Internal qualified as Internal (Parsec(Parsec, unParsec), State(..), expectedErr, useHints)
+import Text.Gigaparsec.Internal.Errors qualified as Internal (ExpectItem(ExpectRaw), ParseError)
 import Text.Gigaparsec.Internal.Require (require)
 
 import Data.Bits (Bits((.&.), (.|.)))
@@ -59,13 +60,31 @@ import Data.List.NonEmpty as NonEmpty (NonEmpty((:|)), groupWith, sortWith)
 import Data.Maybe (isJust, fromJust)
 import Data.Monoid (Alt(Alt, getAlt))
 import Data.Set (Set)
-import Data.Set qualified as Set (member, size, findMin, findMax, mapMonotonic)
+import Data.Set qualified as Set (empty, member, size, findMin, findMax, mapMonotonic, singleton)
 import Data.Map (Map)
 import Data.Map qualified as Map (fromSet, toAscList, member)
 
 -------------------------------------------------
 -- Primitives
 -------------------------------------------------
+
+_satisfy :: Set Internal.ExpectItem -> (Char -> Bool) -> Parsec Char
+_satisfy expecteds test = Internal.Parsec $ \st ok bad ->
+  case Internal.input st of
+    c:cs | test c -> ok c (updateState st c cs)
+    _             -> Internal.useHints bad (Internal.expectedErr st expecteds 1) st
+  where
+  -- The duplicated input & consumed update avoids double allocation
+  -- that occurs if they were done separately to the line and col updates.
+  updateState st '\n' cs = st
+    { Internal.line = Internal.line st + 1, Internal.col = 1,
+      Internal.input = cs, Internal.consumed = Internal.consumed st + 1 }
+  updateState st '\t' cs = st
+    { Internal.col = ((Internal.col st + 3) .&. (-4)) .|. 1,
+      Internal.input = cs, Internal.consumed = Internal.consumed st + 1 }
+  updateState st _ cs = st
+    { Internal.col = Internal.col st + 1,
+      Internal.input = cs, Internal.consumed = Internal.consumed st + 1 }
 
 {-|
 This combinator tries to parse a single character from the input that matches the given predicate.
@@ -75,11 +94,11 @@ Attempts to read a character from the input and tests it against the predicate @
 consumed and this combinator will fail.
 
 ==== __Examples__
->>> parse (satisfy Data.Char.isDigit) ""
+>>> parse @String (satisfy Data.Char.isDigit) ""
 Failure ..
->>> parse (satisfy Data.Char.isDigit) "7"
+>>> parse @String (satisfy Data.Char.isDigit) "7"
 Success '7'
->>> parse (satisfy Data.Char.isDigit) "a5"
+>>> parse @String (satisfy Data.Char.isDigit) "a5"
 Failure ..
 
 Roughly speaking:
@@ -94,23 +113,7 @@ satisfy :: (Char -> Bool) -- ^ the predicate, @pred@, to test the next character
                           -- exist.
         -> Parsec Char    -- ^ a parser that tries to read a single character @c@, such that @pred c@
                           -- is true, or fails.
-satisfy test = Internal.Parsec $ \st ok err ->
-  case Internal.input st of
-    c: cs | test c  ->
-      ok c (updateState st c cs)
-    _                 -> err st
-  where
-  -- The duplicated input & consumed update avoids double allocation
-  -- that occurs if they were done separately to the line and col updates.
-  updateState st '\n' cs = st
-    { Internal.line = Internal.line st + 1, Internal.col = 1,
-      Internal.input = cs, Internal.consumed = Internal.consumed st + 1 }
-  updateState st '\t' cs = st
-    { Internal.col = ((Internal.col st + 3) .&. (-4)) .|. 1,
-      Internal.input = cs, Internal.consumed = Internal.consumed st + 1 }
-  updateState st _ cs = st
-    { Internal.col = Internal.col st + 1,
-      Internal.input = cs, Internal.consumed = Internal.consumed st + 1 }
+satisfy = _satisfy Set.empty
 
 -- Needs to be primitive for the raw expected item down the line
 {-|
@@ -121,18 +124,18 @@ character can be found, it is consumed and returned. Otherwise, no input is cons
 combinator will fail.
 
 ==== __Examples__
->>> parse (char 'a') ""
+>>> parse @String (char 'a') ""
 Failure ..
->>> parse (char 'a') "a"
+>>> parse @String (char 'a') "a"
 Success 'a'
->>> parse (char 'a') "ba"
+>>> parse @String (char 'a') "ba"
 Failure ..
 
 @since 0.1.0.0
 -}
 char :: Char        -- ^ the character to parse, @c@.
      -> Parsec Char -- ^ a parser that tries to read a single @c@, or fails.
-char c = satisfy (== c)
+char c = _satisfy (Set.singleton (Internal.ExpectRaw (pure c))) (== c)
 
 -- Needs to be primitive for the raw expected item and wide caret down the line
 {-|
@@ -145,11 +148,11 @@ the characters matched, the parser fails. On failure, __all__ the characters tha
 matched are consumed from the input.
 
 ==== __Examples__
->>> parse (string "abc") ""
+>>> parse @String (string "abc") ""
 Failure ..
->>> parse (string "abc") "abcd"
+>>> parse @String (string "abc") "abcd"
 Success "abc"
->>> parse (string "abc") "xabc"
+>>> parse @String (string "abc") "xabc"
 Failure ..
 
 ==== Notes
@@ -163,7 +166,12 @@ string :: String        -- ^ the string, @s@, to be parsed from the input
        -> Parsec String -- ^ a parser that either parses the string @s@ or fails at the first
                         -- mismatched character.
 string s = require (not (null s)) "Text.Gigaparsec.Char.string" "cannot pass empty string" $
-  traverse char s
+  --TODO: this could be much improved
+  Internal.Parsec $ \st ok bad ->
+    let bad' (_ :: Internal.ParseError) =
+          Internal.useHints bad (Internal.expectedErr st [Internal.ExpectRaw s]
+                                                         (fromIntegral (length s)))
+    in Internal.unParsec (traverse char s) st ok bad'
 
 -------------------------------------------------
 -- Composite Combinators
@@ -179,11 +187,11 @@ no input is consumed and this combinator will fail.
 
 ==== __Examples__
 >>> let digit = satisfyMap (\c -> if isDigit c then Just (digitToInt c) else Nothing)
->>> parse digit ""
+>>> parse @String digit ""
 Failure ..
->>> parse digit "7"
+>>> parse @String digit "7"
 Success 7
->>> parse digit "a5"
+>>> parse @String digit "a5"
 Failure ..
 
 @since 0.1.0.0
@@ -204,11 +212,11 @@ Otherwise, no input is consumed and the combinator fails.
 
 ==== __Examples__
 >>> let p = oneOf (Set.fromList ['a'..'c'])
->>> parse p "a"
+>>> parse @String p "a"
 Success 'a'
->>> parse p "c"
+>>> parse @String p "c"
 Success 'c'
->>> parse p "xb"
+>>> parse @String p "xb"
 Failure ..
 
 @since 0.1.0.0
@@ -220,14 +228,14 @@ oneOf cs
   | sz == 1                     = char c1
   -- if the smallest and largest characters are as far apart
   -- as the size of the set, it must be contiguous
-  | sz == (ord c2 - ord c1 + 1) = satisfy (\c -> c1 <= c && c <= c2) <?> Set.mapMonotonic show cs
-  | otherwise                   = satisfy (`Set.member` cs) <?> [rangeLabel]
+  | sz == (ord c2 - ord c1 + 1) = satisfy (\c -> c1 <= c && c <= c2) <?> [rangeLabel]
+  | otherwise                   = satisfy (`Set.member` cs) <?> Set.mapMonotonic (show . (: [])) cs
   where !sz = Set.size cs
         -- must be left lazy until sz known not to be 0
         c1 = Set.findMin cs
         c2 = Set.findMax cs
         --FIXME: control character safe show (and for the map above!)
-        rangeLabel = "one of " ++ show c1 ++ " to " ++ show c2
+        rangeLabel = "one of " ++ show @String [c1] ++ " to " ++ show @String [c2]
 
 {-|
 This combinator tries to parse any character __not__ from supplied set of characters @cs@,
@@ -238,13 +246,13 @@ Otherwise, no input is consumed and the combinator fails.
 
 ==== __Examples__
 >>> let p = noneOf (Set.from ['a'..'c'])
->>> parse p "a"
+>>> parse @String p "a"
 Failure ..
->>> parse p "c"
+>>> parse @String p "c"
 Failure ..
->>> parse p "xb"
+>>> parse @String p "xb"
 Success 'x'
->>> parse p ""
+>>> parse @String p ""
 Failure ..
 
 @since 0.1.0.0
@@ -261,7 +269,7 @@ noneOf cs
         c1 = Set.findMin cs
         c2 = Set.findMax cs
         --FIXME: control character safe show
-        rangeLabel = "anything outside of " ++ show c1 ++ " to " ++ show c2
+        rangeLabel = "anything outside of " ++ show @String [c1] ++ " to " ++ show @String [c2]
 
 {-|
 This combinator parses characters matching the given predicate __zero__ or more times, collecting
@@ -273,11 +281,11 @@ This combinator can never fail, since @satisfy@ can never fail having consumed i
 
 ==== __Examples__
 >>> let ident = letter <:> stringOfMany isAlphaNum
->>> parse ident "abdc9d"
+>>> parse @String ident "abdc9d"
 Success "abdc9d"
->>> parse ident "a"
+>>> parse @String ident "a"
 Success "a"
->>> parser ident "9"
+>>> parse @Stringr ident "9"
 Failure ..
 
 ==== Notes
@@ -301,11 +309,11 @@ consumed input.
 
 ==== __Examples__
 >>> let ident = stringOfSome isAlpha
->>> parse ident "abdc9d"
+>>> parse @String ident "abdc9d"
 Success "abdc"
->>> parse ident "a"
+>>> parse @String ident "a"
 Success "a"
->>> parser ident "9"
+>>> parse @Stringr ident "9"
 Failure ..
 
 ==== Notes
@@ -329,15 +337,15 @@ The longest succeeding string will be returned. If no strings match then the com
 
 ==== __Examples__
 >>> let p = strings (Set.fromList ["hell", "hello", "goodbye", "g", "abc"])
->>> parse p "hell"
+>>> parse @String p "hell"
 Success "hell"
->>> parse p "hello"
+>>> parse @String p "hello"
 Success "hello"
->>> parse p "good"
+>>> parse @String p "good"
 Success "g"
->>> parse p "goodbye"
+>>> parse @String p "goodbye"
 Success "goodbye"
->>> parse p "a"
+>>> parse @String p "a"
 Failure ..
 
 @since 0.1.0.0
@@ -363,15 +371,15 @@ efficient option.
                                 , ("g", pure 1)
                                 , ("abc", pure 3)
                                 ]
->>> parse p "hell"
+>>> parse @String p "hell"
 Success 4
->>> parse p "hello"
+>>> parse @String p "hello"
 Success 5
->>> parse p "good"
+>>> parse @String p "good"
 Success 1
->>> parse p "goodbye"
+>>> parse @String p "goodbye"
 Success 7
->>> parse p "a"
+>>> parse @String p "a"
 Failure ..
 
 ==== Notes
@@ -496,8 +504,9 @@ This parser tries to parse an uppercase letter, and returns it if successful.
 
 An uppercase letter is any character whose Unicode /Category Type/ is Uppercase Letter (@Lu@).
 Examples of characters within this category include:
-  * the Latin letters @'A'@ through @'Z'@
-  * Latin special character such as @'Å'@, @'Ç'@, @'Õ'@
+
+  * the Latin letters @\'A\'@ through @\'Z\'@
+  * Latin special character such as @\'Å\'@, @\'Ç\'@, @\'Õ\'@
   * Cryillic letters
   * Greek letters
   * Coptic letters
@@ -514,8 +523,9 @@ A lowercase letter is any character whose Unicode /Category Type/ is Lowercase
 Letter (@Ll@).
 
 Examples of characters within this category include:
-  * the Latin letters @'a'@ through @'z'@
-  * Latin special character such as @'é'@, @'ß'@, @'ð'@
+
+  * the Latin letters @\'a\'@ through @\'z\'@
+  * Latin special character such as @\'é\'@, @\'ß\'@, @\'ð\'@
   * Cryillic letters
   * Greek letters
   * Coptic letters

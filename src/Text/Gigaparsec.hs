@@ -15,7 +15,7 @@ TODO: what is inside it?
 @since 0.1.0.0
 -}
 module Text.Gigaparsec (
-    Parsec, Result(..), parse,
+    Parsec, Result(..), result, parse, parseRepl,
   -- * Primitive Combinators
   -- | These combinators are specific to parser combinators. In one way or another, they influence
   -- how a parser consumes input, or under what conditions a parser does or does not fail. These are
@@ -83,25 +83,42 @@ module Text.Gigaparsec (
 -- `Internal`: when they are in the public API, we are locked into them!
 
 import Text.Gigaparsec.Internal (Parsec(Parsec), emptyState, manyr, somer)
-import Text.Gigaparsec.Internal qualified as Internal.State (State(..))
-import Text.Gigaparsec.Internal.RT (runRT)
+import Text.Gigaparsec.Internal qualified as Internal (State(..), useHints, expectedErr)
+import Text.Gigaparsec.Internal.RT qualified as Internal (RT, runRT)
+import Text.Gigaparsec.Internal.Errors qualified as Internal (ParseError, ExpectItem(ExpectEndOfInput), fromParseError)
+
+import Text.Gigaparsec.Errors.ErrorBuilder (ErrorBuilder)
 
 import Data.Functor (void)
 import Control.Applicative (liftA2, (<|>), empty, many, some, (<**>)) -- liftA2 required until 9.6
 import Control.Selective (select, branch)
+
+import Data.Set qualified as Set (singleton, empty)
 
 -- Hiding the Internal module seems like the better bet: nobody needs to see it anyway :)
 -- re-expose like this to prevent hlint suggesting import refinement into internal
 --type Parsec :: * -> *
 --type Parsec = Internal.Parsec
 
-type Result :: * -> *
-data Result a = Success a | Failure deriving stock (Show, Eq)
+type Result :: * -> * -> *
+data Result e a = Success a | Failure e deriving stock (Show, Eq)
 
-parse :: Parsec a -> String -> Result a
-parse (Parsec p) inp = runRT $ p (emptyState inp) good bad
-  where good x _ = return (Success x)
-        bad _    = return Failure
+result :: (e -> b) -> (a -> b) -> Result e a -> b
+result _ success (Success x) = success x
+result failure _ (Failure err) = failure err
+
+{-# SPECIALISE parse :: Parsec a -> String -> Result String a #-}
+{-# INLINABLE parse #-}
+parse :: forall err a. ErrorBuilder err => Parsec a -> String -> Result err a
+parse (Parsec p) inp = Internal.runRT $ p (emptyState inp) good bad
+  where good :: a -> Internal.State -> Internal.RT (Result err a)
+        good x _  = return (Success x)
+        bad :: Internal.ParseError -> Internal.State -> Internal.RT (Result err a)
+        bad err _ = return (Failure (Internal.fromParseError Nothing inp err))
+
+-- TODO: documentation
+parseRepl :: Show a => Parsec a -> String -> IO ()
+parseRepl p inp = result putStrLn print (parse p inp)
 
 {-|
 This combinator parses its argument @p@, but rolls back any consumed input on failure.
@@ -122,8 +139,7 @@ Success "abd" -- first parser does not consume input on failure now
 -}
 atomic :: Parsec a -- ^ the parser, @p@, to execute, if it fails, it will not have consumed input.
        -> Parsec a -- ^ a parser that tries @p@, but never consumes input if it fails.
-atomic (Parsec p) = Parsec $ \st ok err ->
-  p st ok (const $ err st)
+atomic (Parsec p) = Parsec $ \st ok bad -> p st ok (\err _ -> bad err st)
 
 {-| This combinator parses its argument @p@, but does not consume input if it succeeds.
 
@@ -142,8 +158,7 @@ Failure .. -- lookAhead does not roll back input consumed on failure
 -}
 lookAhead :: Parsec a -- ^ the parser, @p@, to execute
           -> Parsec a -- ^ a parser that parses @p@ and never consumes input if it succeeds.
-lookAhead (Parsec p) = Parsec $ \st ok err ->
-  p st (\x _ -> ok x st) err
+lookAhead (Parsec p) = Parsec $ \st ok err -> p st (\x _ -> ok x st) err
 
 {-|
 This combinator parses its argument @p@, and succeeds when @p@ fails and vice-versa, never consuming
@@ -168,8 +183,10 @@ keyword kw = atomic $ string kw *> notFollowedBy letterOrDigit
 -}
 notFollowedBy :: Parsec a  -- ^ the parser, @p@, to execute, it must fail in order for this combinator to succeed.
               -> Parsec () -- ^ a parser which fails when @p@ succeeds and succeeds otherwise, never consuming input.
-notFollowedBy (Parsec p) = Parsec $ \st ok err ->
-  p st (\_ _ -> err st) (\_ -> ok () st)
+notFollowedBy (Parsec p) = Parsec $ \st ok bad ->
+  p st (\_ st' -> let !width = Internal.consumed st' - Internal.consumed st
+                  in Internal.useHints bad (Internal.expectedErr st Set.empty width) st)
+       (\_ _ -> ok () st)
 
 -- eof is usually `notFollowedBy item`, but this requires annoying cyclic dependencies on Char
 {- This parser only succeeds at the end of the input.
@@ -185,8 +202,9 @@ Success ()
 @since 0.1.0.0
 -}
 eof :: Parsec ()
-eof = Parsec $ \st good bad -> case Internal.State.input st of
-  (:){} -> bad st
+eof = Parsec $ \st good bad -> case Internal.input st of
+  (:){} -> Internal.useHints bad
+             (Internal.expectedErr st (Set.singleton Internal.ExpectEndOfInput) 1) st
   []    -> good () st
 
 {-|

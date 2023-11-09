@@ -1,0 +1,35 @@
+# HLint configuration file
+# https://github.com/ndmitchell/hlint
+##########################
+
+# This file contains a template configuration file, which is typically
+# placed as .hlint.yaml in the root of your project
+
+# Specify additional command line arguments
+#
+# - arguments: [--color, --cpp-simple, -XQuasiQuotes]
+
+# Control which extensions/flags/modules/functions can be used
+- extensions:
+  - {name: [LexicalNegation, QualifiedDo, LinearTypes], within: [], message: "Cannot use before 9.0 is min"}
+  - {name: [ImpredicativeTypes, FieldSelectors, OverloadedRecordDot, OverloadedRecordUpdate, UnliftedDatatypes], within: [], message: "Cannot use before 9.2 is min"}
+  - {name: [TypeData], within: [], message: "Cannot use before 9.6 is min"}
+
+# - flags:
+#   - {name: -w, within: []} # -w is allowed nowhere
+
+- modules:
+  - {name: [Data.Set, Data.HashSet], as: Set} # if you import Data.Set qualified, it must be as 'Set'
+#   - {name: Control.Arrow, within: []} # Certain modules are banned entirely
+#
+# - functions:
+#   - {name: unsafePerformIO, within: []} # unsafePerformIO can only appear in no modules
+
+# Add custom hints for this project
+#
+# Will suggest replacing "wibbleMany [myvar]" with "wibbleOne myvar"
+# - error: {lhs: "wibbleMany [x]", rhs: wibbleOne x}
+
+- ignore: {name: Use optional}
+- ignore: {name: Use section}
+- ignore: {name: Avoid lambda}
