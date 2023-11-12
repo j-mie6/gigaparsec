@@ -8,7 +8,7 @@ module Text.Gigaparsec.Registers (
     local, localWith,
   ) where
 
-import Text.Gigaparsec (Parsec, ($>))
+import Text.Gigaparsec (Parsec)
 import Text.Gigaparsec.Internal.RT (Reg, newReg, readReg, writeReg)
 import Text.Gigaparsec.Internal qualified as Internal (Parsec(..))
 
@@ -53,8 +53,7 @@ modify reg f = _put reg (gets reg f)
 local :: Reg r a -> (a -> a) -> Parsec b -> Parsec b
 local reg f p = do x <- get reg
                    put reg (f x)
-                   y <- p
-                   put reg x $> y
+                   p <* put reg x
 
 localWith :: Reg r a -> a -> Parsec b -> Parsec b
 localWith reg x = local reg (const x)

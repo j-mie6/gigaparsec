@@ -7,6 +7,10 @@ import GHC.Base (MutVar#, RealWorld, State#, runRW#, newMutVar#, readMutVar#, wr
 
 import Control.Applicative (liftA, liftA2)
 import Control.Monad (liftM2)
+import Data.Coerce (coerce)
+import GHC.IO (IO(IO))
+import GHC.IORef (IORef(IORef))
+import GHC.STRef (STRef(STRef))
 
 type Reg :: * -> * -> *
 type role Reg phantom representational
@@ -18,22 +22,26 @@ newtype RT a = RT (State# RealWorld -> (# State# RealWorld, a #))
 
 instance Functor RT where
   fmap :: (a -> b) -> RT a -> RT b
-  fmap = liftA -- TODO:
+  fmap = liftA
 
   {-# INLINE fmap #-}
 
--- TODO: (*>), (<*), (<*>)?
 instance Applicative RT where
   pure :: a -> RT a
   pure x = RT (# , x #)
 
   liftA2 :: (a -> b -> c) -> RT a -> RT b -> RT c
-  liftA2 = liftM2 -- TODO:
+  liftA2 = liftM2
+
+  (*>) :: RT a -> RT b -> RT b
+  RT m1 *> RT m2 = RT $ \s# ->
+    case m1 s# of
+      (# s'#, _ #) -> m2 s'#
 
   {-# INLINE pure #-}
   {-# INLINE liftA2 #-}
+  {-# INLINE (*>) #-}
 
--- TODO: (>>)
 instance Monad RT where
   return :: a -> RT a
   return = pure
@@ -43,8 +51,12 @@ instance Monad RT where
     case m s# of
       (# s'#, x #) -> let RT n = k x in n s'#
 
+  (>>) :: RT a -> RT b -> RT b
+  (>>) = (*>)
+
   {-# INLINE return #-}
   {-# INLINE (>>=) #-}
+  {-# INLINE (>>) #-}
 
 {-# INLINE runRT #-}
 runRT :: RT a -> a
@@ -63,6 +75,11 @@ writeReg (Reg reg#) x = RT $ \s# ->
   case writeMutVar# reg# x s# of
     s'# -> (# s'#, () #)
 
--- ioToRT?
--- rtToIO?
--- fromIORef?
+ioToRT :: IO a -> RT a
+ioToRT = coerce
+
+rtToIO :: RT a -> IO a
+rtToIO = coerce
+
+fromIORef :: IORef a -> Reg r a
+fromIORef (IORef (STRef reg#)) = Reg reg#
