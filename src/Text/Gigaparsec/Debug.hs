@@ -1,6 +1,6 @@
 {-# LANGUAGE Trustworthy #-}
 {-# LANGUAGE ExistentialQuantification, RecordWildCards, NamedFieldPuns #-}
-module Text.Gigaparsec.Debug (debug, debugConfig, DebugConfig(..), WatchedReg(..), Break(..)) where
+module Text.Gigaparsec.Debug (debug, debugWith, debugConfig, DebugConfig(..), WatchedReg(..), Break(..)) where
 
 import Text.Gigaparsec.Internal (Parsec)
 import Text.Gigaparsec.Internal.RT (Reg, readReg)
@@ -12,7 +12,7 @@ import System.IO (hGetEcho, hSetEcho, stdin)
 import Data.List (intercalate, isPrefixOf)
 import Data.List.NonEmpty (NonEmpty((:|)), (<|))
 import Data.List.NonEmpty qualified as NonEmpty (toList)
-import System.Console.Pretty (color, Color(Green, White, Red, Blue))
+import System.Console.Pretty (color, supportsPretty, Color(Green, White, Red, Blue))
 
 type DebugConfig :: *
 data DebugConfig = DebugConfig {
@@ -30,17 +30,22 @@ data WatchedReg = forall r a. Show a => WatchedReg String (Reg r a)
 type Break :: *
 data Break = OnEntry | OnExit | Always | Never
 
-debug :: String -> DebugConfig -> Parsec a -> Parsec a
-debug name config@DebugConfig{ascii} (Internal.Parsec p) = Internal.Parsec $ \st good bad -> do
+debug :: String -> Parsec a -> Parsec a
+debug = debugWith debugConfig
+
+debugWith :: DebugConfig -> String -> Parsec a -> Parsec a
+debugWith config@DebugConfig{ascii} name (Internal.Parsec p) = Internal.Parsec $ \st good bad -> do
   -- TODO: could make it so the postamble can print input information from the entry?
-  doDebug name Enter st "" config
+  ascii' <- (\colourful -> ascii || not colourful) <$> Internal.ioToRT supportsPretty
+  let config' = config { ascii = ascii' }
+  doDebug name Enter st ""  config'
   let good' x st' = do
         let st'' = st' { Internal.debugLevel = Internal.debugLevel st' - 1}
-        doDebug name Exit st'' (green ascii " Good") config
+        doDebug name Exit st'' (green ascii' " Good") config'
         good x st''
   let bad' err st' = do
         let st'' = st' { Internal.debugLevel = Internal.debugLevel st' - 1}
-        doDebug name Exit st'' (red ascii " Bad") config
+        doDebug name Exit st'' (red ascii' " Bad") config'
         bad err st''
   p (st { Internal.debugLevel = Internal.debugLevel st + 1}) good' bad'
 
@@ -79,8 +84,8 @@ printInfo name dir st@Internal.State{input, line, col} end ascii regs = do
   regSummary <-
     if null regs then return []
     else (++ [""]) . ("watched registers:" :) <$>
-      forM regs (\(WatchedReg rname reg) -> do x <- readReg reg
-                                               return ("    " ++ rname ++ " = " ++ show x))
+      forM regs (\(WatchedReg rname reg) ->
+        (\x -> "    " ++ rname ++ " = " ++ show x) <$> readReg reg)
   Internal.ioToRT $ putStr $ indentAndUnlines st ((prelude ++ cs' ++ end) : caret : regSummary)
 
 waitForUser :: Internal.RT ()
