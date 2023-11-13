@@ -33,3 +33,4 @@
 - ignore: {name: Use optional}
 - ignore: {name: Use section}
 - ignore: {name: Avoid lambda}
+- ignore: {name: Use infix}

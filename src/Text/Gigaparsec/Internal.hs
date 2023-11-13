@@ -179,7 +179,9 @@ data State = State {
     -- | the valid for which hints can be used
     hintsValidOffset :: {-# UNPACK #-} !Word,
     -- | the hints at this point in time
-    hints :: !(Set ExpectItem)
+    hints :: !(Set ExpectItem),
+    -- | Debug nesting
+    debugLevel :: {-# UNPACK #-} !Int
   }
 
 emptyState :: String -> State
@@ -189,6 +191,7 @@ emptyState !str = State { input = str
                         , col = 1
                         , hintsValidOffset = 0
                         , hints = Set.empty
+                        , debugLevel = 0
                         }
 
 emptyErr :: State -> Word -> ParseError

@@ -83,6 +83,7 @@ library
                       Text.Gigaparsec.Char,
                       Text.Gigaparsec.Combinator,
                       Text.Gigaparsec.Combinator.NonEmpty,
+                      Text.Gigaparsec.Debug,
                       Text.Gigaparsec.Errors.Combinator,
                       Text.Gigaparsec.Errors.DefaultErrorBuilder,
                       Text.Gigaparsec.Errors.ErrorBuilder,
@@ -99,8 +100,9 @@ library
                       Text.Gigaparsec.Internal.Require
 
     -- this can probably be loosened?
-    build-depends:    containers >= 0.6 && < 0.7,
-                      selective >= 0.6 && < 0.8
+    build-depends:    containers      >= 0.6 && < 0.7,
+                      selective       >= 0.6 && < 0.8,
+                      pretty-terminal >= 0.1.0   && < 0.2
 
     -- Modules included in this library but not exported.
     -- other-modules:
