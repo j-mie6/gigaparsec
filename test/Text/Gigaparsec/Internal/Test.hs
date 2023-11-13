@@ -106,8 +106,8 @@ parseState (Parsec p) st = runRT (p st (\ !_ st' -> return (Lifted st')) (\ _ st
 -- don't @ me
 instance Eq LiftedState where
   (==) :: LiftedState -> LiftedState -> Bool
-  Lifted (State input1 consumed1 line1 col1 _hintValidOffset1 _hints1) ==
-    Lifted (State input2 consumed2 line2 col2 _hintValidOffset2 _hints2) =
+  Lifted (State input1 consumed1 line1 col1 _hintValidOffset1 _hints1 _debugLevel1) ==
+    Lifted (State input2 consumed2 line2 col2 _hintValidOffset2 _hints2 _debugLevel2) =
        consumed1 == consumed2 && line1 == line2 && col1 == col2 && input1 == input2
     -- this throws off a whole bunch of tests, understandably
     -- && hintValidOffset1 == hintValidOffset2 && hints1 == hints2
