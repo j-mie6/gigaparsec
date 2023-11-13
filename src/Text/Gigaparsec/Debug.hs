@@ -1,14 +1,13 @@
 {-# LANGUAGE Trustworthy #-}
 {-# LANGUAGE ExistentialQuantification, RecordWildCards, NamedFieldPuns #-}
-{-# OPTIONS_GHC -Wno-unrecognised-pragmas #-}
 module Text.Gigaparsec.Debug (debug, debugConfig, DebugConfig(..), WatchedReg(..), Break(..)) where
 
-import Text.Gigaparsec (Parsec)
-import Text.Gigaparsec.Registers (Reg)
+import Text.Gigaparsec.Internal (Parsec)
+import Text.Gigaparsec.Internal.RT (Reg, readReg)
 import Text.Gigaparsec.Internal qualified as Internal
 import Text.Gigaparsec.Internal.RT qualified as Internal
 
-import Control.Monad (when)
+import Control.Monad (when, forM)
 import System.IO (hGetEcho, hSetEcho, stdin)
 import Data.List (intercalate, isPrefixOf)
 import Data.List.NonEmpty (NonEmpty((:|)), (<|))
@@ -68,7 +67,7 @@ doDebug name dir st end DebugConfig{..} = do
   when (shouldBreak dir breakPoint) waitForUser
 
 printInfo :: String -> Direction -> Internal.State -> String -> Bool -> [WatchedReg] -> Internal.RT ()
-printInfo name dir st@Internal.State{input, line, col} end ascii _regs = Internal.ioToRT $ do
+printInfo name dir st@Internal.State{input, line, col} end ascii regs = do
   let cs = replace "\n" (newline ascii)
          . replace " " (space ascii)
          . replace "\r" (carriageReturn ascii)
@@ -77,8 +76,12 @@ printInfo name dir st@Internal.State{input, line, col} end ascii _regs = Interna
   let cs' = if length cs < (5 + 1) then cs ++ endOfInput ascii else cs
   let prelude = portal dir name ++ " " ++ show (line, col) ++ ": "
   let caret = replicate (length prelude) ' ' ++ blue ascii "^"
-  let regSummary = [] -- TODO: something with the register summary
-  putStr $ indentAndUnlines st ((prelude ++ cs' ++ end) : caret : regSummary)
+  regSummary <-
+    if null regs then return []
+    else (++ [""]) . ("watched registers:" :) <$>
+      forM regs (\(WatchedReg rname reg) -> do x <- readReg reg
+                                               return ("    " ++ rname ++ " = " ++ show x))
+  Internal.ioToRT $ putStr $ indentAndUnlines st ((prelude ++ cs' ++ end) : caret : regSummary)
 
 waitForUser :: Internal.RT ()
 waitForUser = Internal.ioToRT $ do
@@ -101,21 +104,15 @@ indent st = replicate (Internal.debugLevel st * 2) ' '
 indentAndUnlines :: Internal.State -> [String] -> String
 indentAndUnlines st = unlines . map (indent st ++)
 
-green :: Bool -> String -> String
-green True s = s
-green False s = color Green s
+green, red, white, blue :: Bool -> String -> String
+green = colour Green
+red = colour Red
+white = colour White
+blue = colour Blue
 
-red :: Bool -> String -> String
-red True s = s
-red False s = color Red s
-
-white :: Bool -> String -> String
-white True s = s
-white False s = color White s
-
-blue :: Bool -> String -> String
-blue True s = s
-blue False s = color Blue s
+colour :: Color -> Bool -> String -> String
+colour _ True s = s
+colour c False s = color c s
 
 newline, space, carriageReturn, tab, endOfInput :: Bool -> String
 newline ascii = green ascii "↙"
