@@ -8,7 +8,7 @@ import Text.Gigaparsec.Internal qualified as Internal
 import Text.Gigaparsec.Internal.RT qualified as Internal
 
 import Control.Monad (when, forM)
-import System.IO (hGetEcho, hSetEcho, stdin)
+import System.IO (hGetEcho, hSetEcho, hPutStr, stdin, stdout, Handle)
 import Data.List (intercalate, isPrefixOf)
 import Data.List.NonEmpty (NonEmpty((:|)), (<|))
 import Data.List.NonEmpty qualified as NonEmpty (toList)
@@ -18,11 +18,12 @@ type DebugConfig :: *
 data DebugConfig = DebugConfig {
     ascii :: !Bool,
     breakPoint :: !Break,
-    watchedRegs :: ![WatchedReg]
+    watchedRegs :: ![WatchedReg],
+    handle :: Handle
   }
 
 debugConfig :: DebugConfig
-debugConfig = DebugConfig { ascii = False, breakPoint = Never, watchedRegs = [] }
+debugConfig = DebugConfig { ascii = False, breakPoint = Never, watchedRegs = [], handle = stdout }
 
 type WatchedReg :: *
 data WatchedReg = forall r a. Show a => WatchedReg String (Reg r a)
@@ -68,11 +69,11 @@ shouldBreak Exit = breakOnExit
 
 doDebug :: String -> Direction -> Internal.State -> String -> DebugConfig -> Internal.RT ()
 doDebug name dir st end DebugConfig{..} = do
-  printInfo name dir st end ascii watchedRegs
+  printInfo handle name dir st end ascii watchedRegs
   when (shouldBreak dir breakPoint) waitForUser
 
-printInfo :: String -> Direction -> Internal.State -> String -> Bool -> [WatchedReg] -> Internal.RT ()
-printInfo name dir st@Internal.State{input, line, col} end ascii regs = do
+printInfo :: Handle -> String -> Direction -> Internal.State -> String -> Bool -> [WatchedReg] -> Internal.RT ()
+printInfo handle name dir st@Internal.State{input, line, col} end ascii regs = do
   let cs = replace "\n" (newline ascii)
          . replace " " (space ascii)
          . replace "\r" (carriageReturn ascii)
@@ -87,7 +88,7 @@ printInfo name dir st@Internal.State{input, line, col} end ascii regs = do
       forM regs (\(WatchedReg rname reg) ->
         (\x -> "    " ++ rname ++ " = " ++ show x) <$> readReg reg)
   Internal.unsafeIOToRT $
-    putStr $ indentAndUnlines st ((prelude ++ cs' ++ end) : caret : regSummary)
+    hPutStr handle $ indentAndUnlines st ((prelude ++ cs' ++ end) : caret : regSummary)
 
 waitForUser :: Internal.RT ()
 waitForUser = Internal.unsafeIOToRT $ do
