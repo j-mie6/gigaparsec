@@ -34,29 +34,29 @@
 </span><a href="Text.Gigaparsec.Debug.html#watchedRegs"><span class="hs-identifier hs-var">watchedRegs</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-special">[</span><span class="hs-special">]</span><span> </span><span class="hs-special">}</span><span>
 </span><span id="line-26"></span><span>
 </span><span id="line-27"></span><span class="hs-keyword">type</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Debug.html#WatchedReg"><span class="hs-identifier hs-type">WatchedReg</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-operator">*</span></span><span>
-</span><span id="line-28"></span><span class="hs-keyword">data</span><span> </span><span id="WatchedReg"><span class="annot"><a href="Text.Gigaparsec.Debug.html#WatchedReg"><span class="hs-identifier hs-var">WatchedReg</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">forall</span><span> </span><span id="local-6989586621679070182"><span class="annot"><a href="#local-6989586621679070182"><span class="hs-identifier hs-type">r</span></a></span></span><span> </span><span id="local-6989586621679070183"><span class="annot"><a href="#local-6989586621679070183"><span class="hs-identifier hs-type">a</span></a></span></span><span class="hs-operator">.</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Show</span></span><span> </span><span class="annot"><a href="#local-6989586621679070183"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span id="WatchedReg"><span class="annot"><a href="Text.Gigaparsec.Debug.html#WatchedReg"><span class="hs-identifier hs-var">WatchedReg</span></a></span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Text.Gigaparsec.Internal.RT.html#Reg"><span class="hs-identifier hs-type">Reg</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679070182"><span class="hs-identifier hs-type">r</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679070183"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-28"></span><span class="hs-keyword">data</span><span> </span><span id="WatchedReg"><span class="annot"><a href="Text.Gigaparsec.Debug.html#WatchedReg"><span class="hs-identifier hs-var">WatchedReg</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">forall</span><span> </span><span id="local-6989586621679071343"><span class="annot"><a href="#local-6989586621679071343"><span class="hs-identifier hs-type">r</span></a></span></span><span> </span><span id="local-6989586621679071344"><span class="annot"><a href="#local-6989586621679071344"><span class="hs-identifier hs-type">a</span></a></span></span><span class="hs-operator">.</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Show</span></span><span> </span><span class="annot"><a href="#local-6989586621679071344"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span id="WatchedReg"><span class="annot"><a href="Text.Gigaparsec.Debug.html#WatchedReg"><span class="hs-identifier hs-var">WatchedReg</span></a></span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Text.Gigaparsec.Internal.RT.html#Reg"><span class="hs-identifier hs-type">Reg</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679071343"><span class="hs-identifier hs-type">r</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679071344"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">)</span><span>
 </span><span id="line-29"></span><span>
 </span><span id="line-30"></span><span class="hs-keyword">type</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Debug.html#Break"><span class="hs-identifier hs-type">Break</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-operator">*</span></span><span>
 </span><span id="line-31"></span><span class="hs-keyword">data</span><span> </span><span id="Break"><span class="annot"><a href="Text.Gigaparsec.Debug.html#Break"><span class="hs-identifier hs-var">Break</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="OnEntry"><span class="annot"><a href="Text.Gigaparsec.Debug.html#OnEntry"><span class="hs-identifier hs-var">OnEntry</span></a></span></span><span> </span><span class="hs-glyph">|</span><span> </span><span id="OnExit"><span class="annot"><a href="Text.Gigaparsec.Debug.html#OnExit"><span class="hs-identifier hs-var">OnExit</span></a></span></span><span> </span><span class="hs-glyph">|</span><span> </span><span id="Always"><span class="annot"><a href="Text.Gigaparsec.Debug.html#Always"><span class="hs-identifier hs-var">Always</span></a></span></span><span> </span><span class="hs-glyph">|</span><span> </span><span id="Never"><span class="annot"><a href="Text.Gigaparsec.Debug.html#Never"><span class="hs-identifier hs-var">Never</span></a></span></span><span>
 </span><span id="line-32"></span><span>
-</span><span id="line-33"></span><span id="local-6989586621679070080"><span class="annot"><a href="Text.Gigaparsec.Debug.html#debug"><span class="hs-identifier hs-type">debug</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679070080"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679070080"><span class="hs-identifier hs-type">a</span></a></span></span><span>
+</span><span id="line-33"></span><span id="local-6989586621679071241"><span class="annot"><a href="Text.Gigaparsec.Debug.html#debug"><span class="hs-identifier hs-type">debug</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679071241"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679071241"><span class="hs-identifier hs-type">a</span></a></span></span><span>
 </span><span id="line-34"></span><span id="debug"><span class="annot"><span class="annottext">debug :: forall a. String -&gt; Parsec a -&gt; Parsec a
 </span><a href="Text.Gigaparsec.Debug.html#debug"><span class="hs-identifier hs-var hs-var">debug</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">DebugConfig -&gt; String -&gt; Parsec a -&gt; Parsec a
 forall a. DebugConfig -&gt; String -&gt; Parsec a -&gt; Parsec a
 </span><a href="Text.Gigaparsec.Debug.html#debugWith"><span class="hs-identifier hs-var">debugWith</span></a></span><span> </span><span class="annot"><span class="annottext">DebugConfig
 </span><a href="Text.Gigaparsec.Debug.html#debugConfig"><span class="hs-identifier hs-var">debugConfig</span></a></span><span>
 </span><span id="line-35"></span><span>
-</span><span id="line-36"></span><span id="local-6989586621679070083"><span class="annot"><a href="Text.Gigaparsec.Debug.html#debugWith"><span class="hs-identifier hs-type">debugWith</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Debug.html#DebugConfig"><span class="hs-identifier hs-type">DebugConfig</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679070083"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679070083"><span class="hs-identifier hs-type">a</span></a></span></span><span>
+</span><span id="line-36"></span><span id="local-6989586621679071244"><span class="annot"><a href="Text.Gigaparsec.Debug.html#debugWith"><span class="hs-identifier hs-type">debugWith</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Debug.html#DebugConfig"><span class="hs-identifier hs-type">DebugConfig</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679071244"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679071244"><span class="hs-identifier hs-type">a</span></a></span></span><span>
 </span><span id="line-37"></span><span id="debugWith"><span class="annot"><span class="annottext">debugWith :: forall a. DebugConfig -&gt; String -&gt; Parsec a -&gt; Parsec a
-</span><a href="Text.Gigaparsec.Debug.html#debugWith"><span class="hs-identifier hs-var hs-var">debugWith</span></a></span></span><span> </span><span id="local-6989586621679070188"><span class="annot"><span class="annottext">config :: DebugConfig
-</span><a href="#local-6989586621679070188"><span class="hs-identifier hs-var">config</span></a></span></span><span class="hs-glyph">@</span><span class="annot"><a href="Text.Gigaparsec.Debug.html#DebugConfig"><span class="hs-identifier hs-type">DebugConfig</span></a></span><span class="hs-special">{</span><span id="local-6989586621679070189"><span class="annot"><span class="annottext">Bool
+</span><a href="Text.Gigaparsec.Debug.html#debugWith"><span class="hs-identifier hs-var hs-var">debugWith</span></a></span></span><span> </span><span id="local-6989586621679071349"><span class="annot"><span class="annottext">config :: DebugConfig
+</span><a href="#local-6989586621679071349"><span class="hs-identifier hs-var">config</span></a></span></span><span class="hs-glyph">@</span><span class="annot"><a href="Text.Gigaparsec.Debug.html#DebugConfig"><span class="hs-identifier hs-type">DebugConfig</span></a></span><span class="hs-special">{</span><span id="local-6989586621679071350"><span class="annot"><span class="annottext">Bool
 ascii :: DebugConfig -&gt; Bool
 ascii :: Bool
-</span><a href="Text.Gigaparsec.Debug.html#ascii"><span class="hs-identifier hs-var hs-var">ascii</span></a></span></span><span class="hs-special">}</span><span> </span><span id="local-6989586621679070190"><span class="annot"><span class="annottext">String
-</span><a href="#local-6989586621679070190"><span class="hs-identifier hs-var">name</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Internal.Parsec</span></a></span><span> </span><span id="local-6989586621679070192"><span class="annot"><span class="annottext">forall r.
+</span><a href="Text.Gigaparsec.Debug.html#ascii"><span class="hs-identifier hs-var hs-var">ascii</span></a></span></span><span class="hs-special">}</span><span> </span><span id="local-6989586621679071351"><span class="annot"><span class="annottext">String
+</span><a href="#local-6989586621679071351"><span class="hs-identifier hs-var">name</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Internal.Parsec</span></a></span><span> </span><span id="local-6989586621679071353"><span class="annot"><span class="annottext">forall r.
 State
 -&gt; (a -&gt; State -&gt; RT r) -&gt; (ParseError -&gt; State -&gt; RT r) -&gt; RT r
-</span><a href="#local-6989586621679070192"><span class="hs-identifier hs-var">p</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">(forall r.
+</span><a href="#local-6989586621679071353"><span class="hs-identifier hs-var">p</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">(forall r.
  State
  -&gt; (a -&gt; State -&gt; RT r) -&gt; (ParseError -&gt; State -&gt; RT r) -&gt; RT r)
 -&gt; Parsec a
@@ -74,82 +74,82 @@ forall a.
     -&gt; (a -&gt; State -&gt; RT r) -&gt; (ParseError -&gt; State -&gt; RT r) -&gt; RT r)
 -&gt; Parsec a
 forall a b. (a -&gt; b) -&gt; a -&gt; b
-</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-glyph">\</span><span id="local-6989586621679070198"><span class="annot"><span class="annottext">State
-</span><a href="#local-6989586621679070198"><span class="hs-identifier hs-var">st</span></a></span></span><span> </span><span id="local-6989586621679070199"><span class="annot"><span class="annottext">a -&gt; State -&gt; RT r
-</span><a href="#local-6989586621679070199"><span class="hs-identifier hs-var">good</span></a></span></span><span> </span><span id="local-6989586621679070200"><span class="annot"><span class="annottext">ParseError -&gt; State -&gt; RT r
-</span><a href="#local-6989586621679070200"><span class="hs-identifier hs-var">bad</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-glyph">\</span><span id="local-6989586621679071359"><span class="annot"><span class="annottext">State
+</span><a href="#local-6989586621679071359"><span class="hs-identifier hs-var">st</span></a></span></span><span> </span><span id="local-6989586621679071360"><span class="annot"><span class="annottext">a -&gt; State -&gt; RT r
+</span><a href="#local-6989586621679071360"><span class="hs-identifier hs-var">good</span></a></span></span><span> </span><span id="local-6989586621679071361"><span class="annot"><span class="annottext">ParseError -&gt; State -&gt; RT r
+</span><a href="#local-6989586621679071361"><span class="hs-identifier hs-var">bad</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-keyword">do</span><span>
 </span><span id="line-38"></span><span>  </span><span class="hs-comment">-- TODO: could make it so the postamble can print input information from the entry?</span><span>
-</span><span id="line-39"></span><span>  </span><span id="local-6989586621679070201"><span class="annot"><span class="annottext">Bool
-</span><a href="#local-6989586621679070201"><span class="hs-identifier hs-var">ascii'</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="hs-special">(</span><span class="hs-glyph">\</span><span id="local-6989586621679070202"><span class="annot"><span class="annottext">Bool
-</span><a href="#local-6989586621679070202"><span class="hs-identifier hs-var">colourful</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Bool
-</span><a href="#local-6989586621679070189"><span class="hs-identifier hs-var">ascii</span></a></span><span> </span><span class="annot"><span class="annottext">Bool -&gt; Bool -&gt; Bool
+</span><span id="line-39"></span><span>  </span><span id="local-6989586621679071362"><span class="annot"><span class="annottext">Bool
+</span><a href="#local-6989586621679071362"><span class="hs-identifier hs-var">ascii'</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="hs-special">(</span><span class="hs-glyph">\</span><span id="local-6989586621679071363"><span class="annot"><span class="annottext">Bool
+</span><a href="#local-6989586621679071363"><span class="hs-identifier hs-var">colourful</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Bool
+</span><a href="#local-6989586621679071350"><span class="hs-identifier hs-var">ascii</span></a></span><span> </span><span class="annot"><span class="annottext">Bool -&gt; Bool -&gt; Bool
 </span><span class="hs-operator hs-var">||</span></span><span> </span><span class="annot"><span class="annottext">Bool -&gt; Bool
 </span><span class="hs-identifier hs-var">not</span></span><span> </span><span class="annot"><span class="annottext">Bool
-</span><a href="#local-6989586621679070202"><span class="hs-identifier hs-var">colourful</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">(Bool -&gt; Bool) -&gt; RT Bool -&gt; RT Bool
+</span><a href="#local-6989586621679071363"><span class="hs-identifier hs-var">colourful</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">(Bool -&gt; Bool) -&gt; RT Bool -&gt; RT Bool
 forall (f :: * -&gt; *) a b. Functor f =&gt; (a -&gt; b) -&gt; f a -&gt; f b
 </span><span class="hs-operator hs-var">&lt;$&gt;</span></span><span> </span><span class="annot"><span class="annottext">IO Bool -&gt; RT Bool
 forall a. IO a -&gt; RT a
 </span><a href="Text.Gigaparsec.Internal.RT.html#unsafeIOToRT"><span class="hs-identifier hs-var">Internal.unsafeIOToRT</span></a></span><span> </span><span class="annot"><span class="annottext">IO Bool
 </span><span class="hs-identifier hs-var">supportsPretty</span></span><span>
-</span><span id="line-40"></span><span>  </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621679070207"><span class="annot"><span class="annottext">config' :: DebugConfig
-</span><a href="#local-6989586621679070207"><span class="hs-identifier hs-var hs-var">config'</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">DebugConfig
-</span><a href="#local-6989586621679070188"><span class="hs-identifier hs-var">config</span></a></span><span> </span><span class="hs-special">{</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Debug.html#ascii"><span class="hs-identifier hs-var">ascii</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="#local-6989586621679070201"><span class="hs-identifier hs-type">ascii'</span></a></span><span> </span><span class="hs-special">}</span><span>
+</span><span id="line-40"></span><span>  </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621679071368"><span class="annot"><span class="annottext">config' :: DebugConfig
+</span><a href="#local-6989586621679071368"><span class="hs-identifier hs-var hs-var">config'</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">DebugConfig
+</span><a href="#local-6989586621679071349"><span class="hs-identifier hs-var">config</span></a></span><span> </span><span class="hs-special">{</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Debug.html#ascii"><span class="hs-identifier hs-var">ascii</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="#local-6989586621679071362"><span class="hs-identifier hs-type">ascii'</span></a></span><span> </span><span class="hs-special">}</span><span>
 </span><span id="line-41"></span><span>  </span><span class="annot"><span class="annottext">String -&gt; Direction -&gt; State -&gt; String -&gt; DebugConfig -&gt; RT ()
 </span><a href="Text.Gigaparsec.Debug.html#doDebug"><span class="hs-identifier hs-var">doDebug</span></a></span><span> </span><span class="annot"><span class="annottext">String
-</span><a href="#local-6989586621679070190"><span class="hs-identifier hs-var">name</span></a></span><span> </span><span class="annot"><span class="annottext">Direction
+</span><a href="#local-6989586621679071351"><span class="hs-identifier hs-var">name</span></a></span><span> </span><span class="annot"><span class="annottext">Direction
 </span><a href="Text.Gigaparsec.Debug.html#Enter"><span class="hs-identifier hs-var">Enter</span></a></span><span> </span><span class="annot"><span class="annottext">State
-</span><a href="#local-6989586621679070198"><span class="hs-identifier hs-var">st</span></a></span><span> </span><span class="annot"><span class="annottext">String
+</span><a href="#local-6989586621679071359"><span class="hs-identifier hs-var">st</span></a></span><span> </span><span class="annot"><span class="annottext">String
 </span><span class="hs-string">&quot;&quot;</span></span><span>  </span><span class="annot"><span class="annottext">DebugConfig
-</span><a href="#local-6989586621679070207"><span class="hs-identifier hs-var">config'</span></a></span><span>
-</span><span id="line-42"></span><span>  </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621679070211"><span class="annot"><span class="annottext">good' :: a -&gt; State -&gt; RT r
-</span><a href="#local-6989586621679070211"><span class="hs-identifier hs-var hs-var">good'</span></a></span></span><span> </span><span id="local-6989586621679070212"><span class="annot"><span class="annottext">a
-</span><a href="#local-6989586621679070212"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span id="local-6989586621679070213"><span class="annot"><span class="annottext">State
-</span><a href="#local-6989586621679070213"><span class="hs-identifier hs-var">st'</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
-</span><span id="line-43"></span><span>        </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621679070216"><span class="annot"><span class="annottext">st'' :: State
-</span><a href="#local-6989586621679070216"><span class="hs-identifier hs-var hs-var">st''</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">State
-</span><a href="#local-6989586621679070213"><span class="hs-identifier hs-var">st'</span></a></span><span> </span><span class="hs-special">{</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#debugLevel"><span class="hs-identifier hs-var">Internal.debugLevel</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#debugLevel"><span class="hs-identifier hs-var">Internal.debugLevel</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679070213"><span class="hs-identifier hs-type">st'</span></a></span><span> </span><span class="annot"><span class="hs-glyph hs-type">-</span></span><span> </span><span class="annot"><span class="hs-number">1</span></span><span class="hs-special">}</span><span>
+</span><a href="#local-6989586621679071368"><span class="hs-identifier hs-var">config'</span></a></span><span>
+</span><span id="line-42"></span><span>  </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621679071372"><span class="annot"><span class="annottext">good' :: a -&gt; State -&gt; RT r
+</span><a href="#local-6989586621679071372"><span class="hs-identifier hs-var hs-var">good'</span></a></span></span><span> </span><span id="local-6989586621679071373"><span class="annot"><span class="annottext">a
+</span><a href="#local-6989586621679071373"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span id="local-6989586621679071374"><span class="annot"><span class="annottext">State
+</span><a href="#local-6989586621679071374"><span class="hs-identifier hs-var">st'</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-43"></span><span>        </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621679071377"><span class="annot"><span class="annottext">st'' :: State
+</span><a href="#local-6989586621679071377"><span class="hs-identifier hs-var hs-var">st''</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">State
+</span><a href="#local-6989586621679071374"><span class="hs-identifier hs-var">st'</span></a></span><span> </span><span class="hs-special">{</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#debugLevel"><span class="hs-identifier hs-var">Internal.debugLevel</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#debugLevel"><span class="hs-identifier hs-var">Internal.debugLevel</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679071374"><span class="hs-identifier hs-type">st'</span></a></span><span> </span><span class="annot"><span class="hs-glyph hs-type">-</span></span><span> </span><span class="annot"><span class="hs-number">1</span></span><span class="hs-special">}</span><span>
 </span><span id="line-44"></span><span>        </span><span class="annot"><span class="annottext">String -&gt; Direction -&gt; State -&gt; String -&gt; DebugConfig -&gt; RT ()
 </span><a href="Text.Gigaparsec.Debug.html#doDebug"><span class="hs-identifier hs-var">doDebug</span></a></span><span> </span><span class="annot"><span class="annottext">String
-</span><a href="#local-6989586621679070190"><span class="hs-identifier hs-var">name</span></a></span><span> </span><span class="annot"><span class="annottext">Direction
+</span><a href="#local-6989586621679071351"><span class="hs-identifier hs-var">name</span></a></span><span> </span><span class="annot"><span class="annottext">Direction
 </span><a href="Text.Gigaparsec.Debug.html#Exit"><span class="hs-identifier hs-var">Exit</span></a></span><span> </span><span class="annot"><span class="annottext">State
-</span><a href="#local-6989586621679070216"><span class="hs-identifier hs-var">st''</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Bool -&gt; String -&gt; String
+</span><a href="#local-6989586621679071377"><span class="hs-identifier hs-var">st''</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Bool -&gt; String -&gt; String
 </span><a href="Text.Gigaparsec.Debug.html#green"><span class="hs-identifier hs-var">green</span></a></span><span> </span><span class="annot"><span class="annottext">Bool
-</span><a href="#local-6989586621679070201"><span class="hs-identifier hs-var">ascii'</span></a></span><span> </span><span class="annot"><span class="annottext">String
+</span><a href="#local-6989586621679071362"><span class="hs-identifier hs-var">ascii'</span></a></span><span> </span><span class="annot"><span class="annottext">String
 </span><span class="hs-string">&quot; Good&quot;</span></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">DebugConfig
-</span><a href="#local-6989586621679070207"><span class="hs-identifier hs-var">config'</span></a></span><span>
+</span><a href="#local-6989586621679071368"><span class="hs-identifier hs-var">config'</span></a></span><span>
 </span><span id="line-45"></span><span>        </span><span class="annot"><span class="annottext">a -&gt; State -&gt; RT r
-</span><a href="#local-6989586621679070199"><span class="hs-identifier hs-var">good</span></a></span><span> </span><span class="annot"><span class="annottext">a
-</span><a href="#local-6989586621679070212"><span class="hs-identifier hs-var">x</span></a></span><span> </span><span class="annot"><span class="annottext">State
-</span><a href="#local-6989586621679070216"><span class="hs-identifier hs-var">st''</span></a></span><span>
-</span><span id="line-46"></span><span>  </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621679070221"><span class="annot"><span class="annottext">bad' :: ParseError -&gt; State -&gt; RT r
-</span><a href="#local-6989586621679070221"><span class="hs-identifier hs-var hs-var">bad'</span></a></span></span><span> </span><span id="local-6989586621679070222"><span class="annot"><span class="annottext">ParseError
-</span><a href="#local-6989586621679070222"><span class="hs-identifier hs-var">err</span></a></span></span><span> </span><span id="local-6989586621679070223"><span class="annot"><span class="annottext">State
-</span><a href="#local-6989586621679070223"><span class="hs-identifier hs-var">st'</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
-</span><span id="line-47"></span><span>        </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621679070226"><span class="annot"><span class="annottext">st'' :: State
-</span><a href="#local-6989586621679070226"><span class="hs-identifier hs-var hs-var">st''</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">State
-</span><a href="#local-6989586621679070223"><span class="hs-identifier hs-var">st'</span></a></span><span> </span><span class="hs-special">{</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#debugLevel"><span class="hs-identifier hs-var">Internal.debugLevel</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#debugLevel"><span class="hs-identifier hs-var">Internal.debugLevel</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679070223"><span class="hs-identifier hs-type">st'</span></a></span><span> </span><span class="annot"><span class="hs-glyph hs-type">-</span></span><span> </span><span class="annot"><span class="hs-number">1</span></span><span class="hs-special">}</span><span>
+</span><a href="#local-6989586621679071360"><span class="hs-identifier hs-var">good</span></a></span><span> </span><span class="annot"><span class="annottext">a
+</span><a href="#local-6989586621679071373"><span class="hs-identifier hs-var">x</span></a></span><span> </span><span class="annot"><span class="annottext">State
+</span><a href="#local-6989586621679071377"><span class="hs-identifier hs-var">st''</span></a></span><span>
+</span><span id="line-46"></span><span>  </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621679071382"><span class="annot"><span class="annottext">bad' :: ParseError -&gt; State -&gt; RT r
+</span><a href="#local-6989586621679071382"><span class="hs-identifier hs-var hs-var">bad'</span></a></span></span><span> </span><span id="local-6989586621679071383"><span class="annot"><span class="annottext">ParseError
+</span><a href="#local-6989586621679071383"><span class="hs-identifier hs-var">err</span></a></span></span><span> </span><span id="local-6989586621679071384"><span class="annot"><span class="annottext">State
+</span><a href="#local-6989586621679071384"><span class="hs-identifier hs-var">st'</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-47"></span><span>        </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621679071387"><span class="annot"><span class="annottext">st'' :: State
+</span><a href="#local-6989586621679071387"><span class="hs-identifier hs-var hs-var">st''</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">State
+</span><a href="#local-6989586621679071384"><span class="hs-identifier hs-var">st'</span></a></span><span> </span><span class="hs-special">{</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#debugLevel"><span class="hs-identifier hs-var">Internal.debugLevel</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#debugLevel"><span class="hs-identifier hs-var">Internal.debugLevel</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679071384"><span class="hs-identifier hs-type">st'</span></a></span><span> </span><span class="annot"><span class="hs-glyph hs-type">-</span></span><span> </span><span class="annot"><span class="hs-number">1</span></span><span class="hs-special">}</span><span>
 </span><span id="line-48"></span><span>        </span><span class="annot"><span class="annottext">String -&gt; Direction -&gt; State -&gt; String -&gt; DebugConfig -&gt; RT ()
 </span><a href="Text.Gigaparsec.Debug.html#doDebug"><span class="hs-identifier hs-var">doDebug</span></a></span><span> </span><span class="annot"><span class="annottext">String
-</span><a href="#local-6989586621679070190"><span class="hs-identifier hs-var">name</span></a></span><span> </span><span class="annot"><span class="annottext">Direction
+</span><a href="#local-6989586621679071351"><span class="hs-identifier hs-var">name</span></a></span><span> </span><span class="annot"><span class="annottext">Direction
 </span><a href="Text.Gigaparsec.Debug.html#Exit"><span class="hs-identifier hs-var">Exit</span></a></span><span> </span><span class="annot"><span class="annottext">State
-</span><a href="#local-6989586621679070226"><span class="hs-identifier hs-var">st''</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Bool -&gt; String -&gt; String
+</span><a href="#local-6989586621679071387"><span class="hs-identifier hs-var">st''</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Bool -&gt; String -&gt; String
 </span><a href="Text.Gigaparsec.Debug.html#red"><span class="hs-identifier hs-var">red</span></a></span><span> </span><span class="annot"><span class="annottext">Bool
-</span><a href="#local-6989586621679070201"><span class="hs-identifier hs-var">ascii'</span></a></span><span> </span><span class="annot"><span class="annottext">String
+</span><a href="#local-6989586621679071362"><span class="hs-identifier hs-var">ascii'</span></a></span><span> </span><span class="annot"><span class="annottext">String
 </span><span class="hs-string">&quot; Bad&quot;</span></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">DebugConfig
-</span><a href="#local-6989586621679070207"><span class="hs-identifier hs-var">config'</span></a></span><span>
+</span><a href="#local-6989586621679071368"><span class="hs-identifier hs-var">config'</span></a></span><span>
 </span><span id="line-49"></span><span>        </span><span class="annot"><span class="annottext">ParseError -&gt; State -&gt; RT r
-</span><a href="#local-6989586621679070200"><span class="hs-identifier hs-var">bad</span></a></span><span> </span><span class="annot"><span class="annottext">ParseError
-</span><a href="#local-6989586621679070222"><span class="hs-identifier hs-var">err</span></a></span><span> </span><span class="annot"><span class="annottext">State
-</span><a href="#local-6989586621679070226"><span class="hs-identifier hs-var">st''</span></a></span><span>
+</span><a href="#local-6989586621679071361"><span class="hs-identifier hs-var">bad</span></a></span><span> </span><span class="annot"><span class="annottext">ParseError
+</span><a href="#local-6989586621679071383"><span class="hs-identifier hs-var">err</span></a></span><span> </span><span class="annot"><span class="annottext">State
+</span><a href="#local-6989586621679071387"><span class="hs-identifier hs-var">st''</span></a></span><span>
 </span><span id="line-50"></span><span>  </span><span class="annot"><span class="annottext">State
 -&gt; (a -&gt; State -&gt; RT r) -&gt; (ParseError -&gt; State -&gt; RT r) -&gt; RT r
 forall r.
 State
 -&gt; (a -&gt; State -&gt; RT r) -&gt; (ParseError -&gt; State -&gt; RT r) -&gt; RT r
-</span><a href="#local-6989586621679070192"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">State
-</span><a href="#local-6989586621679070198"><span class="hs-identifier hs-var">st</span></a></span><span> </span><span class="hs-special">{</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#debugLevel"><span class="hs-identifier hs-var">Internal.debugLevel</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#debugLevel"><span class="hs-identifier hs-var">Internal.debugLevel</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679070198"><span class="hs-identifier hs-type">st</span></a></span><span> </span><span class="annot"><span class="hs-operator hs-type">+</span></span><span> </span><span class="annot"><span class="hs-number">1</span></span><span class="hs-special">}</span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">a -&gt; State -&gt; RT r
-</span><a href="#local-6989586621679070211"><span class="hs-identifier hs-var">good'</span></a></span><span> </span><span class="annot"><span class="annottext">ParseError -&gt; State -&gt; RT r
-</span><a href="#local-6989586621679070221"><span class="hs-identifier hs-var">bad'</span></a></span><span>
+</span><a href="#local-6989586621679071353"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">State
+</span><a href="#local-6989586621679071359"><span class="hs-identifier hs-var">st</span></a></span><span> </span><span class="hs-special">{</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#debugLevel"><span class="hs-identifier hs-var">Internal.debugLevel</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#debugLevel"><span class="hs-identifier hs-var">Internal.debugLevel</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679071359"><span class="hs-identifier hs-type">st</span></a></span><span> </span><span class="annot"><span class="hs-operator hs-type">+</span></span><span> </span><span class="annot"><span class="hs-number">1</span></span><span class="hs-special">}</span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">a -&gt; State -&gt; RT r
+</span><a href="#local-6989586621679071372"><span class="hs-identifier hs-var">good'</span></a></span><span> </span><span class="annot"><span class="annottext">ParseError -&gt; State -&gt; RT r
+</span><a href="#local-6989586621679071382"><span class="hs-identifier hs-var">bad'</span></a></span><span>
 </span><span id="line-51"></span><span>
 </span><span id="line-52"></span><span class="hs-keyword">type</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Debug.html#Direction"><span class="hs-identifier hs-type">Direction</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-operator">*</span></span><span>
 </span><span id="line-53"></span><span class="hs-keyword">data</span><span> </span><span id="Direction"><span class="annot"><a href="Text.Gigaparsec.Debug.html#Direction"><span class="hs-identifier hs-var">Direction</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="Enter"><span class="annot"><a href="Text.Gigaparsec.Debug.html#Enter"><span class="hs-identifier hs-var">Enter</span></a></span></span><span> </span><span class="hs-glyph">|</span><span> </span><span id="Exit"><span class="annot"><a href="Text.Gigaparsec.Debug.html#Exit"><span class="hs-identifier hs-var">Exit</span></a></span></span><span>
@@ -189,11 +189,11 @@ State
 </span><span id="line-68"></span><span>
 </span><span id="line-69"></span><span class="annot"><a href="Text.Gigaparsec.Debug.html#doDebug"><span class="hs-identifier hs-type">doDebug</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Debug.html#Direction"><span class="hs-identifier hs-type">Direction</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#State"><span class="hs-identifier hs-type">Internal.State</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Debug.html#DebugConfig"><span class="hs-identifier hs-type">DebugConfig</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.RT.html#RT"><span class="hs-identifier hs-type">Internal.RT</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span>
 </span><span id="line-70"></span><span id="doDebug"><span class="annot"><span class="annottext">doDebug :: String -&gt; Direction -&gt; State -&gt; String -&gt; DebugConfig -&gt; RT ()
-</span><a href="Text.Gigaparsec.Debug.html#doDebug"><span class="hs-identifier hs-var hs-var">doDebug</span></a></span></span><span> </span><span id="local-6989586621679070232"><span class="annot"><span class="annottext">String
-</span><a href="#local-6989586621679070232"><span class="hs-identifier hs-var">name</span></a></span></span><span> </span><span id="local-6989586621679070233"><span class="annot"><span class="annottext">Direction
-</span><a href="#local-6989586621679070233"><span class="hs-identifier hs-var">dir</span></a></span></span><span> </span><span id="local-6989586621679070234"><span class="annot"><span class="annottext">State
-</span><a href="#local-6989586621679070234"><span class="hs-identifier hs-var">st</span></a></span></span><span> </span><span id="local-6989586621679070235"><span class="annot"><span class="annottext">String
-</span><a href="#local-6989586621679070235"><span class="hs-identifier hs-var">end</span></a></span></span><span> </span><span class="annot"><a href="Text.Gigaparsec.Debug.html#DebugConfig"><span class="hs-identifier hs-type">DebugConfig</span></a></span><span class="hs-special">{</span><span id="local-6989586621679070236"><span id="local-6989586621679070237"><span id="local-6989586621679070238"><span class="annot"><span class="annottext">Bool
+</span><a href="Text.Gigaparsec.Debug.html#doDebug"><span class="hs-identifier hs-var hs-var">doDebug</span></a></span></span><span> </span><span id="local-6989586621679071393"><span class="annot"><span class="annottext">String
+</span><a href="#local-6989586621679071393"><span class="hs-identifier hs-var">name</span></a></span></span><span> </span><span id="local-6989586621679071394"><span class="annot"><span class="annottext">Direction
+</span><a href="#local-6989586621679071394"><span class="hs-identifier hs-var">dir</span></a></span></span><span> </span><span id="local-6989586621679071395"><span class="annot"><span class="annottext">State
+</span><a href="#local-6989586621679071395"><span class="hs-identifier hs-var">st</span></a></span></span><span> </span><span id="local-6989586621679071396"><span class="annot"><span class="annottext">String
+</span><a href="#local-6989586621679071396"><span class="hs-identifier hs-var">end</span></a></span></span><span> </span><span class="annot"><a href="Text.Gigaparsec.Debug.html#DebugConfig"><span class="hs-identifier hs-type">DebugConfig</span></a></span><span class="hs-special">{</span><span id="local-6989586621679071397"><span id="local-6989586621679071398"><span id="local-6989586621679071399"><span class="annot"><span class="annottext">Bool
 [WatchedReg]
 Break
 ascii :: DebugConfig -&gt; Bool
@@ -206,66 +206,66 @@ watchedRegs :: [WatchedReg]
 </span><span id="line-71"></span><span>  </span><span class="annot"><span class="annottext">String
 -&gt; Direction -&gt; State -&gt; String -&gt; Bool -&gt; [WatchedReg] -&gt; RT ()
 </span><a href="Text.Gigaparsec.Debug.html#printInfo"><span class="hs-identifier hs-var">printInfo</span></a></span><span> </span><span class="annot"><span class="annottext">String
-</span><a href="#local-6989586621679070232"><span class="hs-identifier hs-var">name</span></a></span><span> </span><span class="annot"><span class="annottext">Direction
-</span><a href="#local-6989586621679070233"><span class="hs-identifier hs-var">dir</span></a></span><span> </span><span class="annot"><span class="annottext">State
-</span><a href="#local-6989586621679070234"><span class="hs-identifier hs-var">st</span></a></span><span> </span><span class="annot"><span class="annottext">String
-</span><a href="#local-6989586621679070235"><span class="hs-identifier hs-var">end</span></a></span><span> </span><span class="annot"><span class="annottext">Bool
-</span><a href="#local-6989586621679070236"><span class="hs-identifier hs-var">ascii</span></a></span><span> </span><span class="annot"><span class="annottext">[WatchedReg]
-</span><a href="#local-6989586621679070238"><span class="hs-identifier hs-var">watchedRegs</span></a></span><span>
+</span><a href="#local-6989586621679071393"><span class="hs-identifier hs-var">name</span></a></span><span> </span><span class="annot"><span class="annottext">Direction
+</span><a href="#local-6989586621679071394"><span class="hs-identifier hs-var">dir</span></a></span><span> </span><span class="annot"><span class="annottext">State
+</span><a href="#local-6989586621679071395"><span class="hs-identifier hs-var">st</span></a></span><span> </span><span class="annot"><span class="annottext">String
+</span><a href="#local-6989586621679071396"><span class="hs-identifier hs-var">end</span></a></span><span> </span><span class="annot"><span class="annottext">Bool
+</span><a href="#local-6989586621679071397"><span class="hs-identifier hs-var">ascii</span></a></span><span> </span><span class="annot"><span class="annottext">[WatchedReg]
+</span><a href="#local-6989586621679071399"><span class="hs-identifier hs-var">watchedRegs</span></a></span><span>
 </span><span id="line-72"></span><span>  </span><span class="annot"><span class="annottext">Bool -&gt; RT () -&gt; RT ()
 forall (f :: * -&gt; *). Applicative f =&gt; Bool -&gt; f () -&gt; f ()
 </span><span class="hs-identifier hs-var">when</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Direction -&gt; Break -&gt; Bool
 </span><a href="Text.Gigaparsec.Debug.html#shouldBreak"><span class="hs-identifier hs-var">shouldBreak</span></a></span><span> </span><span class="annot"><span class="annottext">Direction
-</span><a href="#local-6989586621679070233"><span class="hs-identifier hs-var">dir</span></a></span><span> </span><span class="annot"><span class="annottext">Break
-</span><a href="#local-6989586621679070237"><span class="hs-identifier hs-var">breakPoint</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">RT ()
+</span><a href="#local-6989586621679071394"><span class="hs-identifier hs-var">dir</span></a></span><span> </span><span class="annot"><span class="annottext">Break
+</span><a href="#local-6989586621679071398"><span class="hs-identifier hs-var">breakPoint</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">RT ()
 </span><a href="Text.Gigaparsec.Debug.html#waitForUser"><span class="hs-identifier hs-var">waitForUser</span></a></span><span>
 </span><span id="line-73"></span><span>
 </span><span id="line-74"></span><span class="annot"><a href="Text.Gigaparsec.Debug.html#printInfo"><span class="hs-identifier hs-type">printInfo</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Debug.html#Direction"><span class="hs-identifier hs-type">Direction</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#State"><span class="hs-identifier hs-type">Internal.State</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Bool</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-special">[</span><span class="annot"><a href="Text.Gigaparsec.Debug.html#WatchedReg"><span class="hs-identifier hs-type">WatchedReg</span></a></span><span class="hs-special">]</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.RT.html#RT"><span class="hs-identifier hs-type">Internal.RT</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span>
 </span><span id="line-75"></span><span id="printInfo"><span class="annot"><span class="annottext">printInfo :: String
 -&gt; Direction -&gt; State -&gt; String -&gt; Bool -&gt; [WatchedReg] -&gt; RT ()
-</span><a href="Text.Gigaparsec.Debug.html#printInfo"><span class="hs-identifier hs-var hs-var">printInfo</span></a></span></span><span> </span><span id="local-6989586621679070241"><span class="annot"><span class="annottext">String
-</span><a href="#local-6989586621679070241"><span class="hs-identifier hs-var">name</span></a></span></span><span> </span><span id="local-6989586621679070242"><span class="annot"><span class="annottext">Direction
-</span><a href="#local-6989586621679070242"><span class="hs-identifier hs-var">dir</span></a></span></span><span> </span><span id="local-6989586621679070243"><span class="annot"><span class="annottext">st :: State
-</span><a href="#local-6989586621679070243"><span class="hs-identifier hs-var">st</span></a></span></span><span class="hs-glyph">@</span><span class="annot"><a href="Text.Gigaparsec.Internal.html#State"><span class="hs-identifier hs-type">Internal.State</span></a></span><span class="hs-special">{</span><span id="local-6989586621679070245"><span class="annot"><span class="annottext">String
+</span><a href="Text.Gigaparsec.Debug.html#printInfo"><span class="hs-identifier hs-var hs-var">printInfo</span></a></span></span><span> </span><span id="local-6989586621679071402"><span class="annot"><span class="annottext">String
+</span><a href="#local-6989586621679071402"><span class="hs-identifier hs-var">name</span></a></span></span><span> </span><span id="local-6989586621679071403"><span class="annot"><span class="annottext">Direction
+</span><a href="#local-6989586621679071403"><span class="hs-identifier hs-var">dir</span></a></span></span><span> </span><span id="local-6989586621679071404"><span class="annot"><span class="annottext">st :: State
+</span><a href="#local-6989586621679071404"><span class="hs-identifier hs-var">st</span></a></span></span><span class="hs-glyph">@</span><span class="annot"><a href="Text.Gigaparsec.Internal.html#State"><span class="hs-identifier hs-type">Internal.State</span></a></span><span class="hs-special">{</span><span id="local-6989586621679071406"><span class="annot"><span class="annottext">String
 input :: String
 input :: State -&gt; String
-</span><a href="#local-6989586621679070245"><span class="hs-identifier hs-var hs-var">input</span></a></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679070247"><span class="annot"><span class="annottext">Word
+</span><a href="#local-6989586621679071406"><span class="hs-identifier hs-var hs-var">input</span></a></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679071408"><span class="annot"><span class="annottext">Word
 line :: Word
 line :: State -&gt; Word
-</span><a href="#local-6989586621679070247"><span class="hs-identifier hs-var hs-var">line</span></a></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679070249"><span class="annot"><span class="annottext">Word
+</span><a href="#local-6989586621679071408"><span class="hs-identifier hs-var hs-var">line</span></a></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679071410"><span class="annot"><span class="annottext">Word
 col :: Word
 col :: State -&gt; Word
-</span><a href="#local-6989586621679070249"><span class="hs-identifier hs-var hs-var">col</span></a></span></span><span class="hs-special">}</span><span> </span><span id="local-6989586621679070251"><span class="annot"><span class="annottext">String
-</span><a href="#local-6989586621679070251"><span class="hs-identifier hs-var">end</span></a></span></span><span> </span><span id="local-6989586621679070252"><span class="annot"><span class="annottext">Bool
-</span><a href="#local-6989586621679070252"><span class="hs-identifier hs-var">ascii</span></a></span></span><span> </span><span id="local-6989586621679070253"><span class="annot"><span class="annottext">[WatchedReg]
-</span><a href="#local-6989586621679070253"><span class="hs-identifier hs-var">regs</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
-</span><span id="line-76"></span><span>  </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621679070257"><span class="annot"><span class="annottext">cs :: String
-</span><a href="#local-6989586621679070257"><span class="hs-identifier hs-var hs-var">cs</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">String -&gt; String -&gt; String -&gt; String
+</span><a href="#local-6989586621679071410"><span class="hs-identifier hs-var hs-var">col</span></a></span></span><span class="hs-special">}</span><span> </span><span id="local-6989586621679071412"><span class="annot"><span class="annottext">String
+</span><a href="#local-6989586621679071412"><span class="hs-identifier hs-var">end</span></a></span></span><span> </span><span id="local-6989586621679071413"><span class="annot"><span class="annottext">Bool
+</span><a href="#local-6989586621679071413"><span class="hs-identifier hs-var">ascii</span></a></span></span><span> </span><span id="local-6989586621679071414"><span class="annot"><span class="annottext">[WatchedReg]
+</span><a href="#local-6989586621679071414"><span class="hs-identifier hs-var">regs</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-76"></span><span>  </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621679071418"><span class="annot"><span class="annottext">cs :: String
+</span><a href="#local-6989586621679071418"><span class="hs-identifier hs-var hs-var">cs</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">String -&gt; String -&gt; String -&gt; String
 </span><a href="Text.Gigaparsec.Debug.html#replace"><span class="hs-identifier hs-var">replace</span></a></span><span> </span><span class="annot"><span class="annottext">String
 </span><span class="hs-string">&quot;\n&quot;</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Bool -&gt; String
 </span><a href="Text.Gigaparsec.Debug.html#newline"><span class="hs-identifier hs-var">newline</span></a></span><span> </span><span class="annot"><span class="annottext">Bool
-</span><a href="#local-6989586621679070252"><span class="hs-identifier hs-var">ascii</span></a></span><span class="hs-special">)</span><span>
+</span><a href="#local-6989586621679071413"><span class="hs-identifier hs-var">ascii</span></a></span><span class="hs-special">)</span><span>
 </span><span id="line-77"></span><span>         </span><span class="annot"><span class="annottext">(String -&gt; String) -&gt; (String -&gt; String) -&gt; String -&gt; String
 forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
 </span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">String -&gt; String -&gt; String -&gt; String
 </span><a href="Text.Gigaparsec.Debug.html#replace"><span class="hs-identifier hs-var">replace</span></a></span><span> </span><span class="annot"><span class="annottext">String
 </span><span class="hs-string">&quot; &quot;</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Bool -&gt; String
 </span><a href="Text.Gigaparsec.Debug.html#space"><span class="hs-identifier hs-var">space</span></a></span><span> </span><span class="annot"><span class="annottext">Bool
-</span><a href="#local-6989586621679070252"><span class="hs-identifier hs-var">ascii</span></a></span><span class="hs-special">)</span><span>
+</span><a href="#local-6989586621679071413"><span class="hs-identifier hs-var">ascii</span></a></span><span class="hs-special">)</span><span>
 </span><span id="line-78"></span><span>         </span><span class="annot"><span class="annottext">(String -&gt; String) -&gt; (String -&gt; String) -&gt; String -&gt; String
 forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
 </span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">String -&gt; String -&gt; String -&gt; String
 </span><a href="Text.Gigaparsec.Debug.html#replace"><span class="hs-identifier hs-var">replace</span></a></span><span> </span><span class="annot"><span class="annottext">String
 </span><span class="hs-string">&quot;\r&quot;</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Bool -&gt; String
 </span><a href="Text.Gigaparsec.Debug.html#carriageReturn"><span class="hs-identifier hs-var">carriageReturn</span></a></span><span> </span><span class="annot"><span class="annottext">Bool
-</span><a href="#local-6989586621679070252"><span class="hs-identifier hs-var">ascii</span></a></span><span class="hs-special">)</span><span>
+</span><a href="#local-6989586621679071413"><span class="hs-identifier hs-var">ascii</span></a></span><span class="hs-special">)</span><span>
 </span><span id="line-79"></span><span>         </span><span class="annot"><span class="annottext">(String -&gt; String) -&gt; (String -&gt; String) -&gt; String -&gt; String
 forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
 </span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">String -&gt; String -&gt; String -&gt; String
 </span><a href="Text.Gigaparsec.Debug.html#replace"><span class="hs-identifier hs-var">replace</span></a></span><span> </span><span class="annot"><span class="annottext">String
 </span><span class="hs-string">&quot;\t&quot;</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Bool -&gt; String
 </span><a href="Text.Gigaparsec.Debug.html#tab"><span class="hs-identifier hs-var">tab</span></a></span><span> </span><span class="annot"><span class="annottext">Bool
-</span><a href="#local-6989586621679070252"><span class="hs-identifier hs-var">ascii</span></a></span><span class="hs-special">)</span><span>
+</span><a href="#local-6989586621679071413"><span class="hs-identifier hs-var">ascii</span></a></span><span class="hs-special">)</span><span>
 </span><span id="line-80"></span><span>         </span><span class="annot"><span class="annottext">(String -&gt; String) -&gt; String -&gt; String
 forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Int -&gt; String -&gt; String
@@ -275,30 +275,30 @@ forall a. Int -&gt; [a] -&gt; [a]
 forall a. Num a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">+</span></span><span> </span><span class="annot"><span class="annottext">Int
 </span><span class="hs-number">1</span></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">String
-</span><a href="#local-6989586621679070245"><span class="hs-identifier hs-var">input</span></a></span><span>
-</span><span id="line-81"></span><span>  </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621679070271"><span class="annot"><span class="annottext">cs' :: String
-</span><a href="#local-6989586621679070271"><span class="hs-identifier hs-var hs-var">cs'</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">if</span><span> </span><span class="annot"><span class="annottext">String -&gt; Int
+</span><a href="#local-6989586621679071406"><span class="hs-identifier hs-var">input</span></a></span><span>
+</span><span id="line-81"></span><span>  </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621679071432"><span class="annot"><span class="annottext">cs' :: String
+</span><a href="#local-6989586621679071432"><span class="hs-identifier hs-var hs-var">cs'</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">if</span><span> </span><span class="annot"><span class="annottext">String -&gt; Int
 forall a. [a] -&gt; Int
 forall (t :: * -&gt; *) a. Foldable t =&gt; t a -&gt; Int
 </span><span class="hs-identifier hs-var">length</span></span><span> </span><span class="annot"><span class="annottext">String
-</span><a href="#local-6989586621679070257"><span class="hs-identifier hs-var">cs</span></a></span><span> </span><span class="annot"><span class="annottext">Int -&gt; Int -&gt; Bool
+</span><a href="#local-6989586621679071418"><span class="hs-identifier hs-var">cs</span></a></span><span> </span><span class="annot"><span class="annottext">Int -&gt; Int -&gt; Bool
 forall a. Ord a =&gt; a -&gt; a -&gt; Bool
 </span><span class="hs-operator hs-var">&lt;</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Int
 </span><span class="hs-number">5</span></span><span> </span><span class="annot"><span class="annottext">Int -&gt; Int -&gt; Int
 forall a. Num a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">+</span></span><span> </span><span class="annot"><span class="annottext">Int
 </span><span class="hs-number">1</span></span><span class="hs-special">)</span><span> </span><span class="hs-keyword">then</span><span> </span><span class="annot"><span class="annottext">String
-</span><a href="#local-6989586621679070257"><span class="hs-identifier hs-var">cs</span></a></span><span> </span><span class="annot"><span class="annottext">String -&gt; String -&gt; String
+</span><a href="#local-6989586621679071418"><span class="hs-identifier hs-var">cs</span></a></span><span> </span><span class="annot"><span class="annottext">String -&gt; String -&gt; String
 forall a. [a] -&gt; [a] -&gt; [a]
 </span><span class="hs-operator hs-var">++</span></span><span> </span><span class="annot"><span class="annottext">Bool -&gt; String
 </span><a href="Text.Gigaparsec.Debug.html#endOfInput"><span class="hs-identifier hs-var">endOfInput</span></a></span><span> </span><span class="annot"><span class="annottext">Bool
-</span><a href="#local-6989586621679070252"><span class="hs-identifier hs-var">ascii</span></a></span><span> </span><span class="hs-keyword">else</span><span> </span><span class="annot"><span class="annottext">String
-</span><a href="#local-6989586621679070257"><span class="hs-identifier hs-var">cs</span></a></span><span>
-</span><span id="line-82"></span><span>  </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621679070280"><span class="annot"><span class="annottext">prelude :: String
-</span><a href="#local-6989586621679070280"><span class="hs-identifier hs-var hs-var">prelude</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Direction -&gt; String -&gt; String
+</span><a href="#local-6989586621679071413"><span class="hs-identifier hs-var">ascii</span></a></span><span> </span><span class="hs-keyword">else</span><span> </span><span class="annot"><span class="annottext">String
+</span><a href="#local-6989586621679071418"><span class="hs-identifier hs-var">cs</span></a></span><span>
+</span><span id="line-82"></span><span>  </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621679071441"><span class="annot"><span class="annottext">prelude :: String
+</span><a href="#local-6989586621679071441"><span class="hs-identifier hs-var hs-var">prelude</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Direction -&gt; String -&gt; String
 </span><a href="Text.Gigaparsec.Debug.html#portal"><span class="hs-identifier hs-var">portal</span></a></span><span> </span><span class="annot"><span class="annottext">Direction
-</span><a href="#local-6989586621679070242"><span class="hs-identifier hs-var">dir</span></a></span><span> </span><span class="annot"><span class="annottext">String
-</span><a href="#local-6989586621679070241"><span class="hs-identifier hs-var">name</span></a></span><span> </span><span class="annot"><span class="annottext">String -&gt; String -&gt; String
+</span><a href="#local-6989586621679071403"><span class="hs-identifier hs-var">dir</span></a></span><span> </span><span class="annot"><span class="annottext">String
+</span><a href="#local-6989586621679071402"><span class="hs-identifier hs-var">name</span></a></span><span> </span><span class="annot"><span class="annottext">String -&gt; String -&gt; String
 forall a. [a] -&gt; [a] -&gt; [a]
 </span><span class="hs-operator hs-var">++</span></span><span> </span><span class="annot"><span class="annottext">String
 </span><span class="hs-string">&quot; &quot;</span></span><span> </span><span class="annot"><span class="annottext">String -&gt; String -&gt; String
@@ -306,32 +306,32 @@ forall a. [a] -&gt; [a] -&gt; [a]
 </span><span class="hs-operator hs-var">++</span></span><span> </span><span class="annot"><span class="annottext">(Word, Word) -&gt; String
 forall a. Show a =&gt; a -&gt; String
 </span><span class="hs-identifier hs-var">show</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Word
-</span><a href="#local-6989586621679070247"><span class="hs-identifier hs-var">line</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">Word
-</span><a href="#local-6989586621679070249"><span class="hs-identifier hs-var">col</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">String -&gt; String -&gt; String
+</span><a href="#local-6989586621679071408"><span class="hs-identifier hs-var">line</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">Word
+</span><a href="#local-6989586621679071410"><span class="hs-identifier hs-var">col</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">String -&gt; String -&gt; String
 forall a. [a] -&gt; [a] -&gt; [a]
 </span><span class="hs-operator hs-var">++</span></span><span> </span><span class="annot"><span class="annottext">String
 </span><span class="hs-string">&quot;: &quot;</span></span><span>
-</span><span id="line-83"></span><span>  </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621679070284"><span class="annot"><span class="annottext">caret :: String
-</span><a href="#local-6989586621679070284"><span class="hs-identifier hs-var hs-var">caret</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Int -&gt; Char -&gt; String
+</span><span id="line-83"></span><span>  </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621679071445"><span class="annot"><span class="annottext">caret :: String
+</span><a href="#local-6989586621679071445"><span class="hs-identifier hs-var hs-var">caret</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Int -&gt; Char -&gt; String
 forall a. Int -&gt; a -&gt; [a]
 </span><span class="hs-identifier hs-var">replicate</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">String -&gt; Int
 forall a. [a] -&gt; Int
 forall (t :: * -&gt; *) a. Foldable t =&gt; t a -&gt; Int
 </span><span class="hs-identifier hs-var">length</span></span><span> </span><span class="annot"><span class="annottext">String
-</span><a href="#local-6989586621679070280"><span class="hs-identifier hs-var">prelude</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">Char
+</span><a href="#local-6989586621679071441"><span class="hs-identifier hs-var">prelude</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">Char
 </span><span class="hs-char">' '</span></span><span> </span><span class="annot"><span class="annottext">String -&gt; String -&gt; String
 forall a. [a] -&gt; [a] -&gt; [a]
 </span><span class="hs-operator hs-var">++</span></span><span> </span><span class="annot"><span class="annottext">Bool -&gt; String -&gt; String
 </span><a href="Text.Gigaparsec.Debug.html#blue"><span class="hs-identifier hs-var">blue</span></a></span><span> </span><span class="annot"><span class="annottext">Bool
-</span><a href="#local-6989586621679070252"><span class="hs-identifier hs-var">ascii</span></a></span><span> </span><span class="annot"><span class="annottext">String
+</span><a href="#local-6989586621679071413"><span class="hs-identifier hs-var">ascii</span></a></span><span> </span><span class="annot"><span class="annottext">String
 </span><span class="hs-string">&quot;^&quot;</span></span><span>
-</span><span id="line-84"></span><span>  </span><span id="local-6989586621679070287"><span class="annot"><span class="annottext">[String]
-</span><a href="#local-6989586621679070287"><span class="hs-identifier hs-var">regSummary</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span>
+</span><span id="line-84"></span><span>  </span><span id="local-6989586621679071448"><span class="annot"><span class="annottext">[String]
+</span><a href="#local-6989586621679071448"><span class="hs-identifier hs-var">regSummary</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span>
 </span><span id="line-85"></span><span>    </span><span class="hs-keyword">if</span><span> </span><span class="annot"><span class="annottext">[WatchedReg] -&gt; Bool
 forall a. [a] -&gt; Bool
 forall (t :: * -&gt; *) a. Foldable t =&gt; t a -&gt; Bool
 </span><span class="hs-identifier hs-var">null</span></span><span> </span><span class="annot"><span class="annottext">[WatchedReg]
-</span><a href="#local-6989586621679070253"><span class="hs-identifier hs-var">regs</span></a></span><span> </span><span class="hs-keyword">then</span><span> </span><span class="annot"><span class="annottext">[String] -&gt; RT [String]
+</span><a href="#local-6989586621679071414"><span class="hs-identifier hs-var">regs</span></a></span><span> </span><span class="hs-keyword">then</span><span> </span><span class="annot"><span class="annottext">[String] -&gt; RT [String]
 forall a. a -&gt; RT a
 forall (m :: * -&gt; *) a. Monad m =&gt; a -&gt; m a
 </span><span class="hs-identifier hs-var">return</span></span><span> </span><span class="hs-special">[</span><span class="hs-special">]</span><span>
@@ -352,15 +352,15 @@ forall (t :: * -&gt; *) (m :: * -&gt; *) a b.
 (Traversable t, Monad m) =&gt;
 t a -&gt; (a -&gt; m b) -&gt; m (t b)
 </span><span class="hs-identifier hs-var">forM</span></span><span> </span><span class="annot"><span class="annottext">[WatchedReg]
-</span><a href="#local-6989586621679070253"><span class="hs-identifier hs-var">regs</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-glyph">\</span><span class="hs-special">(</span><span class="annot"><a href="Text.Gigaparsec.Debug.html#WatchedReg"><span class="hs-identifier hs-type">WatchedReg</span></a></span><span> </span><span id="local-6989586621679070292"><span class="annot"><span class="annottext">String
-</span><a href="#local-6989586621679070292"><span class="hs-identifier hs-var">rname</span></a></span></span><span> </span><span id="local-6989586621679070293"><span class="annot"><span class="annottext">Reg r a
-</span><a href="#local-6989586621679070293"><span class="hs-identifier hs-var">reg</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span>
-</span><span id="line-88"></span><span>        </span><span class="hs-special">(</span><span class="hs-glyph">\</span><span id="local-6989586621679070294"><span class="annot"><span class="annottext">a
-</span><a href="#local-6989586621679070294"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">String
+</span><a href="#local-6989586621679071414"><span class="hs-identifier hs-var">regs</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-glyph">\</span><span class="hs-special">(</span><span class="annot"><a href="Text.Gigaparsec.Debug.html#WatchedReg"><span class="hs-identifier hs-type">WatchedReg</span></a></span><span> </span><span id="local-6989586621679071453"><span class="annot"><span class="annottext">String
+</span><a href="#local-6989586621679071453"><span class="hs-identifier hs-var">rname</span></a></span></span><span> </span><span id="local-6989586621679071454"><span class="annot"><span class="annottext">Reg r a
+</span><a href="#local-6989586621679071454"><span class="hs-identifier hs-var">reg</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span>
+</span><span id="line-88"></span><span>        </span><span class="hs-special">(</span><span class="hs-glyph">\</span><span id="local-6989586621679071455"><span class="annot"><span class="annottext">a
+</span><a href="#local-6989586621679071455"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">String
 </span><span class="hs-string">&quot;    &quot;</span></span><span> </span><span class="annot"><span class="annottext">String -&gt; String -&gt; String
 forall a. [a] -&gt; [a] -&gt; [a]
 </span><span class="hs-operator hs-var">++</span></span><span> </span><span class="annot"><span class="annottext">String
-</span><a href="#local-6989586621679070292"><span class="hs-identifier hs-var">rname</span></a></span><span> </span><span class="annot"><span class="annottext">String -&gt; String -&gt; String
+</span><a href="#local-6989586621679071453"><span class="hs-identifier hs-var">rname</span></a></span><span> </span><span class="annot"><span class="annottext">String -&gt; String -&gt; String
 forall a. [a] -&gt; [a] -&gt; [a]
 </span><span class="hs-operator hs-var">++</span></span><span> </span><span class="annot"><span class="annottext">String
 </span><span class="hs-string">&quot; = &quot;</span></span><span> </span><span class="annot"><span class="annottext">String -&gt; String -&gt; String
@@ -368,12 +368,12 @@ forall a. [a] -&gt; [a] -&gt; [a]
 </span><span class="hs-operator hs-var">++</span></span><span> </span><span class="annot"><span class="annottext">a -&gt; String
 forall a. Show a =&gt; a -&gt; String
 </span><span class="hs-identifier hs-var">show</span></span><span> </span><span class="annot"><span class="annottext">a
-</span><a href="#local-6989586621679070294"><span class="hs-identifier hs-var">x</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">(a -&gt; String) -&gt; RT a -&gt; RT String
+</span><a href="#local-6989586621679071455"><span class="hs-identifier hs-var">x</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">(a -&gt; String) -&gt; RT a -&gt; RT String
 forall (f :: * -&gt; *) a b. Functor f =&gt; (a -&gt; b) -&gt; f a -&gt; f b
 </span><span class="hs-operator hs-var">&lt;$&gt;</span></span><span> </span><span class="annot"><span class="annottext">Reg r a -&gt; RT a
 forall r a. Reg r a -&gt; RT a
 </span><a href="Text.Gigaparsec.Internal.RT.html#readReg"><span class="hs-identifier hs-var">readReg</span></a></span><span> </span><span class="annot"><span class="annottext">Reg r a
-</span><a href="#local-6989586621679070293"><span class="hs-identifier hs-var">reg</span></a></span><span class="hs-special">)</span><span>
+</span><a href="#local-6989586621679071454"><span class="hs-identifier hs-var">reg</span></a></span><span class="hs-special">)</span><span>
 </span><span id="line-89"></span><span>  </span><span class="annot"><span class="annottext">IO () -&gt; RT ()
 forall a. IO a -&gt; RT a
 </span><a href="Text.Gigaparsec.Internal.RT.html#unsafeIOToRT"><span class="hs-identifier hs-var">Internal.unsafeIOToRT</span></a></span><span> </span><span class="annot"><span class="annottext">(IO () -&gt; RT ()) -&gt; IO () -&gt; RT ()
@@ -384,20 +384,20 @@ forall a b. (a -&gt; b) -&gt; a -&gt; b
 forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">State -&gt; [String] -&gt; String
 </span><a href="Text.Gigaparsec.Debug.html#indentAndUnlines"><span class="hs-identifier hs-var">indentAndUnlines</span></a></span><span> </span><span class="annot"><span class="annottext">State
-</span><a href="#local-6989586621679070243"><span class="hs-identifier hs-var">st</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">String
-</span><a href="#local-6989586621679070280"><span class="hs-identifier hs-var">prelude</span></a></span><span> </span><span class="annot"><span class="annottext">String -&gt; String -&gt; String
+</span><a href="#local-6989586621679071404"><span class="hs-identifier hs-var">st</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">String
+</span><a href="#local-6989586621679071441"><span class="hs-identifier hs-var">prelude</span></a></span><span> </span><span class="annot"><span class="annottext">String -&gt; String -&gt; String
 forall a. [a] -&gt; [a] -&gt; [a]
 </span><span class="hs-operator hs-var">++</span></span><span> </span><span class="annot"><span class="annottext">String
-</span><a href="#local-6989586621679070271"><span class="hs-identifier hs-var">cs'</span></a></span><span> </span><span class="annot"><span class="annottext">String -&gt; String -&gt; String
+</span><a href="#local-6989586621679071432"><span class="hs-identifier hs-var">cs'</span></a></span><span> </span><span class="annot"><span class="annottext">String -&gt; String -&gt; String
 forall a. [a] -&gt; [a] -&gt; [a]
 </span><span class="hs-operator hs-var">++</span></span><span> </span><span class="annot"><span class="annottext">String
-</span><a href="#local-6989586621679070251"><span class="hs-identifier hs-var">end</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">String -&gt; [String] -&gt; [String]
+</span><a href="#local-6989586621679071412"><span class="hs-identifier hs-var">end</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">String -&gt; [String] -&gt; [String]
 forall a. a -&gt; [a] -&gt; [a]
 </span><span class="hs-glyph hs-var">:</span></span><span> </span><span class="annot"><span class="annottext">String
-</span><a href="#local-6989586621679070284"><span class="hs-identifier hs-var">caret</span></a></span><span> </span><span class="annot"><span class="annottext">String -&gt; [String] -&gt; [String]
+</span><a href="#local-6989586621679071445"><span class="hs-identifier hs-var">caret</span></a></span><span> </span><span class="annot"><span class="annottext">String -&gt; [String] -&gt; [String]
 forall a. a -&gt; [a] -&gt; [a]
 </span><span class="hs-glyph hs-var">:</span></span><span> </span><span class="annot"><span class="annottext">[String]
-</span><a href="#local-6989586621679070287"><span class="hs-identifier hs-var">regSummary</span></a></span><span class="hs-special">)</span><span>
+</span><a href="#local-6989586621679071448"><span class="hs-identifier hs-var">regSummary</span></a></span><span class="hs-special">)</span><span>
 </span><span id="line-91"></span><span>
 </span><span id="line-92"></span><span class="annot"><a href="Text.Gigaparsec.Debug.html#waitForUser"><span class="hs-identifier hs-type">waitForUser</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.RT.html#RT"><span class="hs-identifier hs-type">Internal.RT</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span>
 </span><span id="line-93"></span><span id="waitForUser"><span class="annot"><span class="annottext">waitForUser :: RT ()
@@ -406,8 +406,8 @@ forall a. IO a -&gt; RT a
 </span><a href="Text.Gigaparsec.Internal.RT.html#unsafeIOToRT"><span class="hs-identifier hs-var">Internal.unsafeIOToRT</span></a></span><span> </span><span class="annot"><span class="annottext">(IO () -&gt; RT ()) -&gt; IO () -&gt; RT ()
 forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-keyword">do</span><span>
-</span><span id="line-94"></span><span>  </span><span id="local-6989586621679070297"><span class="annot"><span class="annottext">Bool
-</span><a href="#local-6989586621679070297"><span class="hs-identifier hs-var">echo</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Handle -&gt; IO Bool
+</span><span id="line-94"></span><span>  </span><span id="local-6989586621679071458"><span class="annot"><span class="annottext">Bool
+</span><a href="#local-6989586621679071458"><span class="hs-identifier hs-var">echo</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Handle -&gt; IO Bool
 </span><span class="hs-identifier hs-var">hGetEcho</span></span><span> </span><span class="annot"><span class="annottext">Handle
 </span><span class="hs-identifier hs-var">stdin</span></span><span>
 </span><span id="line-95"></span><span>  </span><span class="annot"><span class="annottext">Handle -&gt; Bool -&gt; IO ()
@@ -423,7 +423,7 @@ forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span id="line-98"></span><span>  </span><span class="annot"><span class="annottext">Handle -&gt; Bool -&gt; IO ()
 </span><span class="hs-identifier hs-var">hSetEcho</span></span><span> </span><span class="annot"><span class="annottext">Handle
 </span><span class="hs-identifier hs-var">stdin</span></span><span> </span><span class="annot"><span class="annottext">Bool
-</span><a href="#local-6989586621679070297"><span class="hs-identifier hs-var">echo</span></a></span><span>
+</span><a href="#local-6989586621679071458"><span class="hs-identifier hs-var">echo</span></a></span><span>
 </span><span id="line-99"></span><span>
 </span><span id="line-100"></span><span class="annot"><a href="Text.Gigaparsec.Debug.html#render"><span class="hs-identifier hs-type">render</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Debug.html#Direction"><span class="hs-identifier hs-type">Direction</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span>
 </span><span id="line-101"></span><span id="render"><span class="annot"><span class="annottext">render :: Direction -&gt; String
@@ -436,27 +436,27 @@ forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span id="line-103"></span><span>
 </span><span id="line-104"></span><span class="annot"><a href="Text.Gigaparsec.Debug.html#portal"><span class="hs-identifier hs-type">portal</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Debug.html#Direction"><span class="hs-identifier hs-type">Direction</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span>
 </span><span id="line-105"></span><span id="portal"><span class="annot"><span class="annottext">portal :: Direction -&gt; String -&gt; String
-</span><a href="Text.Gigaparsec.Debug.html#portal"><span class="hs-identifier hs-var hs-var">portal</span></a></span></span><span> </span><span id="local-6989586621679070301"><span class="annot"><span class="annottext">Direction
-</span><a href="#local-6989586621679070301"><span class="hs-identifier hs-var">dir</span></a></span></span><span> </span><span id="local-6989586621679070302"><span class="annot"><span class="annottext">String
-</span><a href="#local-6989586621679070302"><span class="hs-identifier hs-var">name</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Direction -&gt; String
+</span><a href="Text.Gigaparsec.Debug.html#portal"><span class="hs-identifier hs-var hs-var">portal</span></a></span></span><span> </span><span id="local-6989586621679071462"><span class="annot"><span class="annottext">Direction
+</span><a href="#local-6989586621679071462"><span class="hs-identifier hs-var">dir</span></a></span></span><span> </span><span id="local-6989586621679071463"><span class="annot"><span class="annottext">String
+</span><a href="#local-6989586621679071463"><span class="hs-identifier hs-var">name</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Direction -&gt; String
 </span><a href="Text.Gigaparsec.Debug.html#render"><span class="hs-identifier hs-var">render</span></a></span><span> </span><span class="annot"><span class="annottext">Direction
-</span><a href="#local-6989586621679070301"><span class="hs-identifier hs-var">dir</span></a></span><span> </span><span class="annot"><span class="annottext">String -&gt; String -&gt; String
+</span><a href="#local-6989586621679071462"><span class="hs-identifier hs-var">dir</span></a></span><span> </span><span class="annot"><span class="annottext">String -&gt; String -&gt; String
 forall a. [a] -&gt; [a] -&gt; [a]
 </span><span class="hs-operator hs-var">++</span></span><span> </span><span class="annot"><span class="annottext">String
-</span><a href="#local-6989586621679070302"><span class="hs-identifier hs-var">name</span></a></span><span> </span><span class="annot"><span class="annottext">String -&gt; String -&gt; String
+</span><a href="#local-6989586621679071463"><span class="hs-identifier hs-var">name</span></a></span><span> </span><span class="annot"><span class="annottext">String -&gt; String -&gt; String
 forall a. [a] -&gt; [a] -&gt; [a]
 </span><span class="hs-operator hs-var">++</span></span><span> </span><span class="annot"><span class="annottext">Direction -&gt; String
 </span><a href="Text.Gigaparsec.Debug.html#render"><span class="hs-identifier hs-var">render</span></a></span><span> </span><span class="annot"><span class="annottext">Direction
-</span><a href="#local-6989586621679070301"><span class="hs-identifier hs-var">dir</span></a></span><span>
+</span><a href="#local-6989586621679071462"><span class="hs-identifier hs-var">dir</span></a></span><span>
 </span><span id="line-106"></span><span>
 </span><span id="line-107"></span><span class="annot"><a href="Text.Gigaparsec.Debug.html#indent"><span class="hs-identifier hs-type">indent</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#State"><span class="hs-identifier hs-type">Internal.State</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span>
 </span><span id="line-108"></span><span id="indent"><span class="annot"><span class="annottext">indent :: State -&gt; String
-</span><a href="Text.Gigaparsec.Debug.html#indent"><span class="hs-identifier hs-var hs-var">indent</span></a></span></span><span> </span><span id="local-6989586621679070304"><span class="annot"><span class="annottext">State
-</span><a href="#local-6989586621679070304"><span class="hs-identifier hs-var">st</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Int -&gt; Char -&gt; String
+</span><a href="Text.Gigaparsec.Debug.html#indent"><span class="hs-identifier hs-var hs-var">indent</span></a></span></span><span> </span><span id="local-6989586621679071465"><span class="annot"><span class="annottext">State
+</span><a href="#local-6989586621679071465"><span class="hs-identifier hs-var">st</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Int -&gt; Char -&gt; String
 forall a. Int -&gt; a -&gt; [a]
 </span><span class="hs-identifier hs-var">replicate</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">State -&gt; Int
 </span><a href="Text.Gigaparsec.Internal.html#debugLevel"><span class="hs-identifier hs-var">Internal.debugLevel</span></a></span><span> </span><span class="annot"><span class="annottext">State
-</span><a href="#local-6989586621679070304"><span class="hs-identifier hs-var">st</span></a></span><span> </span><span class="annot"><span class="annottext">Int -&gt; Int -&gt; Int
+</span><a href="#local-6989586621679071465"><span class="hs-identifier hs-var">st</span></a></span><span> </span><span class="annot"><span class="annottext">Int -&gt; Int -&gt; Int
 forall a. Num a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">*</span></span><span> </span><span class="annot"><span class="annottext">Int
 </span><span class="hs-number">2</span></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">Char
@@ -464,8 +464,8 @@ forall a. Num a =&gt; a -&gt; a -&gt; a
 </span><span id="line-109"></span><span>
 </span><span id="line-110"></span><span class="annot"><a href="Text.Gigaparsec.Debug.html#indentAndUnlines"><span class="hs-identifier hs-type">indentAndUnlines</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#State"><span class="hs-identifier hs-type">Internal.State</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-special">[</span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span class="hs-special">]</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span>
 </span><span id="line-111"></span><span id="indentAndUnlines"><span class="annot"><span class="annottext">indentAndUnlines :: State -&gt; [String] -&gt; String
-</span><a href="Text.Gigaparsec.Debug.html#indentAndUnlines"><span class="hs-identifier hs-var hs-var">indentAndUnlines</span></a></span></span><span> </span><span id="local-6989586621679070306"><span class="annot"><span class="annottext">State
-</span><a href="#local-6989586621679070306"><span class="hs-identifier hs-var">st</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">[String] -&gt; String
+</span><a href="Text.Gigaparsec.Debug.html#indentAndUnlines"><span class="hs-identifier hs-var hs-var">indentAndUnlines</span></a></span></span><span> </span><span id="local-6989586621679071467"><span class="annot"><span class="annottext">State
+</span><a href="#local-6989586621679071467"><span class="hs-identifier hs-var">st</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">[String] -&gt; String
 </span><span class="hs-identifier hs-var">unlines</span></span><span> </span><span class="annot"><span class="annottext">([String] -&gt; String)
 -&gt; ([String] -&gt; [String]) -&gt; [String] -&gt; String
 forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
@@ -473,7 +473,7 @@ forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
 forall a b. (a -&gt; b) -&gt; [a] -&gt; [b]
 </span><span class="hs-identifier hs-var">map</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">State -&gt; String
 </span><a href="Text.Gigaparsec.Debug.html#indent"><span class="hs-identifier hs-var">indent</span></a></span><span> </span><span class="annot"><span class="annottext">State
-</span><a href="#local-6989586621679070306"><span class="hs-identifier hs-var">st</span></a></span><span> </span><span class="annot"><span class="annottext">String -&gt; String -&gt; String
+</span><a href="#local-6989586621679071467"><span class="hs-identifier hs-var">st</span></a></span><span> </span><span class="annot"><span class="annottext">String -&gt; String -&gt; String
 forall a. [a] -&gt; [a] -&gt; [a]
 </span><span class="hs-operator hs-var">++</span></span><span class="hs-special">)</span><span>
 </span><span id="line-112"></span><span>
@@ -499,111 +499,111 @@ forall a. [a] -&gt; [a] -&gt; [a]
 </span><span id="line-120"></span><span id="colour"><span class="annot"><span class="annottext">colour :: Color -&gt; Bool -&gt; String -&gt; String
 </span><a href="Text.Gigaparsec.Debug.html#colour"><span class="hs-identifier hs-var hs-var">colour</span></a></span></span><span> </span><span class="annot"><span class="annottext">Color
 </span><span class="hs-identifier">_</span></span><span> </span><span class="annot"><span class="annottext">Bool
-</span><span class="hs-identifier hs-var">True</span></span><span> </span><span id="local-6989586621679070310"><span class="annot"><span class="annottext">String
-</span><a href="#local-6989586621679070310"><span class="hs-identifier hs-var">s</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">String
-</span><a href="#local-6989586621679070310"><span class="hs-identifier hs-var">s</span></a></span><span>
-</span><span id="line-121"></span><span class="annot"><a href="Text.Gigaparsec.Debug.html#colour"><span class="hs-identifier hs-var">colour</span></a></span><span> </span><span id="local-6989586621679070311"><span class="annot"><span class="annottext">Color
-</span><a href="#local-6989586621679070311"><span class="hs-identifier hs-var">c</span></a></span></span><span> </span><span class="annot"><span class="annottext">Bool
-</span><span class="hs-identifier hs-var">False</span></span><span> </span><span id="local-6989586621679070312"><span class="annot"><span class="annottext">String
-</span><a href="#local-6989586621679070312"><span class="hs-identifier hs-var">s</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Color -&gt; String -&gt; String
+</span><span class="hs-identifier hs-var">True</span></span><span> </span><span id="local-6989586621679071471"><span class="annot"><span class="annottext">String
+</span><a href="#local-6989586621679071471"><span class="hs-identifier hs-var">s</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">String
+</span><a href="#local-6989586621679071471"><span class="hs-identifier hs-var">s</span></a></span><span>
+</span><span id="line-121"></span><span class="annot"><a href="Text.Gigaparsec.Debug.html#colour"><span class="hs-identifier hs-var">colour</span></a></span><span> </span><span id="local-6989586621679071472"><span class="annot"><span class="annottext">Color
+</span><a href="#local-6989586621679071472"><span class="hs-identifier hs-var">c</span></a></span></span><span> </span><span class="annot"><span class="annottext">Bool
+</span><span class="hs-identifier hs-var">False</span></span><span> </span><span id="local-6989586621679071473"><span class="annot"><span class="annottext">String
+</span><a href="#local-6989586621679071473"><span class="hs-identifier hs-var">s</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Color -&gt; String -&gt; String
 forall a. Pretty a =&gt; Color -&gt; a -&gt; a
 </span><span class="hs-identifier hs-var">color</span></span><span> </span><span class="annot"><span class="annottext">Color
-</span><a href="#local-6989586621679070311"><span class="hs-identifier hs-var">c</span></a></span><span> </span><span class="annot"><span class="annottext">String
-</span><a href="#local-6989586621679070312"><span class="hs-identifier hs-var">s</span></a></span><span>
+</span><a href="#local-6989586621679071472"><span class="hs-identifier hs-var">c</span></a></span><span> </span><span class="annot"><span class="annottext">String
+</span><a href="#local-6989586621679071473"><span class="hs-identifier hs-var">s</span></a></span><span>
 </span><span id="line-122"></span><span>
 </span><span id="line-123"></span><span class="annot"><a href="Text.Gigaparsec.Debug.html#newline"><span class="hs-identifier hs-type">newline</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Debug.html#space"><span class="hs-identifier hs-type">space</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Debug.html#carriageReturn"><span class="hs-identifier hs-type">carriageReturn</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Debug.html#tab"><span class="hs-identifier hs-type">tab</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Debug.html#endOfInput"><span class="hs-identifier hs-type">endOfInput</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Bool</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span>
 </span><span id="line-124"></span><span id="newline"><span class="annot"><span class="annottext">newline :: Bool -&gt; String
-</span><a href="Text.Gigaparsec.Debug.html#newline"><span class="hs-identifier hs-var hs-var">newline</span></a></span></span><span> </span><span id="local-6989586621679070313"><span class="annot"><span class="annottext">Bool
-</span><a href="#local-6989586621679070313"><span class="hs-identifier hs-var">ascii</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Bool -&gt; String -&gt; String
+</span><a href="Text.Gigaparsec.Debug.html#newline"><span class="hs-identifier hs-var hs-var">newline</span></a></span></span><span> </span><span id="local-6989586621679071474"><span class="annot"><span class="annottext">Bool
+</span><a href="#local-6989586621679071474"><span class="hs-identifier hs-var">ascii</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Bool -&gt; String -&gt; String
 </span><a href="Text.Gigaparsec.Debug.html#green"><span class="hs-identifier hs-var">green</span></a></span><span> </span><span class="annot"><span class="annottext">Bool
-</span><a href="#local-6989586621679070313"><span class="hs-identifier hs-var">ascii</span></a></span><span> </span><span class="annot"><span class="annottext">String
+</span><a href="#local-6989586621679071474"><span class="hs-identifier hs-var">ascii</span></a></span><span> </span><span class="annot"><span class="annottext">String
 </span><span class="hs-string">&quot;&#8601;&quot;</span></span><span>
 </span><span id="line-125"></span><span id="space"><span class="annot"><span class="annottext">space :: Bool -&gt; String
-</span><a href="Text.Gigaparsec.Debug.html#space"><span class="hs-identifier hs-var hs-var">space</span></a></span></span><span> </span><span id="local-6989586621679070314"><span class="annot"><span class="annottext">Bool
-</span><a href="#local-6989586621679070314"><span class="hs-identifier hs-var">ascii</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Bool -&gt; String -&gt; String
+</span><a href="Text.Gigaparsec.Debug.html#space"><span class="hs-identifier hs-var hs-var">space</span></a></span></span><span> </span><span id="local-6989586621679071475"><span class="annot"><span class="annottext">Bool
+</span><a href="#local-6989586621679071475"><span class="hs-identifier hs-var">ascii</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Bool -&gt; String -&gt; String
 </span><a href="Text.Gigaparsec.Debug.html#white"><span class="hs-identifier hs-var">white</span></a></span><span> </span><span class="annot"><span class="annottext">Bool
-</span><a href="#local-6989586621679070314"><span class="hs-identifier hs-var">ascii</span></a></span><span> </span><span class="annot"><span class="annottext">String
+</span><a href="#local-6989586621679071475"><span class="hs-identifier hs-var">ascii</span></a></span><span> </span><span class="annot"><span class="annottext">String
 </span><span class="hs-string">&quot;&#183;&quot;</span></span><span>
 </span><span id="line-126"></span><span id="carriageReturn"><span class="annot"><span class="annottext">carriageReturn :: Bool -&gt; String
-</span><a href="Text.Gigaparsec.Debug.html#carriageReturn"><span class="hs-identifier hs-var hs-var">carriageReturn</span></a></span></span><span> </span><span id="local-6989586621679070315"><span class="annot"><span class="annottext">Bool
-</span><a href="#local-6989586621679070315"><span class="hs-identifier hs-var">ascii</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Bool -&gt; String -&gt; String
+</span><a href="Text.Gigaparsec.Debug.html#carriageReturn"><span class="hs-identifier hs-var hs-var">carriageReturn</span></a></span></span><span> </span><span id="local-6989586621679071476"><span class="annot"><span class="annottext">Bool
+</span><a href="#local-6989586621679071476"><span class="hs-identifier hs-var">ascii</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Bool -&gt; String -&gt; String
 </span><a href="Text.Gigaparsec.Debug.html#green"><span class="hs-identifier hs-var">green</span></a></span><span> </span><span class="annot"><span class="annottext">Bool
-</span><a href="#local-6989586621679070315"><span class="hs-identifier hs-var">ascii</span></a></span><span> </span><span class="annot"><span class="annottext">String
+</span><a href="#local-6989586621679071476"><span class="hs-identifier hs-var">ascii</span></a></span><span> </span><span class="annot"><span class="annottext">String
 </span><span class="hs-string">&quot;&#8592;&quot;</span></span><span>
 </span><span id="line-127"></span><span id="tab"><span class="annot"><span class="annottext">tab :: Bool -&gt; String
-</span><a href="Text.Gigaparsec.Debug.html#tab"><span class="hs-identifier hs-var hs-var">tab</span></a></span></span><span> </span><span id="local-6989586621679070316"><span class="annot"><span class="annottext">Bool
-</span><a href="#local-6989586621679070316"><span class="hs-identifier hs-var">ascii</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Bool -&gt; String -&gt; String
+</span><a href="Text.Gigaparsec.Debug.html#tab"><span class="hs-identifier hs-var hs-var">tab</span></a></span></span><span> </span><span id="local-6989586621679071477"><span class="annot"><span class="annottext">Bool
+</span><a href="#local-6989586621679071477"><span class="hs-identifier hs-var">ascii</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Bool -&gt; String -&gt; String
 </span><a href="Text.Gigaparsec.Debug.html#white"><span class="hs-identifier hs-var">white</span></a></span><span> </span><span class="annot"><span class="annottext">Bool
-</span><a href="#local-6989586621679070316"><span class="hs-identifier hs-var">ascii</span></a></span><span> </span><span class="annot"><span class="annottext">String
+</span><a href="#local-6989586621679071477"><span class="hs-identifier hs-var">ascii</span></a></span><span> </span><span class="annot"><span class="annottext">String
 </span><span class="hs-string">&quot;&#8594;&quot;</span></span><span>
 </span><span id="line-128"></span><span id="endOfInput"><span class="annot"><span class="annottext">endOfInput :: Bool -&gt; String
-</span><a href="Text.Gigaparsec.Debug.html#endOfInput"><span class="hs-identifier hs-var hs-var">endOfInput</span></a></span></span><span> </span><span id="local-6989586621679070317"><span class="annot"><span class="annottext">Bool
-</span><a href="#local-6989586621679070317"><span class="hs-identifier hs-var">ascii</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Bool -&gt; String -&gt; String
+</span><a href="Text.Gigaparsec.Debug.html#endOfInput"><span class="hs-identifier hs-var hs-var">endOfInput</span></a></span></span><span> </span><span id="local-6989586621679071478"><span class="annot"><span class="annottext">Bool
+</span><a href="#local-6989586621679071478"><span class="hs-identifier hs-var">ascii</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Bool -&gt; String -&gt; String
 </span><a href="Text.Gigaparsec.Debug.html#red"><span class="hs-identifier hs-var">red</span></a></span><span> </span><span class="annot"><span class="annottext">Bool
-</span><a href="#local-6989586621679070317"><span class="hs-identifier hs-var">ascii</span></a></span><span> </span><span class="annot"><span class="annottext">String
+</span><a href="#local-6989586621679071478"><span class="hs-identifier hs-var">ascii</span></a></span><span> </span><span class="annot"><span class="annottext">String
 </span><span class="hs-string">&quot;&#8226;&quot;</span></span><span>
 </span><span id="line-129"></span><span>
 </span><span id="line-130"></span><span class="annot"><a href="Text.Gigaparsec.Debug.html#replace"><span class="hs-identifier hs-type">replace</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span>
 </span><span id="line-131"></span><span id="replace"><span class="annot"><span class="annottext">replace :: String -&gt; String -&gt; String -&gt; String
-</span><a href="Text.Gigaparsec.Debug.html#replace"><span class="hs-identifier hs-var hs-var">replace</span></a></span></span><span> </span><span id="local-6989586621679070318"><span class="annot"><span class="annottext">String
-</span><a href="#local-6989586621679070318"><span class="hs-identifier hs-var">needle</span></a></span></span><span> </span><span id="local-6989586621679070319"><span class="annot"><span class="annottext">String
-</span><a href="#local-6989586621679070319"><span class="hs-identifier hs-var">replacement</span></a></span></span><span> </span><span id="local-6989586621679070320"><span class="annot"><span class="annottext">String
-</span><a href="#local-6989586621679070320"><span class="hs-identifier hs-var">haystack</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
+</span><a href="Text.Gigaparsec.Debug.html#replace"><span class="hs-identifier hs-var hs-var">replace</span></a></span></span><span> </span><span id="local-6989586621679071479"><span class="annot"><span class="annottext">String
+</span><a href="#local-6989586621679071479"><span class="hs-identifier hs-var">needle</span></a></span></span><span> </span><span id="local-6989586621679071480"><span class="annot"><span class="annottext">String
+</span><a href="#local-6989586621679071480"><span class="hs-identifier hs-var">replacement</span></a></span></span><span> </span><span id="local-6989586621679071481"><span class="annot"><span class="annottext">String
+</span><a href="#local-6989586621679071481"><span class="hs-identifier hs-var">haystack</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
 </span><span id="line-132"></span><span>  </span><span class="annot"><span class="annottext">String -&gt; [String] -&gt; String
 forall a. [a] -&gt; [[a]] -&gt; [a]
 </span><span class="hs-identifier hs-var">intercalate</span></span><span> </span><span class="annot"><span class="annottext">String
-</span><a href="#local-6989586621679070319"><span class="hs-identifier hs-var">replacement</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">NonEmpty String -&gt; [String]
+</span><a href="#local-6989586621679071480"><span class="hs-identifier hs-var">replacement</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">NonEmpty String -&gt; [String]
 forall a. NonEmpty a -&gt; [a]
 </span><span class="hs-identifier hs-var">NonEmpty.toList</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">String -&gt; String -&gt; NonEmpty String
 </span><a href="Text.Gigaparsec.Debug.html#splitOn"><span class="hs-identifier hs-var">splitOn</span></a></span><span> </span><span class="annot"><span class="annottext">String
-</span><a href="#local-6989586621679070318"><span class="hs-identifier hs-var">needle</span></a></span><span> </span><span class="annot"><span class="annottext">String
-</span><a href="#local-6989586621679070320"><span class="hs-identifier hs-var">haystack</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><a href="#local-6989586621679071479"><span class="hs-identifier hs-var">needle</span></a></span><span> </span><span class="annot"><span class="annottext">String
+</span><a href="#local-6989586621679071481"><span class="hs-identifier hs-var">haystack</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
 </span><span id="line-133"></span><span>
 </span><span id="line-134"></span><span class="annot"><a href="Text.Gigaparsec.Debug.html#splitOn"><span class="hs-identifier hs-type">splitOn</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">NonEmpty</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span>
 </span><span id="line-135"></span><span id="splitOn"><span class="annot"><span class="annottext">splitOn :: String -&gt; String -&gt; NonEmpty String
-</span><a href="Text.Gigaparsec.Debug.html#splitOn"><span class="hs-identifier hs-var hs-var">splitOn</span></a></span></span><span> </span><span id="local-6989586621679070322"><span class="annot"><span class="annottext">String
-</span><a href="#local-6989586621679070322"><span class="hs-identifier hs-var">pat</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">String -&gt; NonEmpty String
-</span><a href="#local-6989586621679070323"><span class="hs-identifier hs-var">go</span></a></span><span>
-</span><span id="line-136"></span><span>  </span><span class="hs-keyword">where</span><span> </span><span id="local-6989586621679070323"><span class="annot"><span class="annottext">go :: String -&gt; NonEmpty String
-</span><a href="#local-6989586621679070323"><span class="hs-identifier hs-var hs-var">go</span></a></span></span><span> </span><span id="local-6989586621679070326"><span class="annot"><span class="annottext">String
-</span><a href="#local-6989586621679070326"><span class="hs-identifier hs-var">src</span></a></span></span><span>
+</span><a href="Text.Gigaparsec.Debug.html#splitOn"><span class="hs-identifier hs-var hs-var">splitOn</span></a></span></span><span> </span><span id="local-6989586621679071483"><span class="annot"><span class="annottext">String
+</span><a href="#local-6989586621679071483"><span class="hs-identifier hs-var">pat</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">String -&gt; NonEmpty String
+</span><a href="#local-6989586621679071484"><span class="hs-identifier hs-var">go</span></a></span><span>
+</span><span id="line-136"></span><span>  </span><span class="hs-keyword">where</span><span> </span><span id="local-6989586621679071484"><span class="annot"><span class="annottext">go :: String -&gt; NonEmpty String
+</span><a href="#local-6989586621679071484"><span class="hs-identifier hs-var hs-var">go</span></a></span></span><span> </span><span id="local-6989586621679071487"><span class="annot"><span class="annottext">String
+</span><a href="#local-6989586621679071487"><span class="hs-identifier hs-var">src</span></a></span></span><span>
 </span><span id="line-137"></span><span>          </span><span class="hs-glyph">|</span><span> </span><span class="annot"><span class="annottext">String -&gt; String -&gt; Bool
 forall a. Eq a =&gt; [a] -&gt; [a] -&gt; Bool
 </span><span class="hs-identifier hs-var">isPrefixOf</span></span><span> </span><span class="annot"><span class="annottext">String
-</span><a href="#local-6989586621679070322"><span class="hs-identifier hs-var">pat</span></a></span><span> </span><span class="annot"><span class="annottext">String
-</span><a href="#local-6989586621679070326"><span class="hs-identifier hs-var">src</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">String
+</span><a href="#local-6989586621679071483"><span class="hs-identifier hs-var">pat</span></a></span><span> </span><span class="annot"><span class="annottext">String
+</span><a href="#local-6989586621679071487"><span class="hs-identifier hs-var">src</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">String
 </span><span class="hs-string">&quot;&quot;</span></span><span> </span><span class="annot"><span class="annottext">String -&gt; NonEmpty String -&gt; NonEmpty String
 forall a. a -&gt; NonEmpty a -&gt; NonEmpty a
 </span><span class="hs-operator hs-var">&lt;|</span></span><span> </span><span class="annot"><span class="annottext">String -&gt; NonEmpty String
-</span><a href="#local-6989586621679070323"><span class="hs-identifier hs-var">go</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Int -&gt; String -&gt; String
+</span><a href="#local-6989586621679071484"><span class="hs-identifier hs-var">go</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Int -&gt; String -&gt; String
 forall a. Int -&gt; [a] -&gt; [a]
 </span><span class="hs-identifier hs-var">drop</span></span><span> </span><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679070328"><span class="hs-identifier hs-var">n</span></a></span><span> </span><span class="annot"><span class="annottext">String
-</span><a href="#local-6989586621679070326"><span class="hs-identifier hs-var">src</span></a></span><span class="hs-special">)</span><span>
-</span><span id="line-138"></span><span>          </span><span class="hs-glyph">|</span><span> </span><span id="local-6989586621679070329"><span class="annot"><span class="annottext">Char
-</span><a href="#local-6989586621679070329"><span class="hs-identifier hs-var">c</span></a></span></span><span class="annot"><span class="hs-glyph hs-type">:</span></span><span id="local-6989586621679070330"><span class="annot"><span class="annottext">String
-</span><a href="#local-6989586621679070330"><span class="hs-identifier hs-var">cs</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">String
-</span><a href="#local-6989586621679070326"><span class="hs-identifier hs-var">src</span></a></span><span>        </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">let</span><span> </span><span class="hs-special">(</span><span id="local-6989586621679070331"><span class="annot"><span class="annottext">String
-</span><a href="#local-6989586621679070331"><span class="hs-identifier hs-var">w</span></a></span></span><span> </span><span class="annot"><span class="hs-operator hs-type">:|</span></span><span> </span><span id="local-6989586621679070332"><span class="annot"><span class="annottext">[String]
-</span><a href="#local-6989586621679070332"><span class="hs-identifier hs-var">ws</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">String -&gt; NonEmpty String
-</span><a href="#local-6989586621679070323"><span class="hs-identifier hs-var">go</span></a></span><span> </span><span class="annot"><span class="annottext">String
-</span><a href="#local-6989586621679070330"><span class="hs-identifier hs-var">cs</span></a></span><span> </span><span class="hs-keyword">in</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Char
-</span><a href="#local-6989586621679070329"><span class="hs-identifier hs-var">c</span></a></span><span> </span><span class="annot"><span class="annottext">Char -&gt; String -&gt; String
+</span><a href="#local-6989586621679071489"><span class="hs-identifier hs-var">n</span></a></span><span> </span><span class="annot"><span class="annottext">String
+</span><a href="#local-6989586621679071487"><span class="hs-identifier hs-var">src</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-138"></span><span>          </span><span class="hs-glyph">|</span><span> </span><span id="local-6989586621679071490"><span class="annot"><span class="annottext">Char
+</span><a href="#local-6989586621679071490"><span class="hs-identifier hs-var">c</span></a></span></span><span class="annot"><span class="hs-glyph hs-type">:</span></span><span id="local-6989586621679071491"><span class="annot"><span class="annottext">String
+</span><a href="#local-6989586621679071491"><span class="hs-identifier hs-var">cs</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">String
+</span><a href="#local-6989586621679071487"><span class="hs-identifier hs-var">src</span></a></span><span>        </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">let</span><span> </span><span class="hs-special">(</span><span id="local-6989586621679071492"><span class="annot"><span class="annottext">String
+</span><a href="#local-6989586621679071492"><span class="hs-identifier hs-var">w</span></a></span></span><span> </span><span class="annot"><span class="hs-operator hs-type">:|</span></span><span> </span><span id="local-6989586621679071493"><span class="annot"><span class="annottext">[String]
+</span><a href="#local-6989586621679071493"><span class="hs-identifier hs-var">ws</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">String -&gt; NonEmpty String
+</span><a href="#local-6989586621679071484"><span class="hs-identifier hs-var">go</span></a></span><span> </span><span class="annot"><span class="annottext">String
+</span><a href="#local-6989586621679071491"><span class="hs-identifier hs-var">cs</span></a></span><span> </span><span class="hs-keyword">in</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Char
+</span><a href="#local-6989586621679071490"><span class="hs-identifier hs-var">c</span></a></span><span> </span><span class="annot"><span class="annottext">Char -&gt; String -&gt; String
 forall a. a -&gt; [a] -&gt; [a]
 </span><span class="hs-glyph hs-var">:</span></span><span> </span><span class="annot"><span class="annottext">String
-</span><a href="#local-6989586621679070331"><span class="hs-identifier hs-var">w</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">String -&gt; [String] -&gt; NonEmpty String
+</span><a href="#local-6989586621679071492"><span class="hs-identifier hs-var">w</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">String -&gt; [String] -&gt; NonEmpty String
 forall a. a -&gt; [a] -&gt; NonEmpty a
 </span><span class="hs-operator hs-var">:|</span></span><span> </span><span class="annot"><span class="annottext">[String]
-</span><a href="#local-6989586621679070332"><span class="hs-identifier hs-var">ws</span></a></span><span>
+</span><a href="#local-6989586621679071493"><span class="hs-identifier hs-var">ws</span></a></span><span>
 </span><span id="line-139"></span><span>          </span><span class="hs-glyph">|</span><span> </span><span class="annot"><span class="annottext">Bool
 </span><span class="hs-identifier hs-var">otherwise</span></span><span>          </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">String
 </span><span class="hs-string">&quot;&quot;</span></span><span> </span><span class="annot"><span class="annottext">String -&gt; [String] -&gt; NonEmpty String
 forall a. a -&gt; [a] -&gt; NonEmpty a
 </span><span class="hs-operator hs-var">:|</span></span><span> </span><span class="hs-special">[</span><span class="hs-special">]</span><span>
-</span><span id="line-140"></span><span>        </span><span id="local-6989586621679070328"><span class="annot"><span class="annottext">n :: Int
-</span><a href="#local-6989586621679070328"><span class="hs-identifier hs-var hs-var">n</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">String -&gt; Int
+</span><span id="line-140"></span><span>        </span><span id="local-6989586621679071489"><span class="annot"><span class="annottext">n :: Int
+</span><a href="#local-6989586621679071489"><span class="hs-identifier hs-var hs-var">n</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">String -&gt; Int
 forall a. [a] -&gt; Int
 forall (t :: * -&gt; *) a. Foldable t =&gt; t a -&gt; Int
 </span><span class="hs-identifier hs-var">length</span></span><span> </span><span class="annot"><span class="annottext">String
-</span><a href="#local-6989586621679070322"><span class="hs-identifier hs-var">pat</span></a></span><span>
+</span><a href="#local-6989586621679071483"><span class="hs-identifier hs-var">pat</span></a></span><span>
 </span><span id="line-141"></span></pre></body></html>
