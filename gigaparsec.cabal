@@ -168,7 +168,7 @@ test-suite gigaparsec-test
         --TODO: performance testing with tasty-bench?
         --tasty-bench
         -- we'd need to keep the basefile files somewhere, cache in CI or keep in repo?
-        knob >=0.2 && <0.3,
+        knob >=0.1.1 && <0.3,
 
 benchmark perf-test
     import:           warnings, extensions, base
