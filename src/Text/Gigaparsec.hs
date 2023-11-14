@@ -15,7 +15,7 @@ TODO: what is inside it?
 @since 0.1.0.0
 -}
 module Text.Gigaparsec (
-    Parsec, Result(..), result, parse, parseRepl,
+    Parsec, Result(..), result, parse, parseFromFile, parseRepl,
   -- * Primitive Combinators
   -- | These combinators are specific to parser combinators. In one way or another, they influence
   -- how a parser consumes input, or under what conditions a parser does or does not fail. These are
@@ -84,7 +84,7 @@ module Text.Gigaparsec (
 
 import Text.Gigaparsec.Internal (Parsec(Parsec), emptyState, manyr, somer)
 import Text.Gigaparsec.Internal qualified as Internal (State(..), useHints, expectedErr)
-import Text.Gigaparsec.Internal.RT qualified as Internal (RT, runRT)
+import Text.Gigaparsec.Internal.RT qualified as Internal (RT, runRT, rtToIO)
 import Text.Gigaparsec.Internal.Errors qualified as Internal (ParseError, ExpectItem(ExpectEndOfInput), fromParseError)
 
 import Text.Gigaparsec.Errors.ErrorBuilder (ErrorBuilder)
@@ -110,15 +110,29 @@ result failure _ (Failure err) = failure err
 {-# SPECIALISE parse :: Parsec a -> String -> Result String a #-}
 {-# INLINABLE parse #-}
 parse :: forall err a. ErrorBuilder err => Parsec a -> String -> Result err a
-parse (Parsec p) inp = Internal.runRT $ p (emptyState inp) good bad
-  where good :: a -> Internal.State -> Internal.RT (Result err a)
-        good x _  = return (Success x)
-        bad :: Internal.ParseError -> Internal.State -> Internal.RT (Result err a)
-        bad err _ = return (Failure (Internal.fromParseError Nothing inp err))
+parse p inp = Internal.runRT $ _parse Nothing p inp
 
 -- TODO: documentation
 parseRepl :: Show a => Parsec a -> String -> IO ()
-parseRepl p inp = result putStrLn print (parse p inp)
+parseRepl p inp =
+  do res <- Internal.rtToIO $ _parse Nothing p inp
+     result putStrLn print res
+
+{-# SPECIALISE parseFromFile :: Parsec a -> String -> IO (Result String a) #-}
+{-# INLINABLE parseFromFile #-}
+-- TODO: documentation
+parseFromFile :: forall err a. ErrorBuilder err => Parsec a -> FilePath -> IO (Result err a)
+parseFromFile p f =
+  do inp <- readFile f
+     Internal.rtToIO $ _parse (Just f) p inp
+
+{-# INLINE _parse #-}
+_parse :: forall err a. ErrorBuilder err => Maybe FilePath -> Parsec a -> String -> Internal.RT (Result err a)
+_parse file (Parsec p) inp = p (emptyState inp) good bad
+  where good :: a -> Internal.State -> Internal.RT (Result err a)
+        good x _  = return (Success x)
+        bad :: Internal.ParseError -> Internal.State -> Internal.RT (Result err a)
+        bad err _ = return (Failure (Internal.fromParseError file inp err))
 
 {-|
 This combinator parses its argument @p@, but rolls back any consumed input on failure.

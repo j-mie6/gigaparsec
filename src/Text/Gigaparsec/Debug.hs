@@ -36,7 +36,7 @@ debug = debugWith debugConfig
 debugWith :: DebugConfig -> String -> Parsec a -> Parsec a
 debugWith config@DebugConfig{ascii} name (Internal.Parsec p) = Internal.Parsec $ \st good bad -> do
   -- TODO: could make it so the postamble can print input information from the entry?
-  ascii' <- (\colourful -> ascii || not colourful) <$> Internal.ioToRT supportsPretty
+  ascii' <- (\colourful -> ascii || not colourful) <$> Internal.unsafeIOToRT supportsPretty
   let config' = config { ascii = ascii' }
   doDebug name Enter st ""  config'
   let good' x st' = do
@@ -86,10 +86,11 @@ printInfo name dir st@Internal.State{input, line, col} end ascii regs = do
     else (++ [""]) . ("watched registers:" :) <$>
       forM regs (\(WatchedReg rname reg) ->
         (\x -> "    " ++ rname ++ " = " ++ show x) <$> readReg reg)
-  Internal.ioToRT $ putStr $ indentAndUnlines st ((prelude ++ cs' ++ end) : caret : regSummary)
+  Internal.unsafeIOToRT $
+    putStr $ indentAndUnlines st ((prelude ++ cs' ++ end) : caret : regSummary)
 
 waitForUser :: Internal.RT ()
-waitForUser = Internal.ioToRT $ do
+waitForUser = Internal.unsafeIOToRT $ do
   echo <- hGetEcho stdin
   hSetEcho stdin False
   putStrLn "..."
