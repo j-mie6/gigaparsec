@@ -130,6 +130,7 @@ test-suite gigaparsec-test
     other-modules: Text.Gigaparsec.PrimitiveTests,
                    Text.Gigaparsec.CharTests,
                    Text.Gigaparsec.CombinatorTests,
+                   Text.Gigaparsec.DebugTests,
                    Text.Gigaparsec.ExprTests,
                    Text.Gigaparsec.ErrorsTests,
                    Text.Gigaparsec.Expr.ChainTests,
@@ -156,6 +157,7 @@ test-suite gigaparsec-test
         gigaparsec,
         containers >= 0.6 && < 0.7,
         deepseq >= 1.4 && < 1.6,
+        bytestring >= 0.10 && < 0.12,
         --deriving-compat >= 0.6 && < 0.7,
         tasty >=1.1 && <1.6,
         tasty-expected-failure >=0.11 && <0.13,
@@ -166,6 +168,7 @@ test-suite gigaparsec-test
         --TODO: performance testing with tasty-bench?
         --tasty-bench
         -- we'd need to keep the basefile files somewhere, cache in CI or keep in repo?
+        knob >=0.2 && <0.3,
 
 benchmark perf-test
     import:           warnings, extensions, base
