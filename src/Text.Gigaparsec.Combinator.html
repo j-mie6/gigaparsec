@@ -76,8 +76,8 @@ Failure ..
 
 @since 0.1.0.0
 -}</span></span><span>
-</span><span id="line-79"></span><span id="local-6989586621679072057"><span class="annot"><a href="Text.Gigaparsec.Combinator.html#choice"><span class="hs-identifier hs-type">choice</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-special">[</span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679072057"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">]</span><span> </span><span class="annot"><span class="hs-comment">-- ^ the parsers, @ps@ to try, in order.</span></span><span>
-</span><span id="line-80"></span><span>       </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679072057"><span class="hs-identifier hs-type">a</span></a></span></span><span>   </span><span class="annot"><span class="hs-comment">-- ^ a parser that tries to parse one of @ps@.</span></span><span>
+</span><span id="line-79"></span><span id="local-6989586621679072062"><span class="annot"><a href="Text.Gigaparsec.Combinator.html#choice"><span class="hs-identifier hs-type">choice</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-special">[</span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679072062"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">]</span><span> </span><span class="annot"><span class="hs-comment">-- ^ the parsers, @ps@ to try, in order.</span></span><span>
+</span><span id="line-80"></span><span>       </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679072062"><span class="hs-identifier hs-type">a</span></a></span></span><span>   </span><span class="annot"><span class="hs-comment">-- ^ a parser that tries to parse one of @ps@.</span></span><span>
 </span><span id="line-81"></span><span id="choice"><span class="annot"><span class="annottext">choice :: forall a. [Parsec a] -&gt; Parsec a
 </span><a href="Text.Gigaparsec.Combinator.html#choice"><span class="hs-identifier hs-var hs-var">choice</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">[Parsec a] -&gt; Parsec a
 forall (t :: * -&gt; *) (f :: * -&gt; *) a.
@@ -101,7 +101,7 @@ Failure ..
 
 @since 0.1.0.0
 -}</span></span><span>
-</span><span id="line-99"></span><span id="local-6989586621679072062"><span class="annot"><a href="Text.Gigaparsec.Combinator.html#skip"><span class="hs-identifier hs-type">skip</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-special">[</span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679072062"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">]</span><span> </span><span class="annot"><span class="hs-comment">-- ^ parsers @ps@ to be sequenced.</span></span><span>
+</span><span id="line-99"></span><span id="local-6989586621679072067"><span class="annot"><a href="Text.Gigaparsec.Combinator.html#skip"><span class="hs-identifier hs-type">skip</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-special">[</span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679072067"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">]</span><span> </span><span class="annot"><span class="hs-comment">-- ^ parsers @ps@ to be sequenced.</span></span><span>
 </span><span id="line-100"></span><span>     </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span></span><span>  </span><span class="annot"><span class="hs-comment">-- ^ a parser that parses each of @ps@, returning @()@.</span></span><span>
 </span><span id="line-101"></span><span id="skip"><span class="annot"><span class="annottext">skip :: forall a. [Parsec a] -&gt; Parsec ()
 </span><a href="Text.Gigaparsec.Combinator.html#skip"><span class="hs-identifier hs-var hs-var">skip</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">[Parsec a] -&gt; Parsec ()
@@ -127,16 +127,16 @@ Failure ..
 
 @since 0.1.0.0
 -}</span></span><span>
-</span><span id="line-120"></span><span id="local-6989586621679072067"><span class="annot"><a href="Text.Gigaparsec.Combinator.html#option"><span class="hs-identifier hs-type">option</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679072067"><span class="hs-identifier hs-type">a</span></a></span><span>         </span><span class="annot"><span class="hs-comment">-- ^ the parser @p@ to try to parse</span></span><span>
-</span><span id="line-121"></span><span>       </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Maybe</span></span><span> </span><span class="annot"><a href="#local-6989586621679072067"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">)</span></span><span>
+</span><span id="line-120"></span><span id="local-6989586621679072072"><span class="annot"><a href="Text.Gigaparsec.Combinator.html#option"><span class="hs-identifier hs-type">option</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679072072"><span class="hs-identifier hs-type">a</span></a></span><span>         </span><span class="annot"><span class="hs-comment">-- ^ the parser @p@ to try to parse</span></span><span>
+</span><span id="line-121"></span><span>       </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Maybe</span></span><span> </span><span class="annot"><a href="#local-6989586621679072072"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">)</span></span><span>
 </span><span id="line-122"></span><span id="option"><span class="annot"><span class="annottext">option :: forall a. Parsec a -&gt; Parsec (Maybe a)
-</span><a href="Text.Gigaparsec.Combinator.html#option"><span class="hs-identifier hs-var hs-var">option</span></a></span></span><span> </span><span id="local-6989586621679072224"><span class="annot"><span class="annottext">Parsec a
-</span><a href="#local-6989586621679072224"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">a -&gt; Maybe a
+</span><a href="Text.Gigaparsec.Combinator.html#option"><span class="hs-identifier hs-var hs-var">option</span></a></span></span><span> </span><span id="local-6989586621679072229"><span class="annot"><span class="annottext">Parsec a
+</span><a href="#local-6989586621679072229"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">a -&gt; Maybe a
 forall a. a -&gt; Maybe a
 </span><span class="hs-identifier hs-var">Just</span></span><span> </span><span class="annot"><span class="annottext">(a -&gt; Maybe a) -&gt; Parsec a -&gt; Parsec (Maybe a)
 forall (f :: * -&gt; *) a b. Functor f =&gt; (a -&gt; b) -&gt; f a -&gt; f b
 </span><span class="hs-operator hs-var">&lt;$&gt;</span></span><span> </span><span class="annot"><span class="annottext">Parsec a
-</span><a href="#local-6989586621679072224"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Parsec (Maybe a) -&gt; Parsec (Maybe a) -&gt; Parsec (Maybe a)
+</span><a href="#local-6989586621679072229"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Parsec (Maybe a) -&gt; Parsec (Maybe a) -&gt; Parsec (Maybe a)
 forall a. Parsec a -&gt; Parsec a -&gt; Parsec a
 forall (f :: * -&gt; *) a. Alternative f =&gt; f a -&gt; f a -&gt; f a
 </span><span class="hs-operator hs-var">&lt;|&gt;</span></span><span> </span><span class="annot"><span class="annottext">Maybe a -&gt; Parsec (Maybe a)
@@ -163,7 +163,7 @@ Failure ..
 
 @since 0.1.0.0
 -}</span></span><span>
-</span><span id="line-141"></span><span id="local-6989586621679072077"><span class="annot"><a href="Text.Gigaparsec.Combinator.html#optional"><span class="hs-identifier hs-type">optional</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679072077"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="annot"><span class="hs-comment">-- ^ the parser @p@ to try to parse.</span></span><span>
+</span><span id="line-141"></span><span id="local-6989586621679072082"><span class="annot"><a href="Text.Gigaparsec.Combinator.html#optional"><span class="hs-identifier hs-type">optional</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679072082"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="annot"><span class="hs-comment">-- ^ the parser @p@ to try to parse.</span></span><span>
 </span><span id="line-142"></span><span>         </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span></span><span>
 </span><span id="line-143"></span><span id="optional"><span class="annot"><span class="annottext">optional :: forall a. Parsec a -&gt; Parsec ()
 </span><a href="Text.Gigaparsec.Combinator.html#optional"><span class="hs-identifier hs-var hs-var">optional</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">() -&gt; Parsec a -&gt; Parsec ()
@@ -187,24 +187,24 @@ Failure ..
 
 @since 0.1.0.0
 -}</span></span><span>
-</span><span id="line-162"></span><span id="local-6989586621679072079"><span id="local-6989586621679072080"><span class="annot"><a href="Text.Gigaparsec.Combinator.html#optionalAs"><span class="hs-identifier hs-type">optionalAs</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="#local-6989586621679072079"><span class="hs-identifier hs-type">b</span></a></span><span>        </span><span class="annot"><span class="hs-comment">-- ^ the value @x@ to return regardless of how @p@ performs.</span></span><span>
-</span><span id="line-163"></span><span>           </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679072080"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="annot"><span class="hs-comment">-- ^ the parser @p@ to try to parse.</span></span><span>
-</span><span id="line-164"></span><span>           </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679072079"><span class="hs-identifier hs-type">b</span></a></span></span></span><span> </span><span class="annot"><span class="hs-comment">-- ^ a parser that tries to parse @p@, returning @x@ regardless of success or failure.</span></span><span>
+</span><span id="line-162"></span><span id="local-6989586621679072084"><span id="local-6989586621679072085"><span class="annot"><a href="Text.Gigaparsec.Combinator.html#optionalAs"><span class="hs-identifier hs-type">optionalAs</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="#local-6989586621679072084"><span class="hs-identifier hs-type">b</span></a></span><span>        </span><span class="annot"><span class="hs-comment">-- ^ the value @x@ to return regardless of how @p@ performs.</span></span><span>
+</span><span id="line-163"></span><span>           </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679072085"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="annot"><span class="hs-comment">-- ^ the parser @p@ to try to parse.</span></span><span>
+</span><span id="line-164"></span><span>           </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679072084"><span class="hs-identifier hs-type">b</span></a></span></span></span><span> </span><span class="annot"><span class="hs-comment">-- ^ a parser that tries to parse @p@, returning @x@ regardless of success or failure.</span></span><span>
 </span><span id="line-165"></span><span id="optionalAs"><span class="annot"><span class="annottext">optionalAs :: forall b a. b -&gt; Parsec a -&gt; Parsec b
-</span><a href="Text.Gigaparsec.Combinator.html#optionalAs"><span class="hs-identifier hs-var hs-var">optionalAs</span></a></span></span><span> </span><span id="local-6989586621679072228"><span class="annot"><span class="annottext">b
-</span><a href="#local-6989586621679072228"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span id="local-6989586621679072229"><span class="annot"><span class="annottext">Parsec a
-</span><a href="#local-6989586621679072229"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Parsec a
-</span><a href="#local-6989586621679072229"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Parsec a -&gt; b -&gt; Parsec b
+</span><a href="Text.Gigaparsec.Combinator.html#optionalAs"><span class="hs-identifier hs-var hs-var">optionalAs</span></a></span></span><span> </span><span id="local-6989586621679072233"><span class="annot"><span class="annottext">b
+</span><a href="#local-6989586621679072233"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span id="local-6989586621679072234"><span class="annot"><span class="annottext">Parsec a
+</span><a href="#local-6989586621679072234"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Parsec a
+</span><a href="#local-6989586621679072234"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Parsec a -&gt; b -&gt; Parsec b
 forall a b. Parsec a -&gt; b -&gt; Parsec b
 </span><a href="Text.Gigaparsec.html#%24%3E"><span class="hs-operator hs-var">$&gt;</span></a></span><span> </span><span class="annot"><span class="annottext">b
-</span><a href="#local-6989586621679072228"><span class="hs-identifier hs-var">x</span></a></span><span> </span><span class="annot"><span class="annottext">Parsec b -&gt; Parsec b -&gt; Parsec b
+</span><a href="#local-6989586621679072233"><span class="hs-identifier hs-var">x</span></a></span><span> </span><span class="annot"><span class="annottext">Parsec b -&gt; Parsec b -&gt; Parsec b
 forall a. Parsec a -&gt; Parsec a -&gt; Parsec a
 forall (f :: * -&gt; *) a. Alternative f =&gt; f a -&gt; f a -&gt; f a
 </span><span class="hs-operator hs-var">&lt;|&gt;</span></span><span> </span><span class="annot"><span class="annottext">b -&gt; Parsec b
 forall a. a -&gt; Parsec a
 forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
 </span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">b
-</span><a href="#local-6989586621679072228"><span class="hs-identifier hs-var">x</span></a></span><span>
+</span><a href="#local-6989586621679072233"><span class="hs-identifier hs-var">x</span></a></span><span>
 </span><span id="line-166"></span><span>
 </span><span id="line-167"></span><span class="hs-comment">-- TODO: collect</span><span>
 </span><span id="line-168"></span><span class="annot"><span class="hs-comment">{-|
@@ -216,12 +216,12 @@ if @p@ fails, or returned @Nothing@, then this combinator fails.
 ==== __Examples__
 @decide (option p) = p@
 -}</span></span><span>
-</span><span id="line-177"></span><span id="local-6989586621679072085"><span class="annot"><a href="Text.Gigaparsec.Combinator.html#decide"><span class="hs-identifier hs-type">decide</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Maybe</span></span><span> </span><span class="annot"><a href="#local-6989586621679072085"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="hs-comment">-- ^ the parser @p@ to parse and extract the result from.</span></span><span>
-</span><span id="line-178"></span><span>       </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679072085"><span class="hs-identifier hs-type">a</span></a></span></span><span>         </span><span class="annot"><span class="hs-comment">-- ^ a parser that tries to extract the result from @p@.</span></span><span>
+</span><span id="line-177"></span><span id="local-6989586621679072090"><span class="annot"><a href="Text.Gigaparsec.Combinator.html#decide"><span class="hs-identifier hs-type">decide</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Maybe</span></span><span> </span><span class="annot"><a href="#local-6989586621679072090"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="hs-comment">-- ^ the parser @p@ to parse and extract the result from.</span></span><span>
+</span><span id="line-178"></span><span>       </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679072090"><span class="hs-identifier hs-type">a</span></a></span></span><span>         </span><span class="annot"><span class="hs-comment">-- ^ a parser that tries to extract the result from @p@.</span></span><span>
 </span><span id="line-179"></span><span id="decide"><span class="annot"><span class="annottext">decide :: forall a. Parsec (Maybe a) -&gt; Parsec a
-</span><a href="Text.Gigaparsec.Combinator.html#decide"><span class="hs-identifier hs-var hs-var">decide</span></a></span></span><span> </span><span id="local-6989586621679072234"><span class="annot"><span class="annottext">Parsec (Maybe a)
-</span><a href="#local-6989586621679072234"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Parsec (Maybe a)
-</span><a href="#local-6989586621679072234"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Parsec (Maybe a) -&gt; (Maybe a -&gt; Parsec a) -&gt; Parsec a
+</span><a href="Text.Gigaparsec.Combinator.html#decide"><span class="hs-identifier hs-var hs-var">decide</span></a></span></span><span> </span><span id="local-6989586621679072239"><span class="annot"><span class="annottext">Parsec (Maybe a)
+</span><a href="#local-6989586621679072239"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Parsec (Maybe a)
+</span><a href="#local-6989586621679072239"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Parsec (Maybe a) -&gt; (Maybe a -&gt; Parsec a) -&gt; Parsec a
 forall a b. Parsec a -&gt; (a -&gt; Parsec b) -&gt; Parsec b
 forall (m :: * -&gt; *) a b. Monad m =&gt; m a -&gt; (a -&gt; m b) -&gt; m b
 </span><span class="hs-operator hs-var">&gt;&gt;=</span></span><span> </span><span class="annot"><span class="annottext">Parsec a -&gt; (a -&gt; Parsec a) -&gt; Maybe a -&gt; Parsec a
@@ -247,13 +247,13 @@ fromMaybe q (option p) = p &lt;|&gt; q
 
 @since 0.1.0.0
 -}</span></span><span>
-</span><span id="line-194"></span><span id="local-6989586621679072093"><span class="annot"><a href="Text.Gigaparsec.Combinator.html#fromMaybeS"><span class="hs-identifier hs-type">fromMaybeS</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679072093"><span class="hs-identifier hs-type">a</span></a></span><span>         </span><span class="annot"><span class="hs-comment">-- ^ a parser to execute when @p@ returns @Nothing@, to provide a value of type @a@.</span></span><span>
-</span><span id="line-195"></span><span>           </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Maybe</span></span><span> </span><span class="annot"><a href="#local-6989586621679072093"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="hs-comment">-- ^ the first parser @p@, which returns an @Maybe@ to eliminate.</span></span><span>
-</span><span id="line-196"></span><span>           </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679072093"><span class="hs-identifier hs-type">a</span></a></span></span><span>         </span><span class="annot"><span class="hs-comment">-- ^ a parser that either just parses @p@ or both @p@ and @q@ in order to return an @a@.</span></span><span>
+</span><span id="line-194"></span><span id="local-6989586621679072098"><span class="annot"><a href="Text.Gigaparsec.Combinator.html#fromMaybeS"><span class="hs-identifier hs-type">fromMaybeS</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679072098"><span class="hs-identifier hs-type">a</span></a></span><span>         </span><span class="annot"><span class="hs-comment">-- ^ a parser to execute when @p@ returns @Nothing@, to provide a value of type @a@.</span></span><span>
+</span><span id="line-195"></span><span>           </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Maybe</span></span><span> </span><span class="annot"><a href="#local-6989586621679072098"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="hs-comment">-- ^ the first parser @p@, which returns an @Maybe@ to eliminate.</span></span><span>
+</span><span id="line-196"></span><span>           </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679072098"><span class="hs-identifier hs-type">a</span></a></span></span><span>         </span><span class="annot"><span class="hs-comment">-- ^ a parser that either just parses @p@ or both @p@ and @q@ in order to return an @a@.</span></span><span>
 </span><span id="line-197"></span><span id="fromMaybeS"><span class="annot"><span class="annottext">fromMaybeS :: forall a. Parsec a -&gt; Parsec (Maybe a) -&gt; Parsec a
-</span><a href="Text.Gigaparsec.Combinator.html#fromMaybeS"><span class="hs-identifier hs-var hs-var">fromMaybeS</span></a></span></span><span> </span><span id="local-6989586621679072240"><span class="annot"><span class="annottext">Parsec a
-</span><a href="#local-6989586621679072240"><span class="hs-identifier hs-var">q</span></a></span></span><span> </span><span id="local-6989586621679072241"><span class="annot"><span class="annottext">Parsec (Maybe a)
-</span><a href="#local-6989586621679072241"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Parsec (Either () a) -&gt; Parsec (() -&gt; a) -&gt; Parsec a
+</span><a href="Text.Gigaparsec.Combinator.html#fromMaybeS"><span class="hs-identifier hs-var hs-var">fromMaybeS</span></a></span></span><span> </span><span id="local-6989586621679072245"><span class="annot"><span class="annottext">Parsec a
+</span><a href="#local-6989586621679072245"><span class="hs-identifier hs-var">q</span></a></span></span><span> </span><span id="local-6989586621679072246"><span class="annot"><span class="annottext">Parsec (Maybe a)
+</span><a href="#local-6989586621679072246"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Parsec (Either () a) -&gt; Parsec (() -&gt; a) -&gt; Parsec a
 forall a b. Parsec (Either a b) -&gt; Parsec (a -&gt; b) -&gt; Parsec b
 forall (f :: * -&gt; *) a b.
 Selective f =&gt;
@@ -268,12 +268,12 @@ forall a b. b -&gt; Either a b
 -&gt; Parsec (Maybe a) -&gt; Parsec (Either () a)
 forall (f :: * -&gt; *) a b. Functor f =&gt; (a -&gt; b) -&gt; f a -&gt; f b
 </span><span class="hs-operator hs-var">&lt;$&gt;</span></span><span> </span><span class="annot"><span class="annottext">Parsec (Maybe a)
-</span><a href="#local-6989586621679072241"><span class="hs-identifier hs-var">p</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">a -&gt; () -&gt; a
+</span><a href="#local-6989586621679072246"><span class="hs-identifier hs-var">p</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">a -&gt; () -&gt; a
 forall a b. a -&gt; b -&gt; a
 </span><span class="hs-identifier hs-var">const</span></span><span> </span><span class="annot"><span class="annottext">(a -&gt; () -&gt; a) -&gt; Parsec a -&gt; Parsec (() -&gt; a)
 forall (f :: * -&gt; *) a b. Functor f =&gt; (a -&gt; b) -&gt; f a -&gt; f b
 </span><span class="hs-operator hs-var">&lt;$&gt;</span></span><span> </span><span class="annot"><span class="annottext">Parsec a
-</span><a href="#local-6989586621679072240"><span class="hs-identifier hs-var">q</span></a></span><span class="hs-special">)</span><span>
+</span><a href="#local-6989586621679072245"><span class="hs-identifier hs-var">q</span></a></span><span class="hs-special">)</span><span>
 </span><span id="line-198"></span><span>
 </span><span id="line-199"></span><span class="annot"><span class="hs-comment">{-|
 This combinator repeatedly parses a given parser __@n@__ or more times, collecting the results into a list.
@@ -299,37 +299,37 @@ Failure ..
 
 @since 0.1.0.0
 -}</span></span><span>
-</span><span id="line-223"></span><span id="local-6989586621679072103"><span class="annot"><a href="Text.Gigaparsec.Combinator.html#manyN"><span class="hs-identifier hs-type">manyN</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Int</span></span><span>        </span><span class="annot"><span class="hs-comment">-- ^ the minimum number of @p@s required, @n@.</span></span><span>
-</span><span id="line-224"></span><span>      </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679072103"><span class="hs-identifier hs-type">a</span></a></span><span>   </span><span class="annot"><span class="hs-comment">-- ^ the parser @p@ to execute multiple times.</span></span><span>
-</span><span id="line-225"></span><span>      </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="hs-special">[</span><span class="annot"><a href="#local-6989586621679072103"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">]</span></span><span> </span><span class="annot"><span class="hs-comment">-- ^ a parser that parses @p@ until it fails, returning the list of all the successful results.</span></span><span>
+</span><span id="line-223"></span><span id="local-6989586621679072108"><span class="annot"><a href="Text.Gigaparsec.Combinator.html#manyN"><span class="hs-identifier hs-type">manyN</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Int</span></span><span>        </span><span class="annot"><span class="hs-comment">-- ^ the minimum number of @p@s required, @n@.</span></span><span>
+</span><span id="line-224"></span><span>      </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679072108"><span class="hs-identifier hs-type">a</span></a></span><span>   </span><span class="annot"><span class="hs-comment">-- ^ the parser @p@ to execute multiple times.</span></span><span>
+</span><span id="line-225"></span><span>      </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="hs-special">[</span><span class="annot"><a href="#local-6989586621679072108"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">]</span></span><span> </span><span class="annot"><span class="hs-comment">-- ^ a parser that parses @p@ until it fails, returning the list of all the successful results.</span></span><span>
 </span><span id="line-226"></span><span id="manyN"><span class="annot"><span class="annottext">manyN :: forall a. Int -&gt; Parsec a -&gt; Parsec [a]
 </span><a href="Text.Gigaparsec.Combinator.html#manyN"><span class="hs-identifier hs-var hs-var">manyN</span></a></span></span><span> </span><span class="annot"><span class="annottext">Int
-</span><span class="hs-number">0</span></span><span> </span><span id="local-6989586621679072253"><span class="annot"><span class="annottext">Parsec a
-</span><a href="#local-6989586621679072253"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Parsec a -&gt; Parsec [a]
+</span><span class="hs-number">0</span></span><span> </span><span id="local-6989586621679072258"><span class="annot"><span class="annottext">Parsec a
+</span><a href="#local-6989586621679072258"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Parsec a -&gt; Parsec [a]
 forall a. Parsec a -&gt; Parsec [a]
 forall (f :: * -&gt; *) a. Alternative f =&gt; f a -&gt; f [a]
 </span><span class="hs-identifier hs-var">many</span></span><span> </span><span class="annot"><span class="annottext">Parsec a
-</span><a href="#local-6989586621679072253"><span class="hs-identifier hs-var">p</span></a></span><span>
+</span><a href="#local-6989586621679072258"><span class="hs-identifier hs-var">p</span></a></span><span>
 </span><span id="line-227"></span><span class="annot"><a href="Text.Gigaparsec.Combinator.html#manyN"><span class="hs-identifier hs-var">manyN</span></a></span><span> </span><span class="annot"><span class="annottext">Int
-</span><span class="hs-number">1</span></span><span> </span><span id="local-6989586621679072254"><span class="annot"><span class="annottext">Parsec a
-</span><a href="#local-6989586621679072254"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Parsec a -&gt; Parsec [a]
+</span><span class="hs-number">1</span></span><span> </span><span id="local-6989586621679072259"><span class="annot"><span class="annottext">Parsec a
+</span><a href="#local-6989586621679072259"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Parsec a -&gt; Parsec [a]
 forall a. Parsec a -&gt; Parsec [a]
 forall (f :: * -&gt; *) a. Alternative f =&gt; f a -&gt; f [a]
 </span><span class="hs-identifier hs-var">some</span></span><span> </span><span class="annot"><span class="annottext">Parsec a
-</span><a href="#local-6989586621679072254"><span class="hs-identifier hs-var">p</span></a></span><span>
-</span><span id="line-228"></span><span class="annot"><a href="Text.Gigaparsec.Combinator.html#manyN"><span class="hs-identifier hs-var">manyN</span></a></span><span> </span><span id="local-6989586621679072255"><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679072255"><span class="hs-identifier hs-var">n</span></a></span></span><span> </span><span id="local-6989586621679072256"><span class="annot"><span class="annottext">Parsec a
-</span><a href="#local-6989586621679072256"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Parsec a
-</span><a href="#local-6989586621679072256"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Parsec a -&gt; Parsec [a] -&gt; Parsec [a]
+</span><a href="#local-6989586621679072259"><span class="hs-identifier hs-var">p</span></a></span><span>
+</span><span id="line-228"></span><span class="annot"><a href="Text.Gigaparsec.Combinator.html#manyN"><span class="hs-identifier hs-var">manyN</span></a></span><span> </span><span id="local-6989586621679072260"><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679072260"><span class="hs-identifier hs-var">n</span></a></span></span><span> </span><span id="local-6989586621679072261"><span class="annot"><span class="annottext">Parsec a
+</span><a href="#local-6989586621679072261"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Parsec a
+</span><a href="#local-6989586621679072261"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Parsec a -&gt; Parsec [a] -&gt; Parsec [a]
 forall a. Parsec a -&gt; Parsec [a] -&gt; Parsec [a]
 </span><a href="Text.Gigaparsec.html#%3C%3A%3E"><span class="hs-operator hs-var">&lt;:&gt;</span></a></span><span> </span><span class="annot"><span class="annottext">Int -&gt; Parsec a -&gt; Parsec [a]
 forall a. Int -&gt; Parsec a -&gt; Parsec [a]
 </span><a href="Text.Gigaparsec.Combinator.html#manyN"><span class="hs-identifier hs-var">manyN</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679072255"><span class="hs-identifier hs-var">n</span></a></span><span> </span><span class="annot"><span class="annottext">Int -&gt; Int -&gt; Int
+</span><a href="#local-6989586621679072260"><span class="hs-identifier hs-var">n</span></a></span><span> </span><span class="annot"><span class="annottext">Int -&gt; Int -&gt; Int
 forall a. Num a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-glyph hs-var">-</span></span><span> </span><span class="annot"><span class="annottext">Int
 </span><span class="hs-number">1</span></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">Parsec a
-</span><a href="#local-6989586621679072256"><span class="hs-identifier hs-var">p</span></a></span><span>
+</span><a href="#local-6989586621679072261"><span class="hs-identifier hs-var">p</span></a></span><span>
 </span><span id="line-229"></span><span>
 </span><span id="line-230"></span><span class="annot"><span class="hs-comment">{-|
 This combinator repeatedly parses a given parser __zero__ or more times, ignoring the results.
@@ -351,22 +351,22 @@ Failure ..
 
 @since 0.1.0.0
 -}</span></span><span>
-</span><span id="line-250"></span><span id="local-6989586621679072257"><span class="annot"><a href="Text.Gigaparsec.Combinator.html#skipMany"><span class="hs-identifier hs-type">skipMany</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679072257"><span class="hs-identifier hs-type">a</span></a></span><span>  </span><span class="annot"><span class="hs-comment">-- ^ the parser @p@ to execute multiple times.</span></span><span>
+</span><span id="line-250"></span><span id="local-6989586621679072262"><span class="annot"><a href="Text.Gigaparsec.Combinator.html#skipMany"><span class="hs-identifier hs-type">skipMany</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679072262"><span class="hs-identifier hs-type">a</span></a></span><span>  </span><span class="annot"><span class="hs-comment">-- ^ the parser @p@ to execute multiple times.</span></span><span>
 </span><span id="line-251"></span><span>         </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span></span><span> </span><span class="annot"><span class="hs-comment">-- ^ a parser that parses @p@ until it fails, returning unit.</span></span><span>
 </span><span id="line-252"></span><span id="skipMany"><span class="annot"><span class="annottext">skipMany :: forall a. Parsec a -&gt; Parsec ()
-</span><a href="Text.Gigaparsec.Combinator.html#skipMany"><span class="hs-identifier hs-var hs-var">skipMany</span></a></span></span><span> </span><span id="local-6989586621679072258"><span class="annot"><span class="annottext">Parsec a
-</span><a href="#local-6989586621679072258"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621679072261"><span class="annot"><span class="annottext">go :: Parsec ()
-</span><a href="#local-6989586621679072261"><span class="hs-identifier hs-var hs-var">go</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Parsec a
-</span><a href="#local-6989586621679072258"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Parsec a -&gt; Parsec () -&gt; Parsec ()
+</span><a href="Text.Gigaparsec.Combinator.html#skipMany"><span class="hs-identifier hs-var hs-var">skipMany</span></a></span></span><span> </span><span id="local-6989586621679072263"><span class="annot"><span class="annottext">Parsec a
+</span><a href="#local-6989586621679072263"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621679072266"><span class="annot"><span class="annottext">go :: Parsec ()
+</span><a href="#local-6989586621679072266"><span class="hs-identifier hs-var hs-var">go</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Parsec a
+</span><a href="#local-6989586621679072263"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Parsec a -&gt; Parsec () -&gt; Parsec ()
 forall a b. Parsec a -&gt; Parsec b -&gt; Parsec b
 forall (f :: * -&gt; *) a b. Applicative f =&gt; f a -&gt; f b -&gt; f b
 </span><span class="hs-operator hs-var">*&gt;</span></span><span> </span><span class="annot"><span class="annottext">Parsec ()
-</span><a href="#local-6989586621679072261"><span class="hs-identifier hs-var">go</span></a></span><span> </span><span class="annot"><span class="annottext">Parsec () -&gt; Parsec () -&gt; Parsec ()
+</span><a href="#local-6989586621679072266"><span class="hs-identifier hs-var">go</span></a></span><span> </span><span class="annot"><span class="annottext">Parsec () -&gt; Parsec () -&gt; Parsec ()
 forall a. Parsec a -&gt; Parsec a -&gt; Parsec a
 forall (f :: * -&gt; *) a. Alternative f =&gt; f a -&gt; f a -&gt; f a
 </span><span class="hs-operator hs-var">&lt;|&gt;</span></span><span> </span><span class="annot"><span class="annottext">Parsec ()
 </span><a href="Text.Gigaparsec.html#unit"><span class="hs-keyword hs-var">unit</span></a></span><span> </span><span class="hs-keyword">in</span><span> </span><span class="annot"><span class="annottext">Parsec ()
-</span><a href="#local-6989586621679072261"><span class="hs-identifier hs-var">go</span></a></span><span>
+</span><a href="#local-6989586621679072266"><span class="hs-identifier hs-var">go</span></a></span><span>
 </span><span id="line-253"></span><span>
 </span><span id="line-254"></span><span class="annot"><span class="hs-comment">{-|
 This combinator repeatedly parses a given parser __one__ or more times, ignoring the results.
@@ -388,18 +388,18 @@ Failure ..
 
 @since 0.1.0.0
 -}</span></span><span>
-</span><span id="line-274"></span><span id="local-6989586621679072262"><span class="annot"><a href="Text.Gigaparsec.Combinator.html#skipSome"><span class="hs-identifier hs-type">skipSome</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679072262"><span class="hs-identifier hs-type">a</span></a></span><span>  </span><span class="annot"><span class="hs-comment">-- ^ @p@, the parser to execute multiple times.</span></span><span>
+</span><span id="line-274"></span><span id="local-6989586621679072267"><span class="annot"><a href="Text.Gigaparsec.Combinator.html#skipSome"><span class="hs-identifier hs-type">skipSome</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679072267"><span class="hs-identifier hs-type">a</span></a></span><span>  </span><span class="annot"><span class="hs-comment">-- ^ @p@, the parser to execute multiple times.</span></span><span>
 </span><span id="line-275"></span><span>         </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span></span><span> </span><span class="annot"><span class="hs-comment">-- ^ a parser that parses @p@ until it fails, returning unit.</span></span><span>
 </span><span id="line-276"></span><span id="skipSome"><span class="annot"><span class="annottext">skipSome :: forall a. Parsec a -&gt; Parsec ()
-</span><a href="Text.Gigaparsec.Combinator.html#skipSome"><span class="hs-identifier hs-var hs-var">skipSome</span></a></span></span><span> </span><span id="local-6989586621679072264"><span class="annot"><span class="annottext">Parsec a
-</span><a href="#local-6989586621679072264"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Parsec a
-</span><a href="#local-6989586621679072264"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Parsec a -&gt; Parsec () -&gt; Parsec ()
+</span><a href="Text.Gigaparsec.Combinator.html#skipSome"><span class="hs-identifier hs-var hs-var">skipSome</span></a></span></span><span> </span><span id="local-6989586621679072269"><span class="annot"><span class="annottext">Parsec a
+</span><a href="#local-6989586621679072269"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Parsec a
+</span><a href="#local-6989586621679072269"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Parsec a -&gt; Parsec () -&gt; Parsec ()
 forall a b. Parsec a -&gt; Parsec b -&gt; Parsec b
 forall (f :: * -&gt; *) a b. Applicative f =&gt; f a -&gt; f b -&gt; f b
 </span><span class="hs-operator hs-var">*&gt;</span></span><span> </span><span class="annot"><span class="annottext">Parsec a -&gt; Parsec ()
 forall a. Parsec a -&gt; Parsec ()
 </span><a href="Text.Gigaparsec.Combinator.html#skipMany"><span class="hs-identifier hs-var">skipMany</span></a></span><span> </span><span class="annot"><span class="annottext">Parsec a
-</span><a href="#local-6989586621679072264"><span class="hs-identifier hs-var">p</span></a></span><span>
+</span><a href="#local-6989586621679072269"><span class="hs-identifier hs-var">p</span></a></span><span>
 </span><span id="line-277"></span><span>
 </span><span id="line-278"></span><span class="annot"><span class="hs-comment">{-|
 This combinator repeatedly parses a given parser __@n@__ or more times, ignoring the results.
@@ -421,36 +421,36 @@ Failure ..
 
 @since 0.1.0.0
 -}</span></span><span>
-</span><span id="line-298"></span><span id="local-6989586621679072112"><span class="annot"><a href="Text.Gigaparsec.Combinator.html#skipManyN"><span class="hs-identifier hs-type">skipManyN</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Int</span></span><span>       </span><span class="annot"><span class="hs-comment">-- ^ @n@, the minimum number of times to execute.</span></span><span>
-</span><span id="line-299"></span><span>          </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679072112"><span class="hs-identifier hs-type">a</span></a></span><span>  </span><span class="annot"><span class="hs-comment">-- ^ @p@, the parser to execute multiple times.</span></span><span>
+</span><span id="line-298"></span><span id="local-6989586621679072117"><span class="annot"><a href="Text.Gigaparsec.Combinator.html#skipManyN"><span class="hs-identifier hs-type">skipManyN</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Int</span></span><span>       </span><span class="annot"><span class="hs-comment">-- ^ @n@, the minimum number of times to execute.</span></span><span>
+</span><span id="line-299"></span><span>          </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679072117"><span class="hs-identifier hs-type">a</span></a></span><span>  </span><span class="annot"><span class="hs-comment">-- ^ @p@, the parser to execute multiple times.</span></span><span>
 </span><span id="line-300"></span><span>          </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span></span><span> </span><span class="annot"><span class="hs-comment">-- ^ a parser that parses @p@ until it fails, returning unit.</span></span><span>
 </span><span id="line-301"></span><span id="skipManyN"><span class="annot"><span class="annottext">skipManyN :: forall a. Int -&gt; Parsec a -&gt; Parsec ()
 </span><a href="Text.Gigaparsec.Combinator.html#skipManyN"><span class="hs-identifier hs-var hs-var">skipManyN</span></a></span></span><span> </span><span class="annot"><span class="annottext">Int
-</span><span class="hs-number">0</span></span><span> </span><span id="local-6989586621679072272"><span class="annot"><span class="annottext">Parsec a
-</span><a href="#local-6989586621679072272"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Parsec a -&gt; Parsec ()
+</span><span class="hs-number">0</span></span><span> </span><span id="local-6989586621679072277"><span class="annot"><span class="annottext">Parsec a
+</span><a href="#local-6989586621679072277"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Parsec a -&gt; Parsec ()
 forall a. Parsec a -&gt; Parsec ()
 </span><a href="Text.Gigaparsec.Combinator.html#skipMany"><span class="hs-identifier hs-var">skipMany</span></a></span><span> </span><span class="annot"><span class="annottext">Parsec a
-</span><a href="#local-6989586621679072272"><span class="hs-identifier hs-var">p</span></a></span><span>
+</span><a href="#local-6989586621679072277"><span class="hs-identifier hs-var">p</span></a></span><span>
 </span><span id="line-302"></span><span class="annot"><a href="Text.Gigaparsec.Combinator.html#skipManyN"><span class="hs-identifier hs-var">skipManyN</span></a></span><span> </span><span class="annot"><span class="annottext">Int
-</span><span class="hs-number">1</span></span><span> </span><span id="local-6989586621679072273"><span class="annot"><span class="annottext">Parsec a
-</span><a href="#local-6989586621679072273"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Parsec a -&gt; Parsec ()
+</span><span class="hs-number">1</span></span><span> </span><span id="local-6989586621679072278"><span class="annot"><span class="annottext">Parsec a
+</span><a href="#local-6989586621679072278"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Parsec a -&gt; Parsec ()
 forall a. Parsec a -&gt; Parsec ()
 </span><a href="Text.Gigaparsec.Combinator.html#skipSome"><span class="hs-identifier hs-var">skipSome</span></a></span><span> </span><span class="annot"><span class="annottext">Parsec a
-</span><a href="#local-6989586621679072273"><span class="hs-identifier hs-var">p</span></a></span><span>
-</span><span id="line-303"></span><span class="annot"><a href="Text.Gigaparsec.Combinator.html#skipManyN"><span class="hs-identifier hs-var">skipManyN</span></a></span><span> </span><span id="local-6989586621679072274"><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679072274"><span class="hs-identifier hs-var">n</span></a></span></span><span> </span><span id="local-6989586621679072275"><span class="annot"><span class="annottext">Parsec a
-</span><a href="#local-6989586621679072275"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Parsec a
-</span><a href="#local-6989586621679072275"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Parsec a -&gt; Parsec () -&gt; Parsec ()
+</span><a href="#local-6989586621679072278"><span class="hs-identifier hs-var">p</span></a></span><span>
+</span><span id="line-303"></span><span class="annot"><a href="Text.Gigaparsec.Combinator.html#skipManyN"><span class="hs-identifier hs-var">skipManyN</span></a></span><span> </span><span id="local-6989586621679072279"><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679072279"><span class="hs-identifier hs-var">n</span></a></span></span><span> </span><span id="local-6989586621679072280"><span class="annot"><span class="annottext">Parsec a
+</span><a href="#local-6989586621679072280"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Parsec a
+</span><a href="#local-6989586621679072280"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Parsec a -&gt; Parsec () -&gt; Parsec ()
 forall a b. Parsec a -&gt; Parsec b -&gt; Parsec b
 forall (f :: * -&gt; *) a b. Applicative f =&gt; f a -&gt; f b -&gt; f b
 </span><span class="hs-operator hs-var">*&gt;</span></span><span> </span><span class="annot"><span class="annottext">Int -&gt; Parsec a -&gt; Parsec ()
 forall a. Int -&gt; Parsec a -&gt; Parsec ()
 </span><a href="Text.Gigaparsec.Combinator.html#skipManyN"><span class="hs-identifier hs-var">skipManyN</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679072274"><span class="hs-identifier hs-var">n</span></a></span><span> </span><span class="annot"><span class="annottext">Int -&gt; Int -&gt; Int
+</span><a href="#local-6989586621679072279"><span class="hs-identifier hs-var">n</span></a></span><span> </span><span class="annot"><span class="annottext">Int -&gt; Int -&gt; Int
 forall a. Num a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-glyph hs-var">-</span></span><span> </span><span class="annot"><span class="annottext">Int
 </span><span class="hs-number">1</span></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">Parsec a
-</span><a href="#local-6989586621679072275"><span class="hs-identifier hs-var">p</span></a></span><span>
+</span><a href="#local-6989586621679072280"><span class="hs-identifier hs-var">p</span></a></span><span>
 </span><span id="line-304"></span><span>
 </span><span id="line-305"></span><span class="annot"><span class="hs-comment">{-|
 This combinator repeatedly parses a given parser __zero__ or more times, returning how many times it succeeded.
@@ -472,7 +472,7 @@ Failure ..
 
 @since 0.1.0.0
 -}</span></span><span>
-</span><span id="line-325"></span><span id="local-6989586621679072114"><span class="annot"><a href="Text.Gigaparsec.Combinator.html#count"><span class="hs-identifier hs-type">count</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679072114"><span class="hs-identifier hs-type">a</span></a></span><span>   </span><span class="annot"><span class="hs-comment">-- ^ @p@, the parser to execute multiple times.</span></span><span>
+</span><span id="line-325"></span><span id="local-6989586621679072119"><span class="annot"><a href="Text.Gigaparsec.Combinator.html#count"><span class="hs-identifier hs-type">count</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679072119"><span class="hs-identifier hs-type">a</span></a></span><span>   </span><span class="annot"><span class="hs-comment">-- ^ @p@, the parser to execute multiple times.</span></span><span>
 </span><span id="line-326"></span><span>      </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Int</span></span></span><span> </span><span class="annot"><span class="hs-comment">-- ^ the number of times @p@ successfully parses</span></span><span>
 </span><span id="line-327"></span><span id="count"><span class="annot"><span class="annottext">count :: forall a. Parsec a -&gt; Parsec Int
 </span><a href="Text.Gigaparsec.Combinator.html#count"><span class="hs-identifier hs-var hs-var">count</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">(Int -&gt; a -&gt; Int) -&gt; Int -&gt; Parsec a -&gt; Parsec Int
@@ -507,7 +507,7 @@ Failure ..
 
 @since 0.1.0.0
 -}</span></span><span>
-</span><span id="line-349"></span><span id="local-6989586621679072281"><span class="annot"><a href="Text.Gigaparsec.Combinator.html#count1"><span class="hs-identifier hs-type">count1</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679072281"><span class="hs-identifier hs-type">a</span></a></span><span>   </span><span class="annot"><span class="hs-comment">-- ^ @p@, the parser to execute multiple times.</span></span><span>
+</span><span id="line-349"></span><span id="local-6989586621679072286"><span class="annot"><a href="Text.Gigaparsec.Combinator.html#count1"><span class="hs-identifier hs-type">count1</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679072286"><span class="hs-identifier hs-type">a</span></a></span><span>   </span><span class="annot"><span class="hs-comment">-- ^ @p@, the parser to execute multiple times.</span></span><span>
 </span><span id="line-350"></span><span>       </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Int</span></span></span><span> </span><span class="annot"><span class="hs-comment">-- ^ the number of times @p@ successfully parses</span></span><span>
 </span><span id="line-351"></span><span id="count1"><span class="annot"><span class="annottext">count1 :: forall a. Parsec a -&gt; Parsec Int
 </span><a href="Text.Gigaparsec.Combinator.html#count1"><span class="hs-identifier hs-var hs-var">count1</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">(Int -&gt; a -&gt; Int) -&gt; Int -&gt; Parsec a -&gt; Parsec Int
@@ -541,17 +541,17 @@ Failure ..
 
 @since 0.1.0.0
 -}</span></span><span>
-</span><span id="line-372"></span><span id="local-6989586621679072122"><span id="local-6989586621679072123"><span class="annot"><a href="Text.Gigaparsec.Combinator.html#sepBy"><span class="hs-identifier hs-type">sepBy</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679072122"><span class="hs-identifier hs-type">a</span></a></span><span>   </span><span class="annot"><span class="hs-comment">-- ^ @p@, the parser whose results are collected into a list.</span></span><span>
-</span><span id="line-373"></span><span>      </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679072123"><span class="hs-identifier hs-type">sep</span></a></span><span> </span><span class="annot"><span class="hs-comment">-- ^ @sep@, the delimiter that must be parsed between every @p@.</span></span><span>
-</span><span id="line-374"></span><span>      </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="hs-special">[</span><span class="annot"><a href="#local-6989586621679072122"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">]</span></span></span><span> </span><span class="annot"><span class="hs-comment">-- ^ a parser that parses @p@ delimited by @sep@, returning the list of @p@'s results.</span></span><span>
+</span><span id="line-372"></span><span id="local-6989586621679072127"><span id="local-6989586621679072128"><span class="annot"><a href="Text.Gigaparsec.Combinator.html#sepBy"><span class="hs-identifier hs-type">sepBy</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679072127"><span class="hs-identifier hs-type">a</span></a></span><span>   </span><span class="annot"><span class="hs-comment">-- ^ @p@, the parser whose results are collected into a list.</span></span><span>
+</span><span id="line-373"></span><span>      </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679072128"><span class="hs-identifier hs-type">sep</span></a></span><span> </span><span class="annot"><span class="hs-comment">-- ^ @sep@, the delimiter that must be parsed between every @p@.</span></span><span>
+</span><span id="line-374"></span><span>      </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="hs-special">[</span><span class="annot"><a href="#local-6989586621679072127"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">]</span></span></span><span> </span><span class="annot"><span class="hs-comment">-- ^ a parser that parses @p@ delimited by @sep@, returning the list of @p@'s results.</span></span><span>
 </span><span id="line-375"></span><span id="sepBy"><span class="annot"><span class="annottext">sepBy :: forall a sep. Parsec a -&gt; Parsec sep -&gt; Parsec [a]
-</span><a href="Text.Gigaparsec.Combinator.html#sepBy"><span class="hs-identifier hs-var hs-var">sepBy</span></a></span></span><span> </span><span id="local-6989586621679072287"><span class="annot"><span class="annottext">Parsec a
-</span><a href="#local-6989586621679072287"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span id="local-6989586621679072288"><span class="annot"><span class="annottext">Parsec sep
-</span><a href="#local-6989586621679072288"><span class="hs-identifier hs-var">sep</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Parsec a -&gt; Parsec sep -&gt; Parsec [a]
+</span><a href="Text.Gigaparsec.Combinator.html#sepBy"><span class="hs-identifier hs-var hs-var">sepBy</span></a></span></span><span> </span><span id="local-6989586621679072292"><span class="annot"><span class="annottext">Parsec a
+</span><a href="#local-6989586621679072292"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span id="local-6989586621679072293"><span class="annot"><span class="annottext">Parsec sep
+</span><a href="#local-6989586621679072293"><span class="hs-identifier hs-var">sep</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Parsec a -&gt; Parsec sep -&gt; Parsec [a]
 forall a sep. Parsec a -&gt; Parsec sep -&gt; Parsec [a]
 </span><a href="Text.Gigaparsec.Combinator.html#sepBy1"><span class="hs-identifier hs-var">sepBy1</span></a></span><span> </span><span class="annot"><span class="annottext">Parsec a
-</span><a href="#local-6989586621679072287"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Parsec sep
-</span><a href="#local-6989586621679072288"><span class="hs-identifier hs-var">sep</span></a></span><span> </span><span class="annot"><span class="annottext">Parsec [a] -&gt; Parsec [a] -&gt; Parsec [a]
+</span><a href="#local-6989586621679072292"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Parsec sep
+</span><a href="#local-6989586621679072293"><span class="hs-identifier hs-var">sep</span></a></span><span> </span><span class="annot"><span class="annottext">Parsec [a] -&gt; Parsec [a] -&gt; Parsec [a]
 forall a. Parsec a -&gt; Parsec a -&gt; Parsec a
 forall (f :: * -&gt; *) a. Alternative f =&gt; f a -&gt; f a -&gt; f a
 </span><span class="hs-operator hs-var">&lt;|&gt;</span></span><span> </span><span class="annot"><span class="annottext">[a] -&gt; Parsec [a]
@@ -581,24 +581,24 @@ Failure ..
 
 @since 0.1.0.0
 -}</span></span><span>
-</span><span id="line-399"></span><span id="local-6989586621679072289"><span id="local-6989586621679072290"><span class="annot"><a href="Text.Gigaparsec.Combinator.html#sepBy1"><span class="hs-identifier hs-type">sepBy1</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679072289"><span class="hs-identifier hs-type">a</span></a></span><span>   </span><span class="annot"><span class="hs-comment">-- ^ @p@, the parser whose results are collected into a list.</span></span><span>
-</span><span id="line-400"></span><span>       </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679072290"><span class="hs-identifier hs-type">sep</span></a></span><span> </span><span class="annot"><span class="hs-comment">-- ^ @sep@, the delimiter that must be parsed between every @p@.</span></span><span>
-</span><span id="line-401"></span><span>       </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="hs-special">[</span><span class="annot"><a href="#local-6989586621679072289"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">]</span></span></span><span> </span><span class="annot"><span class="hs-comment">-- ^ a parser that parses @p@ delimited by @sep@, returning the list of @p@'s results.</span></span><span>
+</span><span id="line-399"></span><span id="local-6989586621679072294"><span id="local-6989586621679072295"><span class="annot"><a href="Text.Gigaparsec.Combinator.html#sepBy1"><span class="hs-identifier hs-type">sepBy1</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679072294"><span class="hs-identifier hs-type">a</span></a></span><span>   </span><span class="annot"><span class="hs-comment">-- ^ @p@, the parser whose results are collected into a list.</span></span><span>
+</span><span id="line-400"></span><span>       </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679072295"><span class="hs-identifier hs-type">sep</span></a></span><span> </span><span class="annot"><span class="hs-comment">-- ^ @sep@, the delimiter that must be parsed between every @p@.</span></span><span>
+</span><span id="line-401"></span><span>       </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="hs-special">[</span><span class="annot"><a href="#local-6989586621679072294"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">]</span></span></span><span> </span><span class="annot"><span class="hs-comment">-- ^ a parser that parses @p@ delimited by @sep@, returning the list of @p@'s results.</span></span><span>
 </span><span id="line-402"></span><span id="sepBy1"><span class="annot"><span class="annottext">sepBy1 :: forall a sep. Parsec a -&gt; Parsec sep -&gt; Parsec [a]
-</span><a href="Text.Gigaparsec.Combinator.html#sepBy1"><span class="hs-identifier hs-var hs-var">sepBy1</span></a></span></span><span> </span><span id="local-6989586621679072293"><span class="annot"><span class="annottext">Parsec a
-</span><a href="#local-6989586621679072293"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span id="local-6989586621679072294"><span class="annot"><span class="annottext">Parsec sep
-</span><a href="#local-6989586621679072294"><span class="hs-identifier hs-var">sep</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Parsec a
-</span><a href="#local-6989586621679072293"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Parsec a -&gt; Parsec [a] -&gt; Parsec [a]
+</span><a href="Text.Gigaparsec.Combinator.html#sepBy1"><span class="hs-identifier hs-var hs-var">sepBy1</span></a></span></span><span> </span><span id="local-6989586621679072298"><span class="annot"><span class="annottext">Parsec a
+</span><a href="#local-6989586621679072298"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span id="local-6989586621679072299"><span class="annot"><span class="annottext">Parsec sep
+</span><a href="#local-6989586621679072299"><span class="hs-identifier hs-var">sep</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Parsec a
+</span><a href="#local-6989586621679072298"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Parsec a -&gt; Parsec [a] -&gt; Parsec [a]
 forall a. Parsec a -&gt; Parsec [a] -&gt; Parsec [a]
 </span><a href="Text.Gigaparsec.html#%3C%3A%3E"><span class="hs-operator hs-var">&lt;:&gt;</span></a></span><span> </span><span class="annot"><span class="annottext">Parsec a -&gt; Parsec [a]
 forall a. Parsec a -&gt; Parsec [a]
 forall (f :: * -&gt; *) a. Alternative f =&gt; f a -&gt; f [a]
 </span><span class="hs-identifier hs-var">many</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Parsec sep
-</span><a href="#local-6989586621679072294"><span class="hs-identifier hs-var">sep</span></a></span><span> </span><span class="annot"><span class="annottext">Parsec sep -&gt; Parsec a -&gt; Parsec a
+</span><a href="#local-6989586621679072299"><span class="hs-identifier hs-var">sep</span></a></span><span> </span><span class="annot"><span class="annottext">Parsec sep -&gt; Parsec a -&gt; Parsec a
 forall a b. Parsec a -&gt; Parsec b -&gt; Parsec b
 forall (f :: * -&gt; *) a b. Applicative f =&gt; f a -&gt; f b -&gt; f b
 </span><span class="hs-operator hs-var">*&gt;</span></span><span> </span><span class="annot"><span class="annottext">Parsec a
-</span><a href="#local-6989586621679072293"><span class="hs-identifier hs-var">p</span></a></span><span class="hs-special">)</span><span>
+</span><a href="#local-6989586621679072298"><span class="hs-identifier hs-var">p</span></a></span><span class="hs-special">)</span><span>
 </span><span id="line-403"></span><span>
 </span><span id="line-404"></span><span class="annot"><span class="hs-comment">{-|
 This combinator parses __zero__ or more occurrences of @p@, separated and optionally ended by @sep@.
@@ -619,17 +619,17 @@ Success [1, 2]
 
 @since 0.1.0.0
 -}</span></span><span>
-</span><span id="line-423"></span><span id="local-6989586621679072295"><span id="local-6989586621679072296"><span class="annot"><a href="Text.Gigaparsec.Combinator.html#sepEndBy"><span class="hs-identifier hs-type">sepEndBy</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679072295"><span class="hs-identifier hs-type">a</span></a></span><span>   </span><span class="annot"><span class="hs-comment">-- ^ @p@, the parser whose results are collected into a list.</span></span><span>
-</span><span id="line-424"></span><span>         </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679072296"><span class="hs-identifier hs-type">sep</span></a></span><span> </span><span class="annot"><span class="hs-comment">-- ^ @sep@, the delimiter that must be parsed between every @p@.</span></span><span>
-</span><span id="line-425"></span><span>         </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="hs-special">[</span><span class="annot"><a href="#local-6989586621679072295"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">]</span></span></span><span> </span><span class="annot"><span class="hs-comment">-- ^ a parser that parses @p@ delimited by @sep@, returning the list of @p@'s results.</span></span><span>
+</span><span id="line-423"></span><span id="local-6989586621679072300"><span id="local-6989586621679072301"><span class="annot"><a href="Text.Gigaparsec.Combinator.html#sepEndBy"><span class="hs-identifier hs-type">sepEndBy</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679072300"><span class="hs-identifier hs-type">a</span></a></span><span>   </span><span class="annot"><span class="hs-comment">-- ^ @p@, the parser whose results are collected into a list.</span></span><span>
+</span><span id="line-424"></span><span>         </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679072301"><span class="hs-identifier hs-type">sep</span></a></span><span> </span><span class="annot"><span class="hs-comment">-- ^ @sep@, the delimiter that must be parsed between every @p@.</span></span><span>
+</span><span id="line-425"></span><span>         </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="hs-special">[</span><span class="annot"><a href="#local-6989586621679072300"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">]</span></span></span><span> </span><span class="annot"><span class="hs-comment">-- ^ a parser that parses @p@ delimited by @sep@, returning the list of @p@'s results.</span></span><span>
 </span><span id="line-426"></span><span id="sepEndBy"><span class="annot"><span class="annottext">sepEndBy :: forall a sep. Parsec a -&gt; Parsec sep -&gt; Parsec [a]
-</span><a href="Text.Gigaparsec.Combinator.html#sepEndBy"><span class="hs-identifier hs-var hs-var">sepEndBy</span></a></span></span><span> </span><span id="local-6989586621679072299"><span class="annot"><span class="annottext">Parsec a
-</span><a href="#local-6989586621679072299"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span id="local-6989586621679072300"><span class="annot"><span class="annottext">Parsec sep
-</span><a href="#local-6989586621679072300"><span class="hs-identifier hs-var">sep</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Parsec a -&gt; Parsec sep -&gt; Parsec [a]
+</span><a href="Text.Gigaparsec.Combinator.html#sepEndBy"><span class="hs-identifier hs-var hs-var">sepEndBy</span></a></span></span><span> </span><span id="local-6989586621679072304"><span class="annot"><span class="annottext">Parsec a
+</span><a href="#local-6989586621679072304"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span id="local-6989586621679072305"><span class="annot"><span class="annottext">Parsec sep
+</span><a href="#local-6989586621679072305"><span class="hs-identifier hs-var">sep</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Parsec a -&gt; Parsec sep -&gt; Parsec [a]
 forall a sep. Parsec a -&gt; Parsec sep -&gt; Parsec [a]
 </span><a href="Text.Gigaparsec.Combinator.html#sepEndBy1"><span class="hs-identifier hs-var">sepEndBy1</span></a></span><span> </span><span class="annot"><span class="annottext">Parsec a
-</span><a href="#local-6989586621679072299"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Parsec sep
-</span><a href="#local-6989586621679072300"><span class="hs-identifier hs-var">sep</span></a></span><span> </span><span class="annot"><span class="annottext">Parsec [a] -&gt; Parsec [a] -&gt; Parsec [a]
+</span><a href="#local-6989586621679072304"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Parsec sep
+</span><a href="#local-6989586621679072305"><span class="hs-identifier hs-var">sep</span></a></span><span> </span><span class="annot"><span class="annottext">Parsec [a] -&gt; Parsec [a] -&gt; Parsec [a]
 forall a. Parsec a -&gt; Parsec a -&gt; Parsec a
 forall (f :: * -&gt; *) a. Alternative f =&gt; f a -&gt; f a -&gt; f a
 </span><span class="hs-operator hs-var">&lt;|&gt;</span></span><span> </span><span class="annot"><span class="annottext">[a] -&gt; Parsec [a]
@@ -659,22 +659,22 @@ Success [1, 2]
 
 @since 0.1.0.0
 -}</span></span><span>
-</span><span id="line-450"></span><span id="local-6989586621679072301"><span id="local-6989586621679072302"><span class="annot"><a href="Text.Gigaparsec.Combinator.html#sepEndBy1"><span class="hs-identifier hs-type">sepEndBy1</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679072301"><span class="hs-identifier hs-type">a</span></a></span><span>   </span><span class="annot"><span class="hs-comment">-- ^ @p@, the parser whose results are collected into a list.</span></span><span>
-</span><span id="line-451"></span><span>          </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679072302"><span class="hs-identifier hs-type">sep</span></a></span><span> </span><span class="annot"><span class="hs-comment">-- ^ @sep@, the delimiter that must be parsed between every @p@.</span></span><span>
-</span><span id="line-452"></span><span>          </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="hs-special">[</span><span class="annot"><a href="#local-6989586621679072301"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">]</span></span></span><span> </span><span class="annot"><span class="hs-comment">-- ^ a parser that parses @p@ delimited by @sep@, returning the list of @p@'s results.</span></span><span>
+</span><span id="line-450"></span><span id="local-6989586621679072306"><span id="local-6989586621679072307"><span class="annot"><a href="Text.Gigaparsec.Combinator.html#sepEndBy1"><span class="hs-identifier hs-type">sepEndBy1</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679072306"><span class="hs-identifier hs-type">a</span></a></span><span>   </span><span class="annot"><span class="hs-comment">-- ^ @p@, the parser whose results are collected into a list.</span></span><span>
+</span><span id="line-451"></span><span>          </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679072307"><span class="hs-identifier hs-type">sep</span></a></span><span> </span><span class="annot"><span class="hs-comment">-- ^ @sep@, the delimiter that must be parsed between every @p@.</span></span><span>
+</span><span id="line-452"></span><span>          </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="hs-special">[</span><span class="annot"><a href="#local-6989586621679072306"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">]</span></span></span><span> </span><span class="annot"><span class="hs-comment">-- ^ a parser that parses @p@ delimited by @sep@, returning the list of @p@'s results.</span></span><span>
 </span><span id="line-453"></span><span id="sepEndBy1"><span class="annot"><span class="annottext">sepEndBy1 :: forall a sep. Parsec a -&gt; Parsec sep -&gt; Parsec [a]
-</span><a href="Text.Gigaparsec.Combinator.html#sepEndBy1"><span class="hs-identifier hs-var hs-var">sepEndBy1</span></a></span></span><span> </span><span id="local-6989586621679072303"><span class="annot"><span class="annottext">Parsec a
-</span><a href="#local-6989586621679072303"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span id="local-6989586621679072304"><span class="annot"><span class="annottext">Parsec sep
-</span><a href="#local-6989586621679072304"><span class="hs-identifier hs-var">sep</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621679072310"><span class="annot"><span class="annottext">seb1 :: Parsec [a]
-</span><a href="#local-6989586621679072310"><span class="hs-identifier hs-var hs-var">seb1</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Parsec a
-</span><a href="#local-6989586621679072303"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Parsec a -&gt; Parsec [a] -&gt; Parsec [a]
+</span><a href="Text.Gigaparsec.Combinator.html#sepEndBy1"><span class="hs-identifier hs-var hs-var">sepEndBy1</span></a></span></span><span> </span><span id="local-6989586621679072308"><span class="annot"><span class="annottext">Parsec a
+</span><a href="#local-6989586621679072308"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span id="local-6989586621679072309"><span class="annot"><span class="annottext">Parsec sep
+</span><a href="#local-6989586621679072309"><span class="hs-identifier hs-var">sep</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621679072315"><span class="annot"><span class="annottext">seb1 :: Parsec [a]
+</span><a href="#local-6989586621679072315"><span class="hs-identifier hs-var hs-var">seb1</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Parsec a
+</span><a href="#local-6989586621679072308"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Parsec a -&gt; Parsec [a] -&gt; Parsec [a]
 forall a. Parsec a -&gt; Parsec [a] -&gt; Parsec [a]
 </span><a href="Text.Gigaparsec.html#%3C%3A%3E"><span class="hs-operator hs-var">&lt;:&gt;</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Parsec sep
-</span><a href="#local-6989586621679072304"><span class="hs-identifier hs-var">sep</span></a></span><span> </span><span class="annot"><span class="annottext">Parsec sep -&gt; Parsec [a] -&gt; Parsec [a]
+</span><a href="#local-6989586621679072309"><span class="hs-identifier hs-var">sep</span></a></span><span> </span><span class="annot"><span class="annottext">Parsec sep -&gt; Parsec [a] -&gt; Parsec [a]
 forall a b. Parsec a -&gt; Parsec b -&gt; Parsec b
 forall (f :: * -&gt; *) a b. Applicative f =&gt; f a -&gt; f b -&gt; f b
 </span><span class="hs-operator hs-var">*&gt;</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Parsec [a]
-</span><a href="#local-6989586621679072310"><span class="hs-identifier hs-var">seb1</span></a></span><span> </span><span class="annot"><span class="annottext">Parsec [a] -&gt; Parsec [a] -&gt; Parsec [a]
+</span><a href="#local-6989586621679072315"><span class="hs-identifier hs-var">seb1</span></a></span><span> </span><span class="annot"><span class="annottext">Parsec [a] -&gt; Parsec [a] -&gt; Parsec [a]
 forall a. Parsec a -&gt; Parsec a -&gt; Parsec a
 forall (f :: * -&gt; *) a. Alternative f =&gt; f a -&gt; f a -&gt; f a
 </span><span class="hs-operator hs-var">&lt;|&gt;</span></span><span> </span><span class="annot"><span class="annottext">[a] -&gt; Parsec [a]
@@ -687,7 +687,7 @@ forall (f :: * -&gt; *) a. Alternative f =&gt; f a -&gt; f a -&gt; f a
 forall a. a -&gt; Parsec a
 forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
 </span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="hs-special">[</span><span class="hs-special">]</span><span class="hs-special">)</span><span> </span><span class="hs-keyword">in</span><span> </span><span class="annot"><span class="annottext">Parsec [a]
-</span><a href="#local-6989586621679072310"><span class="hs-identifier hs-var">seb1</span></a></span><span>
+</span><a href="#local-6989586621679072315"><span class="hs-identifier hs-var">seb1</span></a></span><span>
 </span><span id="line-454"></span><span>
 </span><span id="line-455"></span><span class="annot"><span class="hs-comment">{-|
 This combinator parses __zero__ or more occurrences of @p@, separated and ended by @sep@.
@@ -708,17 +708,17 @@ Success [1, 2]
 
 @since 0.1.0.0
 -}</span></span><span>
-</span><span id="line-474"></span><span id="local-6989586621679072311"><span id="local-6989586621679072312"><span class="annot"><a href="Text.Gigaparsec.Combinator.html#endBy"><span class="hs-identifier hs-type">endBy</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679072311"><span class="hs-identifier hs-type">a</span></a></span><span>   </span><span class="annot"><span class="hs-comment">-- ^ @p@, the parser whose results are collected into a list.</span></span><span>
-</span><span id="line-475"></span><span>      </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679072312"><span class="hs-identifier hs-type">sep</span></a></span><span> </span><span class="annot"><span class="hs-comment">-- ^ @sep@, the delimiter that must be parsed between every @p@.</span></span><span>
-</span><span id="line-476"></span><span>      </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="hs-special">[</span><span class="annot"><a href="#local-6989586621679072311"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">]</span></span></span><span> </span><span class="annot"><span class="hs-comment">-- ^ a parser that parses @p@ delimited by @sep@, returning the list of @p@'s results.</span></span><span>
+</span><span id="line-474"></span><span id="local-6989586621679072316"><span id="local-6989586621679072317"><span class="annot"><a href="Text.Gigaparsec.Combinator.html#endBy"><span class="hs-identifier hs-type">endBy</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679072316"><span class="hs-identifier hs-type">a</span></a></span><span>   </span><span class="annot"><span class="hs-comment">-- ^ @p@, the parser whose results are collected into a list.</span></span><span>
+</span><span id="line-475"></span><span>      </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679072317"><span class="hs-identifier hs-type">sep</span></a></span><span> </span><span class="annot"><span class="hs-comment">-- ^ @sep@, the delimiter that must be parsed between every @p@.</span></span><span>
+</span><span id="line-476"></span><span>      </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="hs-special">[</span><span class="annot"><a href="#local-6989586621679072316"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">]</span></span></span><span> </span><span class="annot"><span class="hs-comment">-- ^ a parser that parses @p@ delimited by @sep@, returning the list of @p@'s results.</span></span><span>
 </span><span id="line-477"></span><span id="endBy"><span class="annot"><span class="annottext">endBy :: forall a sep. Parsec a -&gt; Parsec sep -&gt; Parsec [a]
-</span><a href="Text.Gigaparsec.Combinator.html#endBy"><span class="hs-identifier hs-var hs-var">endBy</span></a></span></span><span> </span><span id="local-6989586621679072315"><span class="annot"><span class="annottext">Parsec a
-</span><a href="#local-6989586621679072315"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span id="local-6989586621679072316"><span class="annot"><span class="annottext">Parsec sep
-</span><a href="#local-6989586621679072316"><span class="hs-identifier hs-var">sep</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Parsec a -&gt; Parsec sep -&gt; Parsec [a]
+</span><a href="Text.Gigaparsec.Combinator.html#endBy"><span class="hs-identifier hs-var hs-var">endBy</span></a></span></span><span> </span><span id="local-6989586621679072320"><span class="annot"><span class="annottext">Parsec a
+</span><a href="#local-6989586621679072320"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span id="local-6989586621679072321"><span class="annot"><span class="annottext">Parsec sep
+</span><a href="#local-6989586621679072321"><span class="hs-identifier hs-var">sep</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Parsec a -&gt; Parsec sep -&gt; Parsec [a]
 forall a sep. Parsec a -&gt; Parsec sep -&gt; Parsec [a]
 </span><a href="Text.Gigaparsec.Combinator.html#endBy1"><span class="hs-identifier hs-var">endBy1</span></a></span><span> </span><span class="annot"><span class="annottext">Parsec a
-</span><a href="#local-6989586621679072315"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Parsec sep
-</span><a href="#local-6989586621679072316"><span class="hs-identifier hs-var">sep</span></a></span><span> </span><span class="annot"><span class="annottext">Parsec [a] -&gt; Parsec [a] -&gt; Parsec [a]
+</span><a href="#local-6989586621679072320"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Parsec sep
+</span><a href="#local-6989586621679072321"><span class="hs-identifier hs-var">sep</span></a></span><span> </span><span class="annot"><span class="annottext">Parsec [a] -&gt; Parsec [a] -&gt; Parsec [a]
 forall a. Parsec a -&gt; Parsec a -&gt; Parsec a
 forall (f :: * -&gt; *) a. Alternative f =&gt; f a -&gt; f a -&gt; f a
 </span><span class="hs-operator hs-var">&lt;|&gt;</span></span><span> </span><span class="annot"><span class="annottext">[a] -&gt; Parsec [a]
@@ -747,21 +747,21 @@ Success [1, 2]
 
 @since 0.1.0.0
 -}</span></span><span>
-</span><span id="line-500"></span><span id="local-6989586621679072317"><span id="local-6989586621679072318"><span class="annot"><a href="Text.Gigaparsec.Combinator.html#endBy1"><span class="hs-identifier hs-type">endBy1</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679072317"><span class="hs-identifier hs-type">a</span></a></span><span>   </span><span class="annot"><span class="hs-comment">-- ^ @p@, the parser whose results are collected into a list.</span></span><span>
-</span><span id="line-501"></span><span>       </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679072318"><span class="hs-identifier hs-type">sep</span></a></span><span> </span><span class="annot"><span class="hs-comment">-- ^ @sep@, the delimiter that must be parsed between every @p@.</span></span><span>
-</span><span id="line-502"></span><span>       </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="hs-special">[</span><span class="annot"><a href="#local-6989586621679072317"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">]</span></span></span><span> </span><span class="annot"><span class="hs-comment">-- ^ a parser that parses @p@ delimited by @sep@, returning the list of @p@'s results.</span></span><span>
+</span><span id="line-500"></span><span id="local-6989586621679072322"><span id="local-6989586621679072323"><span class="annot"><a href="Text.Gigaparsec.Combinator.html#endBy1"><span class="hs-identifier hs-type">endBy1</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679072322"><span class="hs-identifier hs-type">a</span></a></span><span>   </span><span class="annot"><span class="hs-comment">-- ^ @p@, the parser whose results are collected into a list.</span></span><span>
+</span><span id="line-501"></span><span>       </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679072323"><span class="hs-identifier hs-type">sep</span></a></span><span> </span><span class="annot"><span class="hs-comment">-- ^ @sep@, the delimiter that must be parsed between every @p@.</span></span><span>
+</span><span id="line-502"></span><span>       </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="hs-special">[</span><span class="annot"><a href="#local-6989586621679072322"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">]</span></span></span><span> </span><span class="annot"><span class="hs-comment">-- ^ a parser that parses @p@ delimited by @sep@, returning the list of @p@'s results.</span></span><span>
 </span><span id="line-503"></span><span id="endBy1"><span class="annot"><span class="annottext">endBy1 :: forall a sep. Parsec a -&gt; Parsec sep -&gt; Parsec [a]
-</span><a href="Text.Gigaparsec.Combinator.html#endBy1"><span class="hs-identifier hs-var hs-var">endBy1</span></a></span></span><span> </span><span id="local-6989586621679072321"><span class="annot"><span class="annottext">Parsec a
-</span><a href="#local-6989586621679072321"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span id="local-6989586621679072322"><span class="annot"><span class="annottext">Parsec sep
-</span><a href="#local-6989586621679072322"><span class="hs-identifier hs-var">sep</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Parsec a -&gt; Parsec [a]
+</span><a href="Text.Gigaparsec.Combinator.html#endBy1"><span class="hs-identifier hs-var hs-var">endBy1</span></a></span></span><span> </span><span id="local-6989586621679072326"><span class="annot"><span class="annottext">Parsec a
+</span><a href="#local-6989586621679072326"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span id="local-6989586621679072327"><span class="annot"><span class="annottext">Parsec sep
+</span><a href="#local-6989586621679072327"><span class="hs-identifier hs-var">sep</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Parsec a -&gt; Parsec [a]
 forall a. Parsec a -&gt; Parsec [a]
 forall (f :: * -&gt; *) a. Alternative f =&gt; f a -&gt; f [a]
 </span><span class="hs-identifier hs-var">some</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Parsec a
-</span><a href="#local-6989586621679072321"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Parsec a -&gt; Parsec sep -&gt; Parsec a
+</span><a href="#local-6989586621679072326"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Parsec a -&gt; Parsec sep -&gt; Parsec a
 forall a b. Parsec a -&gt; Parsec b -&gt; Parsec a
 forall (f :: * -&gt; *) a b. Applicative f =&gt; f a -&gt; f b -&gt; f a
 </span><span class="hs-operator hs-var">&lt;*</span></span><span> </span><span class="annot"><span class="annottext">Parsec sep
-</span><a href="#local-6989586621679072322"><span class="hs-identifier hs-var">sep</span></a></span><span class="hs-special">)</span><span>
+</span><a href="#local-6989586621679072327"><span class="hs-identifier hs-var">sep</span></a></span><span class="hs-special">)</span><span>
 </span><span id="line-504"></span><span>
 </span><span id="line-505"></span><span class="annot"><span class="hs-comment">{-|
 This combinator repeatedly parses a given parser __zero__ or more times, until the @end@ parser succeeds, collecting the results into a list.
@@ -783,25 +783,25 @@ Success Nil
 
 @since 0.1.0.0
 -}</span></span><span>
-</span><span id="line-525"></span><span id="local-6989586621679072324"><span id="local-6989586621679072325"><span class="annot"><a href="Text.Gigaparsec.Combinator.html#manyTill"><span class="hs-identifier hs-type">manyTill</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679072324"><span class="hs-identifier hs-type">a</span></a></span><span>   </span><span class="annot"><span class="hs-comment">-- ^ @p@, the parser to execute multiple times.</span></span><span>
-</span><span id="line-526"></span><span>         </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679072325"><span class="hs-identifier hs-type">end</span></a></span><span> </span><span class="annot"><span class="hs-comment">-- ^ @end@, the parser that stops the parsing of @p@.</span></span><span>
-</span><span id="line-527"></span><span>         </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="hs-special">[</span><span class="annot"><a href="#local-6989586621679072324"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">]</span></span></span><span> </span><span class="annot"><span class="hs-comment">-- ^ a parser that parses @p@ until @end@ succeeds, returning the list of all the successful results.</span></span><span>
+</span><span id="line-525"></span><span id="local-6989586621679072329"><span id="local-6989586621679072330"><span class="annot"><a href="Text.Gigaparsec.Combinator.html#manyTill"><span class="hs-identifier hs-type">manyTill</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679072329"><span class="hs-identifier hs-type">a</span></a></span><span>   </span><span class="annot"><span class="hs-comment">-- ^ @p@, the parser to execute multiple times.</span></span><span>
+</span><span id="line-526"></span><span>         </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679072330"><span class="hs-identifier hs-type">end</span></a></span><span> </span><span class="annot"><span class="hs-comment">-- ^ @end@, the parser that stops the parsing of @p@.</span></span><span>
+</span><span id="line-527"></span><span>         </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="hs-special">[</span><span class="annot"><a href="#local-6989586621679072329"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">]</span></span></span><span> </span><span class="annot"><span class="hs-comment">-- ^ a parser that parses @p@ until @end@ succeeds, returning the list of all the successful results.</span></span><span>
 </span><span id="line-528"></span><span id="manyTill"><span class="annot"><span class="annottext">manyTill :: forall a sep. Parsec a -&gt; Parsec sep -&gt; Parsec [a]
-</span><a href="Text.Gigaparsec.Combinator.html#manyTill"><span class="hs-identifier hs-var hs-var">manyTill</span></a></span></span><span> </span><span id="local-6989586621679072326"><span class="annot"><span class="annottext">Parsec a
-</span><a href="#local-6989586621679072326"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span id="local-6989586621679072327"><span class="annot"><span class="annottext">Parsec end
-</span><a href="#local-6989586621679072327"><span class="hs-identifier hs-var">end</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621679072329"><span class="annot"><span class="annottext">go :: Parsec [a]
-</span><a href="#local-6989586621679072329"><span class="hs-identifier hs-var hs-var">go</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Parsec end
-</span><a href="#local-6989586621679072327"><span class="hs-identifier hs-var">end</span></a></span><span> </span><span class="annot"><span class="annottext">Parsec end -&gt; [a] -&gt; Parsec [a]
+</span><a href="Text.Gigaparsec.Combinator.html#manyTill"><span class="hs-identifier hs-var hs-var">manyTill</span></a></span></span><span> </span><span id="local-6989586621679072331"><span class="annot"><span class="annottext">Parsec a
+</span><a href="#local-6989586621679072331"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span id="local-6989586621679072332"><span class="annot"><span class="annottext">Parsec end
+</span><a href="#local-6989586621679072332"><span class="hs-identifier hs-var">end</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621679072334"><span class="annot"><span class="annottext">go :: Parsec [a]
+</span><a href="#local-6989586621679072334"><span class="hs-identifier hs-var hs-var">go</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Parsec end
+</span><a href="#local-6989586621679072332"><span class="hs-identifier hs-var">end</span></a></span><span> </span><span class="annot"><span class="annottext">Parsec end -&gt; [a] -&gt; Parsec [a]
 forall a b. Parsec a -&gt; b -&gt; Parsec b
 </span><a href="Text.Gigaparsec.html#%24%3E"><span class="hs-operator hs-var">$&gt;</span></a></span><span> </span><span class="hs-special">[</span><span class="hs-special">]</span><span> </span><span class="annot"><span class="annottext">Parsec [a] -&gt; Parsec [a] -&gt; Parsec [a]
 forall a. Parsec a -&gt; Parsec a -&gt; Parsec a
 forall (f :: * -&gt; *) a. Alternative f =&gt; f a -&gt; f a -&gt; f a
 </span><span class="hs-operator hs-var">&lt;|&gt;</span></span><span> </span><span class="annot"><span class="annottext">Parsec a
-</span><a href="#local-6989586621679072326"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Parsec a -&gt; Parsec [a] -&gt; Parsec [a]
+</span><a href="#local-6989586621679072331"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Parsec a -&gt; Parsec [a] -&gt; Parsec [a]
 forall a. Parsec a -&gt; Parsec [a] -&gt; Parsec [a]
 </span><a href="Text.Gigaparsec.html#%3C%3A%3E"><span class="hs-operator hs-var">&lt;:&gt;</span></a></span><span> </span><span class="annot"><span class="annottext">Parsec [a]
-</span><a href="#local-6989586621679072329"><span class="hs-identifier hs-var">go</span></a></span><span> </span><span class="hs-keyword">in</span><span> </span><span class="annot"><span class="annottext">Parsec [a]
-</span><a href="#local-6989586621679072329"><span class="hs-identifier hs-var">go</span></a></span><span>
+</span><a href="#local-6989586621679072334"><span class="hs-identifier hs-var">go</span></a></span><span> </span><span class="hs-keyword">in</span><span> </span><span class="annot"><span class="annottext">Parsec [a]
+</span><a href="#local-6989586621679072334"><span class="hs-identifier hs-var">go</span></a></span><span>
 </span><span id="line-529"></span><span>
 </span><span id="line-530"></span><span class="annot"><span class="hs-comment">{-|
 This combinator repeatedly parses a given parser __one__ or more times, until the @end@ parser succeeds, collecting the results into a list.
@@ -826,26 +826,26 @@ Success ['a']
 
 @since 0.1.0.0
 -}</span></span><span>
-</span><span id="line-553"></span><span id="local-6989586621679072330"><span id="local-6989586621679072331"><span class="annot"><a href="Text.Gigaparsec.Combinator.html#someTill"><span class="hs-identifier hs-type">someTill</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679072330"><span class="hs-identifier hs-type">a</span></a></span><span>   </span><span class="annot"><span class="hs-comment">-- ^ @p@, the parser to execute multiple times.</span></span><span>
-</span><span id="line-554"></span><span>         </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679072331"><span class="hs-identifier hs-type">end</span></a></span><span> </span><span class="annot"><span class="hs-comment">-- ^ @end@, the parser that stops the parsing of @p@.</span></span><span>
-</span><span id="line-555"></span><span>         </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="hs-special">[</span><span class="annot"><a href="#local-6989586621679072330"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">]</span></span></span><span> </span><span class="annot"><span class="hs-comment">-- ^ a parser that parses @p@ until @end@ succeeds, returning the list of all the successful results.</span></span><span>
+</span><span id="line-553"></span><span id="local-6989586621679072335"><span id="local-6989586621679072336"><span class="annot"><a href="Text.Gigaparsec.Combinator.html#someTill"><span class="hs-identifier hs-type">someTill</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679072335"><span class="hs-identifier hs-type">a</span></a></span><span>   </span><span class="annot"><span class="hs-comment">-- ^ @p@, the parser to execute multiple times.</span></span><span>
+</span><span id="line-554"></span><span>         </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679072336"><span class="hs-identifier hs-type">end</span></a></span><span> </span><span class="annot"><span class="hs-comment">-- ^ @end@, the parser that stops the parsing of @p@.</span></span><span>
+</span><span id="line-555"></span><span>         </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="hs-special">[</span><span class="annot"><a href="#local-6989586621679072335"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">]</span></span></span><span> </span><span class="annot"><span class="hs-comment">-- ^ a parser that parses @p@ until @end@ succeeds, returning the list of all the successful results.</span></span><span>
 </span><span id="line-556"></span><span id="someTill"><span class="annot"><span class="annottext">someTill :: forall a sep. Parsec a -&gt; Parsec sep -&gt; Parsec [a]
-</span><a href="Text.Gigaparsec.Combinator.html#someTill"><span class="hs-identifier hs-var hs-var">someTill</span></a></span></span><span> </span><span id="local-6989586621679072333"><span class="annot"><span class="annottext">Parsec a
-</span><a href="#local-6989586621679072333"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span id="local-6989586621679072334"><span class="annot"><span class="annottext">Parsec end
-</span><a href="#local-6989586621679072334"><span class="hs-identifier hs-var">end</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Parsec end -&gt; Parsec ()
+</span><a href="Text.Gigaparsec.Combinator.html#someTill"><span class="hs-identifier hs-var hs-var">someTill</span></a></span></span><span> </span><span id="local-6989586621679072338"><span class="annot"><span class="annottext">Parsec a
+</span><a href="#local-6989586621679072338"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span id="local-6989586621679072339"><span class="annot"><span class="annottext">Parsec end
+</span><a href="#local-6989586621679072339"><span class="hs-identifier hs-var">end</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Parsec end -&gt; Parsec ()
 forall a. Parsec a -&gt; Parsec ()
 </span><a href="Text.Gigaparsec.html#notFollowedBy"><span class="hs-identifier hs-var">notFollowedBy</span></a></span><span> </span><span class="annot"><span class="annottext">Parsec end
-</span><a href="#local-6989586621679072334"><span class="hs-identifier hs-var">end</span></a></span><span> </span><span class="annot"><span class="annottext">Parsec () -&gt; Parsec [a] -&gt; Parsec [a]
+</span><a href="#local-6989586621679072339"><span class="hs-identifier hs-var">end</span></a></span><span> </span><span class="annot"><span class="annottext">Parsec () -&gt; Parsec [a] -&gt; Parsec [a]
 forall a b. Parsec a -&gt; Parsec b -&gt; Parsec b
 forall (f :: * -&gt; *) a b. Applicative f =&gt; f a -&gt; f b -&gt; f b
 </span><span class="hs-operator hs-var">*&gt;</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Parsec a
-</span><a href="#local-6989586621679072333"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Parsec a -&gt; Parsec [a] -&gt; Parsec [a]
+</span><a href="#local-6989586621679072338"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Parsec a -&gt; Parsec [a] -&gt; Parsec [a]
 forall a. Parsec a -&gt; Parsec [a] -&gt; Parsec [a]
 </span><a href="Text.Gigaparsec.html#%3C%3A%3E"><span class="hs-operator hs-var">&lt;:&gt;</span></a></span><span> </span><span class="annot"><span class="annottext">Parsec a -&gt; Parsec end -&gt; Parsec [a]
 forall a sep. Parsec a -&gt; Parsec sep -&gt; Parsec [a]
 </span><a href="Text.Gigaparsec.Combinator.html#manyTill"><span class="hs-identifier hs-var">manyTill</span></a></span><span> </span><span class="annot"><span class="annottext">Parsec a
-</span><a href="#local-6989586621679072333"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Parsec end
-</span><a href="#local-6989586621679072334"><span class="hs-identifier hs-var">end</span></a></span><span class="hs-special">)</span><span>
+</span><a href="#local-6989586621679072338"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Parsec end
+</span><a href="#local-6989586621679072339"><span class="hs-identifier hs-var">end</span></a></span><span class="hs-special">)</span><span>
 </span><span id="line-557"></span><span>
 </span><span id="line-558"></span><span class="hs-comment">-- this is ifP</span><span>
 </span><span id="line-559"></span><span class="annot"><span class="hs-comment">{-|
@@ -864,40 +864,40 @@ based on state.
 
 @since 0.1.0.0
 -}</span></span><span>
-</span><span id="line-575"></span><span id="local-6989586621679072142"><span class="annot"><a href="Text.Gigaparsec.Combinator.html#ifS"><span class="hs-identifier hs-type">ifS</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Bool</span></span><span> </span><span class="annot"><span class="hs-comment">-- ^ @condP@, the parser that yields the condition value.</span></span><span>
-</span><span id="line-576"></span><span>    </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679072142"><span class="hs-identifier hs-type">a</span></a></span><span>    </span><span class="annot"><span class="hs-comment">-- ^ @thenP@, the parser to execute if the condition is @true@.</span></span><span>
-</span><span id="line-577"></span><span>    </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679072142"><span class="hs-identifier hs-type">a</span></a></span><span>    </span><span class="annot"><span class="hs-comment">-- ^ @elseP@, the parser to execute if the condition is @false.</span></span><span>
-</span><span id="line-578"></span><span>    </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679072142"><span class="hs-identifier hs-type">a</span></a></span></span><span>    </span><span class="annot"><span class="hs-comment">-- ^ a parser that conditionally parses @thenP@ or @elseP@ after @condP@.</span></span><span>
+</span><span id="line-575"></span><span id="local-6989586621679072147"><span class="annot"><a href="Text.Gigaparsec.Combinator.html#ifS"><span class="hs-identifier hs-type">ifS</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Bool</span></span><span> </span><span class="annot"><span class="hs-comment">-- ^ @condP@, the parser that yields the condition value.</span></span><span>
+</span><span id="line-576"></span><span>    </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679072147"><span class="hs-identifier hs-type">a</span></a></span><span>    </span><span class="annot"><span class="hs-comment">-- ^ @thenP@, the parser to execute if the condition is @true@.</span></span><span>
+</span><span id="line-577"></span><span>    </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679072147"><span class="hs-identifier hs-type">a</span></a></span><span>    </span><span class="annot"><span class="hs-comment">-- ^ @elseP@, the parser to execute if the condition is @false.</span></span><span>
+</span><span id="line-578"></span><span>    </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679072147"><span class="hs-identifier hs-type">a</span></a></span></span><span>    </span><span class="annot"><span class="hs-comment">-- ^ a parser that conditionally parses @thenP@ or @elseP@ after @condP@.</span></span><span>
 </span><span id="line-579"></span><span id="ifS"><span class="annot"><span class="annottext">ifS :: forall a. Parsec Bool -&gt; Parsec a -&gt; Parsec a -&gt; Parsec a
-</span><a href="Text.Gigaparsec.Combinator.html#ifS"><span class="hs-identifier hs-var hs-var">ifS</span></a></span></span><span> </span><span id="local-6989586621679072339"><span class="annot"><span class="annottext">Parsec Bool
-</span><a href="#local-6989586621679072339"><span class="hs-identifier hs-var">cond</span></a></span></span><span> </span><span id="local-6989586621679072340"><span class="annot"><span class="annottext">Parsec a
-</span><a href="#local-6989586621679072340"><span class="hs-identifier hs-var">t</span></a></span></span><span> </span><span id="local-6989586621679072341"><span class="annot"><span class="annottext">Parsec a
-</span><a href="#local-6989586621679072341"><span class="hs-identifier hs-var">e</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Parsec (Either () ())
+</span><a href="Text.Gigaparsec.Combinator.html#ifS"><span class="hs-identifier hs-var hs-var">ifS</span></a></span></span><span> </span><span id="local-6989586621679072344"><span class="annot"><span class="annottext">Parsec Bool
+</span><a href="#local-6989586621679072344"><span class="hs-identifier hs-var">cond</span></a></span></span><span> </span><span id="local-6989586621679072345"><span class="annot"><span class="annottext">Parsec a
+</span><a href="#local-6989586621679072345"><span class="hs-identifier hs-var">t</span></a></span></span><span> </span><span id="local-6989586621679072346"><span class="annot"><span class="annottext">Parsec a
+</span><a href="#local-6989586621679072346"><span class="hs-identifier hs-var">e</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Parsec (Either () ())
 -&gt; Parsec (() -&gt; a) -&gt; Parsec (() -&gt; a) -&gt; Parsec a
 forall (f :: * -&gt; *) a b c.
 Selective f =&gt;
 f (Either a b) -&gt; f (a -&gt; c) -&gt; f (b -&gt; c) -&gt; f c
 </span><span class="hs-identifier hs-var">branch</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Bool -&gt; Either () ()
-</span><a href="#local-6989586621679072342"><span class="hs-identifier hs-var">bool</span></a></span><span> </span><span class="annot"><span class="annottext">(Bool -&gt; Either () ()) -&gt; Parsec Bool -&gt; Parsec (Either () ())
+</span><a href="#local-6989586621679072347"><span class="hs-identifier hs-var">bool</span></a></span><span> </span><span class="annot"><span class="annottext">(Bool -&gt; Either () ()) -&gt; Parsec Bool -&gt; Parsec (Either () ())
 forall (f :: * -&gt; *) a b. Functor f =&gt; (a -&gt; b) -&gt; f a -&gt; f b
 </span><span class="hs-operator hs-var">&lt;$&gt;</span></span><span> </span><span class="annot"><span class="annottext">Parsec Bool
-</span><a href="#local-6989586621679072339"><span class="hs-identifier hs-var">cond</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">a -&gt; () -&gt; a
+</span><a href="#local-6989586621679072344"><span class="hs-identifier hs-var">cond</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">a -&gt; () -&gt; a
 forall a b. a -&gt; b -&gt; a
 </span><span class="hs-identifier hs-var">const</span></span><span> </span><span class="annot"><span class="annottext">(a -&gt; () -&gt; a) -&gt; Parsec a -&gt; Parsec (() -&gt; a)
 forall (f :: * -&gt; *) a b. Functor f =&gt; (a -&gt; b) -&gt; f a -&gt; f b
 </span><span class="hs-operator hs-var">&lt;$&gt;</span></span><span> </span><span class="annot"><span class="annottext">Parsec a
-</span><a href="#local-6989586621679072341"><span class="hs-identifier hs-var">e</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">a -&gt; () -&gt; a
+</span><a href="#local-6989586621679072346"><span class="hs-identifier hs-var">e</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">a -&gt; () -&gt; a
 forall a b. a -&gt; b -&gt; a
 </span><span class="hs-identifier hs-var">const</span></span><span> </span><span class="annot"><span class="annottext">(a -&gt; () -&gt; a) -&gt; Parsec a -&gt; Parsec (() -&gt; a)
 forall (f :: * -&gt; *) a b. Functor f =&gt; (a -&gt; b) -&gt; f a -&gt; f b
 </span><span class="hs-operator hs-var">&lt;$&gt;</span></span><span> </span><span class="annot"><span class="annottext">Parsec a
-</span><a href="#local-6989586621679072340"><span class="hs-identifier hs-var">t</span></a></span><span class="hs-special">)</span><span>
-</span><span id="line-580"></span><span>  </span><span class="hs-keyword">where</span><span> </span><span id="local-6989586621679072342"><span class="annot"><span class="annottext">bool :: Bool -&gt; Either () ()
-</span><a href="#local-6989586621679072342"><span class="hs-identifier hs-var hs-var">bool</span></a></span></span><span> </span><span class="annot"><span class="annottext">Bool
+</span><a href="#local-6989586621679072345"><span class="hs-identifier hs-var">t</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-580"></span><span>  </span><span class="hs-keyword">where</span><span> </span><span id="local-6989586621679072347"><span class="annot"><span class="annottext">bool :: Bool -&gt; Either () ()
+</span><a href="#local-6989586621679072347"><span class="hs-identifier hs-var hs-var">bool</span></a></span></span><span> </span><span class="annot"><span class="annottext">Bool
 </span><span class="hs-identifier hs-var">True</span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">() -&gt; Either () ()
 forall a b. b -&gt; Either a b
 </span><span class="hs-identifier hs-var">Right</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span>
-</span><span id="line-581"></span><span>        </span><span class="annot"><a href="#local-6989586621679072342"><span class="hs-identifier hs-var">bool</span></a></span><span> </span><span class="annot"><span class="annottext">Bool
+</span><span id="line-581"></span><span>        </span><span class="annot"><a href="#local-6989586621679072347"><span class="hs-identifier hs-var">bool</span></a></span><span> </span><span class="annot"><span class="annottext">Bool
 </span><span class="hs-identifier hs-var">False</span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">() -&gt; Either () ()
 forall a b. a -&gt; Either a b
 </span><span class="hs-identifier hs-var">Left</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span>
@@ -923,13 +923,13 @@ based on state.
 </span><span id="line-601"></span><span>      </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span>   </span><span class="annot"><span class="hs-comment">-- ^ @thenP@, the parser to execute if the condition is @true@.</span></span><span>
 </span><span id="line-602"></span><span>      </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span>   </span><span class="annot"><span class="hs-comment">-- ^ a parser that conditionally parses @thenP@ after @condP@.</span></span><span>
 </span><span id="line-603"></span><span id="whenS"><span class="annot"><span class="annottext">whenS :: Parsec Bool -&gt; Parsec () -&gt; Parsec ()
-</span><a href="Text.Gigaparsec.Combinator.html#whenS"><span class="hs-identifier hs-var hs-var">whenS</span></a></span></span><span> </span><span id="local-6989586621679072343"><span class="annot"><span class="annottext">Parsec Bool
-</span><a href="#local-6989586621679072343"><span class="hs-identifier hs-var">cond</span></a></span></span><span> </span><span id="local-6989586621679072344"><span class="annot"><span class="annottext">Parsec ()
-</span><a href="#local-6989586621679072344"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Parsec Bool -&gt; Parsec () -&gt; Parsec () -&gt; Parsec ()
+</span><a href="Text.Gigaparsec.Combinator.html#whenS"><span class="hs-identifier hs-var hs-var">whenS</span></a></span></span><span> </span><span id="local-6989586621679072348"><span class="annot"><span class="annottext">Parsec Bool
+</span><a href="#local-6989586621679072348"><span class="hs-identifier hs-var">cond</span></a></span></span><span> </span><span id="local-6989586621679072349"><span class="annot"><span class="annottext">Parsec ()
+</span><a href="#local-6989586621679072349"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Parsec Bool -&gt; Parsec () -&gt; Parsec () -&gt; Parsec ()
 forall a. Parsec Bool -&gt; Parsec a -&gt; Parsec a -&gt; Parsec a
 </span><a href="Text.Gigaparsec.Combinator.html#ifS"><span class="hs-identifier hs-var">ifS</span></a></span><span> </span><span class="annot"><span class="annottext">Parsec Bool
-</span><a href="#local-6989586621679072343"><span class="hs-identifier hs-var">cond</span></a></span><span> </span><span class="annot"><span class="annottext">Parsec ()
-</span><a href="#local-6989586621679072344"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Parsec ()
+</span><a href="#local-6989586621679072348"><span class="hs-identifier hs-var">cond</span></a></span><span> </span><span class="annot"><span class="annottext">Parsec ()
+</span><a href="#local-6989586621679072349"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Parsec ()
 </span><a href="Text.Gigaparsec.html#unit"><span class="hs-keyword hs-var">unit</span></a></span><span>
 </span><span id="line-604"></span><span>
 </span><span id="line-605"></span><span class="hs-comment">-- this is guard</span><span>
@@ -949,11 +949,11 @@ if @p@ either fails, or returns @false@, @guard p@ will fail.
 </span><span id="line-619"></span><span class="annot"><a href="Text.Gigaparsec.Combinator.html#guardS"><span class="hs-identifier hs-type">guardS</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Bool</span></span><span> </span><span class="annot"><span class="hs-comment">-- ^ @p@, the parser that yields the condition value.</span></span><span>
 </span><span id="line-620"></span><span>       </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span>
 </span><span id="line-621"></span><span id="guardS"><span class="annot"><span class="annottext">guardS :: Parsec Bool -&gt; Parsec ()
-</span><a href="Text.Gigaparsec.Combinator.html#guardS"><span class="hs-identifier hs-var hs-var">guardS</span></a></span></span><span> </span><span id="local-6989586621679072345"><span class="annot"><span class="annottext">Parsec Bool
-</span><a href="#local-6989586621679072345"><span class="hs-identifier hs-var">cond</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Parsec Bool -&gt; Parsec () -&gt; Parsec () -&gt; Parsec ()
+</span><a href="Text.Gigaparsec.Combinator.html#guardS"><span class="hs-identifier hs-var hs-var">guardS</span></a></span></span><span> </span><span id="local-6989586621679072350"><span class="annot"><span class="annottext">Parsec Bool
+</span><a href="#local-6989586621679072350"><span class="hs-identifier hs-var">cond</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Parsec Bool -&gt; Parsec () -&gt; Parsec () -&gt; Parsec ()
 forall a. Parsec Bool -&gt; Parsec a -&gt; Parsec a -&gt; Parsec a
 </span><a href="Text.Gigaparsec.Combinator.html#ifS"><span class="hs-identifier hs-var">ifS</span></a></span><span> </span><span class="annot"><span class="annottext">Parsec Bool
-</span><a href="#local-6989586621679072345"><span class="hs-identifier hs-var">cond</span></a></span><span> </span><span class="annot"><span class="annottext">Parsec ()
+</span><a href="#local-6989586621679072350"><span class="hs-identifier hs-var">cond</span></a></span><span> </span><span class="annot"><span class="annottext">Parsec ()
 </span><a href="Text.Gigaparsec.html#unit"><span class="hs-keyword hs-var">unit</span></a></span><span> </span><span class="annot"><span class="annottext">Parsec ()
 forall a. Parsec a
 forall (f :: * -&gt; *) a. Alternative f =&gt; f a
@@ -975,13 +975,13 @@ based on state. In particular, this can be used to define the @forP@ combinator.
 </span><span id="line-636"></span><span class="annot"><a href="Text.Gigaparsec.Combinator.html#whileS"><span class="hs-identifier hs-type">whileS</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Bool</span></span><span> </span><span class="annot"><span class="hs-comment">-- ^ @p@, the parser to repeatedly parse.</span></span><span>
 </span><span id="line-637"></span><span>       </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span>   </span><span class="annot"><span class="hs-comment">-- ^ a parser that continues to parse @p@ until it returns @false@.</span></span><span>
 </span><span id="line-638"></span><span id="whileS"><span class="annot"><span class="annottext">whileS :: Parsec Bool -&gt; Parsec ()
-</span><a href="Text.Gigaparsec.Combinator.html#whileS"><span class="hs-identifier hs-var hs-var">whileS</span></a></span></span><span> </span><span id="local-6989586621679072346"><span class="annot"><span class="annottext">Parsec Bool
-</span><a href="#local-6989586621679072346"><span class="hs-identifier hs-var">c</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621679072347"><span class="annot"><span class="annottext">go :: Parsec ()
-</span><a href="#local-6989586621679072347"><span class="hs-identifier hs-var hs-var">go</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Parsec Bool -&gt; Parsec () -&gt; Parsec ()
+</span><a href="Text.Gigaparsec.Combinator.html#whileS"><span class="hs-identifier hs-var hs-var">whileS</span></a></span></span><span> </span><span id="local-6989586621679072351"><span class="annot"><span class="annottext">Parsec Bool
+</span><a href="#local-6989586621679072351"><span class="hs-identifier hs-var">c</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621679072352"><span class="annot"><span class="annottext">go :: Parsec ()
+</span><a href="#local-6989586621679072352"><span class="hs-identifier hs-var hs-var">go</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Parsec Bool -&gt; Parsec () -&gt; Parsec ()
 </span><a href="Text.Gigaparsec.Combinator.html#whenS"><span class="hs-identifier hs-var">whenS</span></a></span><span> </span><span class="annot"><span class="annottext">Parsec Bool
-</span><a href="#local-6989586621679072346"><span class="hs-identifier hs-var">c</span></a></span><span> </span><span class="annot"><span class="annottext">Parsec ()
-</span><a href="#local-6989586621679072347"><span class="hs-identifier hs-var">go</span></a></span><span> </span><span class="hs-keyword">in</span><span> </span><span class="annot"><span class="annottext">Parsec ()
-</span><a href="#local-6989586621679072347"><span class="hs-identifier hs-var">go</span></a></span><span>
+</span><a href="#local-6989586621679072351"><span class="hs-identifier hs-var">c</span></a></span><span> </span><span class="annot"><span class="annottext">Parsec ()
+</span><a href="#local-6989586621679072352"><span class="hs-identifier hs-var">go</span></a></span><span> </span><span class="hs-keyword">in</span><span> </span><span class="annot"><span class="annottext">Parsec ()
+</span><a href="#local-6989586621679072352"><span class="hs-identifier hs-var">go</span></a></span><span>
 </span><span id="line-639"></span><span>
 </span><span id="line-640"></span><span class="annot"><span class="hs-comment">{-|
 This combinator parses exactly @n@ occurrences of @p@, returning these @n@ results in a list.
@@ -1001,16 +1001,16 @@ Success ['a', 'b', 'c']
 
 @since 0.1.0.0
 -}</span></span><span>
-</span><span id="line-658"></span><span id="local-6989586621679072348"><span class="annot"><a href="Text.Gigaparsec.Combinator.html#exactly"><span class="hs-identifier hs-type">exactly</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Int</span></span><span>        </span><span class="annot"><span class="hs-comment">-- ^ @n@, the number of times to repeat @p@.</span></span><span>
-</span><span id="line-659"></span><span>        </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679072348"><span class="hs-identifier hs-type">a</span></a></span><span>   </span><span class="annot"><span class="hs-comment">-- ^ @p@, the parser to repeat.</span></span><span>
-</span><span id="line-660"></span><span>        </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="hs-special">[</span><span class="annot"><a href="#local-6989586621679072348"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">]</span></span><span> </span><span class="annot"><span class="hs-comment">-- ^ a parser that parses @p@ exactly @n@ times, returning a list of the results.</span></span><span>
+</span><span id="line-658"></span><span id="local-6989586621679072353"><span class="annot"><a href="Text.Gigaparsec.Combinator.html#exactly"><span class="hs-identifier hs-type">exactly</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Int</span></span><span>        </span><span class="annot"><span class="hs-comment">-- ^ @n@, the number of times to repeat @p@.</span></span><span>
+</span><span id="line-659"></span><span>        </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679072353"><span class="hs-identifier hs-type">a</span></a></span><span>   </span><span class="annot"><span class="hs-comment">-- ^ @p@, the parser to repeat.</span></span><span>
+</span><span id="line-660"></span><span>        </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="hs-special">[</span><span class="annot"><a href="#local-6989586621679072353"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">]</span></span><span> </span><span class="annot"><span class="hs-comment">-- ^ a parser that parses @p@ exactly @n@ times, returning a list of the results.</span></span><span>
 </span><span id="line-661"></span><span id="exactly"><span class="annot"><span class="annottext">exactly :: forall a. Int -&gt; Parsec a -&gt; Parsec [a]
-</span><a href="Text.Gigaparsec.Combinator.html#exactly"><span class="hs-identifier hs-var hs-var">exactly</span></a></span></span><span> </span><span id="local-6989586621679072349"><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679072349"><span class="hs-identifier hs-var">n</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Int -&gt; Int -&gt; Parsec a -&gt; Parsec [a]
+</span><a href="Text.Gigaparsec.Combinator.html#exactly"><span class="hs-identifier hs-var hs-var">exactly</span></a></span></span><span> </span><span id="local-6989586621679072354"><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679072354"><span class="hs-identifier hs-var">n</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Int -&gt; Int -&gt; Parsec a -&gt; Parsec [a]
 forall a. Int -&gt; Int -&gt; Parsec a -&gt; Parsec [a]
 </span><a href="Text.Gigaparsec.Combinator.html#range"><span class="hs-identifier hs-var">range</span></a></span><span> </span><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679072349"><span class="hs-identifier hs-var">n</span></a></span><span> </span><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679072349"><span class="hs-identifier hs-var">n</span></a></span><span>
+</span><a href="#local-6989586621679072354"><span class="hs-identifier hs-var">n</span></a></span><span> </span><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679072354"><span class="hs-identifier hs-var">n</span></a></span><span>
 </span><span id="line-662"></span><span>
 </span><span id="line-663"></span><span class="annot"><span class="hs-comment">{-|
 This combinator parses between @min@ and @max@ occurrences of @p@, returning these @n@ results in a list.
@@ -1034,51 +1034,51 @@ Success ['a', 'b', 'c', 'd', 'e']
 
 @since 0.1.0.0
 -}</span></span><span>
-</span><span id="line-685"></span><span id="local-6989586621679072149"><span class="annot"><a href="Text.Gigaparsec.Combinator.html#range"><span class="hs-identifier hs-type">range</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Int</span></span><span>        </span><span class="annot"><span class="hs-comment">-- ^ @min@, the minimum number of times to repeat @p@, inclusive.</span></span><span>
+</span><span id="line-685"></span><span id="local-6989586621679072154"><span class="annot"><a href="Text.Gigaparsec.Combinator.html#range"><span class="hs-identifier hs-type">range</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Int</span></span><span>        </span><span class="annot"><span class="hs-comment">-- ^ @min@, the minimum number of times to repeat @p@, inclusive.</span></span><span>
 </span><span id="line-686"></span><span>      </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Int</span></span><span>        </span><span class="annot"><span class="hs-comment">-- ^ @max@, the maximum number of times to repeat @p@, inclusive.</span></span><span>
-</span><span id="line-687"></span><span>      </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679072149"><span class="hs-identifier hs-type">a</span></a></span><span>   </span><span class="annot"><span class="hs-comment">-- ^ @p@, the parser to repeat.</span></span><span>
-</span><span id="line-688"></span><span>      </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="hs-special">[</span><span class="annot"><a href="#local-6989586621679072149"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">]</span></span><span> </span><span class="annot"><span class="hs-comment">-- ^ the results of the successful parses of @p@.</span></span><span>
+</span><span id="line-687"></span><span>      </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679072154"><span class="hs-identifier hs-type">a</span></a></span><span>   </span><span class="annot"><span class="hs-comment">-- ^ @p@, the parser to repeat.</span></span><span>
+</span><span id="line-688"></span><span>      </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="hs-special">[</span><span class="annot"><a href="#local-6989586621679072154"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">]</span></span><span> </span><span class="annot"><span class="hs-comment">-- ^ the results of the successful parses of @p@.</span></span><span>
 </span><span id="line-689"></span><span id="range"><span class="annot"><span class="annottext">range :: forall a. Int -&gt; Int -&gt; Parsec a -&gt; Parsec [a]
-</span><a href="Text.Gigaparsec.Combinator.html#range"><span class="hs-identifier hs-var hs-var">range</span></a></span></span><span> </span><span id="local-6989586621679072359"><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679072359"><span class="hs-identifier hs-var">mn</span></a></span></span><span> </span><span id="local-6989586621679072360"><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679072360"><span class="hs-identifier hs-var">mx</span></a></span></span><span> </span><span id="local-6989586621679072361"><span class="annot"><span class="annottext">Parsec a
-</span><a href="#local-6989586621679072361"><span class="hs-identifier hs-var">p</span></a></span></span><span>
+</span><a href="Text.Gigaparsec.Combinator.html#range"><span class="hs-identifier hs-var hs-var">range</span></a></span></span><span> </span><span id="local-6989586621679072364"><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679072364"><span class="hs-identifier hs-var">mn</span></a></span></span><span> </span><span id="local-6989586621679072365"><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679072365"><span class="hs-identifier hs-var">mx</span></a></span></span><span> </span><span id="local-6989586621679072366"><span class="annot"><span class="annottext">Parsec a
+</span><a href="#local-6989586621679072366"><span class="hs-identifier hs-var">p</span></a></span></span><span>
 </span><span id="line-690"></span><span>  </span><span class="hs-glyph">|</span><span> </span><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679072359"><span class="hs-identifier hs-var">mn</span></a></span><span> </span><span class="annot"><span class="annottext">Int -&gt; Int -&gt; Bool
+</span><a href="#local-6989586621679072364"><span class="hs-identifier hs-var">mn</span></a></span><span> </span><span class="annot"><span class="annottext">Int -&gt; Int -&gt; Bool
 forall a. Ord a =&gt; a -&gt; a -&gt; Bool
 </span><span class="hs-operator hs-var">&lt;</span></span><span> </span><span class="annot"><span class="annottext">Int
 </span><span class="hs-number">0</span></span><span> </span><span class="annot"><span class="annottext">Bool -&gt; Bool -&gt; Bool
 </span><span class="hs-operator hs-var">||</span></span><span> </span><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679072360"><span class="hs-identifier hs-var">mx</span></a></span><span> </span><span class="annot"><span class="annottext">Int -&gt; Int -&gt; Bool
+</span><a href="#local-6989586621679072365"><span class="hs-identifier hs-var">mx</span></a></span><span> </span><span class="annot"><span class="annottext">Int -&gt; Int -&gt; Bool
 forall a. Ord a =&gt; a -&gt; a -&gt; Bool
 </span><span class="hs-operator hs-var">&lt;</span></span><span> </span><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679072359"><span class="hs-identifier hs-var">mn</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">[a] -&gt; Parsec [a]
+</span><a href="#local-6989586621679072364"><span class="hs-identifier hs-var">mn</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">[a] -&gt; Parsec [a]
 forall a. a -&gt; Parsec a
 forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
 </span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="hs-special">[</span><span class="hs-special">]</span><span>
 </span><span id="line-691"></span><span>  </span><span class="hs-glyph">|</span><span> </span><span class="annot"><span class="annottext">Bool
 </span><span class="hs-identifier hs-var">otherwise</span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Int -&gt; Int -&gt; Parsec [a]
 forall {t} {t}. (Eq t, Eq t, Num t, Num t) =&gt; t -&gt; t -&gt; Parsec [a]
-</span><a href="#local-6989586621679072364"><span class="hs-identifier hs-var">go</span></a></span><span> </span><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679072359"><span class="hs-identifier hs-var">mn</span></a></span><span> </span><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679072360"><span class="hs-identifier hs-var">mx</span></a></span><span>
+</span><a href="#local-6989586621679072369"><span class="hs-identifier hs-var">go</span></a></span><span> </span><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679072364"><span class="hs-identifier hs-var">mn</span></a></span><span> </span><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679072365"><span class="hs-identifier hs-var">mx</span></a></span><span>
 </span><span id="line-692"></span><span>  </span><span class="hs-keyword">where</span><span>
-</span><span id="line-693"></span><span>    </span><span id="local-6989586621679072364"><span class="annot"><span class="annottext">go :: t -&gt; t -&gt; Parsec [a]
-</span><a href="#local-6989586621679072364"><span class="hs-identifier hs-var hs-var">go</span></a></span></span><span> </span><span class="annot"><span class="annottext">t
+</span><span id="line-693"></span><span>    </span><span id="local-6989586621679072369"><span class="annot"><span class="annottext">go :: t -&gt; t -&gt; Parsec [a]
+</span><a href="#local-6989586621679072369"><span class="hs-identifier hs-var hs-var">go</span></a></span></span><span> </span><span class="annot"><span class="annottext">t
 </span><span class="hs-number">0</span></span><span> </span><span class="annot"><span class="annottext">t
 </span><span class="hs-number">0</span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">[a] -&gt; Parsec [a]
 forall a. a -&gt; Parsec a
 forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
 </span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="hs-special">[</span><span class="hs-special">]</span><span>
-</span><span id="line-694"></span><span>    </span><span class="annot"><a href="#local-6989586621679072364"><span class="hs-identifier hs-var">go</span></a></span><span> </span><span class="annot"><span class="annottext">t
-</span><span class="hs-number">0</span></span><span> </span><span id="local-6989586621679072385"><span class="annot"><span class="annottext">t
-</span><a href="#local-6989586621679072385"><span class="hs-identifier hs-var">n</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Parsec a
-</span><a href="#local-6989586621679072361"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Parsec a -&gt; Parsec [a] -&gt; Parsec [a]
+</span><span id="line-694"></span><span>    </span><span class="annot"><a href="#local-6989586621679072369"><span class="hs-identifier hs-var">go</span></a></span><span> </span><span class="annot"><span class="annottext">t
+</span><span class="hs-number">0</span></span><span> </span><span id="local-6989586621679072390"><span class="annot"><span class="annottext">t
+</span><a href="#local-6989586621679072390"><span class="hs-identifier hs-var">n</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Parsec a
+</span><a href="#local-6989586621679072366"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Parsec a -&gt; Parsec [a] -&gt; Parsec [a]
 forall a. Parsec a -&gt; Parsec [a] -&gt; Parsec [a]
 </span><a href="Text.Gigaparsec.html#%3C%3A%3E"><span class="hs-operator hs-var">&lt;:&gt;</span></a></span><span> </span><span class="annot"><span class="annottext">t -&gt; t -&gt; Parsec [a]
-</span><a href="#local-6989586621679072364"><span class="hs-identifier hs-var">go</span></a></span><span> </span><span class="annot"><span class="annottext">t
+</span><a href="#local-6989586621679072369"><span class="hs-identifier hs-var">go</span></a></span><span> </span><span class="annot"><span class="annottext">t
 </span><span class="hs-number">0</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">t
-</span><a href="#local-6989586621679072385"><span class="hs-identifier hs-var">n</span></a></span><span> </span><span class="annot"><span class="annottext">t -&gt; t -&gt; t
+</span><a href="#local-6989586621679072390"><span class="hs-identifier hs-var">n</span></a></span><span> </span><span class="annot"><span class="annottext">t -&gt; t -&gt; t
 forall a. Num a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-glyph hs-var">-</span></span><span> </span><span class="annot"><span class="annottext">t
 </span><span class="hs-number">1</span></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">Parsec [a] -&gt; Parsec [a] -&gt; Parsec [a]
@@ -1088,18 +1088,18 @@ forall (f :: * -&gt; *) a. Alternative f =&gt; f a -&gt; f a -&gt; f a
 forall a. a -&gt; Parsec a
 forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
 </span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="hs-special">[</span><span class="hs-special">]</span><span>
-</span><span id="line-695"></span><span>    </span><span class="annot"><a href="#local-6989586621679072364"><span class="hs-identifier hs-var">go</span></a></span><span> </span><span id="local-6989586621679072386"><span class="annot"><span class="annottext">t
-</span><a href="#local-6989586621679072386"><span class="hs-identifier hs-var">m</span></a></span></span><span> </span><span id="local-6989586621679072387"><span class="annot"><span class="annottext">t
-</span><a href="#local-6989586621679072387"><span class="hs-identifier hs-var">n</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Parsec a
-</span><a href="#local-6989586621679072361"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Parsec a -&gt; Parsec [a] -&gt; Parsec [a]
+</span><span id="line-695"></span><span>    </span><span class="annot"><a href="#local-6989586621679072369"><span class="hs-identifier hs-var">go</span></a></span><span> </span><span id="local-6989586621679072391"><span class="annot"><span class="annottext">t
+</span><a href="#local-6989586621679072391"><span class="hs-identifier hs-var">m</span></a></span></span><span> </span><span id="local-6989586621679072392"><span class="annot"><span class="annottext">t
+</span><a href="#local-6989586621679072392"><span class="hs-identifier hs-var">n</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Parsec a
+</span><a href="#local-6989586621679072366"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Parsec a -&gt; Parsec [a] -&gt; Parsec [a]
 forall a. Parsec a -&gt; Parsec [a] -&gt; Parsec [a]
 </span><a href="Text.Gigaparsec.html#%3C%3A%3E"><span class="hs-operator hs-var">&lt;:&gt;</span></a></span><span> </span><span class="annot"><span class="annottext">t -&gt; t -&gt; Parsec [a]
-</span><a href="#local-6989586621679072364"><span class="hs-identifier hs-var">go</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">t
-</span><a href="#local-6989586621679072386"><span class="hs-identifier hs-var">m</span></a></span><span> </span><span class="annot"><span class="annottext">t -&gt; t -&gt; t
+</span><a href="#local-6989586621679072369"><span class="hs-identifier hs-var">go</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">t
+</span><a href="#local-6989586621679072391"><span class="hs-identifier hs-var">m</span></a></span><span> </span><span class="annot"><span class="annottext">t -&gt; t -&gt; t
 forall a. Num a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-glyph hs-var">-</span></span><span> </span><span class="annot"><span class="annottext">t
 </span><span class="hs-number">1</span></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">t
-</span><a href="#local-6989586621679072387"><span class="hs-identifier hs-var">n</span></a></span><span> </span><span class="annot"><span class="annottext">t -&gt; t -&gt; t
+</span><a href="#local-6989586621679072392"><span class="hs-identifier hs-var">n</span></a></span><span> </span><span class="annot"><span class="annottext">t -&gt; t -&gt; t
 forall a. Num a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-glyph hs-var">-</span></span><span> </span><span class="annot"><span class="annottext">t
 </span><span class="hs-number">1</span></span><span class="hs-special">)</span><span>
@@ -1126,66 +1126,66 @@ Success ()
 
 @since 0.1.0.0
 -}</span></span><span>
-</span><span id="line-719"></span><span id="local-6989586621679072154"><span class="annot"><a href="Text.Gigaparsec.Combinator.html#range_"><span class="hs-identifier hs-type">range_</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Int</span></span><span>       </span><span class="annot"><span class="hs-comment">-- ^ @min@, the minimum number of times to repeat @p@, inclusive.</span></span><span>
+</span><span id="line-719"></span><span id="local-6989586621679072159"><span class="annot"><a href="Text.Gigaparsec.Combinator.html#range_"><span class="hs-identifier hs-type">range_</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Int</span></span><span>       </span><span class="annot"><span class="hs-comment">-- ^ @min@, the minimum number of times to repeat @p@, inclusive.</span></span><span>
 </span><span id="line-720"></span><span>       </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Int</span></span><span>       </span><span class="annot"><span class="hs-comment">-- ^ @max@, the maximum number of times to repeat @p@, inclusive.</span></span><span>
-</span><span id="line-721"></span><span>       </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679072154"><span class="hs-identifier hs-type">a</span></a></span><span>  </span><span class="annot"><span class="hs-comment">-- ^ @p@, the parser to repeat.</span></span><span>
+</span><span id="line-721"></span><span>       </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679072159"><span class="hs-identifier hs-type">a</span></a></span><span>  </span><span class="annot"><span class="hs-comment">-- ^ @p@, the parser to repeat.</span></span><span>
 </span><span id="line-722"></span><span>       </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span></span><span>
 </span><span id="line-723"></span><span id="range_"><span class="annot"><span class="annottext">range_ :: forall a. Int -&gt; Int -&gt; Parsec a -&gt; Parsec ()
-</span><a href="Text.Gigaparsec.Combinator.html#range_"><span class="hs-identifier hs-var hs-var">range_</span></a></span></span><span> </span><span id="local-6989586621679072395"><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679072395"><span class="hs-identifier hs-var">mn</span></a></span></span><span> </span><span id="local-6989586621679072396"><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679072396"><span class="hs-identifier hs-var">mx</span></a></span></span><span> </span><span id="local-6989586621679072397"><span class="annot"><span class="annottext">Parsec a
-</span><a href="#local-6989586621679072397"><span class="hs-identifier hs-var">p</span></a></span></span><span>
+</span><a href="Text.Gigaparsec.Combinator.html#range_"><span class="hs-identifier hs-var hs-var">range_</span></a></span></span><span> </span><span id="local-6989586621679072400"><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679072400"><span class="hs-identifier hs-var">mn</span></a></span></span><span> </span><span id="local-6989586621679072401"><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679072401"><span class="hs-identifier hs-var">mx</span></a></span></span><span> </span><span id="local-6989586621679072402"><span class="annot"><span class="annottext">Parsec a
+</span><a href="#local-6989586621679072402"><span class="hs-identifier hs-var">p</span></a></span></span><span>
 </span><span id="line-724"></span><span>  </span><span class="hs-glyph">|</span><span> </span><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679072395"><span class="hs-identifier hs-var">mn</span></a></span><span> </span><span class="annot"><span class="annottext">Int -&gt; Int -&gt; Bool
+</span><a href="#local-6989586621679072400"><span class="hs-identifier hs-var">mn</span></a></span><span> </span><span class="annot"><span class="annottext">Int -&gt; Int -&gt; Bool
 forall a. Ord a =&gt; a -&gt; a -&gt; Bool
 </span><span class="hs-operator hs-var">&lt;</span></span><span> </span><span class="annot"><span class="annottext">Int
 </span><span class="hs-number">0</span></span><span> </span><span class="annot"><span class="annottext">Bool -&gt; Bool -&gt; Bool
 </span><span class="hs-operator hs-var">||</span></span><span> </span><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679072396"><span class="hs-identifier hs-var">mx</span></a></span><span> </span><span class="annot"><span class="annottext">Int -&gt; Int -&gt; Bool
+</span><a href="#local-6989586621679072401"><span class="hs-identifier hs-var">mx</span></a></span><span> </span><span class="annot"><span class="annottext">Int -&gt; Int -&gt; Bool
 forall a. Ord a =&gt; a -&gt; a -&gt; Bool
 </span><span class="hs-operator hs-var">&lt;</span></span><span> </span><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679072395"><span class="hs-identifier hs-var">mn</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Parsec ()
+</span><a href="#local-6989586621679072400"><span class="hs-identifier hs-var">mn</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Parsec ()
 </span><a href="Text.Gigaparsec.html#unit"><span class="hs-keyword hs-var">unit</span></a></span><span>
 </span><span id="line-725"></span><span>  </span><span class="hs-glyph">|</span><span> </span><span class="annot"><span class="annottext">Bool
 </span><span class="hs-identifier hs-var">otherwise</span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Int -&gt; Int -&gt; Parsec ()
 forall {t} {t}. (Eq t, Eq t, Num t, Num t) =&gt; t -&gt; t -&gt; Parsec ()
-</span><a href="#local-6989586621679072398"><span class="hs-identifier hs-var">go</span></a></span><span> </span><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679072395"><span class="hs-identifier hs-var">mn</span></a></span><span> </span><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679072396"><span class="hs-identifier hs-var">mx</span></a></span><span>
+</span><a href="#local-6989586621679072403"><span class="hs-identifier hs-var">go</span></a></span><span> </span><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679072400"><span class="hs-identifier hs-var">mn</span></a></span><span> </span><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679072401"><span class="hs-identifier hs-var">mx</span></a></span><span>
 </span><span id="line-726"></span><span>  </span><span class="hs-keyword">where</span><span>
-</span><span id="line-727"></span><span>    </span><span id="local-6989586621679072398"><span class="annot"><span class="annottext">go :: t -&gt; t -&gt; Parsec ()
-</span><a href="#local-6989586621679072398"><span class="hs-identifier hs-var hs-var">go</span></a></span></span><span> </span><span class="annot"><span class="annottext">t
+</span><span id="line-727"></span><span>    </span><span id="local-6989586621679072403"><span class="annot"><span class="annottext">go :: t -&gt; t -&gt; Parsec ()
+</span><a href="#local-6989586621679072403"><span class="hs-identifier hs-var hs-var">go</span></a></span></span><span> </span><span class="annot"><span class="annottext">t
 </span><span class="hs-number">0</span></span><span> </span><span class="annot"><span class="annottext">t
 </span><span class="hs-number">0</span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Parsec ()
 </span><a href="Text.Gigaparsec.html#unit"><span class="hs-keyword hs-var">unit</span></a></span><span>
-</span><span id="line-728"></span><span>    </span><span class="annot"><a href="#local-6989586621679072398"><span class="hs-identifier hs-var">go</span></a></span><span> </span><span class="annot"><span class="annottext">t
-</span><span class="hs-number">0</span></span><span> </span><span id="local-6989586621679072418"><span class="annot"><span class="annottext">t
-</span><a href="#local-6989586621679072418"><span class="hs-identifier hs-var">n</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Parsec () -&gt; Parsec ()
+</span><span id="line-728"></span><span>    </span><span class="annot"><a href="#local-6989586621679072403"><span class="hs-identifier hs-var">go</span></a></span><span> </span><span class="annot"><span class="annottext">t
+</span><span class="hs-number">0</span></span><span> </span><span id="local-6989586621679072423"><span class="annot"><span class="annottext">t
+</span><a href="#local-6989586621679072423"><span class="hs-identifier hs-var">n</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Parsec () -&gt; Parsec ()
 forall a. Parsec a -&gt; Parsec ()
 </span><a href="Text.Gigaparsec.Combinator.html#optional"><span class="hs-identifier hs-var">optional</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Parsec a
-</span><a href="#local-6989586621679072397"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Parsec a -&gt; Parsec () -&gt; Parsec ()
+</span><a href="#local-6989586621679072402"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Parsec a -&gt; Parsec () -&gt; Parsec ()
 forall a b. Parsec a -&gt; Parsec b -&gt; Parsec b
 forall (f :: * -&gt; *) a b. Applicative f =&gt; f a -&gt; f b -&gt; f b
 </span><span class="hs-operator hs-var">*&gt;</span></span><span> </span><span class="annot"><span class="annottext">t -&gt; t -&gt; Parsec ()
-</span><a href="#local-6989586621679072398"><span class="hs-identifier hs-var">go</span></a></span><span> </span><span class="annot"><span class="annottext">t
+</span><a href="#local-6989586621679072403"><span class="hs-identifier hs-var">go</span></a></span><span> </span><span class="annot"><span class="annottext">t
 </span><span class="hs-number">0</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">t
-</span><a href="#local-6989586621679072418"><span class="hs-identifier hs-var">n</span></a></span><span> </span><span class="annot"><span class="annottext">t -&gt; t -&gt; t
+</span><a href="#local-6989586621679072423"><span class="hs-identifier hs-var">n</span></a></span><span> </span><span class="annot"><span class="annottext">t -&gt; t -&gt; t
 forall a. Num a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-glyph hs-var">-</span></span><span> </span><span class="annot"><span class="annottext">t
 </span><span class="hs-number">1</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
-</span><span id="line-729"></span><span>    </span><span class="annot"><a href="#local-6989586621679072398"><span class="hs-identifier hs-var">go</span></a></span><span> </span><span id="local-6989586621679072419"><span class="annot"><span class="annottext">t
-</span><a href="#local-6989586621679072419"><span class="hs-identifier hs-var">m</span></a></span></span><span> </span><span id="local-6989586621679072420"><span class="annot"><span class="annottext">t
-</span><a href="#local-6989586621679072420"><span class="hs-identifier hs-var">n</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Parsec a
-</span><a href="#local-6989586621679072397"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Parsec a -&gt; Parsec () -&gt; Parsec ()
+</span><span id="line-729"></span><span>    </span><span class="annot"><a href="#local-6989586621679072403"><span class="hs-identifier hs-var">go</span></a></span><span> </span><span id="local-6989586621679072424"><span class="annot"><span class="annottext">t
+</span><a href="#local-6989586621679072424"><span class="hs-identifier hs-var">m</span></a></span></span><span> </span><span id="local-6989586621679072425"><span class="annot"><span class="annottext">t
+</span><a href="#local-6989586621679072425"><span class="hs-identifier hs-var">n</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Parsec a
+</span><a href="#local-6989586621679072402"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Parsec a -&gt; Parsec () -&gt; Parsec ()
 forall a b. Parsec a -&gt; Parsec b -&gt; Parsec b
 forall (f :: * -&gt; *) a b. Applicative f =&gt; f a -&gt; f b -&gt; f b
 </span><span class="hs-operator hs-var">*&gt;</span></span><span> </span><span class="annot"><span class="annottext">t -&gt; t -&gt; Parsec ()
-</span><a href="#local-6989586621679072398"><span class="hs-identifier hs-var">go</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">t
-</span><a href="#local-6989586621679072419"><span class="hs-identifier hs-var">m</span></a></span><span> </span><span class="annot"><span class="annottext">t -&gt; t -&gt; t
+</span><a href="#local-6989586621679072403"><span class="hs-identifier hs-var">go</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">t
+</span><a href="#local-6989586621679072424"><span class="hs-identifier hs-var">m</span></a></span><span> </span><span class="annot"><span class="annottext">t -&gt; t -&gt; t
 forall a. Num a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-glyph hs-var">-</span></span><span> </span><span class="annot"><span class="annottext">t
 </span><span class="hs-number">1</span></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">t
-</span><a href="#local-6989586621679072420"><span class="hs-identifier hs-var">n</span></a></span><span> </span><span class="annot"><span class="annottext">t -&gt; t -&gt; t
+</span><a href="#local-6989586621679072425"><span class="hs-identifier hs-var">n</span></a></span><span> </span><span class="annot"><span class="annottext">t -&gt; t -&gt; t
 forall a. Num a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-glyph hs-var">-</span></span><span> </span><span class="annot"><span class="annottext">t
 </span><span class="hs-number">1</span></span><span class="hs-special">)</span><span>
@@ -1214,25 +1214,25 @@ Success 5
 
 @since 0.1.0.0
 -}</span></span><span>
-</span><span id="line-755"></span><span id="local-6989586621679072158"><span class="annot"><a href="Text.Gigaparsec.Combinator.html#countRange"><span class="hs-identifier hs-type">countRange</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Int</span></span><span>        </span><span class="annot"><span class="hs-comment">-- ^ @min@, the minimum number of times to repeat @p@, inclusive.</span></span><span>
+</span><span id="line-755"></span><span id="local-6989586621679072163"><span class="annot"><a href="Text.Gigaparsec.Combinator.html#countRange"><span class="hs-identifier hs-type">countRange</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Int</span></span><span>        </span><span class="annot"><span class="hs-comment">-- ^ @min@, the minimum number of times to repeat @p@, inclusive.</span></span><span>
 </span><span id="line-756"></span><span>           </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Int</span></span><span>        </span><span class="annot"><span class="hs-comment">-- ^ @max@, the maximum number of times to repeat @p@, inclusive.</span></span><span>
-</span><span id="line-757"></span><span>           </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679072158"><span class="hs-identifier hs-type">a</span></a></span><span>   </span><span class="annot"><span class="hs-comment">-- ^ @p@, the parser to repeat.</span></span><span>
+</span><span id="line-757"></span><span>           </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679072163"><span class="hs-identifier hs-type">a</span></a></span><span>   </span><span class="annot"><span class="hs-comment">-- ^ @p@, the parser to repeat.</span></span><span>
 </span><span id="line-758"></span><span>           </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Int</span></span></span><span> </span><span class="annot"><span class="hs-comment">-- ^ the number of times @p@ parsed successfully.</span></span><span>
 </span><span id="line-759"></span><span id="countRange"><span class="annot"><span class="annottext">countRange :: forall a. Int -&gt; Int -&gt; Parsec a -&gt; Parsec Int
-</span><a href="Text.Gigaparsec.Combinator.html#countRange"><span class="hs-identifier hs-var hs-var">countRange</span></a></span></span><span> </span><span id="local-6989586621679072431"><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679072431"><span class="hs-identifier hs-var">mn</span></a></span></span><span> </span><span id="local-6989586621679072432"><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679072432"><span class="hs-identifier hs-var">mx</span></a></span></span><span> </span><span id="local-6989586621679072433"><span class="annot"><span class="annottext">Parsec a
-</span><a href="#local-6989586621679072433"><span class="hs-identifier hs-var">p</span></a></span></span><span>
+</span><a href="Text.Gigaparsec.Combinator.html#countRange"><span class="hs-identifier hs-var hs-var">countRange</span></a></span></span><span> </span><span id="local-6989586621679072436"><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679072436"><span class="hs-identifier hs-var">mn</span></a></span></span><span> </span><span id="local-6989586621679072437"><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679072437"><span class="hs-identifier hs-var">mx</span></a></span></span><span> </span><span id="local-6989586621679072438"><span class="annot"><span class="annottext">Parsec a
+</span><a href="#local-6989586621679072438"><span class="hs-identifier hs-var">p</span></a></span></span><span>
 </span><span id="line-760"></span><span>  </span><span class="hs-glyph">|</span><span> </span><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679072431"><span class="hs-identifier hs-var">mn</span></a></span><span> </span><span class="annot"><span class="annottext">Int -&gt; Int -&gt; Bool
+</span><a href="#local-6989586621679072436"><span class="hs-identifier hs-var">mn</span></a></span><span> </span><span class="annot"><span class="annottext">Int -&gt; Int -&gt; Bool
 forall a. Ord a =&gt; a -&gt; a -&gt; Bool
 </span><span class="hs-operator hs-var">&lt;</span></span><span> </span><span class="annot"><span class="annottext">Int
 </span><span class="hs-number">0</span></span><span> </span><span class="annot"><span class="annottext">Bool -&gt; Bool -&gt; Bool
 </span><span class="hs-operator hs-var">||</span></span><span> </span><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679072432"><span class="hs-identifier hs-var">mx</span></a></span><span> </span><span class="annot"><span class="annottext">Int -&gt; Int -&gt; Bool
+</span><a href="#local-6989586621679072437"><span class="hs-identifier hs-var">mx</span></a></span><span> </span><span class="annot"><span class="annottext">Int -&gt; Int -&gt; Bool
 forall a. Ord a =&gt; a -&gt; a -&gt; Bool
 </span><span class="hs-operator hs-var">&lt;</span></span><span> </span><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679072431"><span class="hs-identifier hs-var">mn</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Int -&gt; Parsec Int
+</span><a href="#local-6989586621679072436"><span class="hs-identifier hs-var">mn</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Int -&gt; Parsec Int
 forall a. a -&gt; Parsec a
 forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
 </span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">Int
@@ -1242,21 +1242,21 @@ forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
 forall {t} {t} {a}.
 (Eq t, Eq t, Num t, Num t, Num a) =&gt;
 t -&gt; t -&gt; Parsec a
-</span><a href="#local-6989586621679072434"><span class="hs-identifier hs-var">go</span></a></span><span> </span><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679072431"><span class="hs-identifier hs-var">mn</span></a></span><span> </span><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679072432"><span class="hs-identifier hs-var">mx</span></a></span><span>
+</span><a href="#local-6989586621679072439"><span class="hs-identifier hs-var">go</span></a></span><span> </span><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679072436"><span class="hs-identifier hs-var">mn</span></a></span><span> </span><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679072437"><span class="hs-identifier hs-var">mx</span></a></span><span>
 </span><span id="line-762"></span><span>  </span><span class="hs-keyword">where</span><span>
-</span><span id="line-763"></span><span>    </span><span id="local-6989586621679072434"><span class="annot"><span class="annottext">go :: t -&gt; t -&gt; Parsec a
-</span><a href="#local-6989586621679072434"><span class="hs-identifier hs-var hs-var">go</span></a></span></span><span> </span><span class="annot"><span class="annottext">t
+</span><span id="line-763"></span><span>    </span><span id="local-6989586621679072439"><span class="annot"><span class="annottext">go :: t -&gt; t -&gt; Parsec a
+</span><a href="#local-6989586621679072439"><span class="hs-identifier hs-var hs-var">go</span></a></span></span><span> </span><span class="annot"><span class="annottext">t
 </span><span class="hs-number">0</span></span><span> </span><span class="annot"><span class="annottext">t
 </span><span class="hs-number">0</span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">a -&gt; Parsec a
 forall a. a -&gt; Parsec a
 forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
 </span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">a
 </span><span class="hs-number">0</span></span><span>
-</span><span id="line-764"></span><span>    </span><span class="annot"><a href="#local-6989586621679072434"><span class="hs-identifier hs-var">go</span></a></span><span> </span><span class="annot"><span class="annottext">t
-</span><span class="hs-number">0</span></span><span> </span><span id="local-6989586621679072464"><span class="annot"><span class="annottext">t
-</span><a href="#local-6989586621679072464"><span class="hs-identifier hs-var">n</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">(a -&gt; a -&gt; a) -&gt; Parsec a -&gt; Parsec a -&gt; Parsec a
+</span><span id="line-764"></span><span>    </span><span class="annot"><a href="#local-6989586621679072439"><span class="hs-identifier hs-var">go</span></a></span><span> </span><span class="annot"><span class="annottext">t
+</span><span class="hs-number">0</span></span><span> </span><span id="local-6989586621679072469"><span class="annot"><span class="annottext">t
+</span><a href="#local-6989586621679072469"><span class="hs-identifier hs-var">n</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">(a -&gt; a -&gt; a) -&gt; Parsec a -&gt; Parsec a -&gt; Parsec a
 forall a b c. (a -&gt; b -&gt; c) -&gt; Parsec a -&gt; Parsec b -&gt; Parsec c
 forall (f :: * -&gt; *) a b c.
 Applicative f =&gt;
@@ -1267,10 +1267,10 @@ forall a b. a -&gt; b -&gt; a
 forall a. Num a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">+</span></span><span> </span><span class="annot"><span class="annottext">a
 </span><span class="hs-number">1</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">Parsec a
-</span><a href="#local-6989586621679072433"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">t -&gt; t -&gt; Parsec a
-</span><a href="#local-6989586621679072434"><span class="hs-identifier hs-var">go</span></a></span><span> </span><span class="annot"><span class="annottext">t
+</span><a href="#local-6989586621679072438"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">t -&gt; t -&gt; Parsec a
+</span><a href="#local-6989586621679072439"><span class="hs-identifier hs-var">go</span></a></span><span> </span><span class="annot"><span class="annottext">t
 </span><span class="hs-number">0</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">t
-</span><a href="#local-6989586621679072464"><span class="hs-identifier hs-var">n</span></a></span><span> </span><span class="annot"><span class="annottext">t -&gt; t -&gt; t
+</span><a href="#local-6989586621679072469"><span class="hs-identifier hs-var">n</span></a></span><span> </span><span class="annot"><span class="annottext">t -&gt; t -&gt; t
 forall a. Num a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-glyph hs-var">-</span></span><span> </span><span class="annot"><span class="annottext">t
 </span><span class="hs-number">1</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">Parsec a -&gt; Parsec a -&gt; Parsec a
@@ -1281,9 +1281,9 @@ forall a. a -&gt; Parsec a
 forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
 </span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">a
 </span><span class="hs-number">0</span></span><span>
-</span><span id="line-765"></span><span>    </span><span class="annot"><a href="#local-6989586621679072434"><span class="hs-identifier hs-var">go</span></a></span><span> </span><span id="local-6989586621679072465"><span class="annot"><span class="annottext">t
-</span><a href="#local-6989586621679072465"><span class="hs-identifier hs-var">m</span></a></span></span><span> </span><span id="local-6989586621679072466"><span class="annot"><span class="annottext">t
-</span><a href="#local-6989586621679072466"><span class="hs-identifier hs-var">n</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">(a -&gt; a -&gt; a) -&gt; Parsec a -&gt; Parsec a -&gt; Parsec a
+</span><span id="line-765"></span><span>    </span><span class="annot"><a href="#local-6989586621679072439"><span class="hs-identifier hs-var">go</span></a></span><span> </span><span id="local-6989586621679072470"><span class="annot"><span class="annottext">t
+</span><a href="#local-6989586621679072470"><span class="hs-identifier hs-var">m</span></a></span></span><span> </span><span id="local-6989586621679072471"><span class="annot"><span class="annottext">t
+</span><a href="#local-6989586621679072471"><span class="hs-identifier hs-var">n</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">(a -&gt; a -&gt; a) -&gt; Parsec a -&gt; Parsec a -&gt; Parsec a
 forall a b c. (a -&gt; b -&gt; c) -&gt; Parsec a -&gt; Parsec b -&gt; Parsec c
 forall (f :: * -&gt; *) a b c.
 Applicative f =&gt;
@@ -1294,13 +1294,13 @@ forall a b. a -&gt; b -&gt; a
 forall a. Num a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">+</span></span><span> </span><span class="annot"><span class="annottext">a
 </span><span class="hs-number">1</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">Parsec a
-</span><a href="#local-6989586621679072433"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">t -&gt; t -&gt; Parsec a
-</span><a href="#local-6989586621679072434"><span class="hs-identifier hs-var">go</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">t
-</span><a href="#local-6989586621679072465"><span class="hs-identifier hs-var">m</span></a></span><span> </span><span class="annot"><span class="annottext">t -&gt; t -&gt; t
+</span><a href="#local-6989586621679072438"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">t -&gt; t -&gt; Parsec a
+</span><a href="#local-6989586621679072439"><span class="hs-identifier hs-var">go</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">t
+</span><a href="#local-6989586621679072470"><span class="hs-identifier hs-var">m</span></a></span><span> </span><span class="annot"><span class="annottext">t -&gt; t -&gt; t
 forall a. Num a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-glyph hs-var">-</span></span><span> </span><span class="annot"><span class="annottext">t
 </span><span class="hs-number">1</span></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">t
-</span><a href="#local-6989586621679072466"><span class="hs-identifier hs-var">n</span></a></span><span> </span><span class="annot"><span class="annottext">t -&gt; t -&gt; t
+</span><a href="#local-6989586621679072471"><span class="hs-identifier hs-var">n</span></a></span><span> </span><span class="annot"><span class="annottext">t -&gt; t -&gt; t
 forall a. Num a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-glyph hs-var">-</span></span><span> </span><span class="annot"><span class="annottext">t
 </span><span class="hs-number">1</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
