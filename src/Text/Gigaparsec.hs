@@ -1,5 +1,5 @@
 {-# LANGUAGE Trustworthy #-}
-{-# LANGUAGE TypeFamilies #-}
+{-# LANGUAGE TypeFamilies, DeriveGeneric #-}
 {-|
 Module      : Text.Gigaparsec
 Description : Contains the bulk of the core combinators.
@@ -94,6 +94,7 @@ import Control.Applicative (liftA2, (<|>), empty, many, some, (<**>)) -- liftA2 
 import Control.Selective (select, branch)
 
 import Data.Set qualified as Set (singleton, empty)
+import GHC.Generics (Generic)
 
 -- Hiding the Internal module seems like the better bet: nobody needs to see it anyway :)
 -- re-expose like this to prevent hlint suggesting import refinement into internal
@@ -101,7 +102,7 @@ import Data.Set qualified as Set (singleton, empty)
 --type Parsec = Internal.Parsec
 
 type Result :: * -> * -> *
-data Result e a = Success a | Failure e deriving stock (Show, Eq)
+data Result e a = Success a | Failure e deriving stock (Show, Eq, Generic)
 
 result :: (e -> b) -> (a -> b) -> Result e a -> b
 result _ success (Success x) = success x

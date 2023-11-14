@@ -20,7 +20,7 @@ name:               gigaparsec
 -- PVP summary:     +-+------- breaking API changes
 --                  | | +----- non-breaking API additions
 --                  | | | +--- code changes with no API change
-version:            0.2.0.0
+version:            0.2.1.0
 
 -- A short (one-line) description of the package.
 synopsis:
@@ -155,6 +155,7 @@ test-suite gigaparsec-test
     build-depends:
         gigaparsec,
         containers >= 0.6 && < 0.7,
+        deepseq >= 1.4 && < 1.6,
         --deriving-compat >= 0.6 && < 0.7,
         tasty >=1.1 && <1.6,
         tasty-expected-failure >=0.11 && <0.13,

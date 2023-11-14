@@ -1,5 +1,5 @@
 -- A collection of test helpers
-{-# LANGUAGE AllowAmbiguousTypes, RecordWildCards #-}
+{-# LANGUAGE AllowAmbiguousTypes, RecordWildCards, StandaloneDeriving, DeriveAnyClass #-}
 {-# OPTIONS_GHC -Wno-unrecognised-pragmas #-}
 {-# HLINT ignore "Use newtype instead of data" #-}
 module Text.Gigaparsec.Internal.Test where
@@ -12,9 +12,10 @@ import Text.Gigaparsec
 import Text.Gigaparsec.Internal
 import Text.Gigaparsec.Internal.RT
 
-import Control.Exception (catches, evaluate, Exception, SomeException(..), Handler(..), throwIO)
+import Control.Exception (catches, catch, evaluate, Exception, SomeException(..), Handler(..), throwIO)
 import Control.Monad (unless, forM_)
 import Type.Reflection (typeOf, typeRep)
+import Control.DeepSeq (rnf, NFData)
 
 data LiftedState = Lifted State
 
@@ -87,6 +88,10 @@ throws x = do
                                                     ++ " but got: " ++ show (typeOf ex))
     ]
 
+notThrow :: NFData a => a -> Assertion
+notThrow x = catch (evaluate (rnf x)) $ \(SomeException ex) ->
+  assertFailure ("expected no exception but got " ++ show (typeOf ex))
+
 -- TODO: we want result/error comparison later down the line
 (~~) :: HasCallStack => Parsec a -> Parsec a -> [String] -> Assertion
 (p ~~ q) inps =
@@ -102,6 +107,8 @@ throws x = do
 
 parseState :: Parsec a -> State -> LiftedState
 parseState (Parsec p) st = runRT (p st (\ !_ st' -> return (Lifted st')) (\ _ st' -> return (Lifted st')))
+
+deriving anyclass instance (NFData e, NFData a) => NFData (Result e a)
 
 -- don't @ me
 instance Eq LiftedState where

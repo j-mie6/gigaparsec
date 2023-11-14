@@ -34,6 +34,7 @@ tests = testGroup "Errors" [ labelTests
                            , partialAmendTests
                            , oneOfTests
                            , noneOfTests
+                           , builderTests
                            , regressionTests
                            ]
 
@@ -356,6 +357,19 @@ noneOfTests = testGroup "noneOf should"
   ]
 
 --TODO: patterns tests
+
+builderTests :: TestTree
+builderTests = testGroup "the default error builder should"
+  [ testCase "not crash with vanilla errors" do
+      notThrow (parse @String (explain "hello" (label ["hi"] (char 'a') <|> char 'b')) "c")
+      notThrow (parse @String (char 'a' <|> char 'b' <|> char 'c') "d")
+      notThrow (parse @String (char 'a' <|> char ',' <|> char 'c') "d")
+      notThrow (parse @String (char ' ' <|> char '\BEL') "a")
+      notThrow (parse @String (char 'a') " ")
+      notThrow (parse @String (char 'a') "\BEL")
+  , testCase "not crash with specialised errors" do
+      notThrow (parse @String @() (fail ["hello", "world"] <|> fail ["!"]) "")
+  ]
 
 regressionTests :: TestTree
 regressionTests = testGroup "thou shalt not regress"
