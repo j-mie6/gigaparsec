@@ -101,31 +101,87 @@ import GHC.Generics (Generic)
 --type Parsec :: * -> *
 --type Parsec = Internal.Parsec
 
+{-|
+Similar to @Either@, this type represents whether a parser has failed or not.
+
+This is chosen instead of @Either@ to be more specific about the naming.
+-}
 type Result :: * -> * -> *
 data Result e a = Success a | Failure e deriving stock (Show, Eq, Generic)
 
+{-|
+A fold for the 'Result' type.
+
+This functions like the 'either' function does for 'Either'.
+
+@since 0.2.0.0
+-}
 result :: (e -> b) -> (a -> b) -> Result e a -> b
 result _ success (Success x) = success x
 result failure _ (Failure err) = failure err
 
 {-# SPECIALISE parse :: Parsec a -> String -> Result String a #-}
 {-# INLINABLE parse #-}
-parse :: forall err a. ErrorBuilder err => Parsec a -> String -> Result err a
+{-|
+Runs a parser against some input.
+
+Given a parser, some input, and a way of producing parse errors of a desired
+type (via 'ErrorBuilder'), this function runs a parser to produce either a
+successful result or an error. Note that the @err@ type parameter is first,
+which allows for @parse \@String@ to make use of the defaultly formated @String@
+error messages. This may not be required if it is clear from context. To make
+this process nicer within GHCi, consider using 'parseRepl'.
+-}
+parse :: forall err a. ErrorBuilder err
+      => Parsec a     -- ^ the parser to execute
+      -> String       -- ^ the input to parse
+      -> Result err a -- ^ result of the parse, either an error or result
 parse p inp = Internal.runRT $ _parse Nothing p inp
 
--- TODO: documentation
-parseRepl :: Show a => Parsec a -> String -> IO ()
+{-|
+Runs a parser against some input, pretty-printing the result to the terminal.
+
+Compared, with 'parse', this function will always generate error messages as
+strings and will print them nicely to the terminal (on multiple lines). If the
+parser succeeds, the result will also be printed to the terminal. This is useful
+for playing around with parsers in GHCi, seeing the results more clearly.
+
+@since 0.2.0.0
+-}
+parseRepl :: Show a
+          => Parsec a -- ^ the parser to execute
+          -> String   -- ^ the input to parse
+          -> IO ()
 parseRepl p inp =
   do res <- Internal.rtToIO $ _parse Nothing p inp
      result putStrLn print res
 
 {-# SPECIALISE parseFromFile :: Parsec a -> String -> IO (Result String a) #-}
 {-# INLINABLE parseFromFile #-}
--- TODO: documentation
-parseFromFile :: forall err a. ErrorBuilder err => Parsec a -> FilePath -> IO (Result err a)
+{-|
+Runs a parser against some input obtained from a given file.
+
+Given a parser, a filename, and a way of producing parse errors of a desired
+type (via 'ErrorBuilder'), this function runs a parser to produce either a
+successful result or an error. First, input is collected by reading the file,
+and then the result is returned within `IO`; the filename is forwarded on to
+the 'ErrorBuilder', which may mean it forms part of the generated error messages.
+
+Note that the @err@ type parameter is first,
+which allows for @parseFromFile \@String@ to make use of the defaultly formated @String@
+error messages. This may not be required if it is clear from context.
+
+@since 0.2.1.0
+-}
+parseFromFile :: forall err a. ErrorBuilder err
+              => Parsec a -- ^ the parser to execute
+              -> FilePath -- ^ the file to source the input from
+              -> IO (Result err a) -- ^ the result of the parse, error or otherwise
 parseFromFile p f =
   do inp <- readFile f
      Internal.rtToIO $ _parse (Just f) p inp
+
+--TODO: parseFromHandle?
 
 {-# INLINE _parse #-}
 _parse :: forall err a. ErrorBuilder err => Maybe FilePath -> Parsec a -> String -> Internal.RT (Result err a)

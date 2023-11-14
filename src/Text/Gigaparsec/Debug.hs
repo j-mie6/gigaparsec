@@ -1,5 +1,17 @@
 {-# LANGUAGE Trustworthy #-}
 {-# LANGUAGE ExistentialQuantification, RecordWildCards, NamedFieldPuns #-}
+{-|
+Module      : Text.Gigaparsec.Debug
+Description : This module contains the very useful debugging combinator, as well as breakpoints.
+License     : BSD-3-Clause
+Maintainer  : Jamie Willis, Gigaparsec Maintainers
+Stability   : stable
+
+This module contains the very useful debugging combinators 'debug' and 'debugWith', as well as
+breakpoints that can be used to pause parsing execution.
+
+@since 0.2.1.0
+-}
 module Text.Gigaparsec.Debug (debug, debugWith, debugConfig, DebugConfig(..), WatchedReg(..), Break(..)) where
 
 import Text.Gigaparsec.Internal (Parsec)
@@ -14,26 +26,71 @@ import Data.List.NonEmpty (NonEmpty((:|)), (<|))
 import Data.List.NonEmpty qualified as NonEmpty (toList)
 import System.Console.Pretty (color, supportsPretty, Color(Green, White, Red, Blue))
 
+{-|
+Configuration that allows for customising the behaviour of a 'debugWith'
+combinator.
+-}
 type DebugConfig :: *
 data DebugConfig = DebugConfig {
-    ascii :: !Bool,
-    breakPoint :: !Break,
-    watchedRegs :: ![WatchedReg],
-    handle :: Handle
+    ascii :: !Bool, -- ^ should the output of the combinator be in plain uncoloured ascii?
+    breakPoint :: !Break, -- ^ should parsing execution be paused when entering or leaving this combinator?
+    watchedRegs :: ![WatchedReg], -- ^ what registers should have their values tracked during debugging?
+    handle :: !Handle -- ^ where should the output of the combinator be sent?
   }
 
+{-|
+The plain configuration used by the 'debug' combinator itself. It will have coloured
+terminal output (if available), never pause the parsing execution, not track any registers,
+and print its output to 'stdout'.
+-}
 debugConfig :: DebugConfig
 debugConfig = DebugConfig { ascii = False, breakPoint = Never, watchedRegs = [], handle = stdout }
 
+{-|
+This type allows for a specified register to be watched by a debug combinator. The
+contents of the register must be 'Show'able, and it should be given a name to identify
+it within the print-out. Registers containing different types can be simultaneously
+tracked, which is why this datatype is existential.
+-}
 type WatchedReg :: *
-data WatchedReg = forall r a. Show a => WatchedReg String (Reg r a)
+data WatchedReg = forall r a. Show a => WatchedReg String    -- ^ the name of the register
+                                                   (Reg r a) -- ^ the register itself
 
+{-|
+This is used by 'DebugConfig' to specify whether the parsing should be paused
+when passing through a 'debugWith' combinator.
+-}
 type Break :: *
-data Break = OnEntry | OnExit | Always | Never
+data Break = OnEntry -- ^ pause the parsing just after entering a debug combinator
+           | OnExit  -- ^ pause the parsing just after leaving a debug combinator
+           | Always  -- ^ pause the parsing both just after entry and exit of a debug combinator
+           | Never   -- ^ do not pause execution when passing through (__default__)
 
+{-|
+This combinator allows this parser to be debugged by providing a trace through the execution.
+
+When this combinator is entered, it will print the name assigned to the parser to the console,
+as well as the current input context for a few characters that follow.
+This parser is then executed. If it succeeded, this combinator again reports the
+name along with \"@Good@\" and the input context. If it failed, it reports the name
+along with \"@Bad@\" and the input context.
+-}
 debug :: String -> Parsec a -> Parsec a
 debug = debugWith debugConfig
 
+{-|
+This combinator allows this parser to be debugged by providing a trace through the execution.
+An additional 'DebugConfig' is provided to customise behaviour.
+
+When this combinator is entered, it will print the name assigned to the parser to the
+configured handle, as well as the current input context for a few characters that follow.
+This parser is then executed. If it succeeded, this combinator again reports the
+name along with \"@Good@\" and the input context. If it failed, it reports the name
+along with \"@Bad@\" and the input context.
+
+When breakpoints are enabled within the config, the execution of the combinator will pause
+on either entry, exit, or both. The parse is resumed by entering any character on standard input.
+-}
 debugWith :: DebugConfig -> String -> Parsec a -> Parsec a
 debugWith config@DebugConfig{ascii} name (Internal.Parsec p) = Internal.Parsec $ \st good bad -> do
   -- TODO: could make it so the postamble can print input information from the entry?
@@ -49,6 +106,9 @@ debugWith config@DebugConfig{ascii} name (Internal.Parsec p) = Internal.Parsec $
         doDebug name Exit st'' (red ascii' " Bad") config'
         bad err st''
   p (st { Internal.debugLevel = Internal.debugLevel st + 1}) good' bad'
+
+---------------------------------------------
+---- INTERNALS
 
 type Direction :: *
 data Direction = Enter | Exit

@@ -45,6 +45,15 @@ investigation and benchmarking to be sure about this however. We'll get a
 core representation settled before doing any "hard" work (the composite
 combinator API, however, can be done whenever).
 -}
+
+{-|
+This type represents parsers as a first-class value.
+
+Values of this type are constructed using the library's combinators, to build
+up a final 'Parsec' value that can be passed to 'Text.Gigaparsec.parse' or one
+of the similar functions. This is implemented internally similar to other
+libraries like @parsec@ and @gigaparsec@.
+-}
 type Parsec :: * -> *
 newtype Parsec a = Parsec {
     unParsec :: forall r. State
