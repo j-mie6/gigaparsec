@@ -31,7 +31,7 @@ given value.</p></div></div><a href="#g:3" id="g:3"><h1>Error Adjustment Combina
 occur at the position recorded on entry to this combinator (effectively as if no
 input were consumed).</p><p>This is useful if validation work is done
 on the output of a parser that may render it invalid, but the error should point to the
-beginning of the structure. This combinators effect can be cancelled with [[entrench <code><a href="Text-Gigaparsec-Errors-Combinator.html#v:entrench" title="Text.Gigaparsec.Errors.Combinator">entrench</a></code>]].</p><h4 class="subheading details-toggle-control details-toggle" data-details-id="ch:amend0">Examples</h4><details id="ch:amend0"><summary class="hide-when-js-enabled">Expand</summary><pre class="screen"><code class="prompt">&gt;&gt;&gt; </code><strong class="userinput"><code>let greeting = string &quot;hello world&quot; &lt;* char '!'
+beginning of the structure. This combinators effect can be cancelled with <code><a href="Text-Gigaparsec-Errors-Combinator.html#v:entrench" title="Text.Gigaparsec.Errors.Combinator">entrench</a></code>.</p><h4 class="subheading details-toggle-control details-toggle" data-details-id="ch:amend0">Examples</h4><details id="ch:amend0"><summary class="hide-when-js-enabled">Expand</summary><pre class="screen"><code class="prompt">&gt;&gt;&gt; </code><strong class="userinput"><code>let greeting = string &quot;hello world&quot; &lt;* char '!'
 </code></strong><code class="prompt">&gt;&gt;&gt; </code><strong class="userinput"><code>parseRepl (greeting &lt;?&gt; [&quot;greeting&quot;]) &quot;hello world.&quot;
 </code></strong>(line 1, column 12):
   unexpected &quot;.&quot;
