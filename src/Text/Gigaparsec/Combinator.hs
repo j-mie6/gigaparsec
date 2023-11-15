@@ -560,21 +560,21 @@ someTill p end = notFollowedBy end *> (p <:> manyTill p end)
 This combinator parses one of @thenP@ or @elseP@ depending on the result of parsing @condP@.
 
 This is a lifted @if@-statement. First, parse @condP@: if it is successful and returns
-@true@, then parse @thenP@; else, if it returned @false@, parse @elseP@; or, if @condP@ failed
+@True@, then parse @thenP@; else, if it returned @False@, parse @elseP@; or, if @condP@ failed
 then fail. If either of @thenP@ or @elseP@ fail, then this combinator also fails.
 
 Most useful in conjunction with /Registers/, as this allows for decisions to be made
 based on state.
 
 ==== __Examples__
->>> ifP (pure true) p _ == p
->>> ifP (pure false) _ p == p
+>>> ifP (pure True) p _ == p
+>>> ifP (pure False) _ p == p
 
 @since 0.1.0.0
 -}
 ifS :: Parsec Bool -- ^ @condP@, the parser that yields the condition value.
-    -> Parsec a    -- ^ @thenP@, the parser to execute if the condition is @true@.
-    -> Parsec a    -- ^ @elseP@, the parser to execute if the condition is @false.
+    -> Parsec a    -- ^ @thenP@, the parser to execute if the condition is @True@.
+    -> Parsec a    -- ^ @elseP@, the parser to execute if the condition is @False@.
     -> Parsec a    -- ^ a parser that conditionally parses @thenP@ or @elseP@ after @condP@.
 ifS cond t e = branch (bool <$> cond) (const <$> e) (const <$> t)
   where bool True = Right ()
@@ -585,33 +585,33 @@ ifS cond t e = branch (bool <$> cond) (const <$> e) (const <$> t)
 This combinator conditionally parses @thenP@ depending on the result of parsing @condP@.
 
 This is a lifted @if@-statement. First, parse @condP@: if it is successful and returns
-@true@, then parse @thenP@; else, if it returned @false@ do nothing; or, if @condP@ failed
+@True@, then parse @thenP@; else, if it returned @False@ do nothing; or, if @condP@ failed
 then fail. If @thenP@ fails, then this combinator also fails.
 
 Most useful in conjunction with /Registers/, as this allows for decisions to be made
 based on state.
 
 ==== __Examples__
->>> when (pure true) p == p
->>> when (pure false) _ == unit
+>>> when (pure True) p == p
+>>> when (pure False) _ == unit
 
 @since 0.1.0.0
 -}
 whenS :: Parsec Bool -- ^ @condP@, the parser that yields the condition value.
-      -> Parsec ()   -- ^ @thenP@, the parser to execute if the condition is @true@.
+      -> Parsec ()   -- ^ @thenP@, the parser to execute if the condition is @True@.
       -> Parsec ()   -- ^ a parser that conditionally parses @thenP@ after @condP@.
 whenS cond p = ifS cond p unit
 
 -- this is guard
 {-|
-This combinator verfies that the given parser returns @true@, or else fails.
+This combinator verfies that the given parser returns @True@, or else fails.
 
-First, parse @p@; if it succeeds then, so long at returns @true@, this @guard p@ succeeds. Otherwise,
-if @p@ either fails, or returns @false@, @guard p@ will fail.
+First, parse @p@; if it succeeds then, so long at returns @True@, this @guard p@ succeeds. Otherwise,
+if @p@ either fails, or returns @False@, @guard p@ will fail.
 
 ==== __Examples__
->>> guard (pure true) == unit
->>> guard (pure false) == empty
+>>> guard (pure True) == unit
+>>> guard (pure False) == empty
 >>> when (not <$> p) empty == guard p
 
 @since 0.1.0.0
@@ -622,10 +622,10 @@ guardS cond = ifS cond unit empty
 
 -- this is whileP
 {-|
-This combinator repeatedly parses @p@ so long as it returns @true@.
+This combinator repeatedly parses @p@ so long as it returns @True@.
 
 This is a lifted @while@-loop. First, parse @p@: if it is successful and
-returns @true@, then repeat; else if it returned @false@ stop; or, if it
+returns @True@, then repeat; else if it returned @False@ stop; or, if it
 failed then this combinator fails.
 
 Most useful in conjunction with /Registers/, as this allows for decisions to be made
@@ -634,7 +634,7 @@ based on state. In particular, this can be used to define the @forP@ combinator.
 @since 0.1.0.0
 -}
 whileS :: Parsec Bool -- ^ @p@, the parser to repeatedly parse.
-       -> Parsec ()   -- ^ a parser that continues to parse @p@ until it returns @false@.
+       -> Parsec ()   -- ^ a parser that continues to parse @p@ until it returns @False@.
 whileS c = let go = whenS c go in go
 
 {-|
