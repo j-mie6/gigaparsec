@@ -852,21 +852,21 @@ forall a sep. Parsec a -&gt; Parsec sep -&gt; Parsec [a]
 This combinator parses one of @thenP@ or @elseP@ depending on the result of parsing @condP@.
 
 This is a lifted @if@-statement. First, parse @condP@: if it is successful and returns
-@true@, then parse @thenP@; else, if it returned @false@, parse @elseP@; or, if @condP@ failed
+@True@, then parse @thenP@; else, if it returned @False@, parse @elseP@; or, if @condP@ failed
 then fail. If either of @thenP@ or @elseP@ fail, then this combinator also fails.
 
 Most useful in conjunction with /Registers/, as this allows for decisions to be made
 based on state.
 
 ==== __Examples__
-&gt;&gt;&gt; ifP (pure true) p _ == p
-&gt;&gt;&gt; ifP (pure false) _ p == p
+&gt;&gt;&gt; ifP (pure True) p _ == p
+&gt;&gt;&gt; ifP (pure False) _ p == p
 
 @since 0.1.0.0
 -}</span></span><span>
 </span><span id="line-575"></span><span id="local-6989586621679072147"><span class="annot"><a href="Text.Gigaparsec.Combinator.html#ifS"><span class="hs-identifier hs-type">ifS</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Bool</span></span><span> </span><span class="annot"><span class="hs-comment">-- ^ @condP@, the parser that yields the condition value.</span></span><span>
-</span><span id="line-576"></span><span>    </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679072147"><span class="hs-identifier hs-type">a</span></a></span><span>    </span><span class="annot"><span class="hs-comment">-- ^ @thenP@, the parser to execute if the condition is @true@.</span></span><span>
-</span><span id="line-577"></span><span>    </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679072147"><span class="hs-identifier hs-type">a</span></a></span><span>    </span><span class="annot"><span class="hs-comment">-- ^ @elseP@, the parser to execute if the condition is @false.</span></span><span>
+</span><span id="line-576"></span><span>    </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679072147"><span class="hs-identifier hs-type">a</span></a></span><span>    </span><span class="annot"><span class="hs-comment">-- ^ @thenP@, the parser to execute if the condition is @True@.</span></span><span>
+</span><span id="line-577"></span><span>    </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679072147"><span class="hs-identifier hs-type">a</span></a></span><span>    </span><span class="annot"><span class="hs-comment">-- ^ @elseP@, the parser to execute if the condition is @False@.</span></span><span>
 </span><span id="line-578"></span><span>    </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679072147"><span class="hs-identifier hs-type">a</span></a></span></span><span>    </span><span class="annot"><span class="hs-comment">-- ^ a parser that conditionally parses @thenP@ or @elseP@ after @condP@.</span></span><span>
 </span><span id="line-579"></span><span id="ifS"><span class="annot"><span class="annottext">ifS :: forall a. Parsec Bool -&gt; Parsec a -&gt; Parsec a -&gt; Parsec a
 </span><a href="Text.Gigaparsec.Combinator.html#ifS"><span class="hs-identifier hs-var hs-var">ifS</span></a></span></span><span> </span><span id="local-6989586621679072344"><span class="annot"><span class="annottext">Parsec Bool
@@ -907,20 +907,20 @@ forall a b. a -&gt; Either a b
 This combinator conditionally parses @thenP@ depending on the result of parsing @condP@.
 
 This is a lifted @if@-statement. First, parse @condP@: if it is successful and returns
-@true@, then parse @thenP@; else, if it returned @false@ do nothing; or, if @condP@ failed
+@True@, then parse @thenP@; else, if it returned @False@ do nothing; or, if @condP@ failed
 then fail. If @thenP@ fails, then this combinator also fails.
 
 Most useful in conjunction with /Registers/, as this allows for decisions to be made
 based on state.
 
 ==== __Examples__
-&gt;&gt;&gt; when (pure true) p == p
-&gt;&gt;&gt; when (pure false) _ == unit
+&gt;&gt;&gt; when (pure True) p == p
+&gt;&gt;&gt; when (pure False) _ == unit
 
 @since 0.1.0.0
 -}</span></span><span>
 </span><span id="line-600"></span><span class="annot"><a href="Text.Gigaparsec.Combinator.html#whenS"><span class="hs-identifier hs-type">whenS</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Bool</span></span><span> </span><span class="annot"><span class="hs-comment">-- ^ @condP@, the parser that yields the condition value.</span></span><span>
-</span><span id="line-601"></span><span>      </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span>   </span><span class="annot"><span class="hs-comment">-- ^ @thenP@, the parser to execute if the condition is @true@.</span></span><span>
+</span><span id="line-601"></span><span>      </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span>   </span><span class="annot"><span class="hs-comment">-- ^ @thenP@, the parser to execute if the condition is @True@.</span></span><span>
 </span><span id="line-602"></span><span>      </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span>   </span><span class="annot"><span class="hs-comment">-- ^ a parser that conditionally parses @thenP@ after @condP@.</span></span><span>
 </span><span id="line-603"></span><span id="whenS"><span class="annot"><span class="annottext">whenS :: Parsec Bool -&gt; Parsec () -&gt; Parsec ()
 </span><a href="Text.Gigaparsec.Combinator.html#whenS"><span class="hs-identifier hs-var hs-var">whenS</span></a></span></span><span> </span><span id="local-6989586621679072348"><span class="annot"><span class="annottext">Parsec Bool
@@ -934,14 +934,14 @@ forall a. Parsec Bool -&gt; Parsec a -&gt; Parsec a -&gt; Parsec a
 </span><span id="line-604"></span><span>
 </span><span id="line-605"></span><span class="hs-comment">-- this is guard</span><span>
 </span><span id="line-606"></span><span class="annot"><span class="hs-comment">{-|
-This combinator verfies that the given parser returns @true@, or else fails.
+This combinator verfies that the given parser returns @True@, or else fails.
 
-First, parse @p@; if it succeeds then, so long at returns @true@, this @guard p@ succeeds. Otherwise,
-if @p@ either fails, or returns @false@, @guard p@ will fail.
+First, parse @p@; if it succeeds then, so long at returns @True@, this @guard p@ succeeds. Otherwise,
+if @p@ either fails, or returns @False@, @guard p@ will fail.
 
 ==== __Examples__
-&gt;&gt;&gt; guard (pure true) == unit
-&gt;&gt;&gt; guard (pure false) == empty
+&gt;&gt;&gt; guard (pure True) == unit
+&gt;&gt;&gt; guard (pure False) == empty
 &gt;&gt;&gt; when (not &lt;$&gt; p) empty == guard p
 
 @since 0.1.0.0
@@ -961,10 +961,10 @@ forall (f :: * -&gt; *) a. Alternative f =&gt; f a
 </span><span id="line-622"></span><span>
 </span><span id="line-623"></span><span class="hs-comment">-- this is whileP</span><span>
 </span><span id="line-624"></span><span class="annot"><span class="hs-comment">{-|
-This combinator repeatedly parses @p@ so long as it returns @true@.
+This combinator repeatedly parses @p@ so long as it returns @True@.
 
 This is a lifted @while@-loop. First, parse @p@: if it is successful and
-returns @true@, then repeat; else if it returned @false@ stop; or, if it
+returns @True@, then repeat; else if it returned @False@ stop; or, if it
 failed then this combinator fails.
 
 Most useful in conjunction with /Registers/, as this allows for decisions to be made
@@ -973,7 +973,7 @@ based on state. In particular, this can be used to define the @forP@ combinator.
 @since 0.1.0.0
 -}</span></span><span>
 </span><span id="line-636"></span><span class="annot"><a href="Text.Gigaparsec.Combinator.html#whileS"><span class="hs-identifier hs-type">whileS</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Bool</span></span><span> </span><span class="annot"><span class="hs-comment">-- ^ @p@, the parser to repeatedly parse.</span></span><span>
-</span><span id="line-637"></span><span>       </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span>   </span><span class="annot"><span class="hs-comment">-- ^ a parser that continues to parse @p@ until it returns @false@.</span></span><span>
+</span><span id="line-637"></span><span>       </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span>   </span><span class="annot"><span class="hs-comment">-- ^ a parser that continues to parse @p@ until it returns @False@.</span></span><span>
 </span><span id="line-638"></span><span id="whileS"><span class="annot"><span class="annottext">whileS :: Parsec Bool -&gt; Parsec ()
 </span><a href="Text.Gigaparsec.Combinator.html#whileS"><span class="hs-identifier hs-var hs-var">whileS</span></a></span></span><span> </span><span id="local-6989586621679072351"><span class="annot"><span class="annottext">Parsec Bool
 </span><a href="#local-6989586621679072351"><span class="hs-identifier hs-var">c</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621679072352"><span class="annot"><span class="annottext">go :: Parsec ()
