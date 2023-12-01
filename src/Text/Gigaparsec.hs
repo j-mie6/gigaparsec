@@ -72,7 +72,7 @@ module Text.Gigaparsec (
   -- or the first successful result is the initial accumulator (for the reduces). These are
   -- implemented efficiently and do not need to construct any intermediate list with which to store
   -- the results.
-    many, some, manyl, manyr, somel, somer, -- TODO: these need to be properly categorised
+    many, some, manyl, manyr, somel, somer, manyMap, someMap,-- TODO: these need to be properly categorised
   ) where
 
 -- NOTE:
@@ -310,6 +310,12 @@ manyl f k = _repl f (pure k)
 
 somel :: (b -> a -> b) -> b -> Parsec a -> Parsec b
 somel f k p = _repl f (f k <$> p) p
+
+manyMap :: Monoid m => (a -> m) -> Parsec a -> Parsec m
+manyMap f = manyr (<>) mempty . fmap f
+
+someMap :: Semigroup m => (a -> m) -> Parsec a -> Parsec m
+someMap f p = _repl (<>) (f <$> p) (f <$> p) -- is there a better implementation, it's tricky!
 
 _repl :: (b -> a -> b) -> Parsec b -> Parsec a -> Parsec b
 _repl f k p = k <**> manyr (\x next !acc -> next (f acc x)) id p
