@@ -1,5 +1,9 @@
 # Revision history for gigaparsec
 
+## 0.2.2.0 -- TBD
+
+* Added `manyMap` and `someMap` combinators.
+
 ## 0.2.1.0 -- 2023-11-14
 
 * Added `Text.Gigaparsec.Debug`, which provides debugging capabilities.
