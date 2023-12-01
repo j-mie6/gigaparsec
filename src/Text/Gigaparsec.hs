@@ -72,7 +72,7 @@ module Text.Gigaparsec (
   -- or the first successful result is the initial accumulator (for the reduces). These are
   -- implemented efficiently and do not need to construct any intermediate list with which to store
   -- the results.
-    many, some, manyl, manyr, somel, somer, -- TODO: these need to be properly categorised
+    many, some, manyl, manyr, somel, somer, manyMap, someMap,-- TODO: these need to be properly categorised
   ) where
 
 -- NOTE:
@@ -201,6 +201,7 @@ parsers that consume input to backtrack when they fail (with '(<|>)'). It should
 used for the latter purpose sparingly, however, since excessive backtracking in a
 parser can result in much lower efficiency.
 
+==== __Examples__
 >>> parse (string "abc" <|> string "abd") "abd"
 Failure .. -- first parser consumed a, so no backtrack
 >>> parse (atomic (string "abc") <|> string "abd") "abd"
@@ -310,6 +311,49 @@ manyl f k = _repl f (pure k)
 
 somel :: (b -> a -> b) -> b -> Parsec a -> Parsec b
 somel f k p = _repl f (f k <$> p) p
+
+{-|
+This combinator acts like the 'foldMap' function but with a parser.
+
+The parser @manyMap f p@, will parse @p@ __zero__ or more times, then
+adapt each result with the function @f@ to produce a bunch of values
+in some 'Monoid' @m@. These values are then combined together to form a
+single value; if @p@ could not be parsed, it will return the 'mempty'
+for @m@.
+
+==== __Examples__
+>>> parse (manyMap Set.singleton item) "aaaab"
+Success (Set.fromList ['a', 'b'])
+
+@since 0.2.2.0
+-}
+manyMap :: Monoid m
+        => (a -> m) -- injection function for parser results into a monoid
+        -> Parsec a -- parser to execute multiple times
+        -> Parsec m
+manyMap f = manyr (<>) mempty . fmap f
+
+{-|
+This combinator acts like the 'foldMap' function but with a parser.
+
+The parser @manyMap f p@, will parse @p@ __one__ or more times, then
+adapt each result with the function @f@ to produce a bunch of values
+in some 'Semigroup' @s@. These values are then combined together to form a
+single value.
+
+==== __Examples__
+>>> parse (someMap Max item) "bdcjb"
+Success (Max 'j')
+>>> parse (someMap Min item) "bdcjb"
+Success (Max 'b')
+
+@since 0.2.2.0
+-}
+someMap :: Semigroup s
+        => (a -> s) -- injection function for parser results into a monoid
+        -> Parsec a -- parser to execute multiple times
+        -> Parsec s
+someMap f p = _repl (<>) (f <$> p) (f <$> p) -- is there a better implementation, it's tricky!
 
 _repl :: (b -> a -> b) -> Parsec b -> Parsec a -> Parsec b
 _repl f k p = k <**> manyr (\x next !acc -> next (f acc x)) id p
