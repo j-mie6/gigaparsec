@@ -201,6 +201,7 @@ parsers that consume input to backtrack when they fail (with '(<|>)'). It should
 used for the latter purpose sparingly, however, since excessive backtracking in a
 parser can result in much lower efficiency.
 
+==== __Examples__
 >>> parse (string "abc" <|> string "abd") "abd"
 Failure .. -- first parser consumed a, so no backtrack
 >>> parse (atomic (string "abc") <|> string "abd") "abd"
@@ -320,6 +321,10 @@ in some 'Monoid' @m@. These values are then combined together to form a
 single value; if @p@ could not be parsed, it will return the 'mempty'
 for @m@.
 
+==== __Examples__
+>>> parse (manyMap Set.singleton item) "aaaab"
+Success (Set.fromList ['a', 'b'])
+
 @since 0.2.2.0
 -}
 manyMap :: Monoid m
@@ -335,6 +340,12 @@ The parser @manyMap f p@, will parse @p@ __one__ or more times, then
 adapt each result with the function @f@ to produce a bunch of values
 in some 'Semigroup' @s@. These values are then combined together to form a
 single value.
+
+==== __Examples__
+>>> parse (someMap Max item) "bdcjb"
+Success (Max 'j')
+>>> parse (someMap Min item) "bdcjb"
+Success (Max 'b')
 
 @since 0.2.2.0
 -}
