@@ -91,6 +91,8 @@ library
                       Text.Gigaparsec.Expr.Chain,
                       Text.Gigaparsec.Expr.Infix,
                       Text.Gigaparsec.Expr.Subtype,
+                      Text.Gigaparsec.Token.Descriptions,
+                      Text.Gigaparsec.Token.Lexer,
                       Text.Gigaparsec.Registers,
 
                       -- Internals
