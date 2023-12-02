@@ -6,9 +6,10 @@ module Text.Gigaparsec.Registers (
     put, puts,
     modify,
     local, localWith,
+    rollback
   ) where
 
-import Text.Gigaparsec (Parsec)
+import Text.Gigaparsec (Parsec, (<|>), empty)
 import Text.Gigaparsec.Internal.RT (Reg, newReg, readReg, writeReg)
 import Text.Gigaparsec.Internal qualified as Internal (Parsec(..))
 
@@ -60,5 +61,8 @@ localWith reg x = local reg (const x)
 
 _localWith :: Reg r a -> Parsec a -> Parsec b -> Parsec b
 _localWith reg px q = px >>= flip (localWith reg) q
+
+rollback :: Reg r a -> Parsec a -> Parsec a
+rollback reg p = get reg >>= \x -> p <|> (put reg x *> empty)
 
 -- TODO: for combinators
