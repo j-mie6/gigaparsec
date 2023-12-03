@@ -1,5 +1,6 @@
 {-# LANGUAGE Safe #-}
 module Text.Gigaparsec.Token.Descriptions (module Text.Gigaparsec.Token.Descriptions) where
+import Data.Char (isSpace)
 
 type LexicalDesc :: *
 data LexicalDesc = LexicalDesc { nameDesc :: !NameDesc
@@ -8,6 +9,14 @@ data LexicalDesc = LexicalDesc { nameDesc :: !NameDesc
                                , textDesc :: !TextDesc
                                , spaceDesc :: !SpaceDesc
                                }
+
+plain :: LexicalDesc
+plain = LexicalDesc { nameDesc = NameDesc {}
+                    , symbolDesc = SymbolDesc {}
+                    , numericDesc = NumericDesc {}
+                    , textDesc = TextDesc {}
+                    , spaceDesc = plainSpace
+                    }
 
 type NameDesc :: *
 data NameDesc = NameDesc {}
@@ -30,6 +39,16 @@ data SpaceDesc = SpaceDesc { commentStart :: !String
                            , space :: !CharPredicate
                            , whitespaceIsContextDependent :: !Bool
                            }
+
+plainSpace :: SpaceDesc
+plainSpace = SpaceDesc { commentStart = ""
+                       , commentEnd = ""
+                       , commentLine = ""
+                       , commentLineAllowsEOF = True
+                       , nestedComments = False
+                       , space = Just isSpace
+                       , whitespaceIsContextDependent = False
+                       }
 
 type CharPredicate :: *
 type CharPredicate = Maybe (Char -> Bool)
