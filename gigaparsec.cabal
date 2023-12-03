@@ -93,6 +93,8 @@ library
                       Text.Gigaparsec.Expr.Subtype,
                       Text.Gigaparsec.Token.Descriptions,
                       Text.Gigaparsec.Token.Lexer,
+                      Text.Gigaparsec.Token.Patterns,
+                      Text.Gigaparsec.Token.Symbol,
                       Text.Gigaparsec.Registers,
 
                       -- Internals
@@ -104,7 +106,8 @@ library
     -- this can probably be loosened?
     build-depends:    containers      >= 0.6 && < 0.7,
                       selective       >= 0.6 && < 0.8,
-                      pretty-terminal >= 0.1.0   && < 0.2
+                      pretty-terminal >= 0.1.0   && < 0.2,
+                      template-haskell
 
     -- Modules included in this library but not exported.
     -- other-modules:

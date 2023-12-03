@@ -5,22 +5,28 @@ module Text.Gigaparsec.Token.Lexer (
     Lexer, mkLexer,
     lexeme, nonlexeme, fully, space,
     skipComments, whiteSpace, alter, initSpace,
+    sym, symbol,
     apply
   ) where
 
 import Text.Gigaparsec (Parsec, eof, void, empty, (<|>), atomic, unit)
 import Text.Gigaparsec.Char (satisfy, string, item, endOfLine)
 import Text.Gigaparsec.Combinator (skipMany, skipManyTill)
-import Text.Gigaparsec.Token.Descriptions qualified as Desc
-import Text.Gigaparsec.Errors.Combinator (hide)
-import Control.Exception (Exception, throw)
 import Text.Gigaparsec.Registers (put, get, localWith, rollback)
-import System.IO.Unsafe (unsafePerformIO)
-import Data.IORef (newIORef)
+import Text.Gigaparsec.Errors.Combinator (hide)
+
+import Text.Gigaparsec.Token.Descriptions qualified as Desc
+import Text.Gigaparsec.Token.Symbol (Symbol, mkSym, mkSymbol)
+import Text.Gigaparsec.Token.Symbol qualified as Symbol (lexeme)
+
 import Text.Gigaparsec.Internal.RT (fromIORef)
-import Control.Monad (join, guard)
 import Text.Gigaparsec.Internal.Require (require)
+
 import Data.List (isPrefixOf)
+import Data.IORef (newIORef)
+import Control.Exception (Exception, throw)
+import Control.Monad (join, guard)
+import System.IO.Unsafe (unsafePerformIO)
 
 type Lexer :: *
 data Lexer = Lexer { lexeme :: !Lexeme
@@ -31,21 +37,30 @@ data Lexer = Lexer { lexeme :: !Lexeme
 
 mkLexer :: Desc.LexicalDesc -> Lexer
 mkLexer Desc.LexicalDesc{..} = Lexer {..}
-  where lexeme = Lexeme { apply = (<* whiteSpace space)
+  where apply p = p <* whiteSpace space
+        lexeme = Lexeme { apply = apply
+                        , sym = apply . sym nonlexeme
+                        , symbol = Symbol.lexeme apply (symbol nonlexeme)
                         }
-        nonlexeme = NonLexeme {}
-        fully' p =  whiteSpace space *> p <* eof
+        nonlexeme = NonLexeme { sym = mkSym symbolDesc (symbol nonlexeme)
+                              , symbol = mkSymbol symbolDesc nameDesc
+                              }
+        fully' p = whiteSpace space *> p <* eof
         fully p
           | Desc.whitespaceIsContextDependent spaceDesc = initSpace space *> fully' p
           | otherwise                                   = fully' p
         space = mkSpace spaceDesc
 
+--TODO: better name for this, I guess?
 type Lexeme :: *
 data Lexeme = Lexeme
                 { apply :: !(forall a. Parsec a -> Parsec a) -- this is tricky...
+                , sym :: !(String -> Parsec ())
+                , symbol :: !Symbol
                 }
             | NonLexeme
-                {
+                { sym :: !(String -> Parsec ())
+                , symbol :: !Symbol
                 }
 
 type Space :: *
@@ -92,7 +107,7 @@ commentParser Desc.SpaceDesc{..} =
     require (not (multiEnabled && isPrefixOf commentStart commentLine)) "skipComments" noOverlap $
       hide (multiLine <|> singleLine)
   where
-    -- can't make these string until guard is gone
+    -- can't make these strict until guard is gone
     openComment = atomic (string commentStart)
     closeComment = atomic (string commentEnd)
     multiLine = guard multiEnabled *> openComment *> wellNested 1

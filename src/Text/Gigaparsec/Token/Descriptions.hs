@@ -1,6 +1,9 @@
 {-# LANGUAGE Safe #-}
+{-# LANGUAGE OverloadedLists #-}
 module Text.Gigaparsec.Token.Descriptions (module Text.Gigaparsec.Token.Descriptions) where
+
 import Data.Char (isSpace)
+import Data.Set (Set)
 
 type LexicalDesc :: *
 data LexicalDesc = LexicalDesc { nameDesc :: !NameDesc
@@ -11,24 +14,42 @@ data LexicalDesc = LexicalDesc { nameDesc :: !NameDesc
                                }
 
 plain :: LexicalDesc
-plain = LexicalDesc { nameDesc = NameDesc {}
-                    , symbolDesc = SymbolDesc {}
-                    , numericDesc = NumericDesc {}
-                    , textDesc = TextDesc {}
+plain = LexicalDesc { nameDesc = plainName
+                    , symbolDesc = plainSymbol
+                    , numericDesc = plainNumeric
+                    , textDesc = plainText
                     , spaceDesc = plainSpace
                     }
 
 type NameDesc :: *
 data NameDesc = NameDesc {}
 
+plainName :: NameDesc
+plainName = NameDesc {}
+
 type SymbolDesc :: *
-data SymbolDesc = SymbolDesc {}
+data SymbolDesc = SymbolDesc { hardKeywords :: !(Set String)
+                             , hardOperators :: !(Set String)
+                             , caseSensitive :: !Bool
+                             }
+
+plainSymbol :: SymbolDesc
+plainSymbol = SymbolDesc { hardKeywords = []
+                         , hardOperators = []
+                         , caseSensitive = True
+                         }
 
 type NumericDesc :: *
 data NumericDesc = NumericDesc {}
 
+plainNumeric :: NumericDesc
+plainNumeric = NumericDesc {}
+
 type TextDesc :: *
 data TextDesc = TextDesc {}
+
+plainText :: TextDesc
+plainText = TextDesc {}
 
 type SpaceDesc :: *
 data SpaceDesc = SpaceDesc { commentStart :: !String
