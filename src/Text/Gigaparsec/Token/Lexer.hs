@@ -10,8 +10,9 @@ module Text.Gigaparsec.Token.Lexer (
 
 import Text.Gigaparsec (Parsec, eof, void, empty, (<|>), atomic, unit)
 import Text.Gigaparsec.Char (satisfy, string, item, endOfLine)
-import Text.Gigaparsec.Combinator (skipMany, manyTill)
+import Text.Gigaparsec.Combinator (skipMany, skipManyTill)
 import Text.Gigaparsec.Token.Descriptions qualified as Desc
+import Text.Gigaparsec.Errors.Combinator (hide)
 import Control.Exception (Exception, throw)
 import Text.Gigaparsec.Registers (put, get, localWith, rollback)
 import System.IO.Unsafe (unsafePerformIO)
@@ -30,7 +31,7 @@ data Lexer = Lexer { lexeme :: !Lexeme
 
 mkLexer :: Desc.LexicalDesc -> Lexer
 mkLexer Desc.LexicalDesc{..} = Lexer {..}
-  where lexeme = Lexeme { apply = id
+  where lexeme = Lexeme { apply = (<* whiteSpace space)
                         }
         nonlexeme = NonLexeme {}
         fully' p =  whiteSpace space *> p <* eof
@@ -61,8 +62,8 @@ mkSpace desc@Desc.SpaceDesc{..} = Space {..}
         !wsImpl = fromIORef (unsafePerformIO (newIORef (error "uninitialised space")))
         comment = commentParser desc -- do not make this lazy
         implOf
-          | supportsComments desc = maybe skipComments (skipMany . (<|> comment) . void . satisfy)
-          | otherwise             = maybe empty (skipMany . satisfy)
+          | supportsComments desc = hide . maybe skipComments (skipMany . (<|> comment) . void . satisfy)
+          | otherwise             = hide . maybe empty (skipMany . satisfy)
         !configuredWhitespace = implOf space
         !whiteSpace
           | whitespaceIsContextDependent = join (get wsImpl)
@@ -82,15 +83,14 @@ We have the following invariances to be checked up front:
   * at least one kind of comment must be enabled
   * the starts of line and multiline must not overlap
 
--- TODO: needs error messages put in
--- TODO: optimise manyTill?
+-- TODO: needs error messages put in (is the hide correct)
 -- TODO: remove guard, configure properly
 -}
 commentParser :: Desc.SpaceDesc -> Parsec ()
 commentParser Desc.SpaceDesc{..} =
   require (multiEnabled || singleEnabled) "skipComments" noComments $
     require (not (multiEnabled && isPrefixOf commentStart commentLine)) "skipComments" noOverlap $
-      void (multiLine <|> singleLine)
+      hide (multiLine <|> singleLine)
   where
     -- can't make these string until guard is gone
     openComment = atomic (string commentStart)
@@ -100,12 +100,14 @@ commentParser Desc.SpaceDesc{..} =
     wellNested 0 = unit
     wellNested n = closeComment *> wellNested (n - 1)
                <|> guard nestedComments *> openComment *> wellNested (n + 1)
-               <|> item *> wellNested n -- TODO: can this loop be tightened? first characters?
+               <|> item *> wellNested n
     singleLine = guard singleEnabled
               *> atomic (string commentLine)
-              *> void (manyTill item endOfLineComment)
+              *> skipManyTill item endOfLineComment
 
-    endOfLineComment = if commentLineAllowsEOF then void endOfLine <|> eof else void endOfLine
+    endOfLineComment
+      | commentLineAllowsEOF = void endOfLine <|> eof
+      | otherwise            = void endOfLine
 
     multiEnabled = not (null commentStart || null commentEnd)
     singleEnabled = not (null commentLine)

@@ -22,7 +22,7 @@ module Text.Gigaparsec.Combinator (
   -- parser succeeds, depending on the combinator. Depending on the combinator, all of the results produced by the
   -- repeated execution of the parser may be returned in a @[]@. These are almost essential for any practical parsing
   -- task.
-    manyN, skipMany, skipSome, skipManyN, count, count1, manyTill, someTill,
+    manyN, skipMany, skipSome, skipManyN, count, count1, manyTill, someTill, skipManyTill, skipSomeTill,
 
   -- * Optional Parsing Combinators
   -- | These combinators allow for the /possible/ parsing of some parser. If the parser succeeds, that is ok
@@ -53,7 +53,7 @@ module Text.Gigaparsec.Combinator (
   ) where
 
 import Text.Gigaparsec (Parsec, many, some, (<|>), ($>), (<:>), select,
-                        branch, empty, unit, manyl, somel, notFollowedBy, liftA2)
+                        branch, empty, unit, manyl, somel, notFollowedBy, liftA2, void)
 import Data.Foldable (asum, sequenceA_)
 
 {-|
@@ -554,6 +554,12 @@ someTill :: Parsec a   -- ^ @p@, the parser to execute multiple times.
          -> Parsec end -- ^ @end@, the parser that stops the parsing of @p@.
          -> Parsec [a] -- ^ a parser that parses @p@ until @end@ succeeds, returning the list of all the successful results.
 someTill p end = notFollowedBy end *> (p <:> manyTill p end)
+
+skipManyTill :: Parsec a -> Parsec end -> Parsec ()
+skipManyTill p end = void (manyTill p end)
+
+skipSomeTill :: Parsec a -> Parsec end -> Parsec ()
+skipSomeTill p end = void (someTill p end)
 
 -- this is ifP
 {-|
