@@ -1,4 +1,4 @@
-{-# LANGUAGE Safe #-}
+{-# LANGUAGE Trustworthy #-}
 {-# LANGUAGE TemplateHaskell, TypeOperators #-}
 module Text.Gigaparsec.Token.Patterns (overloadedStrings) where
 
