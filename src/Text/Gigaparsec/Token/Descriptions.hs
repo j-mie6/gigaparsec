@@ -22,10 +22,18 @@ plain = LexicalDesc { nameDesc = plainName
                     }
 
 type NameDesc :: *
-data NameDesc = NameDesc {}
+data NameDesc = NameDesc { identifierStart :: !CharPredicate
+                         , identifierLetter :: !CharPredicate
+                         , operatorStart :: !CharPredicate
+                         , operatorLetter :: !CharPredicate
+                         }
 
 plainName :: NameDesc
-plainName = NameDesc {}
+plainName = NameDesc { identifierStart = Nothing
+                     , identifierLetter = Nothing
+                     , operatorStart = Nothing
+                     , operatorLetter = Nothing
+                     }
 
 type SymbolDesc :: *
 data SymbolDesc = SymbolDesc { hardKeywords :: !(Set String)
