@@ -63,12 +63,9 @@ _softOperator hardOperators letter op =
   else atomic (string op *> notFollowedBy (void letter' <|> void (strings ends)))
   where ends = Set.fromList (mapMaybe (flip strip op) (Set.toList hardOperators))
         letter' = maybe empty satisfy letter
-        strip [] [] = Nothing
-        strip [] str = Just str
-        strip (c:pre) (c':str)
-          | c == c'   = strip pre str
-          | otherwise = Nothing
-        strip _ _ = Nothing
+        strip []      str@(:){}          = Just str
+        strip (c:pre) (c':str) | c == c' = strip pre str
+        strip _       _                  = Nothing
 
 -- TODO: HasField instances for the dot/comma/etc?
 -- FIXME: to make these work, well need to move sym into Symbol?
