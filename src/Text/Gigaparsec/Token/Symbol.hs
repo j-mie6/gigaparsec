@@ -29,7 +29,6 @@ mkSymbol SymbolDesc{..} NameDesc{..} = Symbol { softKeyword = _softKeyword caseS
                                               , softOperator = _softOperator hardOperators operatorLetter
                                               }
 
-
 mkSym :: SymbolDesc -> Symbol -> (String -> Parsec ())
 mkSym SymbolDesc{..} Symbol{..} str
   | Set.member str hardKeywords  = softKeyword str

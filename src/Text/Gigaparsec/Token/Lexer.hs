@@ -18,6 +18,8 @@ import Text.Gigaparsec.Errors.Combinator (hide)
 import Text.Gigaparsec.Token.Descriptions qualified as Desc
 import Text.Gigaparsec.Token.Symbol (Symbol, mkSym, mkSymbol)
 import Text.Gigaparsec.Token.Symbol qualified as Symbol (lexeme)
+import Text.Gigaparsec.Token.Names (Names, mkNames)
+import Text.Gigaparsec.Token.Names qualified as Names (lexeme)
 
 import Text.Gigaparsec.Internal.RT (fromIORef)
 import Text.Gigaparsec.Internal.Require (require)
@@ -41,9 +43,11 @@ mkLexer Desc.LexicalDesc{..} = Lexer {..}
         lexeme = Lexeme { apply = apply
                         , sym = apply . sym nonlexeme
                         , symbol = Symbol.lexeme apply (symbol nonlexeme)
+                        , names = Names.lexeme apply (names nonlexeme)
                         }
         nonlexeme = NonLexeme { sym = mkSym symbolDesc (symbol nonlexeme)
                               , symbol = mkSymbol symbolDesc nameDesc
+                              , names = mkNames nameDesc symbolDesc
                               }
         fully' p = whiteSpace space *> p <* eof
         fully p
@@ -57,10 +61,12 @@ data Lexeme = Lexeme
                 { apply :: !(forall a. Parsec a -> Parsec a) -- this is tricky...
                 , sym :: !(String -> Parsec ())
                 , symbol :: !Symbol
+                , names :: !Names
                 }
             | NonLexeme
                 { sym :: !(String -> Parsec ())
                 , symbol :: !Symbol
+                , names :: !Names
                 }
 
 type Space :: *

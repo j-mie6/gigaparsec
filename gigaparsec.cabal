@@ -93,6 +93,7 @@ library
                       Text.Gigaparsec.Expr.Subtype,
                       Text.Gigaparsec.Token.Descriptions,
                       Text.Gigaparsec.Token.Lexer,
+                      Text.Gigaparsec.Token.Names,
                       Text.Gigaparsec.Token.Patterns,
                       Text.Gigaparsec.Token.Symbol,
                       Text.Gigaparsec.Registers,
