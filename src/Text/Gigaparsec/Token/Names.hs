@@ -11,14 +11,15 @@ import Text.Gigaparsec (Parsec, empty, (<:>), atomic, filterS)
 import Text.Gigaparsec.Char (stringOfMany, satisfy)
 import Text.Gigaparsec.Errors.Combinator ((<?>))
 
-import Data.Set qualified as Set (member)
+import Data.Set qualified as Set (member, map)
 
 import Text.Gigaparsec.Token.Descriptions (
-    SymbolDesc(SymbolDesc, hardKeywords, hardOperators),
+    SymbolDesc(SymbolDesc, hardKeywords, hardOperators, caseSensitive),
     NameDesc(NameDesc, identifierStart, identifierLetter,
                        operatorStart, operatorLetter),
     CharPredicate
   )
+import Data.Char (toLower)
 
 -- TODO: primes are gross, better way?
 type Names :: *
@@ -29,14 +30,15 @@ data Names = Names { identifier :: !(Parsec String)
                    }
 
 mkNames :: NameDesc -> SymbolDesc -> Names
-mkNames NameDesc{..} SymbolDesc{..} = Names {..}
+mkNames NameDesc{..} symbolDesc@SymbolDesc{..} = Names {..}
   where
     -- TODO: error transformers
-    identifier =
-      keyOrOp identifierStart identifierLetter (flip Set.member hardKeywords) "identifier" id
+    !isReserved = isReservedName symbolDesc
+    !identifier =
+      keyOrOp identifierStart identifierLetter isReserved "identifier" id
     identifier' start =
       filterS (startsWith start) identifier
-    userDefinedOperator =
+    !userDefinedOperator =
       keyOrOp operatorStart operatorLetter (flip Set.member hardOperators) "operator" id
     userDefinedOperator' start =
       filterS (startsWith start) identifier
@@ -63,3 +65,10 @@ lexeme lexe Names{..} = Names { identifier = lexe identifier
                               , userDefinedOperator = lexe userDefinedOperator
                               , userDefinedOperator' = lexe . userDefinedOperator'
                               }
+
+isReservedName :: SymbolDesc -> String -> Bool
+isReservedName SymbolDesc{..}
+  | caseSensitive = flip Set.member hardKeywords
+  | otherwise     = flip Set.member lowerHardKeywords . allLower
+  where allLower = map toLower
+        lowerHardKeywords = Set.map allLower hardKeywords
