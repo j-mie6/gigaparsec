@@ -36,8 +36,8 @@ mkSym SymbolDesc{..} Symbol{..} str
   | otherwise                    = void (atomic (string str))
 
 lexeme :: (forall a. Parsec a -> Parsec a) -> Symbol -> Symbol
-lexeme _lex Symbol{..} = Symbol { softKeyword = _lex . softKeyword
-                                , softOperator = _lex . softKeyword
+lexeme lexe Symbol{..} = Symbol { softKeyword = lexe . softKeyword
+                                , softOperator = lexe . softOperator
                                 }
 
 -- TODO: requirement on non-empty name
