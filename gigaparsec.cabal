@@ -143,8 +143,8 @@ test-suite gigaparsec-test
                    Text.Gigaparsec.ErrorsTests,
                    Text.Gigaparsec.Expr.ChainTests,
                    Text.Gigaparsec.Expr.InfixTests,
-                   --Text.Gigaparsec.TokenTests,
-                   --Text.Gigaparsec.Token.NamesTests,
+                   Text.Gigaparsec.TokenTests,
+                   Text.Gigaparsec.Token.NamesTests,
                    Text.Gigaparsec.Internal.Test,
                    Text.Gigaparsec.Internal.TestError,
                    Text.Gigaparsec.Internal.PlainString
