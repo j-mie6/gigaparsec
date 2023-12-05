@@ -1,11 +1,17 @@
 {-# LANGUAGE Trustworthy #-}
 {-# LANGUAGE RecordWildCards #-}
 {-# OPTIONS_GHC -Wno-partial-fields #-}
+-- Ideally, we should probably expose all the functionally via this one file
+-- for ergonomics
 module Text.Gigaparsec.Token.Lexer (
     Lexer, mkLexer,
     lexeme, nonlexeme, fully, space,
     skipComments, whiteSpace, alter, initSpace,
-    sym, symbol,
+    sym, symbol, names,
+    -- Symbol
+    softKeyword, softOperator,
+    -- Names
+    identifier, identifier', userDefinedOperator, userDefinedOperator',
     apply
   ) where
 
@@ -16,9 +22,11 @@ import Text.Gigaparsec.Registers (put, get, localWith, rollback)
 import Text.Gigaparsec.Errors.Combinator (hide)
 
 import Text.Gigaparsec.Token.Descriptions qualified as Desc
-import Text.Gigaparsec.Token.Symbol (Symbol, mkSym, mkSymbol)
+import Text.Gigaparsec.Token.Symbol (Symbol, mkSym, mkSymbol, softKeyword, softOperator)
 import Text.Gigaparsec.Token.Symbol qualified as Symbol (lexeme)
-import Text.Gigaparsec.Token.Names (Names, mkNames)
+import Text.Gigaparsec.Token.Names (
+    Names, mkNames, identifier, identifier', userDefinedOperator, userDefinedOperator'
+  )
 import Text.Gigaparsec.Token.Names qualified as Names (lexeme)
 
 import Text.Gigaparsec.Internal.RT (fromIORef)
