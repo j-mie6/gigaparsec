@@ -1,6 +1,11 @@
 {-# LANGUAGE Safe #-}
 {-# LANGUAGE RecordWildCards, OverloadedLists #-}
-module Text.Gigaparsec.Token.Names where
+module Text.Gigaparsec.Token.Names (
+    Names, mkNames,
+    identifier, identifier',
+    userDefinedOperator, userDefinedOperator',
+    lexeme
+  ) where
 
 import Text.Gigaparsec (Parsec, empty, (<:>), atomic, filterS)
 import Text.Gigaparsec.Char (stringOfMany, satisfy)
@@ -8,7 +13,12 @@ import Text.Gigaparsec.Errors.Combinator ((<?>))
 
 import Data.Set qualified as Set (member)
 
-import Text.Gigaparsec.Token.Descriptions
+import Text.Gigaparsec.Token.Descriptions (
+    SymbolDesc(SymbolDesc, hardKeywords, hardOperators),
+    NameDesc(NameDesc, identifierStart, identifierLetter,
+                       operatorStart, operatorLetter),
+    CharPredicate
+  )
 
 -- TODO: primes are gross, better way?
 type Names :: *
@@ -48,4 +58,8 @@ mkNames NameDesc{..} SymbolDesc{..} = Names {..}
     startsWith (Just p) (c:_) = p c
 
 lexeme :: (forall a. Parsec a -> Parsec a) -> Names -> Names
-lexeme = const id
+lexeme lexe Names{..} = Names { identifier = lexe identifier
+                              , identifier' = lexe . identifier'
+                              , userDefinedOperator = lexe userDefinedOperator
+                              , userDefinedOperator' = lexe . userDefinedOperator'
+                              }
