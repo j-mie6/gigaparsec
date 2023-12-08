@@ -1,5 +1,5 @@
 {-# LANGUAGE Trustworthy #-}
-{-# LANGUAGE ExistentialQuantification, RecordWildCards, NamedFieldPuns #-}
+{-# LANGUAGE ExistentialQuantification, NamedFieldPuns #-}
 {-|
 Module      : Text.Gigaparsec.Debug
 Description : This module contains the very useful debugging combinator, as well as breakpoints.

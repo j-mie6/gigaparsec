@@ -68,7 +68,7 @@ common extensions
     -- Extensions we want enabled without having to specify them
     default-extensions: ScopedTypeVariables, RankNTypes, BangPatterns, TypeApplications,
                         MultiWayIf, DerivingStrategies, InstanceSigs, StandaloneKindSignatures,
-                        ImportQualifiedPost
+                        ImportQualifiedPost, RecordWildCards
 
 common base
     -- Other library packages from which modules are imported.
@@ -93,8 +93,10 @@ library
                       Text.Gigaparsec.Expr.Subtype,
                       Text.Gigaparsec.Position,
                       Text.Gigaparsec.Token.Descriptions,
+                      Text.Gigaparsec.Token.Generic,
                       Text.Gigaparsec.Token.Lexer,
                       Text.Gigaparsec.Token.Names,
+                      Text.Gigaparsec.Token.Numeric,
                       Text.Gigaparsec.Token.Patterns,
                       Text.Gigaparsec.Token.Symbol,
                       Text.Gigaparsec.Registers,

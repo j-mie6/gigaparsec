@@ -1,5 +1,5 @@
 {-# LANGUAGE Safe #-}
-{-# LANGUAGE RecordWildCards, OverloadedLists #-}
+{-# LANGUAGE OverloadedLists #-}
 module Text.Gigaparsec.Token.Names (
     Names, mkNames,
     identifier, identifier',

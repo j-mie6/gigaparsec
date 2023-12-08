@@ -1,18 +1,19 @@
 {-# LANGUAGE Trustworthy #-}
-{-# LANGUAGE RecordWildCards #-}
 {-# OPTIONS_GHC -Wno-partial-fields #-}
 -- Ideally, we should probably expose all the functionally via this one file
 -- for ergonomics
 module Text.Gigaparsec.Token.Lexer (
     Lexer, mkLexer,
     lexeme, nonlexeme, fully, space,
-    skipComments, whiteSpace, alter, initSpace,
-    sym, symbol, names,
+    apply, sym, symbol, names, -- more go here, no numeric and no text
     -- Symbol
     softKeyword, softOperator,
     -- Names
     identifier, identifier', userDefinedOperator, userDefinedOperator',
-    apply
+    -- Numeric
+    -- Text
+    -- Space
+    skipComments, whiteSpace, alter, initSpace,
   ) where
 
 import Text.Gigaparsec (Parsec, eof, void, empty, (<|>), atomic, unit)
@@ -22,12 +23,19 @@ import Text.Gigaparsec.Registers (put, get, localWith, rollback)
 import Text.Gigaparsec.Errors.Combinator (hide)
 
 import Text.Gigaparsec.Token.Descriptions qualified as Desc
+import Text.Gigaparsec.Token.Generic (mkGeneric)
 import Text.Gigaparsec.Token.Symbol (Symbol, mkSym, mkSymbol, softKeyword, softOperator)
 import Text.Gigaparsec.Token.Symbol qualified as Symbol (lexeme)
 import Text.Gigaparsec.Token.Names (
     Names, mkNames, identifier, identifier', userDefinedOperator, userDefinedOperator'
   )
 import Text.Gigaparsec.Token.Names qualified as Names (lexeme)
+import Text.Gigaparsec.Token.Numeric (
+    IntegerParsers, mkSigned, mkUnsigned,
+    FloatingParsers, mkSignedFloating, mkUnsignedFloating,
+    CombinedParsers, mkSignedCombined, mkUnsignedCombined
+  )
+import Text.Gigaparsec.Token.Numeric qualified as Numeric (lexemeInteger, lexemeFloating, lexemeCombined)
 
 import Text.Gigaparsec.Internal.RT (fromIORef)
 import Text.Gigaparsec.Internal.Require (require)
@@ -48,15 +56,29 @@ data Lexer = Lexer { lexeme :: !Lexeme
 mkLexer :: Desc.LexicalDesc -> Lexer
 mkLexer Desc.LexicalDesc{..} = Lexer {..}
   where apply p = p <* whiteSpace space
+        gen = mkGeneric
         lexeme = Lexeme { apply = apply
                         , sym = apply . sym nonlexeme
                         , symbol = Symbol.lexeme apply (symbol nonlexeme)
                         , names = Names.lexeme apply (names nonlexeme)
+                        , natural = Numeric.lexemeInteger apply (natural nonlexeme)
+                        , integer = Numeric.lexemeInteger apply (integer nonlexeme)
+                        , floating = Numeric.lexemeFloating apply (floating nonlexeme)
+                        , unsignedCombined =
+                            Numeric.lexemeCombined apply (unsignedCombined nonlexeme)
+                        , signedCombined =
+                            Numeric.lexemeCombined apply (signedCombined nonlexeme)
                         }
         nonlexeme = NonLexeme { sym = mkSym symbolDesc (symbol nonlexeme)
                               , symbol = mkSymbol symbolDesc nameDesc
                               , names = mkNames nameDesc symbolDesc
+                              , natural = mkUnsigned numericDesc gen
+                              , integer = mkSigned numericDesc (natural nonlexeme)
+                              , floating = mkSignedFloating numericDesc positiveFloating
+                              , unsignedCombined = mkUnsignedCombined numericDesc (natural nonlexeme) positiveFloating
+                              , signedCombined = mkSignedCombined numericDesc (unsignedCombined nonlexeme)
                               }
+        positiveFloating = mkUnsignedFloating numericDesc (natural nonlexeme) gen
         fully' p = whiteSpace space *> p <* eof
         fully p
           | Desc.whitespaceIsContextDependent spaceDesc = initSpace space *> fully' p
@@ -70,11 +92,21 @@ data Lexeme = Lexeme
                 , sym :: !(String -> Parsec ())
                 , symbol :: !Symbol
                 , names :: !Names
+                , natural :: !IntegerParsers
+                , integer :: !IntegerParsers
+                , floating :: !FloatingParsers
+                , unsignedCombined :: !CombinedParsers
+                , signedCombined :: !CombinedParsers
                 }
             | NonLexeme
                 { sym :: !(String -> Parsec ())
                 , symbol :: !Symbol
                 , names :: !Names
+                , natural :: !IntegerParsers
+                , integer :: !IntegerParsers
+                , floating :: !FloatingParsers
+                , unsignedCombined :: !CombinedParsers
+                , signedCombined :: !CombinedParsers
                 }
 
 type Space :: *
