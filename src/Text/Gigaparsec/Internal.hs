@@ -1,5 +1,5 @@
 {-# LANGUAGE Trustworthy #-}
-{-# LANGUAGE DeriveFunctor, StandaloneDeriving, RecordWildCards, NamedFieldPuns, CPP #-}
+{-# LANGUAGE DeriveFunctor, StandaloneDeriving, NamedFieldPuns, CPP #-}
 #include "portable-unlifted.h"
 {-# OPTIONS_HADDOCK hide #-}
 {-|

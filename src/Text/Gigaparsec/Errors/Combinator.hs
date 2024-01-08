@@ -71,8 +71,8 @@ filtering combinators, but are a little more verbose to use.
 
 import Prelude hiding (fail)
 
-import Text.Gigaparsec (Parsec)
 -- We want to use this to make the docs point to the right definition for users.
+import Text.Gigaparsec.Internal (Parsec)
 import Text.Gigaparsec.Internal qualified as Internal (Parsec(Parsec), line, col, emptyErr, specialisedErr, raise, unexpectedErr, hints, consumed, useHints, adjustErr, hints, hintsValidOffset)
 import Text.Gigaparsec.Internal.Errors (ParseError, CaretWidth(FlexibleCaret, RigidCaret), ExpectItem(ExpectNamed))
 import Text.Gigaparsec.Internal.Errors qualified as Internal (setLexical, amendErr, entrenchErr, dislodgeErr, partialAmendErr, labelErr, explainErr)

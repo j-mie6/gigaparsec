@@ -8,6 +8,7 @@ import Text.Gigaparsec.CombinatorTests qualified as Combinator
 import Text.Gigaparsec.DebugTests qualified as Debug
 import Text.Gigaparsec.ExprTests qualified as Expr
 import Text.Gigaparsec.ErrorsTests qualified as Errors
+import Text.Gigaparsec.TokenTests qualified as Token
 
 main :: IO ()
 main = defaultMain $ testGroup "gigaparsec"
@@ -16,5 +17,6 @@ main = defaultMain $ testGroup "gigaparsec"
   , Combinator.tests
   , Expr.tests
   , Errors.tests
+  , Token.tests
   , Debug.tests
   ]

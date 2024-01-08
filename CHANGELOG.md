@@ -3,6 +3,9 @@
 ## 0.2.2.0 -- TBD
 
 * Added `manyMap` and `someMap` combinators.
+* Added `filterS` and `mapMaybeS` combinators.
+* Added `Text.Gigaparsec.Position` module.
+* Added `Text.Gigaparsec.Token` and associated functionality.
 
 ## 0.2.1.0 -- 2023-11-14
 

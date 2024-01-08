@@ -1,5 +1,4 @@
 {-# LANGUAGE Safe #-}
-{-# LANGUAGE RecordWildCards #-}
 {-# OPTIONS_HADDOCK hide #-}
 {-# OPTIONS_GHC -Wno-all-missed-specialisations #-}
 module Text.Gigaparsec.Internal.Require (require, RequirementUnsatisfied) where
