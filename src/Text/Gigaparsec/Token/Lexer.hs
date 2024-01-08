@@ -33,7 +33,7 @@ import Text.Gigaparsec.Token.Names qualified as Names (lexeme)
 import Text.Gigaparsec.Token.Numeric (
     IntegerParsers, mkSigned, mkUnsigned,
     FloatingParsers, mkSignedFloating, mkUnsignedFloating,
-    CombinedParsers, mkSignedCombined, mkUnsignedCombined
+    CombinedParsers, mkSignedCombined, mkUnsignedCombined, CanHoldSigned, CanHoldUnsigned
   )
 import Text.Gigaparsec.Token.Numeric qualified as Numeric (lexemeInteger, lexemeFloating, lexemeCombined)
 
@@ -92,8 +92,8 @@ data Lexeme = Lexeme
                 , sym :: !(String -> Parsec ())
                 , symbol :: !Symbol
                 , names :: !Names
-                , natural :: !IntegerParsers
-                , integer :: !IntegerParsers
+                , natural :: !(IntegerParsers CanHoldUnsigned)
+                , integer :: !(IntegerParsers CanHoldSigned)
                 , floating :: !FloatingParsers
                 , unsignedCombined :: !CombinedParsers
                 , signedCombined :: !CombinedParsers
@@ -102,8 +102,8 @@ data Lexeme = Lexeme
                 { sym :: !(String -> Parsec ())
                 , symbol :: !Symbol
                 , names :: !Names
-                , natural :: !IntegerParsers
-                , integer :: !IntegerParsers
+                , natural :: !(IntegerParsers CanHoldUnsigned)
+                , integer :: !(IntegerParsers CanHoldSigned)
                 , floating :: !FloatingParsers
                 , unsignedCombined :: !CombinedParsers
                 , signedCombined :: !CombinedParsers
