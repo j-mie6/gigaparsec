@@ -104,102 +104,73 @@ data IntegerParsers canHold = IntegerParsers { decimal :: Parsec Integer
                                              , octal :: Parsec Integer
                                              , binary :: Parsec Integer
                                              , number :: Parsec Integer
-                                             , decimal8 :: forall a. canHold 'B8 a => Parsec a
-                                             , hexadecimal8 :: forall a. canHold 'B8 a => Parsec a
-                                             , octal8 :: forall a. canHold 'B8 a => Parsec a
-                                             , binary8 :: forall a. canHold 'B8 a => Parsec a
-                                             , number8 :: forall a. canHold 'B8 a => Parsec a
-                                             , decimal16 :: forall a. canHold 'B16 a => Parsec a
-                                             , hexadecimal16 :: forall a. canHold 'B16 a => Parsec a
-                                             , octal16 :: forall a. canHold 'B16 a => Parsec a
-                                             , binary16 :: forall a. canHold 'B16 a => Parsec a
-                                             , number16 :: forall a. canHold 'B16 a => Parsec a
-                                             , decimal32 :: forall a. canHold 'B32 a => Parsec a
-                                             , hexadecimal32 :: forall a. canHold 'B32 a => Parsec a
-                                             , octal32 :: forall a. canHold 'B32 a => Parsec a
-                                             , binary32 :: forall a. canHold 'B32 a => Parsec a
-                                             , number32 :: forall a. canHold 'B32 a => Parsec a
-                                             , decimal64 :: forall a. canHold 'B64 a => Parsec a
-                                             , hexadecimal64 :: forall a. canHold 'B64 a => Parsec a
-                                             , octal64 :: forall a. canHold 'B64 a => Parsec a
-                                             , binary64 :: forall a. canHold 'B64 a => Parsec a
-                                             , number64 :: forall a. canHold 'B64 a => Parsec a
+                                             , _bounded :: forall (bits :: Bits) t. canHold bits t => Proxy bits -> Parsec Integer -> Int -> Parsec t
                                              }
 
-mkIntegerParsers :: forall (canHold :: (Bits -> * -> Constraint)).
-                    (forall (bits :: Bits) t. canHold bits t => Proxy bits -> Parsec Integer -> Int -> Parsec t)
-                 -> Parsec Integer
-                 -> Parsec Integer
-                 -> Parsec Integer
-                 -> Parsec Integer
-                 -> Parsec Integer
-                 -> IntegerParsers canHold
-mkIntegerParsers bounded decimal hexadecimal octal binary number = IntegerParsers {..}
-  where decimalBounded :: forall (bits :: Bits) t. canHold bits t => Parsec t
-        decimalBounded = bounded (Proxy @bits) decimal 10
+decimalBounded :: forall (bits :: Bits) canHold t. canHold bits t => IntegerParsers canHold -> Parsec t
+decimalBounded IntegerParsers{..} = _bounded (Proxy @bits) decimal 10
 
-        hexadecimalBounded :: forall (bits :: Bits) t. canHold bits t => Parsec t
-        hexadecimalBounded = bounded (Proxy @bits) hexadecimal 16
+hexadecimalBounded :: forall (bits :: Bits) canHold t. canHold bits t => IntegerParsers canHold -> Parsec t
+hexadecimalBounded IntegerParsers{..} = _bounded (Proxy @bits) hexadecimal 16
 
-        octalBounded :: forall (bits :: Bits) t. canHold bits t => Parsec t
-        octalBounded = bounded (Proxy @bits) octal 8
+octalBounded :: forall (bits :: Bits) canHold t. canHold bits t => IntegerParsers canHold -> Parsec t
+octalBounded IntegerParsers{..} = _bounded (Proxy @bits) octal 8
 
-        binaryBounded :: forall (bits :: Bits) t. canHold bits t => Parsec t
-        binaryBounded = bounded (Proxy @bits) binary 2
+binaryBounded :: forall (bits :: Bits) canHold t. canHold bits t => IntegerParsers canHold -> Parsec t
+binaryBounded IntegerParsers{..} = _bounded (Proxy @bits) binary 2
 
-        numberBounded :: forall (bits :: Bits) t. canHold bits t => Parsec t
-        numberBounded = bounded (Proxy @bits) number 10
+numberBounded :: forall (bits :: Bits) canHold t. canHold bits t => IntegerParsers canHold -> Parsec t
+numberBounded IntegerParsers{..} = _bounded (Proxy @bits) number 10
 
-        decimal8 :: forall t. canHold 'B8 t => Parsec t
-        decimal8 = decimalBounded @'B8
-        decimal16 :: forall t. canHold 'B16 t => Parsec t
-        decimal16 = decimalBounded @'B16
-        decimal32 :: forall t. canHold 'B32 t => Parsec t
-        decimal32 = decimalBounded @'B32
-        decimal64 :: forall t. canHold 'B64 t => Parsec t
-        decimal64 = decimalBounded @'B64
+decimal8 :: canHold 'B8 a => IntegerParsers canHold -> Parsec a
+decimal8 = decimalBounded @'B8
+hexadecimal8 :: canHold 'B8 a => IntegerParsers canHold -> Parsec a
+hexadecimal8 = hexadecimalBounded @'B8
+octal8 :: canHold 'B8 a => IntegerParsers canHold -> Parsec a
+octal8 = octalBounded @'B8
+binary8 :: canHold 'B8 a => IntegerParsers canHold -> Parsec a
+binary8 = binaryBounded @'B8
+number8 :: canHold 'B8 a => IntegerParsers canHold -> Parsec a
+number8 = numberBounded @'B8
 
-        hexadecimal8 :: forall t. canHold 'B8 t => Parsec t
-        hexadecimal8 = hexadecimalBounded @'B8
-        hexadecimal16 :: forall t. canHold 'B16 t => Parsec t
-        hexadecimal16 = hexadecimalBounded @'B16
-        hexadecimal32 :: forall t. canHold 'B32 t => Parsec t
-        hexadecimal32 = hexadecimalBounded @'B32
-        hexadecimal64 :: forall t. canHold 'B64 t => Parsec t
-        hexadecimal64 = hexadecimalBounded @'B64
+decimal16 :: canHold 'B16 a => IntegerParsers canHold -> Parsec a
+decimal16 = decimalBounded @'B16
+hexadecimal16 :: canHold 'B16 a => IntegerParsers canHold -> Parsec a
+hexadecimal16 = hexadecimalBounded @'B16
+octal16 :: canHold 'B16 a => IntegerParsers canHold -> Parsec a
+octal16 = octalBounded @'B16
+binary16 :: canHold 'B16 a => IntegerParsers canHold -> Parsec a
+binary16 = binaryBounded @'B16
+number16 :: canHold 'B16 a => IntegerParsers canHold -> Parsec a
+number16 = numberBounded @'B16
 
-        octal8 :: forall t. canHold 'B8 t => Parsec t
-        octal8 = octalBounded @'B8
-        octal16 :: forall t. canHold 'B16 t => Parsec t
-        octal16 = octalBounded @'B16
-        octal32 :: forall t. canHold 'B32 t => Parsec t
-        octal32 = octalBounded @'B32
-        octal64 :: forall t. canHold 'B64 t => Parsec t
-        octal64 = octalBounded @'B64
+decimal32 :: canHold 'B32 a => IntegerParsers canHold -> Parsec a
+decimal32 = decimalBounded @'B32
+hexadecimal32 :: canHold 'B32 a => IntegerParsers canHold -> Parsec a
+hexadecimal32 = hexadecimalBounded @'B32
+octal32 :: canHold 'B32 a => IntegerParsers canHold -> Parsec a
+octal32 = octalBounded @'B32
+binary32 :: canHold 'B32 a => IntegerParsers canHold -> Parsec a
+binary32 = binaryBounded @'B32
+number32 :: canHold 'B32 a => IntegerParsers canHold -> Parsec a
+number32 = numberBounded @'B32
 
-        binary8 :: forall t. canHold 'B8 t => Parsec t
-        binary8 = binaryBounded @'B8
-        binary16 :: forall t. canHold 'B16 t => Parsec t
-        binary16 = binaryBounded @'B16
-        binary32 :: forall t. canHold 'B32 t => Parsec t
-        binary32 = binaryBounded @'B32
-        binary64 :: forall t. canHold 'B64 t => Parsec t
-        binary64 = binaryBounded @'B64
-
-        number8 :: forall t. canHold 'B8 t => Parsec t
-        number8 = numberBounded @'B8
-        number16 :: forall t. canHold 'B16 t => Parsec t
-        number16 = numberBounded @'B16
-        number32 :: forall t. canHold 'B32 t => Parsec t
-        number32 = numberBounded @'B32
-        number64 :: forall t. canHold 'B64 t => Parsec t
-        number64 = numberBounded @'B64
+decimal64 :: canHold 'B64 a => IntegerParsers canHold -> Parsec a
+decimal64 = decimalBounded @'B64
+hexadecimal64 :: canHold 'B64 a => IntegerParsers canHold -> Parsec a
+hexadecimal64 = hexadecimalBounded @'B64
+octal64 :: canHold 'B64 a => IntegerParsers canHold -> Parsec a
+octal64 = octalBounded @'B64
+binary64 :: canHold 'B64 a => IntegerParsers canHold -> Parsec a
+binary64 = binaryBounded @'B64
+number64 :: canHold 'B64 a => IntegerParsers canHold -> Parsec a
+number64 = numberBounded @'B64
 
 mkUnsigned :: NumericDesc -> GenericNumeric -> IntegerParsers CanHoldUnsigned
-mkUnsigned desc@NumericDesc{..} gen = mkIntegerParsers bounded decimal hexadecimal octal binary number
-  where bounded :: forall (bits :: Bits) t. CanHoldUnsigned bits t
-                => Proxy bits -> Parsec Integer -> Int -> Parsec t
-        bounded _ num _radix = mapMaybeS
+mkUnsigned desc@NumericDesc{..} gen = IntegerParsers {..}
+  where _bounded :: forall (bits :: Bits) t. CanHoldUnsigned bits t
+                 => Proxy bits -> Parsec Integer -> Int -> Parsec t
+        _bounded _ num _radix = mapMaybeS
           (\n -> if n >= 0 && n <= upperUnsigned @bits then Just (fromInteger n) else Nothing)
           num
 
@@ -244,11 +215,17 @@ mkUnsigned desc@NumericDesc{..} gen = mkIntegerParsers bounded decimal hexadecim
                   | otherwise = id
 
 mkSigned :: NumericDesc -> IntegerParsers c -> IntegerParsers CanHoldSigned
-mkSigned NumericDesc{..} unsigned =
-  mkIntegerParsers bounded _decimal _hexadecimal _octal _binary _number
-  where bounded :: forall (bits :: Bits) t. CanHoldSigned bits t
-                => Proxy bits -> Parsec Integer -> Int -> Parsec t
-        bounded _ num _radix = mapMaybeS
+mkSigned NumericDesc{..} unsigned = IntegerParsers {
+    decimal = _decimal,
+    hexadecimal = _hexadecimal,
+    octal = _octal,
+    binary = _binary,
+    number = _number,
+    ..
+  }
+  where _bounded :: forall (bits :: Bits) t. CanHoldSigned bits t
+                 => Proxy bits -> Parsec Integer -> Int -> Parsec t
+        _bounded _ num _radix = mapMaybeS
           (\n -> if n >= lowerSigned @bits && n <= upperSigned @bits
                  then Just (fromInteger n)
                  else Nothing)
@@ -284,7 +261,14 @@ mkSignedCombined :: NumericDesc -> CombinedParsers -> CombinedParsers
 mkSignedCombined NumericDesc{..} unsigned = CombinedParsers {}-}
 
 lexemeInteger :: (forall a. Parsec a -> Parsec a) -> IntegerParsers c -> IntegerParsers c
-lexemeInteger = const id
+lexemeInteger lexe IntegerParsers{..} = IntegerParsers {
+    decimal = lexe decimal,
+    hexadecimal = lexe hexadecimal,
+    octal = lexe octal,
+    binary = lexe binary,
+    number = lexe number,
+    _bounded = \n b radix -> lexe (_bounded n b radix)
+  }
 
 {-lexemeFloating :: (forall a. Parsec a -> Parsec a) -> FloatingParsers -> FloatingParsers
 lexemeFloating = const id
