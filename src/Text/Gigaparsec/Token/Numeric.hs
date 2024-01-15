@@ -265,7 +265,7 @@ mkSigned NumericDesc{..} unsigned =
         _binary = atomic (sign <*> binary unsigned)
         _number = atomic (sign <*> number unsigned)
 
-type FloatingParsers :: *
+{-type FloatingParsers :: *
 data FloatingParsers = FloatingParsers {}
 
 mkUnsignedFloating :: NumericDesc -> IntegerParsers CanHoldUnsigned -> GenericNumeric -> FloatingParsers
@@ -281,13 +281,14 @@ mkUnsignedCombined :: NumericDesc -> IntegerParsers CanHoldUnsigned -> FloatingP
 mkUnsignedCombined NumericDesc{..} natural floating = CombinedParsers {}
 
 mkSignedCombined :: NumericDesc -> CombinedParsers -> CombinedParsers
-mkSignedCombined NumericDesc{..} unsigned = CombinedParsers {}
+mkSignedCombined NumericDesc{..} unsigned = CombinedParsers {}-}
 
 lexemeInteger :: (forall a. Parsec a -> Parsec a) -> IntegerParsers c -> IntegerParsers c
 lexemeInteger = const id
 
-lexemeFloating :: (forall a. Parsec a -> Parsec a) -> FloatingParsers -> FloatingParsers
+{-lexemeFloating :: (forall a. Parsec a -> Parsec a) -> FloatingParsers -> FloatingParsers
 lexemeFloating = const id
 
 lexemeCombined :: (forall a. Parsec a -> Parsec a) -> CombinedParsers -> CombinedParsers
 lexemeCombined = const id
+-}

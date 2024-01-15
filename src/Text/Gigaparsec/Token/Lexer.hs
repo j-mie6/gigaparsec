@@ -32,10 +32,11 @@ import Text.Gigaparsec.Token.Names (
 import Text.Gigaparsec.Token.Names qualified as Names (lexeme)
 import Text.Gigaparsec.Token.Numeric (
     IntegerParsers, mkSigned, mkUnsigned,
-    FloatingParsers, mkSignedFloating, mkUnsignedFloating,
-    CombinedParsers, mkSignedCombined, mkUnsignedCombined, CanHoldSigned, CanHoldUnsigned
+    --FloatingParsers, mkSignedFloating, mkUnsignedFloating,
+    --CombinedParsers, mkSignedCombined, mkUnsignedCombined,
+    CanHoldSigned, CanHoldUnsigned
   )
-import Text.Gigaparsec.Token.Numeric qualified as Numeric (lexemeInteger, lexemeFloating, lexemeCombined)
+import Text.Gigaparsec.Token.Numeric qualified as Numeric (lexemeInteger, {-lexemeFloating, lexemeCombined-})
 
 import Text.Gigaparsec.Internal.RT (fromIORef)
 import Text.Gigaparsec.Internal.Require (require)
@@ -63,22 +64,22 @@ mkLexer Desc.LexicalDesc{..} = Lexer {..}
                         , names = Names.lexeme apply (names nonlexeme)
                         , natural = Numeric.lexemeInteger apply (natural nonlexeme)
                         , integer = Numeric.lexemeInteger apply (integer nonlexeme)
-                        , floating = Numeric.lexemeFloating apply (floating nonlexeme)
+                        {-, floating = Numeric.lexemeFloating apply (floating nonlexeme)
                         , unsignedCombined =
                             Numeric.lexemeCombined apply (unsignedCombined nonlexeme)
                         , signedCombined =
-                            Numeric.lexemeCombined apply (signedCombined nonlexeme)
+                            Numeric.lexemeCombined apply (signedCombined nonlexeme)-}
                         }
         nonlexeme = NonLexeme { sym = mkSym symbolDesc (symbol nonlexeme)
                               , symbol = mkSymbol symbolDesc nameDesc
                               , names = mkNames nameDesc symbolDesc
                               , natural = mkUnsigned numericDesc gen
                               , integer = mkSigned numericDesc (natural nonlexeme)
-                              , floating = mkSignedFloating numericDesc positiveFloating
+                              {-, floating = mkSignedFloating numericDesc positiveFloating
                               , unsignedCombined = mkUnsignedCombined numericDesc (natural nonlexeme) positiveFloating
-                              , signedCombined = mkSignedCombined numericDesc (unsignedCombined nonlexeme)
+                              , signedCombined = mkSignedCombined numericDesc (unsignedCombined nonlexeme)-}
                               }
-        positiveFloating = mkUnsignedFloating numericDesc (natural nonlexeme) gen
+        --positiveFloating = mkUnsignedFloating numericDesc (natural nonlexeme) gen
         fully' p = whiteSpace space *> p <* eof
         fully p
           | Desc.whitespaceIsContextDependent spaceDesc = initSpace space *> fully' p
@@ -94,9 +95,10 @@ data Lexeme = Lexeme
                 , names :: !Names
                 , natural :: !(IntegerParsers CanHoldUnsigned)
                 , integer :: !(IntegerParsers CanHoldSigned)
-                , floating :: !FloatingParsers
-                , unsignedCombined :: !CombinedParsers
-                , signedCombined :: !CombinedParsers
+                -- desperate times, desperate measures
+                --, floating :: !FloatingParsers
+                --, unsignedCombined :: !CombinedParsers
+                --, signedCombined :: !CombinedParsers
                 }
             | NonLexeme
                 { sym :: !(String -> Parsec ())
@@ -104,9 +106,10 @@ data Lexeme = Lexeme
                 , names :: !Names
                 , natural :: !(IntegerParsers CanHoldUnsigned)
                 , integer :: !(IntegerParsers CanHoldSigned)
-                , floating :: !FloatingParsers
-                , unsignedCombined :: !CombinedParsers
-                , signedCombined :: !CombinedParsers
+                -- desperate times, desperate measures
+                --, floating :: !FloatingParsers
+                --, unsignedCombined :: !CombinedParsers
+                --, signedCombined :: !CombinedParsers
                 }
 
 type Space :: *
