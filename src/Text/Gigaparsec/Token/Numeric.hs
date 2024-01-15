@@ -1,6 +1,6 @@
 {-# LANGUAGE Safe #-}
 {-# LANGUAGE DataKinds, KindSignatures, ConstraintKinds, MultiParamTypeClasses, AllowAmbiguousTypes, FlexibleInstances, FlexibleContexts, UndecidableInstances, ApplicativeDo #-}
--- TODO: refine
+-- TODO: refine, move to Internal
 module Text.Gigaparsec.Token.Numeric (module Text.Gigaparsec.Token.Numeric) where
 
 import Text.Gigaparsec (Parsec, mapMaybeS, unit, void, atomic, (<|>), ($>))

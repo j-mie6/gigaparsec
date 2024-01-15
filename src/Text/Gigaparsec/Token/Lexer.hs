@@ -153,33 +153,33 @@ We have the following invariances to be checked up front:
 commentParser :: Desc.SpaceDesc -> Parsec ()
 commentParser Desc.SpaceDesc{..} =
   require (multiEnabled || singleEnabled) "skipComments" noComments $
-    require (not (multiEnabled && isPrefixOf commentStart commentLine)) "skipComments" noOverlap $
+    require (not (multiEnabled && isPrefixOf multiLineCommentStart lineCommentStart)) "skipComments" noOverlap $
       hide (multiLine <|> singleLine)
   where
     -- can't make these strict until guard is gone
-    openComment = atomic (string commentStart)
-    closeComment = atomic (string commentEnd)
+    openComment = atomic (string multiLineCommentStart)
+    closeComment = atomic (string multiLineCommentEnd)
     multiLine = guard multiEnabled *> openComment *> wellNested 1
     wellNested :: Int -> Parsec ()
     wellNested 0 = unit
     wellNested n = closeComment *> wellNested (n - 1)
-               <|> guard nestedComments *> openComment *> wellNested (n + 1)
+               <|> guard multiLineNestedComments *> openComment *> wellNested (n + 1)
                <|> item *> wellNested n
     singleLine = guard singleEnabled
-              *> atomic (string commentLine)
+              *> atomic (string lineCommentStart)
               *> skipManyTill item endOfLineComment
 
     endOfLineComment
-      | commentLineAllowsEOF = void endOfLine <|> eof
+      | lineCommentAllowsEOF = void endOfLine <|> eof
       | otherwise            = void endOfLine
 
-    multiEnabled = not (null commentStart || null commentEnd)
-    singleEnabled = not (null commentLine)
+    multiEnabled = not (null multiLineCommentStart || null multiLineCommentEnd)
+    singleEnabled = not (null lineCommentStart)
     noComments = "one of single- or multi-line comments must be enabled"
     noOverlap = "single-line comments must not overlap with multi-line comments"
 
 supportsComments :: Desc.SpaceDesc -> Bool
-supportsComments Desc.SpaceDesc{..} = not (null commentLine && null commentStart)
+supportsComments Desc.SpaceDesc{..} = not (null lineCommentStart && null multiLineCommentStart)
 
 type UnsupportedOperation :: *
 newtype UnsupportedOperation = UnsupportedOperation String deriving stock Eq

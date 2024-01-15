@@ -96,21 +96,25 @@ plainNumeric = NumericDesc { literalBreakChar = NoBreakChar
                                                                       , chars = ['e', 'E']
                                                                       , base = 10
                                                                       , expSign = PlusOptional
+                                                                      , expLeadingZerosAllowd = True
                                                                       }
                            , hexadecimalExponentDesc = ExponentsSupported { compulsory = True
                                                                           , chars = ['p', 'P']
                                                                           , base = 2
                                                                           , expSign = PlusOptional
+                                                                          , expLeadingZerosAllowd = True
                                                                           }
                            , octalExponentDesc = ExponentsSupported { compulsory = True
                                                                     , chars = ['e', 'E', 'p', 'P']
                                                                     , base = 2
                                                                     , expSign = PlusOptional
+                                                                    , expLeadingZerosAllowd = True
                                                                     }
                            , binaryExponentDesc = ExponentsSupported { compulsory = True
                                                                      , chars = ['e', 'E', 'p', 'P']
                                                                      , base = 2
                                                                      , expSign = PlusOptional
+                                                                     , expLeadingZerosAllowd = True
                                                                      }
                            }
 
@@ -120,6 +124,7 @@ data ExponentDesc = NoExponents
                                        , chars :: !(Set Char)
                                        , base :: !Int
                                        , expSign :: !PlusSignPresence
+                                       , expLeadingZerosAllowd :: !Bool
                                        }
 
 type BreakCharDesc :: *
@@ -134,15 +139,15 @@ data PlusSignPresence = PlusRequired | PlusOptional | PlusIllegal
 type TextDesc :: *
 data TextDesc = TextDesc { escapeSequences :: {-# UNPACK #-} !EscapeDesc
                          , characterLiteralEnd :: !Char
-                         , stringEnds :: !(Set String)
-                         , multiStringEnds :: !(Set String)
+                         , stringEnds :: !(Set (String, String))
+                         , multiStringEnds :: !(Set (String, String))
                          , graphicCharacter :: !CharPredicate
                          }
 
 plainText :: TextDesc
 plainText = TextDesc { escapeSequences = plainEscape
                      , characterLiteralEnd = '\''
-                     , stringEnds = ["\""]
+                     , stringEnds = [("\"", "\"")]
                      , multiStringEnds = []
                      , graphicCharacter = Just (>= ' ')
                      }
@@ -150,8 +155,7 @@ plainText = TextDesc { escapeSequences = plainEscape
 type EscapeDesc :: *
 data EscapeDesc = EscapeDesc { escBegin :: !Char
                              , literals :: !(Set Char)
-                             , singleMap :: !(Map Char Char)
-                             , multiMap :: !(Map String Char)
+                             , mapping :: !(Map String Char)
                              , decimalEscape :: !NumericEscape
                              , hexadecimalEscape :: !NumericEscape
                              , octalEscape :: !NumericEscape
@@ -163,8 +167,7 @@ data EscapeDesc = EscapeDesc { escBegin :: !Char
 plainEscape :: EscapeDesc
 plainEscape = EscapeDesc { escBegin = '\\'
                          , literals = ['\\']
-                         , singleMap = []
-                         , multiMap = []
+                         , mapping = []
                          , decimalEscape = NumericIllegal
                          , hexadecimalEscape = NumericIllegal
                          , octalEscape = NumericIllegal
@@ -186,21 +189,21 @@ type NumberOfDigits :: *
 data NumberOfDigits = Unbounded | Exactly !(NonEmpty Word) | AtMost !Word
 
 type SpaceDesc :: *
-data SpaceDesc = SpaceDesc { commentStart :: !String
-                           , commentEnd :: !String
-                           , commentLine :: !String
-                           , commentLineAllowsEOF :: !Bool
-                           , nestedComments :: !Bool
+data SpaceDesc = SpaceDesc { lineCommentStart :: !String
+                           , lineCommentAllowsEOF :: !Bool
+                           , multiLineCommentStart :: !String
+                           , multiLineCommentEnd :: !String
+                           , multiLineNestedComments :: !Bool
                            , space :: !CharPredicate
                            , whitespaceIsContextDependent :: !Bool
                            }
 
 plainSpace :: SpaceDesc
-plainSpace = SpaceDesc { commentStart = ""
-                       , commentEnd = ""
-                       , commentLine = ""
-                       , commentLineAllowsEOF = True
-                       , nestedComments = False
+plainSpace = SpaceDesc { lineCommentStart = ""
+                       , lineCommentAllowsEOF = True
+                       , multiLineCommentStart = ""
+                       , multiLineCommentEnd = ""
+                       , multiLineNestedComments = False
                        , space = Just isSpace
                        , whitespaceIsContextDependent = False
                        }
