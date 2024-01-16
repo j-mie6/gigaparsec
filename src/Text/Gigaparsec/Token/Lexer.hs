@@ -11,6 +11,7 @@ module Text.Gigaparsec.Token.Lexer (
     -- Names
     identifier, identifier', userDefinedOperator, userDefinedOperator',
     -- Numeric
+    integer, natural,
     -- Text
     -- Space
     skipComments, whiteSpace, alter, initSpace,
