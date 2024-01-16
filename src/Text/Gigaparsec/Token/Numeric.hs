@@ -24,12 +24,12 @@ import Control.Monad (when, unless)
 
 #if __GLASGOW_HASKELL__ >= 904
 
-import GHC.TypeLits (type (<=?))
+import GHC.TypeLits (type (<=?), Nat)
 import GHC.TypeError(TypeError, ErrorMessage(Text, (:<>:), ShowType), Assert)
 
 #else
 
-import GHC.TypeLits (type (<=))
+import GHC.TypeLits (type (<=), Nat)
 import GHC.TypeLits(TypeError, ErrorMessage(Text, (:<>:), ShowType))
 
 #endif
@@ -101,7 +101,7 @@ class BitBounds b where
   lowerSigned :: Integer
   upperUnsigned :: Integer
   bits :: Int
-  type BitsNat b :: Natural 
+  type BitsNat b :: Nat 
 instance BitBounds 'B8 where
   upperSigned = fromIntegral (maxBound @Int8)
   lowerSigned = fromIntegral (minBound @Int8)
