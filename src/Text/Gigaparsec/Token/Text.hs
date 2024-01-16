@@ -2,16 +2,19 @@
 -- TODO: refine, move to Internal
 module Text.Gigaparsec.Token.Text (module Text.Gigaparsec.Token.Text) where
 
-import Text.Gigaparsec (Parsec, void, (<|>), empty, filterS, mapMaybeS, somel, (<~>), ($>), atomic)
-import Text.Gigaparsec.Char (char, digit, hexDigit, octDigit, bit, satisfy, trie)
+import Text.Gigaparsec (Parsec, void, (<|>), empty, filterS, mapMaybeS, somel, (<~>), ($>), atomic, some)
+import Text.Gigaparsec.Char (char, digit, hexDigit, octDigit, bit, satisfy, trie, string)
 import Text.Gigaparsec.Token.Descriptions (TextDesc(..), EscapeDesc(..), NumericEscape (NumericSupported, NumericIllegal, numDigits, maxValue, prefix), CharPredicate, NumberOfDigits (Exactly, AtMost, Unbounded))
 import Text.Gigaparsec.Token.Generic (GenericNumeric(zeroAllowedDecimal, zeroAllowedHexadecimal, zeroAllowedOctal, zeroAllowedBinary))
-import Data.Char (isSpace, chr, ord, digitToInt)
+import Data.Char (isSpace, chr, ord, digitToInt, isAscii, isLatin1)
 import Data.Map qualified as Map (insert, map)
+import Data.Set (Set)
+import Data.Set qualified as Set (toList)
 import Data.List.NonEmpty (NonEmpty((:|)), sort)
 import Text.Gigaparsec.Registers (Reg, make, unsafeMake, gets, modify, put, get)
-import Text.Gigaparsec.Combinator (guardS)
+import Text.Gigaparsec.Combinator (guardS, choice, manyTill)
 import Control.Applicative (liftA3)
+import Data.Maybe (catMaybes)
 
 type TextParsers :: * -> *
 data TextParsers t = TextParsers { unicode :: Parsec t
@@ -37,6 +40,51 @@ mkCharacterParsers TextDesc{..} escape = TextParsers {..}
         uncheckedUniLetter = escapeChar escape <|> graphic
 
         graphic = maybe empty satisfy (letter characterLiteralEnd False graphicCharacter)
+
+type StringChar :: *
+data StringChar = RawChar
+                | EscapeChar {-# UNPACK #-} !Char (Parsec (Maybe Char))
+
+mkEscapeChar :: EscapeDesc -> Escape -> Parsec () -> StringChar
+mkEscapeChar !desc !esc !space = EscapeChar (escBegin desc) stringEsc
+  where stringEsc = escapeBegin esc *> (escapeGap $> Nothing <|>
+                                        escapeEmpty $> Nothing <|>
+                                        Just <$> escapeCode esc)
+        escapeEmpty = maybe empty char (emptyEscape desc)
+        escapeGap
+          | gapsSupported desc = some space *> escapeBegin esc
+          | otherwise = empty
+
+mkChar :: StringChar -> CharPredicate -> Parsec (Maybe Char)
+mkChar RawChar = maybe empty (fmap Just . satisfy)
+mkChar (EscapeChar escBegin stringEsc) =
+  foldr (\p -> (<|> fmap Just (satisfy (\c -> p c && c /= escBegin)))) stringEsc
+
+isRawChar :: StringChar -> Bool
+isRawChar RawChar = True
+isRawChar EscapeChar{} = False
+
+ensureAscii :: Parsec String -> Parsec String
+ensureAscii = filterS (all isAscii)
+
+ensureLatin1 :: Parsec String -> Parsec String
+ensureLatin1 = filterS (all isLatin1)
+
+mkStringParsers :: Set (String, String) -> StringChar -> CharPredicate -> Bool -> StringParsers
+mkStringParsers !ends !stringChar !isGraphic !allowsAllSpace = TextParsers {..}
+  where ascii = stringLiteral ensureAscii
+        latin1 = stringLiteral ensureLatin1
+        unicode = stringLiteral id
+
+        stringLiteral :: (Parsec String -> Parsec String) -> Parsec String
+        stringLiteral valid = choice (map (uncurry (makeStringParser valid)) (Set.toList ends))
+
+        makeStringParser :: (Parsec String -> Parsec String) -> String -> String -> Parsec String
+        makeStringParser valid begin end@(terminalInit : _) =
+          let strChar = mkChar stringChar (letter terminalInit allowsAllSpace isGraphic)
+          in (string begin *>) . valid $
+               catMaybes <$> manyTill (Just <$> char terminalInit <|> strChar) (atomic (string end))
+        makeStringParser _ _ [] = error "string terminals cannot be empty"
 
 letter :: Char -> Bool -> CharPredicate -> CharPredicate
 letter !terminalLead !allowsAllSpace (Just g)
