@@ -1,12 +1,13 @@
 {-# LANGUAGE Safe #-}
 -- TODO: refine, move to Internal
-module Text.Gigaparsec.Token.Numeric (module Text.Gigaparsec.Token.Numeric) where
+module Text.Gigaparsec.Token.Text (module Text.Gigaparsec.Token.Text) where
 
 import Text.Gigaparsec (Parsec, void, (<|>), empty, filterS)
-import Text.Gigaparsec.Char (char, digit, hexDigit, octDigit, bit, satisfy)
+import Text.Gigaparsec.Char (char, digit, hexDigit, octDigit, bit, satisfy, trie)
 import Text.Gigaparsec.Token.Descriptions (TextDesc(..), EscapeDesc(..), NumericEscape, CharPredicate)
 import Text.Gigaparsec.Token.Generic (GenericNumeric(zeroAllowedDecimal, zeroAllowedHexadecimal, zeroAllowedOctal, zeroAllowedBinary))
 import Data.Char (isSpace)
+import Data.Map qualified as Map (insert, null, map)
 
 type TextParsers :: * -> *
 data TextParsers t = TextParsers { unicode :: Parsec t
@@ -52,7 +53,11 @@ mkEscape EscapeDesc{..} gen = Escape {..}
     escapeCode = escMapped <|> numericEscape
     escapeChar = escapeBegin *> escapeCode
 
-    escMapped = undefined --TODO:
+    escs = foldr (\c -> Map.insert [c] c) mapping literals
+    escMapped
+      | Map.null escs = empty
+      | otherwise     = trie (Map.map pure escs)
+
     numericEscape = decimalEsc <|> hexadecimalEsc <|> octalEsc <|> binaryEsc
 
     decimalEsc = fromDesc 10 decimalEscape (zeroAllowedDecimal gen) digit
