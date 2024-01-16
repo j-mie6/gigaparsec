@@ -1,7 +1,7 @@
 {-# LANGUAGE Trustworthy #-}
 module Text.Gigaparsec.Registers (
     Reg,
-    make,
+    make, unsafeMake,
     get, gets,
     put, puts,
     modify,
@@ -12,6 +12,9 @@ module Text.Gigaparsec.Registers (
 import Text.Gigaparsec (Parsec, (<|>), empty)
 import Text.Gigaparsec.Internal.RT (Reg, newReg, readReg, writeReg)
 import Text.Gigaparsec.Internal qualified as Internal (Parsec(..))
+
+unsafeMake :: (forall r. Reg r a -> Parsec b) -> Parsec b
+unsafeMake = make (error "reference used but not set")
 
 _make :: Parsec a -> (forall r. Reg r a -> Parsec b) -> Parsec b
 _make p f = p >>= \x -> make x f
