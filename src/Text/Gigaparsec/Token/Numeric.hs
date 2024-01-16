@@ -1,7 +1,7 @@
 {-# LANGUAGE Safe #-}
-{-# LANGUAGE DataKinds, KindSignatures, ConstraintKinds, MultiParamTypeClasses, AllowAmbiguousTypes, FlexibleInstances, FlexibleContexts, UndecidableInstances, ApplicativeDo #-}
-{-# LANGUAGE TypeFamilies #-}
-{-# LANGUAGE TypeOperators #-}
+{-# LANGUAGE DataKinds, KindSignatures, ConstraintKinds, MultiParamTypeClasses, AllowAmbiguousTypes, FlexibleInstances, FlexibleContexts, UndecidableInstances, ApplicativeDo, TypeFamilies, 
+TypeOperators, CPP #-}
+#include "portable-unlifted.h"
 -- TODO: refine, move to Internal
 module Text.Gigaparsec.Token.Numeric (module Text.Gigaparsec.Token.Numeric) where
 
@@ -23,8 +23,9 @@ import Data.Word (Word8, Word16, Word32, Word64)
 import Numeric.Natural (Natural)
 import Data.Proxy (Proxy(Proxy))
 import Control.Monad (when, unless)
-import GHC.TypeError (TypeError, ErrorMessage(Text, (:<>:), ShowType), Assert)
 import GHC.TypeLits (type (<=?))
+
+CPP_import_TypeError
 
 type Bits :: *
 data Bits = B8 | B16 | B32 | B64
@@ -74,7 +75,7 @@ type SatisfiesBound :: * -> Bits -> Constraint
 type SatisfiesBound t b 
       = Assert (BitsNat b <=? BitsNat (BitWidth t)) (TypeError ('Text "The type '" 
  ' :<>: 'ShowType t  ' :<>: 'Text "' does not have enough bit-width to store " 
- ' :<>: ShowBits (BitWidth t) ' :<>: 'Text " bits of data (can only store " ' :<>: ShowBits b 
+ ' :<>: ShowBits (BitWidth t) ' :<>: 'Text " bits of data (can only store up to" ' :<>: ShowBits b 
  ' :<>: 'Text " bits)."))
 
 type BitBounds :: Bits -> Constraint

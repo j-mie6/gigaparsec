@@ -23,3 +23,13 @@
 #define UnliftedDatatype *
 
 #endif
+
+#if __GLASGOW_HASKELL__ >= 904
+
+#define CPP_import_TypeError import GHC.TypeError(TypeError, ErrorMessage(Text, (:<>:), ShowType), Assert)
+
+#else
+
+#define CPP_import_TypeError import GHC.TypeLits(TypeError, ErrorMessage(Text, (:<>:), ShowType), Assert)
+
+#endif
