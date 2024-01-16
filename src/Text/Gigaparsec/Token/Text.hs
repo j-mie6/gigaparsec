@@ -4,7 +4,14 @@ module Text.Gigaparsec.Token.Text (module Text.Gigaparsec.Token.Text) where
 
 import Text.Gigaparsec (Parsec, void, (<|>), empty, filterS, mapMaybeS, somel, (<~>), ($>), atomic, some)
 import Text.Gigaparsec.Char (char, digit, hexDigit, octDigit, bit, satisfy, trie, string)
-import Text.Gigaparsec.Token.Descriptions (TextDesc(..), EscapeDesc(..), NumericEscape (NumericSupported, NumericIllegal, numDigits, maxValue, prefix), CharPredicate, NumberOfDigits (Exactly, AtMost, Unbounded))
+import Text.Gigaparsec.Token.Descriptions (
+    TextDesc(TextDesc, characterLiteralEnd, graphicCharacter),
+    EscapeDesc(EscapeDesc, escBegin, emptyEscape, gapsSupported, mapping, literals,
+               decimalEscape, hexadecimalEscape, octalEscape, binaryEscape),
+    NumericEscape(NumericSupported, NumericIllegal, numDigits, maxValue, prefix),
+    CharPredicate,
+    NumberOfDigits(Exactly, AtMost, Unbounded)
+  )
 import Text.Gigaparsec.Token.Generic (GenericNumeric(zeroAllowedDecimal, zeroAllowedHexadecimal, zeroAllowedOctal, zeroAllowedBinary))
 import Data.Char (isSpace, chr, ord, digitToInt, isAscii, isLatin1)
 import Data.Map qualified as Map (insert, map)
@@ -161,8 +168,8 @@ mkEscape EscapeDesc{..} gen = Escape {..}
       AtMost n   -> boundedChar (atMost n radix dig) maxValue prefix radix
       Exactly ns -> boundedChar (oneOfExactly ns radix dig) maxValue prefix radix
 
-lexemeText :: (forall a. Parsec a -> Parsec a) -> TextParsers t -> TextParsers t
-lexemeText lexe TextParsers{..} = TextParsers {
+lexeme :: (forall a. Parsec a -> Parsec a) -> TextParsers t -> TextParsers t
+lexeme lexe TextParsers{..} = TextParsers {
     unicode = lexe unicode,
     ascii = lexe ascii,
     latin1 = lexe latin1

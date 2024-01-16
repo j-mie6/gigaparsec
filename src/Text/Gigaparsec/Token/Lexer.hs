@@ -13,6 +13,8 @@ module Text.Gigaparsec.Token.Lexer (
     -- Numeric
     integer, natural,
     -- Text
+    stringLiteral, rawStringLiteral, multiStringLiteral, rawMultiStringLiteral,
+    charLiteral,
     -- Space
     skipComments, whiteSpace, alter, initSpace,
   ) where
@@ -38,6 +40,11 @@ import Text.Gigaparsec.Token.Numeric (
     CanHoldSigned, CanHoldUnsigned
   )
 import Text.Gigaparsec.Token.Numeric qualified as Numeric (lexemeInteger, {-lexemeFloating, lexemeCombined-})
+import Text.Gigaparsec.Token.Text (
+    CharacterParsers, StringParsers,
+    mkStringParsers, mkCharacterParsers, mkEscape, mkEscapeChar, StringChar(RawChar)
+  )
+import Text.Gigaparsec.Token.Text qualified as Text (lexeme)
 
 import Text.Gigaparsec.Internal.RT (fromIORef)
 import Text.Gigaparsec.Internal.Require (require)
@@ -70,6 +77,11 @@ mkLexer Desc.LexicalDesc{..} = Lexer {..}
                             Numeric.lexemeCombined apply (unsignedCombined nonlexeme)
                         , signedCombined =
                             Numeric.lexemeCombined apply (signedCombined nonlexeme)-}
+                        , stringLiteral = Text.lexeme apply (stringLiteral nonlexeme)
+                        , rawStringLiteral = Text.lexeme apply (rawStringLiteral nonlexeme)
+                        , multiStringLiteral = Text.lexeme apply (multiStringLiteral nonlexeme)
+                        , rawMultiStringLiteral = Text.lexeme apply (rawMultiStringLiteral nonlexeme)
+                        , charLiteral = Text.lexeme apply (charLiteral nonlexeme)
                         }
         nonlexeme = NonLexeme { sym = mkSym symbolDesc (symbol nonlexeme)
                               , symbol = mkSymbol symbolDesc nameDesc
@@ -79,8 +91,19 @@ mkLexer Desc.LexicalDesc{..} = Lexer {..}
                               {-, floating = mkSignedFloating numericDesc positiveFloating
                               , unsignedCombined = mkUnsignedCombined numericDesc (natural nonlexeme) positiveFloating
                               , signedCombined = mkSignedCombined numericDesc (unsignedCombined nonlexeme)-}
+                              , stringLiteral = mkStringParsers stringEnds escapeChar graphicCharacter False
+                              , rawStringLiteral = mkStringParsers stringEnds rawChar graphicCharacter False
+                              , multiStringLiteral = mkStringParsers multiStringEnds escapeChar graphicCharacter True
+                              , rawMultiStringLiteral = mkStringParsers multiStringEnds rawChar graphicCharacter True
+                              , charLiteral = mkCharacterParsers textDesc escape
                               }
         --positiveFloating = mkUnsignedFloating numericDesc (natural nonlexeme) gen
+        !escape = mkEscape (Desc.escapeSequences textDesc) mkGeneric -- this is mkGeneric because of errors
+        graphicCharacter = Desc.graphicCharacter textDesc
+        stringEnds = Desc.stringEnds textDesc
+        multiStringEnds = Desc.multiStringEnds textDesc
+        rawChar = RawChar
+        escapeChar = mkEscapeChar (Desc.escapeSequences textDesc) escape (whiteSpace space)
         fully' p = whiteSpace space *> p <* eof
         fully p
           | Desc.whitespaceIsContextDependent spaceDesc = initSpace space *> fully' p
@@ -100,6 +123,11 @@ data Lexeme = Lexeme
                 --, floating :: !FloatingParsers
                 --, unsignedCombined :: !CombinedParsers
                 --, signedCombined :: !CombinedParsers
+                , stringLiteral :: !StringParsers
+                , rawStringLiteral :: !StringParsers
+                , multiStringLiteral :: !StringParsers
+                , rawMultiStringLiteral :: !StringParsers
+                , charLiteral :: !CharacterParsers
                 }
             | NonLexeme
                 { sym :: !(String -> Parsec ())
@@ -111,6 +139,11 @@ data Lexeme = Lexeme
                 --, floating :: !FloatingParsers
                 --, unsignedCombined :: !CombinedParsers
                 --, signedCombined :: !CombinedParsers
+                , stringLiteral :: !StringParsers
+                , rawStringLiteral :: !StringParsers
+                , multiStringLiteral :: !StringParsers
+                , rawMultiStringLiteral :: !StringParsers
+                , charLiteral :: !CharacterParsers
                 }
 
 type Space :: *
