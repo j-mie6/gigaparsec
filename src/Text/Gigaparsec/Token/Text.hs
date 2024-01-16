@@ -4,8 +4,9 @@ module Text.Gigaparsec.Token.Numeric (module Text.Gigaparsec.Token.Numeric) wher
 
 import Text.Gigaparsec (Parsec, void, (<|>), empty, filterS)
 import Text.Gigaparsec.Char (char, digit, hexDigit, octDigit, bit, satisfy)
-import Text.Gigaparsec.Token.Descriptions (TextDesc(..), EscapeDesc(..), NumericEscape)
+import Text.Gigaparsec.Token.Descriptions (TextDesc(..), EscapeDesc(..), NumericEscape, CharPredicate)
 import Text.Gigaparsec.Token.Generic (GenericNumeric(zeroAllowedDecimal, zeroAllowedHexadecimal, zeroAllowedOctal, zeroAllowedBinary))
+import Data.Char (isSpace)
 
 type TextParsers :: * -> *
 data TextParsers t = TextParsers { unicode :: Parsec t
@@ -30,8 +31,13 @@ mkCharacterParsers TextDesc{..} escape = TextParsers {..}
         lit c = quote *> c <* quote
         uncheckedUniLetter = escapeChar escape <|> graphic
 
-        -- FIXME: nope!
-        graphic = maybe empty satisfy graphicCharacter
+        graphic = maybe empty satisfy (letter characterLiteralEnd False graphicCharacter)
+
+letter :: Char -> Bool -> CharPredicate -> CharPredicate
+letter !terminalLead !allowsAllSpace (Just g)
+  | allowsAllSpace = Just $ \c -> c /= terminalLead && (g c || isSpace c)
+  | otherwise      = Just $ \c -> c /= terminalLead && g c
+letter _ _ Nothing = Nothing
 
 type Escape :: *
 data Escape = Escape { escapeCode :: !(Parsec Char)

@@ -99,6 +99,7 @@ library
                       Text.Gigaparsec.Token.Numeric,
                       Text.Gigaparsec.Token.Patterns,
                       Text.Gigaparsec.Token.Symbol,
+                      Text.Gigaparsec.Token.Text,
                       Text.Gigaparsec.Registers,
 
                       -- Internals
