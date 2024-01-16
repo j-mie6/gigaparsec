@@ -1,7 +1,5 @@
 {-# LANGUAGE Safe #-}
-{-# LANGUAGE DataKinds, KindSignatures, ConstraintKinds, MultiParamTypeClasses, AllowAmbiguousTypes, FlexibleInstances, FlexibleContexts, UndecidableInstances, ApplicativeDo, TypeFamilies, 
-TypeOperators, CPP #-}
-#include "portable-unlifted.h"
+{-# LANGUAGE DataKinds, KindSignatures, ConstraintKinds, MultiParamTypeClasses, AllowAmbiguousTypes, FlexibleInstances, FlexibleContexts, UndecidableInstances, ApplicativeDo, TypeFamilies, TypeOperators, CPP #-}
 -- TODO: refine, move to Internal
 module Text.Gigaparsec.Token.Numeric (module Text.Gigaparsec.Token.Numeric) where
 
@@ -35,7 +33,6 @@ import GHC.TypeLits (type (<=))
 import GHC.TypeLits(TypeError, ErrorMessage(Text, (:<>:), ShowType))
 
 #endif
-
 
 type Bits :: *
 data Bits = B8 | B16 | B32 | B64
@@ -74,9 +71,10 @@ type family IsSigned t s where
   IsSigned Int8    'Signed   = ()
   IsSigned Word8   'Unsigned = ()
   IsSigned a       'Signed
-      = TypeError ('Text "The type '" ' :<>: 'ShowType a ' :<>: 'Text "' does not hold unsigned data")
-  IsSigned a       'Unsigned     
       = TypeError ('Text "The type '" ' :<>: 'ShowType a ' :<>: 'Text "' does not hold signed data")
+  IsSigned a       'Unsigned     
+        = TypeError ('Text "The type '" ' :<>: 'ShowType a 
+   ' :<>: 'Text "' does not hold unsigned data")
 
 type ShowBits :: Bits -> ErrorMessage
 type ShowBits b = 'ShowType (BitsNat b)
@@ -88,7 +86,7 @@ type SatisfiesBound t b
 
       = Assert (BitsNat b <=? BitsNat (BitWidth t)) (TypeError ('Text "The type '" 
  ' :<>: 'ShowType t  ' :<>: 'Text "' does not have enough bit-width to store " 
- ' :<>: ShowBits (BitWidth t) ' :<>: 'Text " bits of data (can only store up to" ' :<>: ShowBits b 
+ ' :<>: ShowBits (BitWidth t) ' :<>: 'Text " bits of data (can only store up to " ' :<>: ShowBits b 
  ' :<>: 'Text " bits)."))
 
 #else
