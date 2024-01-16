@@ -23,9 +23,19 @@ import Data.Word (Word8, Word16, Word32, Word64)
 import Numeric.Natural (Natural)
 import Data.Proxy (Proxy(Proxy))
 import Control.Monad (when, unless)
-import GHC.TypeLits (type (<=?))
 
-CPP_import_TypeError
+#if __GLASGOW_HASKELL__ >= 904
+
+import GHC.TypeLits (type (<=?))
+import GHC.TypeError(TypeError, ErrorMessage(Text, (:<>:), ShowType), Assert)
+
+#else
+
+import GHC.TypeLits (type (<=))
+import GHC.TypeLits(TypeError, ErrorMessage(Text, (:<>:), ShowType))
+
+#endif
+
 
 type Bits :: *
 data Bits = B8 | B16 | B32 | B64
@@ -73,10 +83,19 @@ type ShowBits b = 'ShowType (BitsNat b)
 
 type SatisfiesBound :: * -> Bits -> Constraint
 type SatisfiesBound t b 
+
+#if __GLASGOW_HASKELL__ >= 904
+
       = Assert (BitsNat b <=? BitsNat (BitWidth t)) (TypeError ('Text "The type '" 
  ' :<>: 'ShowType t  ' :<>: 'Text "' does not have enough bit-width to store " 
  ' :<>: ShowBits (BitWidth t) ' :<>: 'Text " bits of data (can only store up to" ' :<>: ShowBits b 
  ' :<>: 'Text " bits)."))
+
+#else
+
+  = BitsNat b <= BitsNat (BitWidth t)
+
+#endif
 
 type BitBounds :: Bits -> Constraint
 class BitBounds b where
