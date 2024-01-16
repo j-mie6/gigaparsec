@@ -1,5 +1,7 @@
 {-# LANGUAGE Safe #-}
 {-# LANGUAGE DataKinds, KindSignatures, ConstraintKinds, MultiParamTypeClasses, AllowAmbiguousTypes, FlexibleInstances, FlexibleContexts, UndecidableInstances, ApplicativeDo #-}
+{-# LANGUAGE TypeFamilies #-}
+{-# LANGUAGE TypeOperators #-}
 -- TODO: refine, move to Internal
 module Text.Gigaparsec.Token.Numeric (module Text.Gigaparsec.Token.Numeric) where
 
@@ -21,9 +23,59 @@ import Data.Word (Word8, Word16, Word32, Word64)
 import Numeric.Natural (Natural)
 import Data.Proxy (Proxy(Proxy))
 import Control.Monad (when, unless)
+import GHC.TypeError (TypeError, ErrorMessage(Text, (:<>:), ShowType), Assert)
+import GHC.TypeLits (type (<=?))
 
 type Bits :: *
 data Bits = B8 | B16 | B32 | B64
+
+type BitWidth :: * -> Bits
+type family BitWidth t where
+  BitWidth Integer = 'B64
+  BitWidth Int     = 'B64
+  BitWidth Word    = 'B64
+  BitWidth Word64  = 'B64
+  BitWidth Natural = 'B64
+  BitWidth Int32   = 'B32
+  BitWidth Word32  = 'B32
+  BitWidth Int16   = 'B16
+  BitWidth Word16  = 'B16
+  BitWidth Int8    = 'B8
+  BitWidth Word8   = 'B8
+  BitWidth a       
+        = TypeError ('Text "The type '" ' :<>: 'ShowType a 
+   ' :<>: 'Text "' is not a numeric type supported by Gigaparsec")
+
+type Signedness :: *
+data Signedness = Signed | Unsigned
+
+type IsSigned :: * -> Signedness -> Constraint
+type family IsSigned t s where
+  IsSigned Integer 'Signed   = ()
+  IsSigned Int     'Signed   = ()
+  IsSigned Word    'Unsigned = ()
+  IsSigned Word64  'Unsigned = ()
+  IsSigned Natural 'Unsigned = ()
+  IsSigned Int32   'Signed   = ()
+  IsSigned Word32  'Unsigned = ()
+  IsSigned Int16   'Signed   = ()
+  IsSigned Word16  'Unsigned = ()
+  IsSigned Int8    'Signed   = ()
+  IsSigned Word8   'Unsigned = ()
+  IsSigned a       'Signed
+      = TypeError ('Text "The type '" ' :<>: 'ShowType a ' :<>: 'Text "' does not hold unsigned data")
+  IsSigned a       'Unsigned     
+      = TypeError ('Text "The type '" ' :<>: 'ShowType a ' :<>: 'Text "' does not hold signed data")
+
+type ShowBits :: Bits -> ErrorMessage
+type ShowBits b = 'ShowType (BitsNat b)
+
+type SatisfiesBound :: * -> Bits -> Constraint
+type SatisfiesBound t b 
+      = Assert (BitsNat b <=? BitsNat (BitWidth t)) (TypeError ('Text "The type '" 
+ ' :<>: 'ShowType t  ' :<>: 'Text "' does not have enough bit-width to store " 
+ ' :<>: ShowBits (BitWidth t) ' :<>: 'Text " bits of data (can only store " ' :<>: ShowBits b 
+ ' :<>: 'Text " bits)."))
 
 type BitBounds :: Bits -> Constraint
 class BitBounds b where
@@ -31,72 +83,39 @@ class BitBounds b where
   lowerSigned :: Integer
   upperUnsigned :: Integer
   bits :: Int
+  type BitsNat b :: Natural 
 instance BitBounds 'B8 where
   upperSigned = fromIntegral (maxBound @Int8)
   lowerSigned = fromIntegral (minBound @Int8)
   upperUnsigned = fromIntegral (maxBound @Word8)
   bits = 8
+  type BitsNat 'B8 = 8
 instance BitBounds 'B16 where
   upperSigned = fromIntegral (maxBound @Int16)
   lowerSigned = fromIntegral (minBound @Int16)
   upperUnsigned = fromIntegral (maxBound @Word16)
   bits = 16
+  type BitsNat 'B16 = 16
 instance BitBounds 'B32 where
   upperSigned = fromIntegral (maxBound @Int32)
   lowerSigned = fromIntegral (minBound @Int32)
   upperUnsigned = fromIntegral (maxBound @Word32)
   bits = 32
+  type BitsNat 'B32 = 32
 instance BitBounds 'B64 where
   upperSigned = fromIntegral (maxBound @Int64)
   lowerSigned = fromIntegral (minBound @Int64)
   upperUnsigned = fromIntegral (maxBound @Word64)
   bits = 64
+  type BitsNat 'B64 = 64
 
 type CanHoldSigned :: Bits -> * -> Constraint
 class (BitBounds b, Num a) => CanHoldSigned b a where
-instance CanHoldSigned 'B8 Int8
-instance CanHoldSigned 'B8 Int16
-instance CanHoldSigned 'B8 Int32
-instance CanHoldSigned 'B8 Int64
-instance CanHoldSigned 'B8 Int
-instance CanHoldSigned 'B8 Integer
-instance CanHoldSigned 'B16 Int16
-instance CanHoldSigned 'B16 Int32
-instance CanHoldSigned 'B16 Int64
-instance CanHoldSigned 'B16 Int
-instance CanHoldSigned 'B16 Integer
-instance CanHoldSigned 'B32 Int32
-instance CanHoldSigned 'B32 Int64
-instance CanHoldSigned 'B32 Int
-instance CanHoldSigned 'B32 Integer
-instance CanHoldSigned 'B64 Int64
-instance CanHoldSigned 'B64 Int
-instance CanHoldSigned 'B64 Integer
+instance (BitBounds b, Num a, IsSigned a 'Signed, SatisfiesBound a b) => CanHoldSigned b a
 
 type CanHoldUnsigned :: Bits -> * -> Constraint
 class (BitBounds b, Num a) => CanHoldUnsigned b a where
-instance CanHoldUnsigned 'B8 Word8
-instance CanHoldUnsigned 'B8 Word16
-instance CanHoldUnsigned 'B8 Word32
-instance CanHoldUnsigned 'B8 Word64
-instance CanHoldUnsigned 'B8 Word
-instance CanHoldUnsigned 'B8 Integer
-instance CanHoldUnsigned 'B8 Natural
-instance CanHoldUnsigned 'B16 Word16
-instance CanHoldUnsigned 'B16 Word32
-instance CanHoldUnsigned 'B16 Word64
-instance CanHoldUnsigned 'B16 Word
-instance CanHoldUnsigned 'B16 Integer
-instance CanHoldUnsigned 'B16 Natural
-instance CanHoldUnsigned 'B32 Word32
-instance CanHoldUnsigned 'B32 Word64
-instance CanHoldUnsigned 'B32 Word
-instance CanHoldUnsigned 'B32 Integer
-instance CanHoldUnsigned 'B32 Natural
-instance CanHoldUnsigned 'B64 Word64
-instance CanHoldUnsigned 'B64 Word
-instance CanHoldUnsigned 'B64 Integer
-instance CanHoldUnsigned 'B64 Natural
+instance (BitBounds b, Num a, IsSigned a 'Unsigned, SatisfiesBound a b) => CanHoldUnsigned b a
 
 type IntegerParsers :: (Bits -> * -> Constraint) -> *
 data IntegerParsers canHold = IntegerParsers { decimal :: Parsec Integer
