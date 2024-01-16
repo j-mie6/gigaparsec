@@ -1,5 +1,5 @@
 {-# LANGUAGE Safe #-}
-{-# LANGUAGE DataKinds, KindSignatures, ConstraintKinds, MultiParamTypeClasses, AllowAmbiguousTypes, FlexibleInstances, FlexibleContexts, UndecidableInstances, ApplicativeDo, TypeFamilies, TypeOperators, CPP #-}
+{-# LANGUAGE DataKinds, ConstraintKinds, MultiParamTypeClasses, AllowAmbiguousTypes, FlexibleInstances, FlexibleContexts, UndecidableInstances, ApplicativeDo, TypeFamilies, TypeOperators, CPP #-}
 -- TODO: refine, move to Internal
 module Text.Gigaparsec.Token.Numeric (module Text.Gigaparsec.Token.Numeric) where
 
@@ -54,9 +54,8 @@ type family BitWidth t where
   BitWidth Word16  = 'B16
   BitWidth Int8    = 'B8
   BitWidth Word8   = 'B8
-  BitWidth a       
-        = TypeError ('Text "The type '" ' :<>: 'ShowType a 
-   ' :<>: 'Text "' is not a numeric type supported by Gigaparsec")
+  BitWidth a       = TypeError ('Text "The type '" ' :<>: 'ShowType a
+                          ':<>: 'Text "' is not a numeric type supported by Gigaparsec")
 
 type Signedness :: *
 data Signedness = Signed | Unsigned
@@ -74,26 +73,25 @@ type family IsSigned t s where
   IsSigned Word16  'Unsigned = ()
   IsSigned Int8    'Signed   = ()
   IsSigned Word8   'Unsigned = ()
-  IsSigned a       'Signed
-      = TypeError ('Text "The type '" ' :<>: 'ShowType a ' :<>: 'Text "' does not hold signed data")
-  IsSigned a       'Unsigned     
-        = TypeError ('Text "The type '" ' :<>: 'ShowType a 
-   ' :<>: 'Text "' does not hold unsigned data")
+  IsSigned a       'Signed   = TypeError ('Text "The type '" ':<>: 'ShowType a
+                                    ':<>: 'Text "' does not hold signed data")
+  IsSigned a       'Unsigned = TypeError ('Text "The type '" ' :<>: 'ShowType a
+                                    ':<>: 'Text "' does not hold unsigned data")
 
 type ShowBits :: Bits -> ErrorMessage
 type ShowBits b = 'ShowType (BitsNat b)
 
 -- This is intentionally not a type alias. On GHC versions < 9.4.1 it appears that TypeErrors are
--- reported slightly more eagerly and we get an error on this definition because 
+-- reported slightly more eagerly and we get an error on this definition because
 -- > BitsNat b <=? BitsNat (BitWidth t)
 -- cannot be solved
 type SatisfiesBound :: * -> Bits -> Constraint
 type family SatisfiesBound t b where
-  SatisfiesBound t b 
-        = Assert (BitsNat b <=? BitsNat (BitWidth t)) (TypeError ('Text "The type '" 
-   ' :<>: 'ShowType t  ' :<>: 'Text "' does not have enough bit-width to store " 
-   ' :<>: ShowBits (BitWidth t) ' :<>: 'Text " bits of data (can only store up to " 
-   ' :<>: ShowBits b ' :<>: 'Text " bits)."))
+  SatisfiesBound t b = Assert (BitsNat b <=? BitsNat (BitWidth t))
+                              (TypeError ('Text "The type '"
+                                    ':<>: 'ShowType t  ' :<>: 'Text "' does not have enough bit-width to store "
+                                    ':<>: ShowBits (BitWidth t) ' :<>: 'Text " bits of data (can only store up to "
+                                    ':<>: ShowBits b ' :<>: 'Text " bits)."))
 
 type BitBounds :: Bits -> Constraint
 class BitBounds b where
@@ -101,7 +99,7 @@ class BitBounds b where
   lowerSigned :: Integer
   upperUnsigned :: Integer
   bits :: Int
-  type BitsNat b :: Nat 
+  type BitsNat b :: Nat
 instance BitBounds 'B8 where
   upperSigned = fromIntegral (maxBound @Int8)
   lowerSigned = fromIntegral (minBound @Int8)
