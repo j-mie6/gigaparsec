@@ -25,12 +25,16 @@ import Control.Monad (when, unless)
 #if __GLASGOW_HASKELL__ >= 904
 
 import GHC.TypeLits (type (<=?), Nat)
-import GHC.TypeError(TypeError, ErrorMessage(Text, (:<>:), ShowType), Assert)
+import GHC.TypeError (TypeError, ErrorMessage(Text, (:<>:), ShowType), Assert)
 
 #else
 
-import GHC.TypeLits (type (<=), Nat)
-import GHC.TypeLits(TypeError, ErrorMessage(Text, (:<>:), ShowType))
+import GHC.TypeLits (type (<=?), Nat, TypeError, ErrorMessage(Text, (:<>:), ShowType))
+
+type Assert :: Bool -> Constraint -> Constraint
+type family Assert b c where
+  Assert 'True  _ = ()
+  Assert 'False c = c
 
 #endif
 
@@ -79,21 +83,17 @@ type family IsSigned t s where
 type ShowBits :: Bits -> ErrorMessage
 type ShowBits b = 'ShowType (BitsNat b)
 
+-- This is intentionally not a type alias. On GHC versions < 9.4.1 it appears that TypeErrors are
+-- reported slightly more eagerly and we get an error on this definition because 
+-- > BitsNat b <=? BitsNat (BitWidth t)
+-- cannot be solved
 type SatisfiesBound :: * -> Bits -> Constraint
-type SatisfiesBound t b 
-
-#if __GLASGOW_HASKELL__ >= 904
-
-      = Assert (BitsNat b <=? BitsNat (BitWidth t)) (TypeError ('Text "The type '" 
- ' :<>: 'ShowType t  ' :<>: 'Text "' does not have enough bit-width to store " 
- ' :<>: ShowBits (BitWidth t) ' :<>: 'Text " bits of data (can only store up to " ' :<>: ShowBits b 
- ' :<>: 'Text " bits)."))
-
-#else
-
-  = BitsNat b <= BitsNat (BitWidth t)
-
-#endif
+type family SatisfiesBound t b where
+  SatisfiesBound t b 
+        = Assert (BitsNat b <=? BitsNat (BitWidth t)) (TypeError ('Text "The type '" 
+   ' :<>: 'ShowType t  ' :<>: 'Text "' does not have enough bit-width to store " 
+   ' :<>: ShowBits (BitWidth t) ' :<>: 'Text " bits of data (can only store up to " 
+   ' :<>: ShowBits b ' :<>: 'Text " bits)."))
 
 type BitBounds :: Bits -> Constraint
 class BitBounds b where
