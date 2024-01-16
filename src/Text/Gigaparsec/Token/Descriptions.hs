@@ -182,7 +182,7 @@ type NumericEscape :: *
 data NumericEscape = NumericIllegal
                    | NumericSupported { prefix :: !(Maybe Char)
                                       , numDigits :: !NumberOfDigits
-                                      , maxValue :: !Int
+                                      , maxValue :: !Char
                                       }
 
 type NumberOfDigits :: *

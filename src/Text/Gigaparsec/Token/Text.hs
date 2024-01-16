@@ -2,12 +2,13 @@
 -- TODO: refine, move to Internal
 module Text.Gigaparsec.Token.Text (module Text.Gigaparsec.Token.Text) where
 
-import Text.Gigaparsec (Parsec, void, (<|>), empty, filterS)
+import Text.Gigaparsec (Parsec, void, (<|>), empty, filterS, mapMaybeS)
 import Text.Gigaparsec.Char (char, digit, hexDigit, octDigit, bit, satisfy, trie)
-import Text.Gigaparsec.Token.Descriptions (TextDesc(..), EscapeDesc(..), NumericEscape, CharPredicate)
+import Text.Gigaparsec.Token.Descriptions (TextDesc(..), EscapeDesc(..), NumericEscape (NumericSupported, NumericIllegal, numDigits, maxValue, prefix), CharPredicate, NumberOfDigits (Exactly, AtMost, Unbounded))
 import Text.Gigaparsec.Token.Generic (GenericNumeric(zeroAllowedDecimal, zeroAllowedHexadecimal, zeroAllowedOctal, zeroAllowedBinary))
-import Data.Char (isSpace)
-import Data.Map qualified as Map (insert, null, map)
+import Data.Char (isSpace, chr, ord)
+import Data.Map qualified as Map (insert, map)
+import Data.List.NonEmpty (NonEmpty((:|)))
 
 type TextParsers :: * -> *
 data TextParsers t = TextParsers { unicode :: Parsec t
@@ -54,9 +55,7 @@ mkEscape EscapeDesc{..} gen = Escape {..}
     escapeChar = escapeBegin *> escapeCode
 
     escs = foldr (\c -> Map.insert [c] c) mapping literals
-    escMapped
-      | Map.null escs = empty
-      | otherwise     = trie (Map.map pure escs)
+    escMapped = trie (Map.map pure escs)
 
     numericEscape = decimalEsc <|> hexadecimalEsc <|> octalEsc <|> binaryEsc
 
@@ -65,8 +64,24 @@ mkEscape EscapeDesc{..} gen = Escape {..}
     octalEsc = fromDesc 8 octalEscape (zeroAllowedOctal gen) octDigit
     binaryEsc = fromDesc 2 binaryEscape (zeroAllowedBinary gen) bit
 
+    boundedChar :: Parsec Integer -> Char -> Maybe Char -> Int -> Parsec Char
+    boundedChar p maxValue prefix _radix = foldr (\c t -> char c *> t) (mapMaybeS f p) prefix
+      where f c
+             | c < toInteger (ord maxValue) = Just (chr (fromInteger c))
+             | otherwise = Nothing
+
+    atMost :: Word -> Int -> Parsec Char -> Parsec Integer
+    atMost _ _ _ = empty -- TODO:
+
+    oneOfExactly :: Word -> [Word] -> Int -> Parsec Char -> Parsec Integer
+    oneOfExactly _ _ _ _ = empty --TODO:
+
     fromDesc :: Int -> NumericEscape -> Parsec Integer -> Parsec Char -> Parsec Char
-    fromDesc radix _ integer digit = undefined --TODO:
+    fromDesc !_ NumericIllegal !_ !_ = empty
+    fromDesc radix NumericSupported{..} integer dig = case numDigits of
+      Unbounded -> boundedChar integer maxValue prefix radix
+      AtMost n -> boundedChar (atMost n radix dig) maxValue prefix radix
+      Exactly (n :| ns) -> boundedChar (oneOfExactly n ns radix digit) maxValue prefix radix
 
 lexemeText :: (forall a. Parsec a -> Parsec a) -> TextParsers t -> TextParsers t
 lexemeText lexe TextParsers{..} = TextParsers {
