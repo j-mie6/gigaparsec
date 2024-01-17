@@ -122,8 +122,12 @@ labelErr _ _ err = err
 
 explainErr :: Word -> String -> ParseError -> ParseError
 explainErr !offset reason err@VanillaError{}
-  | offset == presentationOffset err = err { reasons = Set.insert reason (reasons err) }
+  | offset == presentationOffset err = addReason reason err
 explainErr _ _ err = err
+
+addReason :: String -> ParseError -> ParseError
+addReason reason err@VanillaError{} = err { reasons = Set.insert reason (reasons err) }
+addReason _ err = err
 
 amendErr :: Word -> Word -> Word -> ParseError -> ParseError
 amendErr !offset !line !col err
