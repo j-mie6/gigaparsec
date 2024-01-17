@@ -8,7 +8,7 @@ import Test.Tasty.ExpectedFailure
 import Text.Gigaparsec
 import Text.Gigaparsec.Char (spaces)
 import Text.Gigaparsec.Token.Descriptions
-import Text.Gigaparsec.Token.Names (mkNames, lexeme, identifier, Names)
+import Text.Gigaparsec.Internal.Token.Names (mkNames, lexeme, identifier, Names)
 
 --import Text.Gigaparsec.Internal.Require
 import Text.Gigaparsec.Internal.Test

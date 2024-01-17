@@ -53,29 +53,29 @@ type family BitWidth t where
   BitWidth Word16  = 'B16
   BitWidth Int8    = 'B8
   BitWidth Word8   = 'B8
-  BitWidth a       = TypeError ('Text "The type '" ' :<>: 'ShowType a
+  BitWidth t       = TypeError ('Text "The type '" ' :<>: 'ShowType t
                           ':<>: 'Text "' is not a numeric type supported by Gigaparsec")
 
-type Signedness :: *
-data Signedness = Signed | Unsigned
+type SignednessK :: *
+data SignednessK = Signed | Unsigned
 
-type IsSigned :: * -> Signedness -> Constraint
-type family IsSigned t s where
-  IsSigned Integer 'Signed   = ()
-  IsSigned Int     'Signed   = ()
-  IsSigned Word    'Unsigned = ()
-  IsSigned Word64  'Unsigned = ()
-  IsSigned Natural 'Unsigned = ()
-  IsSigned Int32   'Signed   = ()
-  IsSigned Word32  'Unsigned = ()
-  IsSigned Int16   'Signed   = ()
-  IsSigned Word16  'Unsigned = ()
-  IsSigned Int8    'Signed   = ()
-  IsSigned Word8   'Unsigned = ()
-  IsSigned a       'Signed   = TypeError ('Text "The type '" ':<>: 'ShowType a
-                                    ':<>: 'Text "' does not hold signed data")
-  IsSigned a       'Unsigned = TypeError ('Text "The type '" ' :<>: 'ShowType a
-                                    ':<>: 'Text "' does not hold unsigned data")
+type Signedness :: * -> SignednessK -> Constraint
+type family Signedness t s where
+  Signedness Integer 'Signed   = ()
+  Signedness Int     'Signed   = ()
+  Signedness Word    'Unsigned = ()
+  Signedness Word64  'Unsigned = ()
+  Signedness Natural 'Unsigned = ()
+  Signedness Int32   'Signed   = ()
+  Signedness Word32  'Unsigned = ()
+  Signedness Int16   'Signed   = ()
+  Signedness Word16  'Unsigned = ()
+  Signedness Int8    'Signed   = ()
+  Signedness Word8   'Unsigned = ()
+  Signedness t       'Signed   = TypeError ('Text "The type '" ':<>: 'ShowType t
+                                      ':<>: 'Text "' does not hold signed data")
+  Signedness t       'Unsigned = TypeError ('Text "The type '" ' :<>: 'ShowType t
+                                      ':<>: 'Text "' does not hold unsigned data")
 
 type ShowBits :: Bits -> ErrorMessage
 type ShowBits b = 'ShowType (BitsNat b)
@@ -84,13 +84,13 @@ type ShowBits b = 'ShowType (BitsNat b)
 -- reported slightly more eagerly and we get an error on this definition because
 -- > BitsNat b <=? BitsNat (BitWidth t)
 -- cannot be solved
-type SatisfiesBound :: * -> Bits -> Constraint
-type family SatisfiesBound t b where
-  SatisfiesBound t b = Assert (BitsNat b <=? BitsNat (BitWidth t))
-                              (TypeError ('Text "The type '"
-                                    ':<>: 'ShowType t  ' :<>: 'Text "' does not have enough bit-width to store "
-                                    ':<>: ShowBits (BitWidth t) ' :<>: 'Text " bits of data (can only store up to "
-                                    ':<>: ShowBits b ' :<>: 'Text " bits)."))
+type HasWidthFor :: Bits -> * -> Constraint
+type family HasWidthFor b t where
+  HasWidthFor b t = Assert (BitsNat b <=? BitsNat (BitWidth t))
+                           (TypeError ('Text "The type '"
+                                 ':<>: 'ShowType t  ' :<>: 'Text "' does not have enough bit-width to store "
+                                 ':<>: ShowBits (BitWidth t) ' :<>: 'Text " bits of data (can only store up to "
+                                 ':<>: ShowBits b ' :<>: 'Text " bits)."))
 
 type BitBounds :: Bits -> Constraint
 class BitBounds b where
@@ -125,12 +125,12 @@ instance BitBounds 'B64 where
   type BitsNat 'B64 = 64
 
 type CanHoldSigned :: Bits -> * -> Constraint
-class (BitBounds b, Num a) => CanHoldSigned b a where
-instance (BitBounds b, Num a, IsSigned a 'Signed, SatisfiesBound a b) => CanHoldSigned b a
+class (BitBounds bits, Num t) => CanHoldSigned bits t where
+instance (BitBounds bits, Num t, Signedness t 'Signed, HasWidthFor bits t) => CanHoldSigned bits t
 
 type CanHoldUnsigned :: Bits -> * -> Constraint
-class (BitBounds b, Num a) => CanHoldUnsigned b a where
-instance (BitBounds b, Num a, IsSigned a 'Unsigned, SatisfiesBound a b) => CanHoldUnsigned b a
+class (BitBounds bits, Num t) => CanHoldUnsigned bits t where
+instance (BitBounds bits, Num t, Signedness t 'Unsigned, HasWidthFor bits t) => CanHoldUnsigned bits t
 
 type IntegerParsers :: (Bits -> * -> Constraint) -> *
 data IntegerParsers canHold = IntegerParsers { decimal :: Parsec Integer
