@@ -33,7 +33,7 @@ import Text.Gigaparsec.Internal.Token.Numeric (
   )
 import Text.Gigaparsec.Internal.Token.Numeric qualified as Numeric (lexemeInteger, {-lexemeFloating, lexemeCombined-})
 import Text.Gigaparsec.Internal.Token.Text (
-    CharacterParsers, StringParsers,
+    TextParsers,
     mkStringParsers, mkCharacterParsers, mkEscape, mkEscapeChar, StringChar(RawChar)
   )
 import Text.Gigaparsec.Internal.Token.Text qualified as Text (lexeme)
@@ -115,11 +115,11 @@ data Lexeme = Lexeme
                 --, floating :: !FloatingParsers
                 --, unsignedCombined :: !CombinedParsers
                 --, signedCombined :: !CombinedParsers
-                , stringLiteral :: !StringParsers
-                , rawStringLiteral :: !StringParsers
-                , multiStringLiteral :: !StringParsers
-                , rawMultiStringLiteral :: !StringParsers
-                , charLiteral :: !CharacterParsers
+                , stringLiteral :: !(TextParsers String)
+                , rawStringLiteral :: !(TextParsers String)
+                , multiStringLiteral :: !(TextParsers String)
+                , rawMultiStringLiteral :: !(TextParsers String)
+                , charLiteral :: !(TextParsers Char)
                 }
             | NonLexeme
                 { sym :: !(String -> Parsec ())
@@ -131,11 +131,11 @@ data Lexeme = Lexeme
                 --, floating :: !FloatingParsers
                 --, unsignedCombined :: !CombinedParsers
                 --, signedCombined :: !CombinedParsers
-                , stringLiteral :: !StringParsers
-                , rawStringLiteral :: !StringParsers
-                , multiStringLiteral :: !StringParsers
-                , rawMultiStringLiteral :: !StringParsers
-                , charLiteral :: !CharacterParsers
+                , stringLiteral :: !(TextParsers String)
+                , rawStringLiteral :: !(TextParsers String)
+                , multiStringLiteral :: !(TextParsers String)
+                , rawMultiStringLiteral :: !(TextParsers String)
+                , charLiteral :: !(TextParsers Char)
                 }
 
 type Space :: *
