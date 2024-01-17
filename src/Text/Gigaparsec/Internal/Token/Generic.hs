@@ -1,8 +1,8 @@
 {-# LANGUAGE Safe #-}
 {-# LANGUAGE OverloadedLists, NamedFieldPuns #-}
-module Text.Gigaparsec.Token.Generic (module Text.Gigaparsec.Token.Generic) where
+module Text.Gigaparsec.Internal.Token.Generic (module Text.Gigaparsec.Internal.Token.Generic) where
 
-import safe Text.Gigaparsec ((<|>), many, Parsec, ($>), (<:>))
+import Text.Gigaparsec ((<|>), many, Parsec, ($>), (<:>))
 import Text.Gigaparsec.Char (satisfy, char, digit, hexDigit, octDigit, bit)
 import Text.Gigaparsec.Combinator (optional)
 import Text.Gigaparsec.Errors.Combinator ((<?>), hide)

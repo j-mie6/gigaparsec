@@ -1,6 +1,6 @@
 {-# LANGUAGE Safe #-}
 {-# LANGUAGE RecordWildCards #-}
-module Text.Gigaparsec.Token.Symbol (
+module Text.Gigaparsec.Internal.Token.Symbol (
     Symbol, softKeyword, softOperator, mkSymbol, mkSym, lexeme
   ) where
 

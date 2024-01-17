@@ -93,20 +93,21 @@ library
                       Text.Gigaparsec.Expr.Subtype,
                       Text.Gigaparsec.Position,
                       Text.Gigaparsec.Token.Descriptions,
-                      Text.Gigaparsec.Token.Generic,
                       Text.Gigaparsec.Token.Lexer,
-                      Text.Gigaparsec.Token.Names,
-                      Text.Gigaparsec.Token.Numeric,
                       Text.Gigaparsec.Token.Patterns,
-                      Text.Gigaparsec.Token.Symbol,
-                      Text.Gigaparsec.Token.Text,
                       Text.Gigaparsec.Registers,
 
                       -- Internals
                       Text.Gigaparsec.Internal,
                       Text.Gigaparsec.Internal.Errors,
                       Text.Gigaparsec.Internal.RT,
-                      Text.Gigaparsec.Internal.Require
+                      Text.Gigaparsec.Internal.Require,
+                      Text.Gigaparsec.Internal.Token.Generic,
+                      Text.Gigaparsec.Internal.Token.Lexer,
+                      Text.Gigaparsec.Internal.Token.Names,
+                      Text.Gigaparsec.Internal.Token.Numeric,
+                      Text.Gigaparsec.Internal.Token.Symbol,
+                      Text.Gigaparsec.Internal.Token.Text,
 
     -- this can probably be loosened?
     build-depends:    containers      >= 0.6 && < 0.7,

@@ -1,6 +1,6 @@
 {-# LANGUAGE Safe #-}
 {-# LANGUAGE OverloadedLists #-}
-module Text.Gigaparsec.Token.Names (
+module Text.Gigaparsec.Internal.Token.Names (
     Names, mkNames,
     identifier, identifier',
     userDefinedOperator, userDefinedOperator',

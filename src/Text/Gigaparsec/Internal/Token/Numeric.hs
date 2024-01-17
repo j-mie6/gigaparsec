@@ -1,7 +1,6 @@
 {-# LANGUAGE Safe #-}
 {-# LANGUAGE DataKinds, ConstraintKinds, MultiParamTypeClasses, AllowAmbiguousTypes, FlexibleInstances, FlexibleContexts, UndecidableInstances, ApplicativeDo, TypeFamilies, TypeOperators, CPP #-}
--- TODO: refine, move to Internal
-module Text.Gigaparsec.Token.Numeric (module Text.Gigaparsec.Token.Numeric) where
+module Text.Gigaparsec.Internal.Token.Numeric (module Text.Gigaparsec.Internal.Token.Numeric) where
 
 import Text.Gigaparsec (Parsec, mapMaybeS, unit, void, atomic, (<|>), ($>))
 import Text.Gigaparsec.Char (char, oneOf)
@@ -14,7 +13,7 @@ import Text.Gigaparsec.Token.Descriptions
                  , hexadecimalLeads, octalLeads, binaryLeads
                  ),
       PlusSignPresence(PlusIllegal, PlusRequired, PlusOptional) )
-import Text.Gigaparsec.Token.Generic (GenericNumeric(plainDecimal, plainHexadecimal, plainOctal, plainBinary))
+import Text.Gigaparsec.Internal.Token.Generic (GenericNumeric(plainDecimal, plainHexadecimal, plainOctal, plainBinary))
 import Data.Kind (Constraint)
 import Data.Int (Int8, Int16, Int32, Int64)
 import Data.Word (Word8, Word16, Word32, Word64)

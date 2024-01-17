@@ -1,6 +1,5 @@
 {-# LANGUAGE Safe #-}
--- TODO: refine, move to Internal
-module Text.Gigaparsec.Token.Text (module Text.Gigaparsec.Token.Text) where
+module Text.Gigaparsec.Internal.Token.Text (module Text.Gigaparsec.Internal.Token.Text) where
 
 import Text.Gigaparsec (Parsec, void, (<|>), empty, filterS, mapMaybeS, somel, (<~>), ($>), atomic, some)
 import Text.Gigaparsec.Char (char, digit, hexDigit, octDigit, bit, satisfy, trie, string)
@@ -12,7 +11,7 @@ import Text.Gigaparsec.Token.Descriptions (
     CharPredicate,
     NumberOfDigits(Exactly, AtMost, Unbounded)
   )
-import Text.Gigaparsec.Token.Generic (GenericNumeric(zeroAllowedDecimal, zeroAllowedHexadecimal, zeroAllowedOctal, zeroAllowedBinary))
+import Text.Gigaparsec.Internal.Token.Generic (GenericNumeric(zeroAllowedDecimal, zeroAllowedHexadecimal, zeroAllowedOctal, zeroAllowedBinary))
 import Data.Char (isSpace, chr, ord, digitToInt, isAscii, isLatin1)
 import Data.Map qualified as Map (insert, map)
 import Data.Set (Set)
@@ -23,6 +22,8 @@ import Text.Gigaparsec.Combinator (guardS, choice, manyTill)
 import Control.Applicative (liftA3)
 import Data.Maybe (catMaybes)
 
+-- TODO: is it possible to /actually/ support Text/Bytestring in future?
+-- Perhaps something like the Numeric stuff?
 type TextParsers :: * -> *
 data TextParsers t = TextParsers { unicode :: Parsec t
                                  , ascii :: Parsec t
