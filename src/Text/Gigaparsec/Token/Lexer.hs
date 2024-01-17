@@ -1,5 +1,5 @@
 {-# LANGUAGE Safe #-}
-{-# LANGUAGE ConstraintKinds #-}
+{-# LANGUAGE ConstraintKinds, DataKinds #-}
 -- Ideally, we should probably expose all the functionally via this one file
 -- for ergonomics
 module Text.Gigaparsec.Token.Lexer (
