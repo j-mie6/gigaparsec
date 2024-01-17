@@ -61,7 +61,7 @@ data SignednessK = Signed | Unsigned
 
 type Signedness :: * -> SignednessK -> Constraint
 type family Signedness t s where
-  Signedness Integer 'Signed   = ()
+  Signedness Integer _         = () -- integers are allowed to serve as both unsigned and signed
   Signedness Int     'Signed   = ()
   Signedness Word    'Unsigned = ()
   Signedness Word64  'Unsigned = ()
@@ -73,9 +73,9 @@ type family Signedness t s where
   Signedness Int8    'Signed   = ()
   Signedness Word8   'Unsigned = ()
   Signedness t       'Signed   = TypeError ('Text "The type '" ':<>: 'ShowType t
-                                      ':<>: 'Text "' does not hold signed data")
+                                      ':<>: 'Text "' does not hold signed numbers")
   Signedness t       'Unsigned = TypeError ('Text "The type '" ' :<>: 'ShowType t
-                                      ':<>: 'Text "' does not hold unsigned data")
+                                      ':<>: 'Text "' does not hold unsigned numbers")
 
 type ShowBits :: Bits -> ErrorMessage
 type ShowBits b = 'ShowType (BitsNat b)
@@ -85,12 +85,12 @@ type ShowBits b = 'ShowType (BitsNat b)
 -- > BitsNat b <=? BitsNat (BitWidth t)
 -- cannot be solved
 type HasWidthFor :: Bits -> * -> Constraint
-type family HasWidthFor b t where
-  HasWidthFor b t = Assert (BitsNat b <=? BitsNat (BitWidth t))
-                           (TypeError ('Text "The type '"
-                                 ':<>: 'ShowType t  ' :<>: 'Text "' does not have enough bit-width to store "
-                                 ':<>: ShowBits (BitWidth t) ' :<>: 'Text " bits of data (can only store up to "
-                                 ':<>: ShowBits b ' :<>: 'Text " bits)."))
+type family HasWidthFor bits t where
+  HasWidthFor bits t = Assert (BitsNat bits <=? BitsNat (BitWidth t))
+                              (TypeError ('Text "The type '"
+                                    ':<>: 'ShowType t  ' :<>: 'Text "' cannot store a "
+                                    ':<>: ShowBits bits ' :<>: 'Text " bit number (only supports up to "
+                                    ':<>: ShowBits (BitWidth t) ' :<>: 'Text " bits)."))
 
 type BitBounds :: Bits -> Constraint
 class BitBounds b where
@@ -156,48 +156,48 @@ binaryBounded IntegerParsers{..} = _bounded (Proxy @bits) binary 2
 numberBounded :: forall (bits :: Bits) canHold t. canHold bits t => IntegerParsers canHold -> Parsec t
 numberBounded IntegerParsers{..} = _bounded (Proxy @bits) number 10
 
-decimal8 :: canHold 'B8 a => IntegerParsers canHold -> Parsec a
+decimal8 :: forall a canHold. canHold 'B8 a => IntegerParsers canHold -> Parsec a
 decimal8 = decimalBounded @'B8
-hexadecimal8 :: canHold 'B8 a => IntegerParsers canHold -> Parsec a
+hexadecimal8 :: forall a canHold. canHold 'B8 a => IntegerParsers canHold -> Parsec a
 hexadecimal8 = hexadecimalBounded @'B8
-octal8 :: canHold 'B8 a => IntegerParsers canHold -> Parsec a
+octal8 :: forall a canHold. canHold 'B8 a => IntegerParsers canHold -> Parsec a
 octal8 = octalBounded @'B8
-binary8 :: canHold 'B8 a => IntegerParsers canHold -> Parsec a
+binary8 :: forall a canHold. canHold 'B8 a => IntegerParsers canHold -> Parsec a
 binary8 = binaryBounded @'B8
-number8 :: canHold 'B8 a => IntegerParsers canHold -> Parsec a
+number8 :: forall a canHold. canHold 'B8 a => IntegerParsers canHold -> Parsec a
 number8 = numberBounded @'B8
 
-decimal16 :: canHold 'B16 a => IntegerParsers canHold -> Parsec a
+decimal16 :: forall a canHold. canHold 'B16 a => IntegerParsers canHold -> Parsec a
 decimal16 = decimalBounded @'B16
-hexadecimal16 :: canHold 'B16 a => IntegerParsers canHold -> Parsec a
+hexadecimal16 :: forall a canHold. canHold 'B16 a => IntegerParsers canHold -> Parsec a
 hexadecimal16 = hexadecimalBounded @'B16
-octal16 :: canHold 'B16 a => IntegerParsers canHold -> Parsec a
+octal16 :: forall a canHold. canHold 'B16 a => IntegerParsers canHold -> Parsec a
 octal16 = octalBounded @'B16
-binary16 :: canHold 'B16 a => IntegerParsers canHold -> Parsec a
+binary16 :: forall a canHold. canHold 'B16 a => IntegerParsers canHold -> Parsec a
 binary16 = binaryBounded @'B16
-number16 :: canHold 'B16 a => IntegerParsers canHold -> Parsec a
+number16 :: forall a canHold. canHold 'B16 a => IntegerParsers canHold -> Parsec a
 number16 = numberBounded @'B16
 
-decimal32 :: canHold 'B32 a => IntegerParsers canHold -> Parsec a
+decimal32 :: forall a canHold. canHold 'B32 a => IntegerParsers canHold -> Parsec a
 decimal32 = decimalBounded @'B32
-hexadecimal32 :: canHold 'B32 a => IntegerParsers canHold -> Parsec a
+hexadecimal32 :: forall a canHold. canHold 'B32 a => IntegerParsers canHold -> Parsec a
 hexadecimal32 = hexadecimalBounded @'B32
-octal32 :: canHold 'B32 a => IntegerParsers canHold -> Parsec a
+octal32 :: forall a canHold. canHold 'B32 a => IntegerParsers canHold -> Parsec a
 octal32 = octalBounded @'B32
-binary32 :: canHold 'B32 a => IntegerParsers canHold -> Parsec a
+binary32 :: forall a canHold. canHold 'B32 a => IntegerParsers canHold -> Parsec a
 binary32 = binaryBounded @'B32
-number32 :: canHold 'B32 a => IntegerParsers canHold -> Parsec a
+number32 :: forall a canHold. canHold 'B32 a => IntegerParsers canHold -> Parsec a
 number32 = numberBounded @'B32
 
-decimal64 :: canHold 'B64 a => IntegerParsers canHold -> Parsec a
+decimal64 :: forall a canHold. canHold 'B64 a => IntegerParsers canHold -> Parsec a
 decimal64 = decimalBounded @'B64
-hexadecimal64 :: canHold 'B64 a => IntegerParsers canHold -> Parsec a
+hexadecimal64 :: forall a canHold. canHold 'B64 a => IntegerParsers canHold -> Parsec a
 hexadecimal64 = hexadecimalBounded @'B64
-octal64 :: canHold 'B64 a => IntegerParsers canHold -> Parsec a
+octal64 :: forall a canHold. canHold 'B64 a => IntegerParsers canHold -> Parsec a
 octal64 = octalBounded @'B64
-binary64 :: canHold 'B64 a => IntegerParsers canHold -> Parsec a
+binary64 :: forall a canHold. canHold 'B64 a => IntegerParsers canHold -> Parsec a
 binary64 = binaryBounded @'B64
-number64 :: canHold 'B64 a => IntegerParsers canHold -> Parsec a
+number64 :: forall a canHold. canHold 'B64 a => IntegerParsers canHold -> Parsec a
 number64 = numberBounded @'B64
 
 mkUnsigned :: NumericDesc -> GenericNumeric -> IntegerParsers CanHoldUnsigned
