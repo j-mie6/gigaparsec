@@ -89,8 +89,8 @@ import Text.Gigaparsec.Internal.RT qualified as Internal (RT, runRT, rtToIO)
 import Text.Gigaparsec.Internal.Errors qualified as Internal (ParseError, ExpectItem(ExpectEndOfInput), fromParseError)
 
 import Text.Gigaparsec.Errors.ErrorBuilder (ErrorBuilder)
-import Text.Gigaparsec.Errors.Combinator (amend, emptyWide)
-import Text.Gigaparsec.Position (withWidth)
+import Text.Gigaparsec.Errors.Combinator (filterSWith, mapMaybeSWith)
+import Text.Gigaparsec.Errors.ErrorGen (vanillaGen)
 
 import Data.Functor (void)
 import Control.Applicative (liftA2, (<|>), empty, many, some, (<**>)) -- liftA2 required until 9.6
@@ -367,7 +367,7 @@ _repl f k p = k <**> manyr (\x next !acc -> next (f acc x)) id p
 @since 0.2.2.0
 -}
 filterS :: (a -> Bool) -> Parsec a -> Parsec a
-filterS f p = amend $ withWidth p >>= \(x, w) -> if f x then pure x else emptyWide w
+filterS = filterSWith vanillaGen
 
 -- this is called mapFilter in Scala... there is no collect counterpart
 {-
@@ -375,4 +375,4 @@ filterS f p = amend $ withWidth p >>= \(x, w) -> if f x then pure x else emptyWi
 @since 0.2.2.0
 -}
 mapMaybeS :: (a -> Maybe b) -> Parsec a -> Parsec b
-mapMaybeS f p = amend $ withWidth p >>= \(x, w) -> maybe (emptyWide w) pure (f x)
+mapMaybeS = mapMaybeSWith vanillaGen
