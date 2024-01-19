@@ -1,7 +1,7 @@
 {-# LANGUAGE Safe #-}
 module Text.Gigaparsec.Internal.Token.Text (module Text.Gigaparsec.Internal.Token.Text) where
 
-import Text.Gigaparsec (Parsec, void, (<|>), empty, filterS, mapMaybeS, somel, (<~>), ($>), atomic, some)
+import Text.Gigaparsec (Parsec, void, (<|>), empty, mapMaybeS, somel, (<~>), ($>), atomic, some)
 import Text.Gigaparsec.Char (char, digit, hexDigit, octDigit, bit, satisfy, trie, string)
 import Text.Gigaparsec.Token.Descriptions (
     TextDesc(TextDesc, characterLiteralEnd, graphicCharacter),
@@ -19,6 +19,7 @@ import Data.Set qualified as Set (toList)
 import Data.List.NonEmpty (NonEmpty((:|)), sort)
 import Text.Gigaparsec.Registers (Reg, make, unsafeMake, gets, modify, put, get)
 import Text.Gigaparsec.Combinator (guardS, choice, manyTill)
+import Text.Gigaparsec.Errors.Combinator (filterOut)
 import Control.Applicative (liftA3)
 import Data.Maybe (catMaybes)
 
@@ -40,8 +41,8 @@ type CharacterParsers = TextParsers Char
 mkCharacterParsers :: TextDesc -> Escape -> CharacterParsers
 mkCharacterParsers TextDesc{..} escape = TextParsers {..}
   where unicode = lit uncheckedUniLetter
-        ascii = lit (filterS (<= '\x7f') uncheckedUniLetter)
-        latin1 = lit (filterS (<= '\xff') uncheckedUniLetter)
+        ascii = lit (filterOut (\c -> if c > '\x7f' then Just "non-ascii character" else Nothing) uncheckedUniLetter)
+        latin1 = lit (filterOut (\c -> if c > '\xff' then Just "non-latin1 character" else Nothing) uncheckedUniLetter)
 
         quote = char characterLiteralEnd
         lit c = quote *> c <* quote
@@ -73,10 +74,14 @@ isRawChar RawChar = True
 isRawChar EscapeChar{} = False
 
 ensureAscii :: Parsec String -> Parsec String
-ensureAscii = filterS (all isAscii)
+ensureAscii = filterOut $ \s ->
+  if not (all isAscii s) then Just "non-ascii characters in string literal, this is not allowed"
+  else Nothing
 
 ensureLatin1 :: Parsec String -> Parsec String
-ensureLatin1 = filterS (all isLatin1)
+ensureLatin1 = filterOut $ \s ->
+  if not (all isLatin1 s) then Just "non-latin1 characters in string literal, this is not allowed"
+  else Nothing
 
 mkStringParsers :: Set (String, String) -> StringChar -> CharPredicate -> Bool -> StringParsers
 mkStringParsers !ends !stringChar !isGraphic !allowsAllSpace = TextParsers {..}
