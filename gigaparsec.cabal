@@ -87,16 +87,17 @@ library
                       Text.Gigaparsec.Errors.Combinator,
                       Text.Gigaparsec.Errors.DefaultErrorBuilder,
                       Text.Gigaparsec.Errors.ErrorBuilder,
+                      Text.Gigaparsec.Errors.ErrorGen,
                       Text.Gigaparsec.Expr,
                       Text.Gigaparsec.Expr.Chain,
                       Text.Gigaparsec.Expr.Infix,
                       Text.Gigaparsec.Expr.Subtype,
                       Text.Gigaparsec.Position,
+                      Text.Gigaparsec.Registers,
                       Text.Gigaparsec.Token.Descriptions,
                       Text.Gigaparsec.Token.Lexer,
                       Text.Gigaparsec.Token.Patterns,
-                      Text.Gigaparsec.Registers,
-
+                      
                       -- Internals
                       Text.Gigaparsec.Internal,
                       Text.Gigaparsec.Internal.Errors,
