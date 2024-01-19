@@ -23,6 +23,7 @@ data GenericNumeric = Generic { zeroAllowedDecimal :: Parsec Integer
                               , zeroNotAllowedHexadecimal :: Parsec Integer
                               , zeroNotAllowedOctal :: Parsec Integer
                               , zeroNotAllowedBinary :: Parsec Integer
+                              -- FIXME: labels are configurable here
                               , plainDecimal :: NumericDesc -> Parsec Integer
                               , plainHexadecimal :: NumericDesc -> Parsec Integer
                               , plainOctal :: NumericDesc -> Parsec Integer
@@ -34,7 +35,8 @@ mkGeneric = Generic {..}
   where ofRadix1 :: Integer -> Parsec Char -> Parsec Integer
         ofRadix1 radix dig = ofRadix2 radix dig dig
         ofRadix2 :: Integer -> Parsec Char -> Parsec Char -> Parsec Integer
-        ofRadix2 radix startDig dig = foldl' (withDigit radix) 0 <$> (startDig <:> many dig) --TODO: improve
+        ofRadix2 radix startDig dig =
+          foldl' (withDigit radix) 0 <$> (startDig <:> many dig) --TODO: improve
 
         ofRadixBreak1 :: Integer -> Parsec Char -> Char -> Parsec Integer
         ofRadixBreak1 radix dig = ofRadixBreak2 radix dig dig

@@ -1,5 +1,5 @@
 {-# LANGUAGE Safe #-}
-{-# LANGUAGE RecordWildCards #-}
+{-# LANGUAGE RecordWildCards, OverloadedLists #-}
 module Text.Gigaparsec.Internal.Token.Symbol (
     Symbol, softKeyword, softOperator, mkSymbol, mkSym, lexeme
   ) where
@@ -13,9 +13,10 @@ import Text.Gigaparsec.Token.Descriptions ( SymbolDesc(SymbolDesc, hardKeywords,
 
 import Data.Set qualified as Set (member, toList, fromList, null)
 import Data.Char (toUpper, toLower, isLetter)
-import Text.Gigaparsec.Errors.Combinator (amend, emptyWide)
+import Text.Gigaparsec.Errors.Combinator (amend, emptyWide, (<?>))
 import Data.Set (Set)
 import Data.Maybe (mapMaybe)
+import Text.Gigaparsec.Internal.Require (require)
 
 type Symbol :: *
 data Symbol = Symbol { softKeyword :: !(String -> Parsec ())
@@ -23,11 +24,11 @@ data Symbol = Symbol { softKeyword :: !(String -> Parsec ())
                      }
 
 mkSymbol :: SymbolDesc -> NameDesc -> Symbol
--- TODO: needs to be case insensitive for softKeyword
--- TODO: need to handle max-operator semantics for softOperator
-mkSymbol SymbolDesc{..} NameDesc{..} = Symbol { softKeyword = _softKeyword caseSensitive identifierLetter
-                                              , softOperator = _softOperator hardOperators operatorLetter
-                                              }
+mkSymbol SymbolDesc{..} NameDesc{..} = Symbol {..}
+  where softKeyword name = require (not (null name)) "softKeyword" "keywords may not be empty"
+          (_softKeyword caseSensitive identifierLetter name <?> [name])
+        softOperator name = require (not (null name)) "softOperator" "operators may not be empty"
+          (_softOperator hardOperators operatorLetter name <?> [name])
 
 mkSym :: SymbolDesc -> Symbol -> (String -> Parsec ())
 mkSym SymbolDesc{..} Symbol{..} str
@@ -40,13 +41,12 @@ lexeme lexe Symbol{..} = Symbol { softKeyword = lexe . softKeyword
                                 , softOperator = lexe . softOperator
                                 }
 
--- TODO: requirement on non-empty name
 _softKeyword :: Bool -> CharPredicate -> String -> Parsec ()
 _softKeyword caseSensitive letter kw
   | caseSensitive = atomic (nfb letter caseString)
   | otherwise     = atomic (nfb letter (string kw))
   where nfb Nothing p = void p
-        nfb (Just c) p = p *> notFollowedBy (satisfy c)
+        nfb (Just c) p = p *> (notFollowedBy (satisfy c) <?> ["end of " ++ kw])
         n = length kw
         caseChar c
           | isLetter c = char (toUpper c) <|> char (toLower c)
@@ -54,12 +54,11 @@ _softKeyword caseSensitive letter kw
         caseString = atomic (amend (traverse caseChar kw))
                  <|> emptyWide (fromIntegral n)
 
--- TODO: requirement on non-empty name
 -- TODO: trie-based implementation
 _softOperator :: Set String -> CharPredicate -> String -> Parsec ()
 _softOperator hardOperators letter op =
   if Set.null ends then atomic (string op *> notFollowedBy letter')
-  else atomic (string op *> notFollowedBy (void letter' <|> void (strings ends)))
+  else atomic (string op *> (notFollowedBy (void letter' <|> void (strings ends)) <?> ["end of " ++ op]))
   where ends = Set.fromList (mapMaybe (flip strip op) (Set.toList hardOperators))
         letter' = maybe empty satisfy letter
         strip []      str@(:){}          = Just str

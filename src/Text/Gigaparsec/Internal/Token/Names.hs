@@ -7,9 +7,9 @@ module Text.Gigaparsec.Internal.Token.Names (
     lexeme
   ) where
 
-import Text.Gigaparsec (Parsec, empty, (<:>), atomic, filterS)
+import Text.Gigaparsec (Parsec, empty, (<:>), atomic)
 import Text.Gigaparsec.Char (stringOfMany, satisfy)
-import Text.Gigaparsec.Errors.Combinator ((<?>))
+import Text.Gigaparsec.Errors.Combinator ((<?>), unexpectedWhen)
 
 import Data.Set qualified as Set (member, map)
 
@@ -35,17 +35,22 @@ mkNames NameDesc{..} symbolDesc@SymbolDesc{..} = Names {..}
     -- TODO: error transformers
     !isReserved = isReservedName symbolDesc
     !identifier =
-      keyOrOp identifierStart identifierLetter isReserved "identifier" id
+      keyOrOp identifierStart identifierLetter isReserved "identifier" ("keyword " ++)
     identifier' start =
-      filterS (startsWith start) identifier
+      unexpectedWhen (\v -> if startsWith start v then Nothing else Just ("identifier " ++ v))
+                     identifier
     !userDefinedOperator =
-      keyOrOp operatorStart operatorLetter (flip Set.member hardOperators) "operator" id
+      keyOrOp operatorStart operatorLetter (flip Set.member hardOperators) "operator" ("reserved operator " ++)
     userDefinedOperator' start =
-      filterS (startsWith start) identifier
+      unexpectedWhen (\v -> if startsWith start v then Nothing else Just ("operator " ++ v))
+                     userDefinedOperator
 
     keyOrOp :: CharPredicate -> CharPredicate -> (String -> Bool) -> String -> (String -> String) -> Parsec String
-    keyOrOp start letter illegal name _unexpectedIllegal = --FIXME: errors!
-      atomic (filterS (not . illegal) (complete start letter)) <?> [name]
+    keyOrOp start letter illegal name unexpectedIllegal =
+      atomic (unexpectedWhen cond (complete start letter)) <?> [name]
+      where cond x
+              | illegal x = Just (unexpectedIllegal x)
+              | otherwise = Nothing
 
     trailer :: CharPredicate -> Parsec String
     trailer = maybe (pure "") stringOfMany

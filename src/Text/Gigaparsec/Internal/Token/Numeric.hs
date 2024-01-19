@@ -1,10 +1,13 @@
 {-# LANGUAGE Safe #-}
 {-# LANGUAGE DataKinds, ConstraintKinds, MultiParamTypeClasses, AllowAmbiguousTypes, FlexibleInstances, FlexibleContexts, UndecidableInstances, ApplicativeDo, TypeFamilies, TypeOperators, CPP #-}
+{-# OPTIONS_GHC -Wno-incomplete-record-updates #-}
 module Text.Gigaparsec.Internal.Token.Numeric (module Text.Gigaparsec.Internal.Token.Numeric) where
 
-import Text.Gigaparsec (Parsec, mapMaybeS, unit, void, atomic, (<|>), ($>))
+import Text.Gigaparsec (Parsec, unit, void, atomic, (<|>), ($>))
 import Text.Gigaparsec.Char (char, oneOf)
 import Text.Gigaparsec.Combinator (optional, optionalAs)
+import Text.Gigaparsec.Errors.Combinator (mapMaybeSWith)
+import Text.Gigaparsec.Errors.ErrorGen (specializedGen, messages)
 import Text.Gigaparsec.Token.Descriptions
     ( BreakCharDesc(BreakCharSupported, NoBreakChar),
       NumericDesc( NumericDesc, positiveSign, literalBreakChar
@@ -14,12 +17,14 @@ import Text.Gigaparsec.Token.Descriptions
                  ),
       PlusSignPresence(PlusIllegal, PlusRequired, PlusOptional) )
 import Text.Gigaparsec.Internal.Token.Generic (GenericNumeric(plainDecimal, plainHexadecimal, plainOctal, plainBinary))
+import Data.Char (intToDigit)
 import Data.Kind (Constraint)
 import Data.Int (Int8, Int16, Int32, Int64)
 import Data.Word (Word8, Word16, Word32, Word64)
 import Numeric.Natural (Natural)
 import Data.Proxy (Proxy(Proxy))
 import Control.Monad (when, unless)
+import Numeric (showIntAtBase)
 
 #if __GLASGOW_HASKELL__ >= 904
 
@@ -200,11 +205,20 @@ binary64 = binaryBounded @'B64
 number64 :: forall a canHold. canHold 'B64 a => IntegerParsers canHold -> Parsec a
 number64 = numberBounded @'B64
 
+outOfBounds :: Integer -> Integer -> Int -> Integer -> [String]
+outOfBounds small big radix _n = [
+    "literal is not within the range " ++ resign small (" to " ++ resign big "")
+  ]
+  where resign n
+          | n < 0 = ('-' :) . showIntAtBase (toInteger radix) intToDigit (abs n)
+          | otherwise = showIntAtBase (toInteger radix) intToDigit n
+
 mkUnsigned :: NumericDesc -> GenericNumeric -> IntegerParsers CanHoldUnsigned
 mkUnsigned desc@NumericDesc{..} gen = IntegerParsers {..}
   where _bounded :: forall (bits :: Bits) t. CanHoldUnsigned bits t
                  => Proxy bits -> Parsec Integer -> Int -> Parsec t
-        _bounded _ num _radix = mapMaybeS
+        _bounded _ num radix = mapMaybeSWith
+          (specializedGen { messages = outOfBounds 0 (upperUnsigned @bits) radix })
           (\n -> if n >= 0 && n <= upperUnsigned @bits then Just (fromInteger n) else Nothing)
           num
 
@@ -259,7 +273,8 @@ mkSigned NumericDesc{..} unsigned = IntegerParsers {
   }
   where _bounded :: forall (bits :: Bits) t. CanHoldSigned bits t
                  => Proxy bits -> Parsec Integer -> Int -> Parsec t
-        _bounded _ num _radix = mapMaybeS
+        _bounded _ num radix = mapMaybeSWith
+          (specializedGen { messages = outOfBounds (lowerSigned @bits) (upperSigned @bits) radix })
           (\n -> if n >= lowerSigned @bits && n <= upperSigned @bits
                  then Just (fromInteger n)
                  else Nothing)

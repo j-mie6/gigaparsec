@@ -1,4 +1,5 @@
 {-# LANGUAGE Trustworthy #-}
+{-# LANGUAGE OverloadedLists #-}
 {-# OPTIONS_GHC -Wno-partial-fields #-}
 module Text.Gigaparsec.Internal.Token.Lexer (
     Lexer, mkLexer,
@@ -17,7 +18,7 @@ import Text.Gigaparsec (Parsec, eof, void, empty, (<|>), atomic, unit)
 import Text.Gigaparsec.Char (satisfy, string, item, endOfLine)
 import Text.Gigaparsec.Combinator (skipMany, skipManyTill)
 import Text.Gigaparsec.Registers (put, get, localWith, rollback)
-import Text.Gigaparsec.Errors.Combinator (hide)
+import Text.Gigaparsec.Errors.Combinator (hide, (<?>))
 
 import Text.Gigaparsec.Token.Descriptions qualified as Desc
 import Text.Gigaparsec.Internal.Token.Generic (mkGeneric)
@@ -150,7 +151,7 @@ mkSpace desc@Desc.SpaceDesc{..} = Space {..}
   where -- don't think we can trust doing initialisation here, it'll happen in some random order
         {-# NOINLINE wsImpl #-}
         !wsImpl = fromIORef (unsafePerformIO (newIORef (error "uninitialised space")))
-        comment = commentParser desc -- do not make this lazy
+        comment = commentParser desc -- do not make this strict
         implOf
           | supportsComments desc = hide . maybe skipComments (skipMany . (<|> comment) . void . satisfy)
           | otherwise             = hide . maybe empty (skipMany . satisfy)
@@ -184,7 +185,7 @@ commentParser Desc.SpaceDesc{..} =
   where
     -- can't make these strict until guard is gone
     openComment = atomic (string multiLineCommentStart)
-    closeComment = atomic (string multiLineCommentEnd)
+    closeComment = atomic (string multiLineCommentEnd) <?> ["end of comment"]
     multiLine = guard multiEnabled *> openComment *> wellNested 1
     wellNested :: Int -> Parsec ()
     wellNested 0 = unit
@@ -193,7 +194,7 @@ commentParser Desc.SpaceDesc{..} =
                <|> item *> wellNested n
     singleLine = guard singleEnabled
               *> atomic (string lineCommentStart)
-              *> skipManyTill item endOfLineComment
+              *> skipManyTill item (endOfLineComment <?> ["end of comment"])
 
     endOfLineComment
       | lineCommentAllowsEOF = void endOfLine <|> eof
