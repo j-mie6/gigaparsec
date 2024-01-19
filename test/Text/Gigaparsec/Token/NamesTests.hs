@@ -3,7 +3,6 @@ module Text.Gigaparsec.Token.NamesTests where
 
 import Test.Tasty
 import Test.Tasty.HUnit
-import Test.Tasty.ExpectedFailure
 
 import Text.Gigaparsec
 import Text.Gigaparsec.Char (spaces)
@@ -54,7 +53,7 @@ identifierTests = testGroup "identifier should"
       case testParseAll (identifier basicNames) "keyword" of
         Failure (TestError pos _) -> pos @?= (1, 1)
         _ -> assertFailure "parser must fail"
-  , expectFailBecause "no unexpected filter" $ testCase "report the correct label" do
+  , testCase "report the correct label" do
       case testParseAll (identifier basicNames) "HARD" of
         Failure (TestError _ (VanillaError unex exs rs width)) -> do
           width @?= 4
