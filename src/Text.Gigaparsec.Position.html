@@ -1,0 +1,145 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><link rel="stylesheet" type="text/css" href="style.css" /><script type="text/javascript" src="highlight.js"></script></head><body><pre><span class="hs-pragma">{-# LANGUAGE Safe #-}</span><span>
+</span><span id="line-2"></span><span class="hs-keyword">module</span><span> </span><span class="hs-identifier">Text.Gigaparsec.Position</span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Text.Gigaparsec.Position.html#line"><span class="hs-identifier">line</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Position.html#col"><span class="hs-identifier">col</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Position.html#pos"><span class="hs-identifier">pos</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Position.html#offset"><span class="hs-identifier">offset</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Position.html#withWidth"><span class="hs-identifier">withWidth</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-3"></span><span>
+</span><span id="line-4"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html"><span class="hs-identifier">Text.Gigaparsec.Internal</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier">Parsec</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-5"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html"><span class="hs-identifier">Text.Gigaparsec.Internal</span></a></span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="hs-keyword">as</span><span> </span><span class="annot"><span class="hs-identifier">Internal</span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier">Parsec</span></a></span><span class="hs-special">(</span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier">Parsec</span></a></span><span class="hs-special">)</span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#line"><span class="hs-identifier">line</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#col"><span class="hs-identifier">col</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#consumed"><span class="hs-identifier">consumed</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-6"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Control.Applicative</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">liftA2</span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier">liftA3</span></span><span class="hs-special">)</span><span>
+</span><span id="line-7"></span><span>
+</span><span id="line-8"></span><span class="annot"><a href="Text.Gigaparsec.Position.html#line"><span class="hs-identifier hs-type">line</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Word</span></span><span>
+</span><span id="line-9"></span><span id="line"><span class="annot"><span class="annottext">line :: Parsec Word
+</span><a href="Text.Gigaparsec.Position.html#line"><span class="hs-identifier hs-var hs-var">line</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">(forall r.
+ State
+ -&gt; (Word -&gt; State -&gt; RT r)
+ -&gt; (ParseError -&gt; State -&gt; RT r)
+ -&gt; RT r)
+-&gt; Parsec Word
+forall a.
+(forall r.
+ State
+ -&gt; (a -&gt; State -&gt; RT r) -&gt; (ParseError -&gt; State -&gt; RT r) -&gt; RT r)
+-&gt; Parsec a
+</span><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-var">Internal.Parsec</span></a></span><span> </span><span class="annot"><span class="annottext">((forall r.
+  State
+  -&gt; (Word -&gt; State -&gt; RT r)
+  -&gt; (ParseError -&gt; State -&gt; RT r)
+  -&gt; RT r)
+ -&gt; Parsec Word)
+-&gt; (forall r.
+    State
+    -&gt; (Word -&gt; State -&gt; RT r)
+    -&gt; (ParseError -&gt; State -&gt; RT r)
+    -&gt; RT r)
+-&gt; Parsec Word
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-glyph">\</span><span id="local-6989586621679074144"><span class="annot"><span class="annottext">State
+</span><a href="#local-6989586621679074144"><span class="hs-identifier hs-var">st</span></a></span></span><span> </span><span id="local-6989586621679074145"><span class="annot"><span class="annottext">Word -&gt; State -&gt; RT r
+</span><a href="#local-6989586621679074145"><span class="hs-identifier hs-var">good</span></a></span></span><span> </span><span class="annot"><span class="annottext">ParseError -&gt; State -&gt; RT r
+</span><span class="hs-identifier">_</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Word -&gt; State -&gt; RT r
+</span><a href="#local-6989586621679074145"><span class="hs-identifier hs-var">good</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">State -&gt; Word
+</span><a href="Text.Gigaparsec.Internal.html#line"><span class="hs-identifier hs-var">Internal.line</span></a></span><span> </span><span class="annot"><span class="annottext">State
+</span><a href="#local-6989586621679074144"><span class="hs-identifier hs-var">st</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">State
+</span><a href="#local-6989586621679074144"><span class="hs-identifier hs-var">st</span></a></span><span>
+</span><span id="line-10"></span><span>
+</span><span id="line-11"></span><span class="annot"><a href="Text.Gigaparsec.Position.html#col"><span class="hs-identifier hs-type">col</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Word</span></span><span>
+</span><span id="line-12"></span><span id="col"><span class="annot"><span class="annottext">col :: Parsec Word
+</span><a href="Text.Gigaparsec.Position.html#col"><span class="hs-identifier hs-var hs-var">col</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">(forall r.
+ State
+ -&gt; (Word -&gt; State -&gt; RT r)
+ -&gt; (ParseError -&gt; State -&gt; RT r)
+ -&gt; RT r)
+-&gt; Parsec Word
+forall a.
+(forall r.
+ State
+ -&gt; (a -&gt; State -&gt; RT r) -&gt; (ParseError -&gt; State -&gt; RT r) -&gt; RT r)
+-&gt; Parsec a
+</span><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-var">Internal.Parsec</span></a></span><span> </span><span class="annot"><span class="annottext">((forall r.
+  State
+  -&gt; (Word -&gt; State -&gt; RT r)
+  -&gt; (ParseError -&gt; State -&gt; RT r)
+  -&gt; RT r)
+ -&gt; Parsec Word)
+-&gt; (forall r.
+    State
+    -&gt; (Word -&gt; State -&gt; RT r)
+    -&gt; (ParseError -&gt; State -&gt; RT r)
+    -&gt; RT r)
+-&gt; Parsec Word
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-glyph">\</span><span id="local-6989586621679074146"><span class="annot"><span class="annottext">State
+</span><a href="#local-6989586621679074146"><span class="hs-identifier hs-var">st</span></a></span></span><span> </span><span id="local-6989586621679074147"><span class="annot"><span class="annottext">Word -&gt; State -&gt; RT r
+</span><a href="#local-6989586621679074147"><span class="hs-identifier hs-var">good</span></a></span></span><span> </span><span class="annot"><span class="annottext">ParseError -&gt; State -&gt; RT r
+</span><span class="hs-identifier">_</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Word -&gt; State -&gt; RT r
+</span><a href="#local-6989586621679074147"><span class="hs-identifier hs-var">good</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">State -&gt; Word
+</span><a href="Text.Gigaparsec.Internal.html#col"><span class="hs-identifier hs-var">Internal.col</span></a></span><span> </span><span class="annot"><span class="annottext">State
+</span><a href="#local-6989586621679074146"><span class="hs-identifier hs-var">st</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">State
+</span><a href="#local-6989586621679074146"><span class="hs-identifier hs-var">st</span></a></span><span>
+</span><span id="line-13"></span><span>
+</span><span id="line-14"></span><span class="annot"><a href="Text.Gigaparsec.Position.html#offset"><span class="hs-identifier hs-type">offset</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Word</span></span><span>
+</span><span id="line-15"></span><span id="offset"><span class="annot"><span class="annottext">offset :: Parsec Word
+</span><a href="Text.Gigaparsec.Position.html#offset"><span class="hs-identifier hs-var hs-var">offset</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">(forall r.
+ State
+ -&gt; (Word -&gt; State -&gt; RT r)
+ -&gt; (ParseError -&gt; State -&gt; RT r)
+ -&gt; RT r)
+-&gt; Parsec Word
+forall a.
+(forall r.
+ State
+ -&gt; (a -&gt; State -&gt; RT r) -&gt; (ParseError -&gt; State -&gt; RT r) -&gt; RT r)
+-&gt; Parsec a
+</span><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-var">Internal.Parsec</span></a></span><span> </span><span class="annot"><span class="annottext">((forall r.
+  State
+  -&gt; (Word -&gt; State -&gt; RT r)
+  -&gt; (ParseError -&gt; State -&gt; RT r)
+  -&gt; RT r)
+ -&gt; Parsec Word)
+-&gt; (forall r.
+    State
+    -&gt; (Word -&gt; State -&gt; RT r)
+    -&gt; (ParseError -&gt; State -&gt; RT r)
+    -&gt; RT r)
+-&gt; Parsec Word
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-glyph">\</span><span id="local-6989586621679074148"><span class="annot"><span class="annottext">State
+</span><a href="#local-6989586621679074148"><span class="hs-identifier hs-var">st</span></a></span></span><span> </span><span id="local-6989586621679074149"><span class="annot"><span class="annottext">Word -&gt; State -&gt; RT r
+</span><a href="#local-6989586621679074149"><span class="hs-identifier hs-var">good</span></a></span></span><span> </span><span class="annot"><span class="annottext">ParseError -&gt; State -&gt; RT r
+</span><span class="hs-identifier">_</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Word -&gt; State -&gt; RT r
+</span><a href="#local-6989586621679074149"><span class="hs-identifier hs-var">good</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">State -&gt; Word
+</span><a href="Text.Gigaparsec.Internal.html#consumed"><span class="hs-identifier hs-var">Internal.consumed</span></a></span><span> </span><span class="annot"><span class="annottext">State
+</span><a href="#local-6989586621679074148"><span class="hs-identifier hs-var">st</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">State
+</span><a href="#local-6989586621679074148"><span class="hs-identifier hs-var">st</span></a></span><span>
+</span><span id="line-16"></span><span>
+</span><span id="line-17"></span><span class="annot"><a href="Text.Gigaparsec.Position.html#pos"><span class="hs-identifier hs-type">pos</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Word</span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Word</span></span><span class="hs-special">)</span><span>
+</span><span id="line-18"></span><span id="pos"><span class="annot"><span class="annottext">pos :: Parsec (Word, Word)
+</span><a href="Text.Gigaparsec.Position.html#pos"><span class="hs-identifier hs-var hs-var">pos</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">(Word -&gt; Word -&gt; (Word, Word))
+-&gt; Parsec Word -&gt; Parsec Word -&gt; Parsec (Word, Word)
+forall a b c. (a -&gt; b -&gt; c) -&gt; Parsec a -&gt; Parsec b -&gt; Parsec c
+forall (f :: * -&gt; *) a b c.
+Applicative f =&gt;
+(a -&gt; b -&gt; c) -&gt; f a -&gt; f b -&gt; f c
+</span><span class="hs-identifier hs-var">liftA2</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">,</span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">Parsec Word
+</span><a href="Text.Gigaparsec.Position.html#line"><span class="hs-identifier hs-var">line</span></a></span><span> </span><span class="annot"><span class="annottext">Parsec Word
+</span><a href="Text.Gigaparsec.Position.html#col"><span class="hs-identifier hs-var">col</span></a></span><span>
+</span><span id="line-19"></span><span>
+</span><span id="line-20"></span><span id="local-6989586621679074123"><span class="annot"><a href="Text.Gigaparsec.Position.html#withWidth"><span class="hs-identifier hs-type">withWidth</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679074123"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="#local-6989586621679074123"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Word</span></span><span class="hs-special">)</span></span><span>
+</span><span id="line-21"></span><span id="withWidth"><span class="annot"><span class="annottext">withWidth :: forall a. Parsec a -&gt; Parsec (a, Word)
+</span><a href="Text.Gigaparsec.Position.html#withWidth"><span class="hs-identifier hs-var hs-var">withWidth</span></a></span></span><span> </span><span id="local-6989586621679074153"><span class="annot"><span class="annottext">Parsec a
+</span><a href="#local-6989586621679074153"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">(Word -&gt; a -&gt; Word -&gt; (a, Word))
+-&gt; Parsec Word -&gt; Parsec a -&gt; Parsec Word -&gt; Parsec (a, Word)
+forall (f :: * -&gt; *) a b c d.
+Applicative f =&gt;
+(a -&gt; b -&gt; c -&gt; d) -&gt; f a -&gt; f b -&gt; f c -&gt; f d
+</span><span class="hs-identifier hs-var">liftA3</span></span><span> </span><span class="hs-special">(</span><span class="hs-glyph">\</span><span id="local-6989586621679074154"><span class="annot"><span class="annottext">Word
+</span><a href="#local-6989586621679074154"><span class="hs-identifier hs-var">s</span></a></span></span><span> </span><span id="local-6989586621679074155"><span class="annot"><span class="annottext">a
+</span><a href="#local-6989586621679074155"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span id="local-6989586621679074156"><span class="annot"><span class="annottext">Word
+</span><a href="#local-6989586621679074156"><span class="hs-identifier hs-var">e</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">a
+</span><a href="#local-6989586621679074155"><span class="hs-identifier hs-var">x</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">Word
+</span><a href="#local-6989586621679074156"><span class="hs-identifier hs-var">e</span></a></span><span class="annot"><span class="annottext">Word -&gt; Word -&gt; Word
+forall a. Num a =&gt; a -&gt; a -&gt; a
+</span><span class="hs-glyph hs-var">-</span></span><span class="annot"><span class="annottext">Word
+</span><a href="#local-6989586621679074154"><span class="hs-identifier hs-var">s</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">Parsec Word
+</span><a href="Text.Gigaparsec.Position.html#offset"><span class="hs-identifier hs-var">offset</span></a></span><span> </span><span class="annot"><span class="annottext">Parsec a
+</span><a href="#local-6989586621679074153"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Parsec Word
+</span><a href="Text.Gigaparsec.Position.html#offset"><span class="hs-identifier hs-var">offset</span></a></span><span>
+</span><span id="line-22"></span></pre></body></html>
