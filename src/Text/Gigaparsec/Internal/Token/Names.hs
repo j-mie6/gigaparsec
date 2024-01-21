@@ -1,5 +1,6 @@
 {-# LANGUAGE Safe #-}
 {-# LANGUAGE OverloadedLists #-}
+{-# OPTIONS_HADDOCK hide #-}
 module Text.Gigaparsec.Internal.Token.Names (
     Names, mkNames,
     identifier, identifier',

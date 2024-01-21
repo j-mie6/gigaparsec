@@ -1,5 +1,6 @@
 {-# LANGUAGE Safe #-}
 {-# LANGUAGE RecordWildCards, OverloadedLists #-}
+{-# OPTIONS_HADDOCK hide #-}
 module Text.Gigaparsec.Internal.Token.Symbol (
     Symbol, softKeyword, softOperator, mkSymbol, mkSym, lexeme
   ) where

@@ -1,6 +1,7 @@
 {-# LANGUAGE Trustworthy #-}
 {-# LANGUAGE OverloadedLists #-}
 {-# OPTIONS_GHC -Wno-partial-fields #-}
+{-# OPTIONS_HADDOCK hide #-}
 module Text.Gigaparsec.Internal.Token.Lexer (
     Lexer, mkLexer,
     Lexeme, lexeme, nonlexeme, fully, space,

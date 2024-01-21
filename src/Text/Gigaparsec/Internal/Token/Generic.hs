@@ -1,5 +1,6 @@
 {-# LANGUAGE Safe #-}
 {-# LANGUAGE OverloadedLists, NamedFieldPuns #-}
+{-# OPTIONS_HADDOCK hide #-}
 module Text.Gigaparsec.Internal.Token.Generic (module Text.Gigaparsec.Internal.Token.Generic) where
 
 import Text.Gigaparsec ((<|>), many, Parsec, ($>), (<:>))

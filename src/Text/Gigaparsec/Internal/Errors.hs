@@ -1,9 +1,8 @@
 {-# LANGUAGE Trustworthy #-}
 {-# LANGUAGE RecordWildCards, BangPatterns, NamedFieldPuns, CPP #-}
 #include "portable-unlifted.h"
-{-# OPTIONS_GHC -Wno-partial-fields -Wno-all-missed-specialisations #-}
+{-# OPTIONS_GHC -Wno-partial-fields -Wno-all-missed-specialisations -Wno-missing-import-lists #-}
 {-# OPTIONS_HADDOCK hide #-}
-{-# OPTIONS_GHC -Wno-missing-import-lists #-}
 module Text.Gigaparsec.Internal.Errors (module Text.Gigaparsec.Internal.Errors) where
 
 import Prelude hiding (lines)

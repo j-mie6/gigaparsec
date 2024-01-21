@@ -1,6 +1,7 @@
 {-# LANGUAGE Safe #-}
 {-# LANGUAGE DataKinds, ConstraintKinds, MultiParamTypeClasses, AllowAmbiguousTypes, FlexibleInstances, FlexibleContexts, UndecidableInstances, ApplicativeDo, TypeFamilies, TypeOperators, CPP #-}
 {-# OPTIONS_GHC -Wno-incomplete-record-updates #-}
+{-# OPTIONS_HADDOCK hide #-}
 module Text.Gigaparsec.Internal.Token.Numeric (module Text.Gigaparsec.Internal.Token.Numeric) where
 
 import Text.Gigaparsec (Parsec, unit, void, atomic, (<|>), ($>))

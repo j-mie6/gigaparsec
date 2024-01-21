@@ -1,6 +1,7 @@
 {-# LANGUAGE Safe #-}
 {-# LANGUAGE OverloadedLists, OverloadedStrings #-}
 {-# OPTIONS_GHC -Wno-incomplete-record-updates -Wno-incomplete-uni-patterns #-}
+{-# OPTIONS_HADDOCK hide #-}
 module Text.Gigaparsec.Internal.Token.Text (module Text.Gigaparsec.Internal.Token.Text) where
 
 import Text.Gigaparsec (Parsec, void, (<|>), empty, somel, (<~>), ($>), atomic, some)
