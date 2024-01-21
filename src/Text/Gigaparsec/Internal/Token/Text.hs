@@ -1,7 +1,9 @@
 {-# LANGUAGE Safe #-}
+{-# LANGUAGE OverloadedLists, OverloadedStrings #-}
+{-# OPTIONS_GHC -Wno-incomplete-record-updates -Wno-incomplete-uni-patterns #-}
 module Text.Gigaparsec.Internal.Token.Text (module Text.Gigaparsec.Internal.Token.Text) where
 
-import Text.Gigaparsec (Parsec, void, (<|>), empty, mapMaybeS, somel, (<~>), ($>), atomic, some)
+import Text.Gigaparsec (Parsec, void, (<|>), empty, somel, (<~>), ($>), atomic, some)
 import Text.Gigaparsec.Char (char, digit, hexDigit, octDigit, bit, satisfy, trie, string)
 import Text.Gigaparsec.Token.Descriptions (
     TextDesc(TextDesc, characterLiteralEnd, graphicCharacter),
@@ -12,16 +14,20 @@ import Text.Gigaparsec.Token.Descriptions (
     NumberOfDigits(Exactly, AtMost, Unbounded)
   )
 import Text.Gigaparsec.Internal.Token.Generic (GenericNumeric(zeroAllowedDecimal, zeroAllowedHexadecimal, zeroAllowedOctal, zeroAllowedBinary))
-import Data.Char (isSpace, chr, ord, digitToInt, isAscii, isLatin1)
+import Data.Char (isSpace, chr, ord, digitToInt, isAscii, isLatin1, intToDigit)
 import Data.Map qualified as Map (insert, map)
 import Data.Set (Set)
 import Data.Set qualified as Set (toList)
 import Data.List.NonEmpty (NonEmpty((:|)), sort)
+import Data.List.NonEmpty qualified as NonEmpty (toList)
 import Text.Gigaparsec.Registers (Reg, make, unsafeMake, gets, modify, put, get)
 import Text.Gigaparsec.Combinator (guardS, choice, manyTill)
-import Text.Gigaparsec.Errors.Combinator (filterOut)
+import Text.Gigaparsec.Errors.Combinator (filterOut, (<?>), label, explain, mapMaybeSWith)
 import Control.Applicative (liftA3)
 import Data.Maybe (catMaybes)
+import Text.Gigaparsec.Errors.ErrorGen (specializedGen, messages)
+import Text.Gigaparsec.Errors.DefaultErrorBuilder (disjunct, toString, from)
+import Numeric (showIntAtBase)
 
 -- TODO: is it possible to /actually/ support Text/Bytestring in future?
 -- Perhaps something like the Numeric stuff?
@@ -48,7 +54,7 @@ mkCharacterParsers TextDesc{..} escape = TextParsers {..}
         lit c = quote *> c <* quote
         uncheckedUniLetter = escapeChar escape <|> graphic
 
-        graphic = maybe empty satisfy (letter characterLiteralEnd False graphicCharacter)
+        graphic = maybe empty satisfy (letter characterLiteralEnd False graphicCharacter) <?> ["graphic character"]
 
 type StringChar :: *
 data StringChar = RawChar
@@ -61,13 +67,14 @@ mkEscapeChar !desc !esc !space = EscapeChar (escBegin desc) stringEsc
                                         Just <$> escapeCode esc)
         escapeEmpty = maybe empty char (emptyEscape desc)
         escapeGap
-          | gapsSupported desc = some space *> escapeBegin esc
+          | gapsSupported desc = some (space <?> ["string gap"]) *> (escapeBegin esc <?> ["end of string gap"])
           | otherwise = empty
 
 mkChar :: StringChar -> CharPredicate -> Parsec (Maybe Char)
-mkChar RawChar = maybe empty (fmap Just . satisfy)
+mkChar RawChar = maybe empty (fmap Just . label ["string character"] . satisfy)
 mkChar (EscapeChar escBegin stringEsc) =
-  foldr (\p -> (<|> fmap Just (satisfy (\c -> p c && c /= escBegin)))) stringEsc
+  foldr (\p -> label ["string character"] . (<|> fmap Just (satisfy (\c -> p c && c /= escBegin) <?> ["graphic character"])))
+        stringEsc
 
 isRawChar :: StringChar -> Bool
 isRawChar RawChar = True
@@ -114,8 +121,9 @@ data Escape = Escape { escapeCode :: !(Parsec Char)
 mkEscape :: EscapeDesc -> GenericNumeric -> Escape
 mkEscape EscapeDesc{..} gen = Escape {..}
   where
-    escapeBegin = void (char escBegin)
-    escapeCode = escMapped <|> numericEscape
+    escapeBegin = void (char escBegin) <?> ["escape sequence"]
+    escapeCode = explain "invalid escape sequence" $ label ["end of escape sequence"] $
+      escMapped <|> numericEscape
     escapeChar = escapeBegin *> escapeCode
 
     escs = foldr (\c -> Map.insert [c] c) mapping literals
@@ -129,10 +137,19 @@ mkEscape EscapeDesc{..} gen = Escape {..}
     binaryEsc = fromDesc 2 binaryEscape (zeroAllowedBinary gen) bit
 
     boundedChar :: Parsec Integer -> Char -> Maybe Char -> Int -> Parsec Char
-    boundedChar p maxValue prefix _radix = foldr (\c t -> char c *> t) (mapMaybeS f p) prefix
+    boundedChar p maxValue prefix radix = foldr (\c t -> char c *> t) (mapMaybeSWith err f p) prefix
       where f c
              | c < toInteger (ord maxValue) = Just (chr (fromInteger c))
              | otherwise = Nothing
+            err = specializedGen { messages = messages }
+            messages c
+              | c > toInteger (ord maxValue) =
+                  [showIntAtBase (toInteger radix) intToDigit c
+                    (" is greater than the maximum character value of "
+                    ++ showIntAtBase (toInteger radix) intToDigit (toInteger (ord maxValue)) "")]
+              | otherwise = ["illegal unicode character: "
+                          ++ showIntAtBase (toInteger radix) intToDigit c ""]
+
 
     atMost' :: Int -> Parsec Char -> Reg r Word -> Parsec Integer
     atMost' radix dig atMostR =
@@ -144,9 +161,13 @@ mkEscape EscapeDesc{..} gen = Escape {..}
     atMost n radix dig = make n (atMost' radix dig)
 
     exactly :: Word -> Word -> Int -> Parsec Char -> NonEmpty Word -> Parsec Integer
-    exactly n full radix dig _reqDigits = make n $ \atMostR ->
-      mapMaybeS (\(num, m) -> if m == full then Just num else Nothing)
-                (atMost' radix dig atMostR <~> gets atMostR (full -))
+    exactly n full radix dig reqDigits = make n $ \atMostR ->
+      mapMaybeSWith (specializedGen {messages = messages})
+                    (\(num, m) -> if m == full then Just num else Nothing)
+                    (atMost' radix dig atMostR <~> gets atMostR (full -))
+      where messages got =
+              [toString ("numeric escape requires " <> formatted <> "digits, but only got" <> from got)]
+            ~(Just formatted) = disjunct True (map show (NonEmpty.toList reqDigits))
 
     oneOfExactly' :: NonEmpty Word -> Word -> Word -> [Word] -> Int -> Parsec Char -> Reg r Word -> Parsec Integer
     oneOfExactly' reqDigits digits m [] radix dig digitsParsed =
