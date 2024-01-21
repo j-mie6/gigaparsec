@@ -1,11 +1,12 @@
 # Revision history for gigaparsec
 
-## 0.2.2.0 -- TBD
+## 0.2.2.0 -- 2024-01-21
 
 * Added `manyMap` and `someMap` combinators.
-* Added `filterS` and `mapMaybeS` combinators.
+* Added `filterS` and `mapMaybeS` combinators as well as `ErrorGen` and more general combinators.
 * Added `Text.Gigaparsec.Position` module.
 * Added `Text.Gigaparsec.Token` and associated functionality.
+* Added `Text.Gigaparsec.Patterns` module, which is currently heavily experimental.
 
 ## 0.2.1.0 -- 2023-11-14
 
