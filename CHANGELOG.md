@@ -6,6 +6,7 @@
 * Added `filterS` and `mapMaybeS` combinators as well as `ErrorGen` and more general combinators.
 * Added `Text.Gigaparsec.Position` module.
 * Added `Text.Gigaparsec.Token` and associated functionality.
+* Added `Text.Gigaparsec.Patterns` module, which is currently heavily experimental.
 
 ## 0.2.1.0 -- 2023-11-14
 

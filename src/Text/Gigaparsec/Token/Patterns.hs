@@ -1,5 +1,17 @@
 {-# LANGUAGE Trustworthy #-}
 {-# LANGUAGE TemplateHaskell, TypeOperators #-}
+{-|
+Module      : Text.Gigaparsec.Token.Patterns
+Description : Template Haskell generators to help with patterns
+License     : BSD-3-Clause
+Maintainer  : Jamie Willis, Gigaparsec Maintainers
+Stability   : experimental
+
+This module is currently experimental, and may have bugs depending on the version
+of Haskell, or the extensions enabled. Please report any issues to the maintainers.
+
+@since 0.2.2.0
+-}
 module Text.Gigaparsec.Token.Patterns (overloadedStrings) where
 
 import Text.Gigaparsec (Parsec)

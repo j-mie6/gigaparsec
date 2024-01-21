@@ -92,12 +92,13 @@ library
                       Text.Gigaparsec.Expr.Chain,
                       Text.Gigaparsec.Expr.Infix,
                       Text.Gigaparsec.Expr.Subtype,
+                      Text.Gigaparsec.Patterns,
                       Text.Gigaparsec.Position,
                       Text.Gigaparsec.Registers,
                       Text.Gigaparsec.Token.Descriptions,
                       Text.Gigaparsec.Token.Lexer,
                       Text.Gigaparsec.Token.Patterns,
-                      
+
                       -- Internals
                       Text.Gigaparsec.Internal,
                       Text.Gigaparsec.Internal.Errors,
