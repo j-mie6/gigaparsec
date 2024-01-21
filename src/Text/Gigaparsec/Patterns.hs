@@ -1,5 +1,8 @@
 {-# LANGUAGE Trustworthy #-}
-{-# LANGUAGE TemplateHaskell #-}
+{-# LANGUAGE TemplateHaskell, CPP #-}
+{-# OPTIONS_GHC -Wno-unrecognised-pragmas #-}
+{-# HLINT ignore "Use fewer imports" #-}
+{-# OPTIONS_GHC -Wno-monomorphism-restriction #-}
 {-|
 Module      : Text.Gigaparsec.Patterns
 Description : Template Haskell generators to help with patterns
@@ -27,13 +30,15 @@ import Data.List (foldl')
 import Data.Maybe (isJust, isNothing)
 import Language.Haskell.TH (
     Q, Exp, Name, Dec,
-    Type (ForallT, AppT, ArrowT, MulArrowT, StarT, ConT),
+    Type (ForallT, AppT, ArrowT, StarT, ConT),
     Info (DataConI), TyVarBndr (KindedTV, PlainTV),
-    Quote (newName),
-    sigD, funD, clause, varP, normalB, varE, reify, mkName,
+    sigD, funD, clause, varP, normalB, varE, reify, mkName, newName,
     isExtEnabled, Extension (KindSignatures),
     forallT, conE, lamE
   )
+#if __GLASGOW_HASKELL__ >= 902
+import Language.Haskell.TH (Type(MulArrowT))
+#endif
 
 posAp :: Bool -> Q Exp -> Q Exp
 posAp True  p = [e| pos <**> $p |]
@@ -91,13 +96,21 @@ splitFun ty                     = return (id, splitFun' ty)
 
 splitFun' :: Type -> [Type]
 splitFun' (AppT (AppT ArrowT a) b)             = a : splitFun' b -- regular function type
+#if __GLASGOW_HASKELL__ >= 902
 splitFun' (AppT (AppT (AppT MulArrowT _) a) b) = a : splitFun' b -- linear function type
+#endif
 splitFun' ty                                   = [ty]
 
 -- When KindSignatures is off, the default (a :: *) that TH generates is broken!
+#if __GLASGOW_HASKELL__ >= 902
 sanitiseStarT :: TyVarBndr flag -> TyVarBndr flag
 sanitiseStarT (KindedTV ty flag StarT) = PlainTV ty flag
 sanitiseStarT ty = ty
+#else
+sanitiseStarT :: TyVarBndr -> TyVarBndr
+sanitiseStarT (KindedTV ty StarT) = PlainTV ty
+sanitiseStarT ty = ty
+#endif
 
 findPosIdx :: Name -> [Type] -> Q (Maybe Int)
 findPosIdx con tys = case elemIndices (ConT ''Pos) tys of
@@ -110,10 +123,10 @@ buildLiftedLambda :: Bool -> Name -> Int -> Maybe Int -> Q Exp
 buildLiftedLambda posLast con nargs posIdx = do
   args <- replicateM nargs (newName "x")
   posArg <- newName "pos"
-  let pargs = if | isNothing posIdx -> map (varP @Q) args
+  let pargs = if | isNothing posIdx -> map varP args
                  | posLast          -> map varP args ++ [varP posArg]
                  | otherwise        -> varP posArg : map varP args
-  let eargs = maybeApply (flip insertAt (varE @Q posArg)) posIdx (map varE args)
+  let eargs = maybeApply (flip insertAt (varE posArg)) posIdx (map varE args)
   lamE pargs (foldl' (\acc arg -> [e|$acc $arg|]) (conE con) eargs)
 
 insertAt :: Int -> a -> [a] -> [a]
