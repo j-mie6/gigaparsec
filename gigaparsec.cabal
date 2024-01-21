@@ -68,7 +68,7 @@ common extensions
     -- Extensions we want enabled without having to specify them
     default-extensions: ScopedTypeVariables, RankNTypes, BangPatterns, TypeApplications,
                         MultiWayIf, DerivingStrategies, InstanceSigs, StandaloneKindSignatures,
-                        ImportQualifiedPost
+                        ImportQualifiedPost, RecordWildCards
 
 common base
     -- Other library packages from which modules are imported.
@@ -94,17 +94,27 @@ library
                       Text.Gigaparsec.Expr.Subtype,
                       Text.Gigaparsec.Position,
                       Text.Gigaparsec.Registers,
-
+                      Text.Gigaparsec.Token.Descriptions,
+                      Text.Gigaparsec.Token.Lexer,
+                      Text.Gigaparsec.Token.Patterns,
+                      
                       -- Internals
                       Text.Gigaparsec.Internal,
                       Text.Gigaparsec.Internal.Errors,
                       Text.Gigaparsec.Internal.RT,
-                      Text.Gigaparsec.Internal.Require
+                      Text.Gigaparsec.Internal.Require,
+                      Text.Gigaparsec.Internal.Token.Generic,
+                      Text.Gigaparsec.Internal.Token.Lexer,
+                      Text.Gigaparsec.Internal.Token.Names,
+                      Text.Gigaparsec.Internal.Token.Numeric,
+                      Text.Gigaparsec.Internal.Token.Symbol,
+                      Text.Gigaparsec.Internal.Token.Text,
 
     -- this can probably be loosened?
     build-depends:    containers      >= 0.6 && < 0.7,
                       selective       >= 0.6 && < 0.8,
-                      pretty-terminal >= 0.1.0   && < 0.2
+                      pretty-terminal >= 0.1.0   && < 0.2,
+                      template-haskell
 
     -- Modules included in this library but not exported.
     -- other-modules:
@@ -138,6 +148,8 @@ test-suite gigaparsec-test
                    Text.Gigaparsec.ErrorsTests,
                    Text.Gigaparsec.Expr.ChainTests,
                    Text.Gigaparsec.Expr.InfixTests,
+                   Text.Gigaparsec.TokenTests,
+                   Text.Gigaparsec.Token.NamesTests,
                    Text.Gigaparsec.Internal.Test,
                    Text.Gigaparsec.Internal.TestError,
                    Text.Gigaparsec.Internal.PlainString

@@ -73,10 +73,10 @@ filtering combinators, but are a little more verbose to use.
 
 import Prelude hiding (fail)
 
-import Text.Gigaparsec (Parsec)
 import Text.Gigaparsec.Errors.ErrorGen (ErrorGen, vanillaGen, specializedGen)
 import Text.Gigaparsec.Errors.ErrorGen qualified as ErrorGen
 -- We want to use this to make the docs point to the right definition for users.
+import Text.Gigaparsec.Internal (Parsec)
 import Text.Gigaparsec.Internal qualified as Internal (Parsec(Parsec), line, col, emptyErr, specialisedErr, raise, unexpectedErr, hints, consumed, useHints, adjustErr, hints, hintsValidOffset)
 import Text.Gigaparsec.Internal.Errors (ParseError, CaretWidth(FlexibleCaret, RigidCaret), ExpectItem(ExpectNamed))
 import Text.Gigaparsec.Internal.Errors qualified as Internal (setLexical, amendErr, entrenchErr, dislodgeErr, partialAmendErr, labelErr, explainErr)
@@ -122,7 +122,7 @@ hide :: Parsec a -> Parsec a
 hide (Internal.Parsec p) =
   Internal.Parsec $ \st good bad ->
     let !origConsumed = Internal.consumed st
-        good' x st' = good x st' { Internal.hints = Set.empty }
+        good' x st' = good x st' { Internal.hints = Internal.hints st } -- TODO: should this change valid offset?
         bad' err st'
           | Internal.consumed st' /= origConsumed = bad err st'
           | otherwise = Internal.useHints bad (Internal.emptyErr st' 0) st'

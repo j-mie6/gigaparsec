@@ -1,16 +1,20 @@
 {-# LANGUAGE Trustworthy #-}
 module Text.Gigaparsec.Registers (
     Reg,
-    make,
+    make, unsafeMake,
     get, gets,
     put, puts,
     modify,
     local, localWith,
+    rollback
   ) where
 
-import Text.Gigaparsec (Parsec)
+import Text.Gigaparsec (Parsec, (<|>), empty)
 import Text.Gigaparsec.Internal.RT (Reg, newReg, readReg, writeReg)
 import Text.Gigaparsec.Internal qualified as Internal (Parsec(..))
+
+unsafeMake :: (forall r. Reg r a -> Parsec b) -> Parsec b
+unsafeMake = make (error "reference used but not set")
 
 _make :: Parsec a -> (forall r. Reg r a -> Parsec b) -> Parsec b
 _make p f = p >>= \x -> make x f
@@ -60,5 +64,8 @@ localWith reg x = local reg (const x)
 
 _localWith :: Reg r a -> Parsec a -> Parsec b -> Parsec b
 _localWith reg px q = px >>= flip (localWith reg) q
+
+rollback :: Reg r a -> Parsec a -> Parsec a
+rollback reg p = get reg >>= \x -> p <|> (put reg x *> empty)
 
 -- TODO: for combinators
