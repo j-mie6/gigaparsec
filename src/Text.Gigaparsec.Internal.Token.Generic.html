@@ -1,0 +1,441 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><link rel="stylesheet" type="text/css" href="style.css" /><script type="text/javascript" src="highlight.js"></script></head><body><pre><span class="hs-pragma">{-# LANGUAGE Safe #-}</span><span>
+</span><span id="line-2"></span><span class="hs-pragma">{-# LANGUAGE OverloadedLists, NamedFieldPuns #-}</span><span>
+</span><span id="line-3"></span><span class="hs-keyword">module</span><span> </span><span class="hs-identifier">Text.Gigaparsec.Internal.Token.Generic</span><span> </span><span class="hs-special">(</span><span class="hs-keyword">module</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.Token.Generic.html"><span class="hs-identifier">Text.Gigaparsec.Internal.Token.Generic</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-4"></span><span>
+</span><span id="line-5"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Text.Gigaparsec.html"><span class="hs-identifier">Text.Gigaparsec</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-operator">(&lt;|&gt;)</span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier">many</span></span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier">Parsec</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Text.Gigaparsec.html#%24%3E"><span class="hs-operator">($&gt;)</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Text.Gigaparsec.html#%3C%3A%3E"><span class="hs-operator">(&lt;:&gt;)</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-6"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Char.html"><span class="hs-identifier">Text.Gigaparsec.Char</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Text.Gigaparsec.Char.html#satisfy"><span class="hs-identifier">satisfy</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Char.html#char"><span class="hs-identifier">char</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Char.html#digit"><span class="hs-identifier">digit</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Char.html#hexDigit"><span class="hs-identifier">hexDigit</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Char.html#octDigit"><span class="hs-identifier">octDigit</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Char.html#bit"><span class="hs-identifier">bit</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-7"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Combinator.html"><span class="hs-identifier">Text.Gigaparsec.Combinator</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Text.Gigaparsec.Combinator.html#optional"><span class="hs-identifier">optional</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-8"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Errors.Combinator.html"><span class="hs-identifier">Text.Gigaparsec.Errors.Combinator</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Text.Gigaparsec.Errors.Combinator.html#%3C%3F%3E"><span class="hs-operator">(&lt;?&gt;)</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Errors.Combinator.html#hide"><span class="hs-identifier">hide</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-9"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Token.Descriptions.html"><span class="hs-identifier">Text.Gigaparsec.Token.Descriptions</span></a></span><span> </span><span class="hs-special">(</span><span>
+</span><span id="line-10"></span><span>    </span><span class="annot"><a href="Text.Gigaparsec.Token.Descriptions.html#BreakCharDesc"><span class="hs-identifier">BreakCharDesc</span></a></span><span class="hs-special">(</span><span class="annot"><a href="Text.Gigaparsec.Token.Descriptions.html#BreakCharSupported"><span class="hs-identifier">BreakCharSupported</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Token.Descriptions.html#NoBreakChar"><span class="hs-identifier">NoBreakChar</span></a></span><span class="hs-special">)</span><span class="hs-special">,</span><span>
+</span><span id="line-11"></span><span>    </span><span class="annot"><a href="Text.Gigaparsec.Token.Descriptions.html#NumericDesc"><span class="hs-identifier">NumericDesc</span></a></span><span class="hs-special">(</span><span class="annot"><a href="Text.Gigaparsec.Token.Descriptions.html#NumericDesc"><span class="hs-identifier">NumericDesc</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Token.Descriptions.html#literalBreakChar"><span class="hs-identifier">literalBreakChar</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Token.Descriptions.html#leadingZerosAllowed"><span class="hs-identifier">leadingZerosAllowed</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-12"></span><span>  </span><span class="hs-special">)</span><span>
+</span><span id="line-13"></span><span>
+</span><span id="line-14"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.Char</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">isDigit</span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier">isHexDigit</span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier">isOctDigit</span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier">digitToInt</span></span><span class="hs-special">)</span><span>
+</span><span id="line-15"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.List</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">foldl'</span></span><span class="hs-special">)</span><span>
+</span><span id="line-16"></span><span>
+</span><span id="line-17"></span><span class="hs-keyword">type</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.Token.Generic.html#GenericNumeric"><span class="hs-identifier hs-type">GenericNumeric</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-operator">*</span></span><span>
+</span><span id="line-18"></span><span class="hs-keyword">data</span><span> </span><span id="GenericNumeric"><span class="annot"><a href="Text.Gigaparsec.Internal.Token.Generic.html#GenericNumeric"><span class="hs-identifier hs-var">GenericNumeric</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="Generic"><span class="annot"><a href="Text.Gigaparsec.Internal.Token.Generic.html#Generic"><span class="hs-identifier hs-var">Generic</span></a></span></span><span> </span><span class="hs-special">{</span><span> </span><span id="zeroAllowedDecimal"><span class="annot"><span class="annottext">GenericNumeric -&gt; Parsec Integer
+</span><a href="Text.Gigaparsec.Internal.Token.Generic.html#zeroAllowedDecimal"><span class="hs-identifier hs-var hs-var">zeroAllowedDecimal</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Integer</span></span><span>
+</span><span id="line-19"></span><span>                              </span><span class="hs-special">,</span><span> </span><span id="zeroAllowedHexadecimal"><span class="annot"><span class="annottext">GenericNumeric -&gt; Parsec Integer
+</span><a href="Text.Gigaparsec.Internal.Token.Generic.html#zeroAllowedHexadecimal"><span class="hs-identifier hs-var hs-var">zeroAllowedHexadecimal</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Integer</span></span><span>
+</span><span id="line-20"></span><span>                              </span><span class="hs-special">,</span><span> </span><span id="zeroAllowedOctal"><span class="annot"><span class="annottext">GenericNumeric -&gt; Parsec Integer
+</span><a href="Text.Gigaparsec.Internal.Token.Generic.html#zeroAllowedOctal"><span class="hs-identifier hs-var hs-var">zeroAllowedOctal</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Integer</span></span><span>
+</span><span id="line-21"></span><span>                              </span><span class="hs-special">,</span><span> </span><span id="zeroAllowedBinary"><span class="annot"><span class="annottext">GenericNumeric -&gt; Parsec Integer
+</span><a href="Text.Gigaparsec.Internal.Token.Generic.html#zeroAllowedBinary"><span class="hs-identifier hs-var hs-var">zeroAllowedBinary</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Integer</span></span><span>
+</span><span id="line-22"></span><span>                              </span><span class="hs-special">,</span><span> </span><span id="zeroNotAllowedDecimal"><span class="annot"><span class="annottext">GenericNumeric -&gt; Parsec Integer
+</span><a href="Text.Gigaparsec.Internal.Token.Generic.html#zeroNotAllowedDecimal"><span class="hs-identifier hs-var hs-var">zeroNotAllowedDecimal</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Integer</span></span><span>
+</span><span id="line-23"></span><span>                              </span><span class="hs-special">,</span><span> </span><span id="zeroNotAllowedHexadecimal"><span class="annot"><span class="annottext">GenericNumeric -&gt; Parsec Integer
+</span><a href="Text.Gigaparsec.Internal.Token.Generic.html#zeroNotAllowedHexadecimal"><span class="hs-identifier hs-var hs-var">zeroNotAllowedHexadecimal</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Integer</span></span><span>
+</span><span id="line-24"></span><span>                              </span><span class="hs-special">,</span><span> </span><span id="zeroNotAllowedOctal"><span class="annot"><span class="annottext">GenericNumeric -&gt; Parsec Integer
+</span><a href="Text.Gigaparsec.Internal.Token.Generic.html#zeroNotAllowedOctal"><span class="hs-identifier hs-var hs-var">zeroNotAllowedOctal</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Integer</span></span><span>
+</span><span id="line-25"></span><span>                              </span><span class="hs-special">,</span><span> </span><span id="zeroNotAllowedBinary"><span class="annot"><span class="annottext">GenericNumeric -&gt; Parsec Integer
+</span><a href="Text.Gigaparsec.Internal.Token.Generic.html#zeroNotAllowedBinary"><span class="hs-identifier hs-var hs-var">zeroNotAllowedBinary</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Integer</span></span><span>
+</span><span id="line-26"></span><span>                              </span><span class="hs-comment">-- FIXME: labels are configurable here</span><span>
+</span><span id="line-27"></span><span>                              </span><span class="hs-special">,</span><span> </span><span id="plainDecimal"><span class="annot"><span class="annottext">GenericNumeric -&gt; NumericDesc -&gt; Parsec Integer
+</span><a href="Text.Gigaparsec.Internal.Token.Generic.html#plainDecimal"><span class="hs-identifier hs-var hs-var">plainDecimal</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Token.Descriptions.html#NumericDesc"><span class="hs-identifier hs-type">NumericDesc</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Integer</span></span><span>
+</span><span id="line-28"></span><span>                              </span><span class="hs-special">,</span><span> </span><span id="plainHexadecimal"><span class="annot"><span class="annottext">GenericNumeric -&gt; NumericDesc -&gt; Parsec Integer
+</span><a href="Text.Gigaparsec.Internal.Token.Generic.html#plainHexadecimal"><span class="hs-identifier hs-var hs-var">plainHexadecimal</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Token.Descriptions.html#NumericDesc"><span class="hs-identifier hs-type">NumericDesc</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Integer</span></span><span>
+</span><span id="line-29"></span><span>                              </span><span class="hs-special">,</span><span> </span><span id="plainOctal"><span class="annot"><span class="annottext">GenericNumeric -&gt; NumericDesc -&gt; Parsec Integer
+</span><a href="Text.Gigaparsec.Internal.Token.Generic.html#plainOctal"><span class="hs-identifier hs-var hs-var">plainOctal</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Token.Descriptions.html#NumericDesc"><span class="hs-identifier hs-type">NumericDesc</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Integer</span></span><span>
+</span><span id="line-30"></span><span>                              </span><span class="hs-special">,</span><span> </span><span id="plainBinary"><span class="annot"><span class="annottext">GenericNumeric -&gt; NumericDesc -&gt; Parsec Integer
+</span><a href="Text.Gigaparsec.Internal.Token.Generic.html#plainBinary"><span class="hs-identifier hs-var hs-var">plainBinary</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Token.Descriptions.html#NumericDesc"><span class="hs-identifier hs-type">NumericDesc</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Integer</span></span><span>
+</span><span id="line-31"></span><span>                              </span><span class="hs-special">}</span><span>
+</span><span id="line-32"></span><span>
+</span><span id="line-33"></span><span class="annot"><a href="Text.Gigaparsec.Internal.Token.Generic.html#mkGeneric"><span class="hs-identifier hs-type">mkGeneric</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.Token.Generic.html#GenericNumeric"><span class="hs-identifier hs-type">GenericNumeric</span></a></span><span>
+</span><span id="line-34"></span><span id="mkGeneric"><span class="annot"><span class="annottext">mkGeneric :: GenericNumeric
+</span><a href="Text.Gigaparsec.Internal.Token.Generic.html#mkGeneric"><span class="hs-identifier hs-var hs-var">mkGeneric</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.Token.Generic.html#Generic"><span class="hs-identifier hs-type">Generic</span></a></span><span> </span><span class="hs-special">{</span><span class="annot"><span class="annottext">Parsec Integer
+NumericDesc -&gt; Parsec Integer
+zeroAllowedDecimal :: Parsec Integer
+zeroAllowedHexadecimal :: Parsec Integer
+zeroAllowedOctal :: Parsec Integer
+zeroAllowedBinary :: Parsec Integer
+zeroNotAllowedDecimal :: Parsec Integer
+zeroNotAllowedHexadecimal :: Parsec Integer
+zeroNotAllowedOctal :: Parsec Integer
+zeroNotAllowedBinary :: Parsec Integer
+plainDecimal :: NumericDesc -&gt; Parsec Integer
+plainHexadecimal :: NumericDesc -&gt; Parsec Integer
+plainOctal :: NumericDesc -&gt; Parsec Integer
+plainBinary :: NumericDesc -&gt; Parsec Integer
+zeroAllowedDecimal :: Parsec Integer
+zeroAllowedHexadecimal :: Parsec Integer
+zeroAllowedOctal :: Parsec Integer
+zeroAllowedBinary :: Parsec Integer
+zeroNotAllowedDecimal :: Parsec Integer
+zeroNotAllowedHexadecimal :: Parsec Integer
+zeroNotAllowedOctal :: Parsec Integer
+zeroNotAllowedBinary :: Parsec Integer
+plainDecimal :: NumericDesc -&gt; Parsec Integer
+plainHexadecimal :: NumericDesc -&gt; Parsec Integer
+plainOctal :: NumericDesc -&gt; Parsec Integer
+plainBinary :: NumericDesc -&gt; Parsec Integer
+</span><a href="Text.Gigaparsec.Internal.Token.Generic.html#zeroAllowedDecimal"><span class="hs-glyph hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">..</span></a></span><span class="hs-special">}</span><span>
+</span><span id="line-35"></span><span>  </span><span class="hs-keyword">where</span><span> </span><span class="annot"><a href="#local-6989586621679181398"><span class="hs-identifier hs-type">ofRadix1</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Integer</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Char</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Integer</span></span><span>
+</span><span id="line-36"></span><span>        </span><span id="local-6989586621679181398"><span class="annot"><span class="annottext">ofRadix1 :: Integer -&gt; Parsec Char -&gt; Parsec Integer
+</span><a href="#local-6989586621679181398"><span class="hs-identifier hs-var hs-var">ofRadix1</span></a></span></span><span> </span><span id="local-6989586621679181399"><span class="annot"><span class="annottext">Integer
+</span><a href="#local-6989586621679181399"><span class="hs-identifier hs-var">radix</span></a></span></span><span> </span><span id="local-6989586621679181400"><span class="annot"><span class="annottext">Parsec Char
+</span><a href="#local-6989586621679181400"><span class="hs-identifier hs-var">dig</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Integer -&gt; Parsec Char -&gt; Parsec Char -&gt; Parsec Integer
+</span><a href="#local-6989586621679181401"><span class="hs-identifier hs-var">ofRadix2</span></a></span><span> </span><span class="annot"><span class="annottext">Integer
+</span><a href="#local-6989586621679181399"><span class="hs-identifier hs-var">radix</span></a></span><span> </span><span class="annot"><span class="annottext">Parsec Char
+</span><a href="#local-6989586621679181400"><span class="hs-identifier hs-var">dig</span></a></span><span> </span><span class="annot"><span class="annottext">Parsec Char
+</span><a href="#local-6989586621679181400"><span class="hs-identifier hs-var">dig</span></a></span><span>
+</span><span id="line-37"></span><span>        </span><span class="annot"><a href="#local-6989586621679181401"><span class="hs-identifier hs-type">ofRadix2</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Integer</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Char</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Char</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Integer</span></span><span>
+</span><span id="line-38"></span><span>        </span><span id="local-6989586621679181401"><span class="annot"><span class="annottext">ofRadix2 :: Integer -&gt; Parsec Char -&gt; Parsec Char -&gt; Parsec Integer
+</span><a href="#local-6989586621679181401"><span class="hs-identifier hs-var hs-var">ofRadix2</span></a></span></span><span> </span><span id="local-6989586621679181402"><span class="annot"><span class="annottext">Integer
+</span><a href="#local-6989586621679181402"><span class="hs-identifier hs-var">radix</span></a></span></span><span> </span><span id="local-6989586621679181403"><span class="annot"><span class="annottext">Parsec Char
+</span><a href="#local-6989586621679181403"><span class="hs-identifier hs-var">startDig</span></a></span></span><span> </span><span id="local-6989586621679181404"><span class="annot"><span class="annottext">Parsec Char
+</span><a href="#local-6989586621679181404"><span class="hs-identifier hs-var">dig</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
+</span><span id="line-39"></span><span>          </span><span class="annot"><span class="annottext">(Integer -&gt; Char -&gt; Integer) -&gt; Integer -&gt; [Char] -&gt; Integer
+forall b a. (b -&gt; a -&gt; b) -&gt; b -&gt; [a] -&gt; b
+forall (t :: * -&gt; *) b a.
+Foldable t =&gt;
+(b -&gt; a -&gt; b) -&gt; b -&gt; t a -&gt; b
+</span><span class="hs-identifier hs-var">foldl'</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Integer -&gt; Integer -&gt; Char -&gt; Integer
+</span><a href="Text.Gigaparsec.Internal.Token.Generic.html#withDigit"><span class="hs-identifier hs-var">withDigit</span></a></span><span> </span><span class="annot"><span class="annottext">Integer
+</span><a href="#local-6989586621679181402"><span class="hs-identifier hs-var">radix</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">Integer
+</span><span class="hs-number">0</span></span><span> </span><span class="annot"><span class="annottext">([Char] -&gt; Integer) -&gt; Parsec [Char] -&gt; Parsec Integer
+forall (f :: * -&gt; *) a b. Functor f =&gt; (a -&gt; b) -&gt; f a -&gt; f b
+</span><span class="hs-operator hs-var">&lt;$&gt;</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Parsec Char
+</span><a href="#local-6989586621679181403"><span class="hs-identifier hs-var">startDig</span></a></span><span> </span><span class="annot"><span class="annottext">Parsec Char -&gt; Parsec [Char] -&gt; Parsec [Char]
+forall a. Parsec a -&gt; Parsec [a] -&gt; Parsec [a]
+</span><a href="Text.Gigaparsec.html#%3C%3A%3E"><span class="hs-operator hs-var">&lt;:&gt;</span></a></span><span> </span><span class="annot"><span class="annottext">Parsec Char -&gt; Parsec [Char]
+forall a. Parsec a -&gt; Parsec [a]
+forall (f :: * -&gt; *) a. Alternative f =&gt; f a -&gt; f [a]
+</span><span class="hs-identifier hs-var">many</span></span><span> </span><span class="annot"><span class="annottext">Parsec Char
+</span><a href="#local-6989586621679181404"><span class="hs-identifier hs-var">dig</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-comment">--TODO: improve</span><span>
+</span><span id="line-40"></span><span>
+</span><span id="line-41"></span><span>        </span><span class="annot"><a href="#local-6989586621679181407"><span class="hs-identifier hs-type">ofRadixBreak1</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Integer</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Char</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Char</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Integer</span></span><span>
+</span><span id="line-42"></span><span>        </span><span id="local-6989586621679181407"><span class="annot"><span class="annottext">ofRadixBreak1 :: Integer -&gt; Parsec Char -&gt; Char -&gt; Parsec Integer
+</span><a href="#local-6989586621679181407"><span class="hs-identifier hs-var hs-var">ofRadixBreak1</span></a></span></span><span> </span><span id="local-6989586621679181408"><span class="annot"><span class="annottext">Integer
+</span><a href="#local-6989586621679181408"><span class="hs-identifier hs-var">radix</span></a></span></span><span> </span><span id="local-6989586621679181409"><span class="annot"><span class="annottext">Parsec Char
+</span><a href="#local-6989586621679181409"><span class="hs-identifier hs-var">dig</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Integer -&gt; Parsec Char -&gt; Parsec Char -&gt; Char -&gt; Parsec Integer
+</span><a href="#local-6989586621679181410"><span class="hs-identifier hs-var">ofRadixBreak2</span></a></span><span> </span><span class="annot"><span class="annottext">Integer
+</span><a href="#local-6989586621679181408"><span class="hs-identifier hs-var">radix</span></a></span><span> </span><span class="annot"><span class="annottext">Parsec Char
+</span><a href="#local-6989586621679181409"><span class="hs-identifier hs-var">dig</span></a></span><span> </span><span class="annot"><span class="annottext">Parsec Char
+</span><a href="#local-6989586621679181409"><span class="hs-identifier hs-var">dig</span></a></span><span>
+</span><span id="line-43"></span><span>        </span><span class="annot"><a href="#local-6989586621679181410"><span class="hs-identifier hs-type">ofRadixBreak2</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Integer</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Char</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Char</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Char</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Integer</span></span><span>
+</span><span id="line-44"></span><span>        </span><span id="local-6989586621679181410"><span class="annot"><span class="annottext">ofRadixBreak2 :: Integer -&gt; Parsec Char -&gt; Parsec Char -&gt; Char -&gt; Parsec Integer
+</span><a href="#local-6989586621679181410"><span class="hs-identifier hs-var hs-var">ofRadixBreak2</span></a></span></span><span> </span><span id="local-6989586621679181411"><span class="annot"><span class="annottext">Integer
+</span><a href="#local-6989586621679181411"><span class="hs-identifier hs-var">radix</span></a></span></span><span> </span><span id="local-6989586621679181412"><span class="annot"><span class="annottext">Parsec Char
+</span><a href="#local-6989586621679181412"><span class="hs-identifier hs-var">startDig</span></a></span></span><span> </span><span id="local-6989586621679181413"><span class="annot"><span class="annottext">Parsec Char
+</span><a href="#local-6989586621679181413"><span class="hs-identifier hs-var">dig</span></a></span></span><span> </span><span id="local-6989586621679181414"><span class="annot"><span class="annottext">Char
+</span><a href="#local-6989586621679181414"><span class="hs-identifier hs-var">breakChar</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
+</span><span id="line-45"></span><span>          </span><span class="annot"><span class="annottext">(Integer -&gt; Char -&gt; Integer) -&gt; Integer -&gt; [Char] -&gt; Integer
+forall b a. (b -&gt; a -&gt; b) -&gt; b -&gt; [a] -&gt; b
+forall (t :: * -&gt; *) b a.
+Foldable t =&gt;
+(b -&gt; a -&gt; b) -&gt; b -&gt; t a -&gt; b
+</span><span class="hs-identifier hs-var">foldl'</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Integer -&gt; Integer -&gt; Char -&gt; Integer
+</span><a href="Text.Gigaparsec.Internal.Token.Generic.html#withDigit"><span class="hs-identifier hs-var">withDigit</span></a></span><span> </span><span class="annot"><span class="annottext">Integer
+</span><a href="#local-6989586621679181411"><span class="hs-identifier hs-var">radix</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">Integer
+</span><span class="hs-number">0</span></span><span> </span><span class="annot"><span class="annottext">([Char] -&gt; Integer) -&gt; Parsec [Char] -&gt; Parsec Integer
+forall (f :: * -&gt; *) a b. Functor f =&gt; (a -&gt; b) -&gt; f a -&gt; f b
+</span><span class="hs-operator hs-var">&lt;$&gt;</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Parsec Char
+</span><a href="#local-6989586621679181412"><span class="hs-identifier hs-var">startDig</span></a></span><span> </span><span class="annot"><span class="annottext">Parsec Char -&gt; Parsec [Char] -&gt; Parsec [Char]
+forall a. Parsec a -&gt; Parsec [a] -&gt; Parsec [a]
+</span><a href="Text.Gigaparsec.html#%3C%3A%3E"><span class="hs-operator hs-var">&lt;:&gt;</span></a></span><span> </span><span class="annot"><span class="annottext">Parsec Char -&gt; Parsec [Char]
+forall a. Parsec a -&gt; Parsec [a]
+forall (f :: * -&gt; *) a. Alternative f =&gt; f a -&gt; f [a]
+</span><span class="hs-identifier hs-var">many</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Parsec Char -&gt; Parsec ()
+forall a. Parsec a -&gt; Parsec ()
+</span><a href="Text.Gigaparsec.Combinator.html#optional"><span class="hs-identifier hs-var">optional</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Char -&gt; Parsec Char
+</span><a href="Text.Gigaparsec.Char.html#char"><span class="hs-identifier hs-var">char</span></a></span><span> </span><span class="annot"><span class="annottext">Char
+</span><a href="#local-6989586621679181414"><span class="hs-identifier hs-var">breakChar</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">Parsec () -&gt; Parsec Char -&gt; Parsec Char
+forall a b. Parsec a -&gt; Parsec b -&gt; Parsec b
+forall (f :: * -&gt; *) a b. Applicative f =&gt; f a -&gt; f b -&gt; f b
+</span><span class="hs-operator hs-var">*&gt;</span></span><span> </span><span class="annot"><span class="annottext">Parsec Char
+</span><a href="#local-6989586621679181413"><span class="hs-identifier hs-var">dig</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-comment">--TODO: improve</span><span>
+</span><span id="line-46"></span><span>
+</span><span id="line-47"></span><span>        </span><span id="local-6989586621679181423"><span class="annot"><span class="annottext">nonZeroDigit :: Parsec Char
+</span><a href="#local-6989586621679181423"><span class="hs-identifier hs-var hs-var">nonZeroDigit</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">(Char -&gt; Bool) -&gt; Parsec Char
+</span><a href="Text.Gigaparsec.Char.html#satisfy"><span class="hs-identifier hs-var">satisfy</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-glyph">\</span><span id="local-6989586621679181424"><span class="annot"><span class="annottext">Char
+</span><a href="#local-6989586621679181424"><span class="hs-identifier hs-var">c</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Char -&gt; Bool
+</span><span class="hs-identifier hs-var">isDigit</span></span><span> </span><span class="annot"><span class="annottext">Char
+</span><a href="#local-6989586621679181424"><span class="hs-identifier hs-var">c</span></a></span><span> </span><span class="annot"><span class="annottext">Bool -&gt; Bool -&gt; Bool
+</span><span class="hs-operator hs-var">&amp;&amp;</span></span><span> </span><span class="annot"><span class="annottext">Char
+</span><a href="#local-6989586621679181424"><span class="hs-identifier hs-var">c</span></a></span><span> </span><span class="annot"><span class="annottext">Char -&gt; Char -&gt; Bool
+forall a. Eq a =&gt; a -&gt; a -&gt; Bool
+</span><span class="hs-operator hs-var">/=</span></span><span> </span><span class="annot"><span class="annottext">Char
+</span><span class="hs-char">'0'</span></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">Parsec Char -&gt; Set [Char] -&gt; Parsec Char
+forall a. Parsec a -&gt; Set [Char] -&gt; Parsec a
+</span><a href="Text.Gigaparsec.Errors.Combinator.html#%3C%3F%3E"><span class="hs-operator hs-var">&lt;?&gt;</span></a></span><span> </span><span class="hs-special">[</span><span class="annot"><span class="annottext">[Char]
+Item (Set [Char])
+</span><span class="hs-string">&quot;digit&quot;</span></span><span class="hs-special">]</span><span>
+</span><span id="line-48"></span><span>        </span><span id="local-6989586621679181431"><span class="annot"><span class="annottext">nonZeroHexDigit :: Parsec Char
+</span><a href="#local-6989586621679181431"><span class="hs-identifier hs-var hs-var">nonZeroHexDigit</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">(Char -&gt; Bool) -&gt; Parsec Char
+</span><a href="Text.Gigaparsec.Char.html#satisfy"><span class="hs-identifier hs-var">satisfy</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-glyph">\</span><span id="local-6989586621679181432"><span class="annot"><span class="annottext">Char
+</span><a href="#local-6989586621679181432"><span class="hs-identifier hs-var">c</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Char -&gt; Bool
+</span><span class="hs-identifier hs-var">isHexDigit</span></span><span> </span><span class="annot"><span class="annottext">Char
+</span><a href="#local-6989586621679181432"><span class="hs-identifier hs-var">c</span></a></span><span> </span><span class="annot"><span class="annottext">Bool -&gt; Bool -&gt; Bool
+</span><span class="hs-operator hs-var">&amp;&amp;</span></span><span> </span><span class="annot"><span class="annottext">Char
+</span><a href="#local-6989586621679181432"><span class="hs-identifier hs-var">c</span></a></span><span> </span><span class="annot"><span class="annottext">Char -&gt; Char -&gt; Bool
+forall a. Eq a =&gt; a -&gt; a -&gt; Bool
+</span><span class="hs-operator hs-var">/=</span></span><span> </span><span class="annot"><span class="annottext">Char
+</span><span class="hs-char">'0'</span></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">Parsec Char -&gt; Set [Char] -&gt; Parsec Char
+forall a. Parsec a -&gt; Set [Char] -&gt; Parsec a
+</span><a href="Text.Gigaparsec.Errors.Combinator.html#%3C%3F%3E"><span class="hs-operator hs-var">&lt;?&gt;</span></a></span><span> </span><span class="hs-special">[</span><span class="annot"><span class="annottext">[Char]
+Item (Set [Char])
+</span><span class="hs-string">&quot;hexadecimal digit&quot;</span></span><span class="hs-special">]</span><span>
+</span><span id="line-49"></span><span>        </span><span id="local-6989586621679181437"><span class="annot"><span class="annottext">nonZeroOctDigit :: Parsec Char
+</span><a href="#local-6989586621679181437"><span class="hs-identifier hs-var hs-var">nonZeroOctDigit</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">(Char -&gt; Bool) -&gt; Parsec Char
+</span><a href="Text.Gigaparsec.Char.html#satisfy"><span class="hs-identifier hs-var">satisfy</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-glyph">\</span><span id="local-6989586621679181438"><span class="annot"><span class="annottext">Char
+</span><a href="#local-6989586621679181438"><span class="hs-identifier hs-var">c</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Char -&gt; Bool
+</span><span class="hs-identifier hs-var">isOctDigit</span></span><span> </span><span class="annot"><span class="annottext">Char
+</span><a href="#local-6989586621679181438"><span class="hs-identifier hs-var">c</span></a></span><span> </span><span class="annot"><span class="annottext">Bool -&gt; Bool -&gt; Bool
+</span><span class="hs-operator hs-var">&amp;&amp;</span></span><span> </span><span class="annot"><span class="annottext">Char
+</span><a href="#local-6989586621679181438"><span class="hs-identifier hs-var">c</span></a></span><span> </span><span class="annot"><span class="annottext">Char -&gt; Char -&gt; Bool
+forall a. Eq a =&gt; a -&gt; a -&gt; Bool
+</span><span class="hs-operator hs-var">/=</span></span><span> </span><span class="annot"><span class="annottext">Char
+</span><span class="hs-char">'0'</span></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">Parsec Char -&gt; Set [Char] -&gt; Parsec Char
+forall a. Parsec a -&gt; Set [Char] -&gt; Parsec a
+</span><a href="Text.Gigaparsec.Errors.Combinator.html#%3C%3F%3E"><span class="hs-operator hs-var">&lt;?&gt;</span></a></span><span> </span><span class="hs-special">[</span><span class="annot"><span class="annottext">[Char]
+Item (Set [Char])
+</span><span class="hs-string">&quot;octal digit&quot;</span></span><span class="hs-special">]</span><span>
+</span><span id="line-50"></span><span>        </span><span id="local-6989586621679181442"><span class="annot"><span class="annottext">nonZeroBit :: Parsec Char
+</span><a href="#local-6989586621679181442"><span class="hs-identifier hs-var hs-var">nonZeroBit</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Char -&gt; Parsec Char
+</span><a href="Text.Gigaparsec.Char.html#char"><span class="hs-identifier hs-var">char</span></a></span><span> </span><span class="annot"><span class="annottext">Char
+</span><span class="hs-char">'1'</span></span><span> </span><span class="annot"><span class="annottext">Parsec Char -&gt; Set [Char] -&gt; Parsec Char
+forall a. Parsec a -&gt; Set [Char] -&gt; Parsec a
+</span><a href="Text.Gigaparsec.Errors.Combinator.html#%3C%3F%3E"><span class="hs-operator hs-var">&lt;?&gt;</span></a></span><span> </span><span class="hs-special">[</span><span class="annot"><span class="annottext">[Char]
+Item (Set [Char])
+</span><span class="hs-string">&quot;bit&quot;</span></span><span class="hs-special">]</span><span>
+</span><span id="line-51"></span><span>        </span><span class="hs-comment">-- why secret? so that the above digits can be marked as digits without &quot;non-zero or zero digit&quot;</span><span>
+</span><span id="line-52"></span><span>        </span><span class="annot"><a href="#local-6989586621679181443"><span class="hs-identifier hs-type">secretZero</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Integer</span></span><span>
+</span><span id="line-53"></span><span>        </span><span id="local-6989586621679181443"><span class="annot"><span class="annottext">secretZero :: Parsec Integer
+</span><a href="#local-6989586621679181443"><span class="hs-identifier hs-var hs-var">secretZero</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Parsec Char -&gt; Parsec Char
+forall a. Parsec a -&gt; Parsec a
+</span><a href="Text.Gigaparsec.Errors.Combinator.html#hide"><span class="hs-identifier hs-var">hide</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Char -&gt; Parsec Char
+</span><a href="Text.Gigaparsec.Char.html#char"><span class="hs-identifier hs-var">char</span></a></span><span> </span><span class="annot"><span class="annottext">Char
+</span><span class="hs-char">'0'</span></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">Parsec Char -&gt; Integer -&gt; Parsec Integer
+forall a b. Parsec a -&gt; b -&gt; Parsec b
+</span><a href="Text.Gigaparsec.html#%24%3E"><span class="hs-operator hs-var">$&gt;</span></a></span><span> </span><span class="annot"><span class="annottext">Integer
+</span><span class="hs-number">0</span></span><span>
+</span><span id="line-54"></span><span>
+</span><span id="line-55"></span><span>        </span><span id="local-6989586621679181386"><span class="annot"><span class="annottext">zeroAllowedDecimal :: Parsec Integer
+</span><a href="#local-6989586621679181386"><span class="hs-identifier hs-var hs-var">zeroAllowedDecimal</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Integer -&gt; Parsec Char -&gt; Parsec Integer
+</span><a href="#local-6989586621679181398"><span class="hs-identifier hs-var">ofRadix1</span></a></span><span> </span><span class="annot"><span class="annottext">Integer
+</span><span class="hs-number">10</span></span><span> </span><span class="annot"><span class="annottext">Parsec Char
+</span><a href="Text.Gigaparsec.Char.html#digit"><span class="hs-identifier hs-var">digit</span></a></span><span>
+</span><span id="line-56"></span><span>        </span><span id="local-6989586621679181387"><span class="annot"><span class="annottext">zeroAllowedHexadecimal :: Parsec Integer
+</span><a href="#local-6989586621679181387"><span class="hs-identifier hs-var hs-var">zeroAllowedHexadecimal</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Integer -&gt; Parsec Char -&gt; Parsec Integer
+</span><a href="#local-6989586621679181398"><span class="hs-identifier hs-var">ofRadix1</span></a></span><span> </span><span class="annot"><span class="annottext">Integer
+</span><span class="hs-number">16</span></span><span> </span><span class="annot"><span class="annottext">Parsec Char
+</span><a href="Text.Gigaparsec.Char.html#hexDigit"><span class="hs-identifier hs-var">hexDigit</span></a></span><span>
+</span><span id="line-57"></span><span>        </span><span id="local-6989586621679181388"><span class="annot"><span class="annottext">zeroAllowedOctal :: Parsec Integer
+</span><a href="#local-6989586621679181388"><span class="hs-identifier hs-var hs-var">zeroAllowedOctal</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Integer -&gt; Parsec Char -&gt; Parsec Integer
+</span><a href="#local-6989586621679181398"><span class="hs-identifier hs-var">ofRadix1</span></a></span><span> </span><span class="annot"><span class="annottext">Integer
+</span><span class="hs-number">8</span></span><span> </span><span class="annot"><span class="annottext">Parsec Char
+</span><a href="Text.Gigaparsec.Char.html#octDigit"><span class="hs-identifier hs-var">octDigit</span></a></span><span>
+</span><span id="line-58"></span><span>        </span><span id="local-6989586621679181389"><span class="annot"><span class="annottext">zeroAllowedBinary :: Parsec Integer
+</span><a href="#local-6989586621679181389"><span class="hs-identifier hs-var hs-var">zeroAllowedBinary</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Integer -&gt; Parsec Char -&gt; Parsec Integer
+</span><a href="#local-6989586621679181398"><span class="hs-identifier hs-var">ofRadix1</span></a></span><span> </span><span class="annot"><span class="annottext">Integer
+</span><span class="hs-number">2</span></span><span> </span><span class="annot"><span class="annottext">Parsec Char
+</span><a href="Text.Gigaparsec.Char.html#bit"><span class="hs-identifier hs-var">bit</span></a></span><span>
+</span><span id="line-59"></span><span>
+</span><span id="line-60"></span><span>        </span><span id="local-6989586621679181390"><span class="annot"><span class="annottext">zeroNotAllowedDecimal :: Parsec Integer
+</span><a href="#local-6989586621679181390"><span class="hs-identifier hs-var hs-var">zeroNotAllowedDecimal</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Integer -&gt; Parsec Char -&gt; Parsec Char -&gt; Parsec Integer
+</span><a href="#local-6989586621679181401"><span class="hs-identifier hs-var">ofRadix2</span></a></span><span> </span><span class="annot"><span class="annottext">Integer
+</span><span class="hs-number">10</span></span><span> </span><span class="annot"><span class="annottext">Parsec Char
+</span><a href="#local-6989586621679181423"><span class="hs-identifier hs-var">nonZeroDigit</span></a></span><span> </span><span class="annot"><span class="annottext">Parsec Char
+</span><a href="Text.Gigaparsec.Char.html#digit"><span class="hs-identifier hs-var">digit</span></a></span><span> </span><span class="annot"><span class="annottext">Parsec Integer -&gt; Parsec Integer -&gt; Parsec Integer
+forall a. Parsec a -&gt; Parsec a -&gt; Parsec a
+forall (f :: * -&gt; *) a. Alternative f =&gt; f a -&gt; f a -&gt; f a
+</span><span class="hs-operator hs-var">&lt;|&gt;</span></span><span> </span><span class="annot"><span class="annottext">Parsec Integer
+</span><a href="#local-6989586621679181443"><span class="hs-identifier hs-var">secretZero</span></a></span><span>
+</span><span id="line-61"></span><span>        </span><span id="local-6989586621679181391"><span class="annot"><span class="annottext">zeroNotAllowedHexadecimal :: Parsec Integer
+</span><a href="#local-6989586621679181391"><span class="hs-identifier hs-var hs-var">zeroNotAllowedHexadecimal</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Integer -&gt; Parsec Char -&gt; Parsec Char -&gt; Parsec Integer
+</span><a href="#local-6989586621679181401"><span class="hs-identifier hs-var">ofRadix2</span></a></span><span> </span><span class="annot"><span class="annottext">Integer
+</span><span class="hs-number">16</span></span><span> </span><span class="annot"><span class="annottext">Parsec Char
+</span><a href="#local-6989586621679181431"><span class="hs-identifier hs-var">nonZeroHexDigit</span></a></span><span> </span><span class="annot"><span class="annottext">Parsec Char
+</span><a href="Text.Gigaparsec.Char.html#hexDigit"><span class="hs-identifier hs-var">hexDigit</span></a></span><span> </span><span class="annot"><span class="annottext">Parsec Integer -&gt; Parsec Integer -&gt; Parsec Integer
+forall a. Parsec a -&gt; Parsec a -&gt; Parsec a
+forall (f :: * -&gt; *) a. Alternative f =&gt; f a -&gt; f a -&gt; f a
+</span><span class="hs-operator hs-var">&lt;|&gt;</span></span><span> </span><span class="annot"><span class="annottext">Parsec Integer
+</span><a href="#local-6989586621679181443"><span class="hs-identifier hs-var">secretZero</span></a></span><span>
+</span><span id="line-62"></span><span>        </span><span id="local-6989586621679181392"><span class="annot"><span class="annottext">zeroNotAllowedOctal :: Parsec Integer
+</span><a href="#local-6989586621679181392"><span class="hs-identifier hs-var hs-var">zeroNotAllowedOctal</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Integer -&gt; Parsec Char -&gt; Parsec Char -&gt; Parsec Integer
+</span><a href="#local-6989586621679181401"><span class="hs-identifier hs-var">ofRadix2</span></a></span><span> </span><span class="annot"><span class="annottext">Integer
+</span><span class="hs-number">8</span></span><span> </span><span class="annot"><span class="annottext">Parsec Char
+</span><a href="#local-6989586621679181437"><span class="hs-identifier hs-var">nonZeroOctDigit</span></a></span><span> </span><span class="annot"><span class="annottext">Parsec Char
+</span><a href="Text.Gigaparsec.Char.html#octDigit"><span class="hs-identifier hs-var">octDigit</span></a></span><span> </span><span class="annot"><span class="annottext">Parsec Integer -&gt; Parsec Integer -&gt; Parsec Integer
+forall a. Parsec a -&gt; Parsec a -&gt; Parsec a
+forall (f :: * -&gt; *) a. Alternative f =&gt; f a -&gt; f a -&gt; f a
+</span><span class="hs-operator hs-var">&lt;|&gt;</span></span><span> </span><span class="annot"><span class="annottext">Parsec Integer
+</span><a href="#local-6989586621679181443"><span class="hs-identifier hs-var">secretZero</span></a></span><span>
+</span><span id="line-63"></span><span>        </span><span id="local-6989586621679181393"><span class="annot"><span class="annottext">zeroNotAllowedBinary :: Parsec Integer
+</span><a href="#local-6989586621679181393"><span class="hs-identifier hs-var hs-var">zeroNotAllowedBinary</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Integer -&gt; Parsec Char -&gt; Parsec Char -&gt; Parsec Integer
+</span><a href="#local-6989586621679181401"><span class="hs-identifier hs-var">ofRadix2</span></a></span><span> </span><span class="annot"><span class="annottext">Integer
+</span><span class="hs-number">2</span></span><span> </span><span class="annot"><span class="annottext">Parsec Char
+</span><a href="#local-6989586621679181442"><span class="hs-identifier hs-var">nonZeroBit</span></a></span><span> </span><span class="annot"><span class="annottext">Parsec Char
+</span><a href="Text.Gigaparsec.Char.html#bit"><span class="hs-identifier hs-var">bit</span></a></span><span> </span><span class="annot"><span class="annottext">Parsec Integer -&gt; Parsec Integer -&gt; Parsec Integer
+forall a. Parsec a -&gt; Parsec a -&gt; Parsec a
+forall (f :: * -&gt; *) a. Alternative f =&gt; f a -&gt; f a -&gt; f a
+</span><span class="hs-operator hs-var">&lt;|&gt;</span></span><span> </span><span class="annot"><span class="annottext">Parsec Integer
+</span><a href="#local-6989586621679181443"><span class="hs-identifier hs-var">secretZero</span></a></span><span>
+</span><span id="line-64"></span><span>
+</span><span id="line-65"></span><span>        </span><span id="local-6989586621679181394"><span class="annot"><span class="annottext">plainDecimal :: NumericDesc -&gt; Parsec Integer
+</span><a href="#local-6989586621679181394"><span class="hs-identifier hs-var hs-var">plainDecimal</span></a></span></span><span> </span><span class="annot"><a href="Text.Gigaparsec.Token.Descriptions.html#NumericDesc"><span class="hs-identifier hs-type">NumericDesc</span></a></span><span class="hs-special">{</span><span id="local-6989586621679181449"><span class="annot"><span class="annottext">Bool
+leadingZerosAllowed :: NumericDesc -&gt; Bool
+leadingZerosAllowed :: Bool
+</span><a href="Text.Gigaparsec.Token.Descriptions.html#leadingZerosAllowed"><span class="hs-identifier hs-var hs-var">leadingZerosAllowed</span></a></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679181450"><span class="annot"><span class="annottext">BreakCharDesc
+literalBreakChar :: NumericDesc -&gt; BreakCharDesc
+literalBreakChar :: BreakCharDesc
+</span><a href="Text.Gigaparsec.Token.Descriptions.html#literalBreakChar"><span class="hs-identifier hs-var hs-var">literalBreakChar</span></a></span></span><span class="hs-special">}</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">case</span><span> </span><span class="annot"><span class="annottext">BreakCharDesc
+</span><a href="#local-6989586621679181450"><span class="hs-identifier hs-var">literalBreakChar</span></a></span><span> </span><span class="hs-keyword">of</span><span>
+</span><span id="line-66"></span><span>          </span><span class="annot"><span class="annottext">BreakCharDesc
+</span><a href="Text.Gigaparsec.Token.Descriptions.html#NoBreakChar"><span class="hs-identifier hs-var">NoBreakChar</span></a></span><span> </span><span class="hs-glyph">|</span><span> </span><span class="annot"><span class="annottext">Bool
+</span><a href="#local-6989586621679181449"><span class="hs-identifier hs-var">leadingZerosAllowed</span></a></span><span>            </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Parsec Integer
+</span><a href="#local-6989586621679181386"><span class="hs-identifier hs-var">zeroAllowedDecimal</span></a></span><span>
+</span><span id="line-67"></span><span>          </span><span class="annot"><span class="annottext">BreakCharDesc
+</span><a href="Text.Gigaparsec.Token.Descriptions.html#NoBreakChar"><span class="hs-identifier hs-var">NoBreakChar</span></a></span><span>                                  </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Parsec Integer
+</span><a href="#local-6989586621679181390"><span class="hs-identifier hs-var">zeroNotAllowedDecimal</span></a></span><span>
+</span><span id="line-68"></span><span>          </span><span class="annot"><a href="Text.Gigaparsec.Token.Descriptions.html#BreakCharSupported"><span class="hs-identifier hs-type">BreakCharSupported</span></a></span><span> </span><span id="local-6989586621679181451"><span class="annot"><span class="annottext">Char
+</span><a href="#local-6989586621679181451"><span class="hs-identifier hs-var">c</span></a></span></span><span> </span><span class="annot"><span class="annottext">Bool
+</span><span class="hs-identifier">_</span></span><span> </span><span class="hs-glyph">|</span><span> </span><span class="annot"><span class="annottext">Bool
+</span><a href="#local-6989586621679181449"><span class="hs-identifier hs-var">leadingZerosAllowed</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Integer -&gt; Parsec Char -&gt; Char -&gt; Parsec Integer
+</span><a href="#local-6989586621679181407"><span class="hs-identifier hs-var">ofRadixBreak1</span></a></span><span> </span><span class="annot"><span class="annottext">Integer
+</span><span class="hs-number">10</span></span><span> </span><span class="annot"><span class="annottext">Parsec Char
+</span><a href="Text.Gigaparsec.Char.html#digit"><span class="hs-identifier hs-var">digit</span></a></span><span> </span><span class="annot"><span class="annottext">Char
+</span><a href="#local-6989586621679181451"><span class="hs-identifier hs-var">c</span></a></span><span>
+</span><span id="line-69"></span><span>          </span><span class="annot"><a href="Text.Gigaparsec.Token.Descriptions.html#BreakCharSupported"><span class="hs-identifier hs-type">BreakCharSupported</span></a></span><span> </span><span id="local-6989586621679181452"><span class="annot"><span class="annottext">Char
+</span><a href="#local-6989586621679181452"><span class="hs-identifier hs-var">c</span></a></span></span><span> </span><span class="annot"><span class="annottext">Bool
+</span><span class="hs-identifier">_</span></span><span>                       </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Integer -&gt; Parsec Char -&gt; Parsec Char -&gt; Char -&gt; Parsec Integer
+</span><a href="#local-6989586621679181410"><span class="hs-identifier hs-var">ofRadixBreak2</span></a></span><span> </span><span class="annot"><span class="annottext">Integer
+</span><span class="hs-number">10</span></span><span> </span><span class="annot"><span class="annottext">Parsec Char
+</span><a href="#local-6989586621679181423"><span class="hs-identifier hs-var">nonZeroDigit</span></a></span><span> </span><span class="annot"><span class="annottext">Parsec Char
+</span><a href="Text.Gigaparsec.Char.html#digit"><span class="hs-identifier hs-var">digit</span></a></span><span> </span><span class="annot"><span class="annottext">Char
+</span><a href="#local-6989586621679181452"><span class="hs-identifier hs-var">c</span></a></span><span> </span><span class="annot"><span class="annottext">Parsec Integer -&gt; Parsec Integer -&gt; Parsec Integer
+forall a. Parsec a -&gt; Parsec a -&gt; Parsec a
+forall (f :: * -&gt; *) a. Alternative f =&gt; f a -&gt; f a -&gt; f a
+</span><span class="hs-operator hs-var">&lt;|&gt;</span></span><span> </span><span class="annot"><span class="annottext">Parsec Integer
+</span><a href="#local-6989586621679181443"><span class="hs-identifier hs-var">secretZero</span></a></span><span>
+</span><span id="line-70"></span><span>
+</span><span id="line-71"></span><span>        </span><span id="local-6989586621679181395"><span class="annot"><span class="annottext">plainHexadecimal :: NumericDesc -&gt; Parsec Integer
+</span><a href="#local-6989586621679181395"><span class="hs-identifier hs-var hs-var">plainHexadecimal</span></a></span></span><span> </span><span class="annot"><a href="Text.Gigaparsec.Token.Descriptions.html#NumericDesc"><span class="hs-identifier hs-type">NumericDesc</span></a></span><span class="hs-special">{</span><span id="local-6989586621679181454"><span class="annot"><span class="annottext">Bool
+leadingZerosAllowed :: NumericDesc -&gt; Bool
+leadingZerosAllowed :: Bool
+</span><a href="Text.Gigaparsec.Token.Descriptions.html#leadingZerosAllowed"><span class="hs-identifier hs-var hs-var">leadingZerosAllowed</span></a></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679181455"><span class="annot"><span class="annottext">BreakCharDesc
+literalBreakChar :: NumericDesc -&gt; BreakCharDesc
+literalBreakChar :: BreakCharDesc
+</span><a href="Text.Gigaparsec.Token.Descriptions.html#literalBreakChar"><span class="hs-identifier hs-var hs-var">literalBreakChar</span></a></span></span><span class="hs-special">}</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">case</span><span> </span><span class="annot"><span class="annottext">BreakCharDesc
+</span><a href="#local-6989586621679181455"><span class="hs-identifier hs-var">literalBreakChar</span></a></span><span> </span><span class="hs-keyword">of</span><span>
+</span><span id="line-72"></span><span>          </span><span class="annot"><span class="annottext">BreakCharDesc
+</span><a href="Text.Gigaparsec.Token.Descriptions.html#NoBreakChar"><span class="hs-identifier hs-var">NoBreakChar</span></a></span><span> </span><span class="hs-glyph">|</span><span> </span><span class="annot"><span class="annottext">Bool
+</span><a href="#local-6989586621679181454"><span class="hs-identifier hs-var">leadingZerosAllowed</span></a></span><span>            </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Parsec Integer
+</span><a href="#local-6989586621679181386"><span class="hs-identifier hs-var">zeroAllowedDecimal</span></a></span><span>
+</span><span id="line-73"></span><span>          </span><span class="annot"><span class="annottext">BreakCharDesc
+</span><a href="Text.Gigaparsec.Token.Descriptions.html#NoBreakChar"><span class="hs-identifier hs-var">NoBreakChar</span></a></span><span>                                  </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Parsec Integer
+</span><a href="#local-6989586621679181390"><span class="hs-identifier hs-var">zeroNotAllowedDecimal</span></a></span><span>
+</span><span id="line-74"></span><span>          </span><span class="annot"><a href="Text.Gigaparsec.Token.Descriptions.html#BreakCharSupported"><span class="hs-identifier hs-type">BreakCharSupported</span></a></span><span> </span><span id="local-6989586621679181456"><span class="annot"><span class="annottext">Char
+</span><a href="#local-6989586621679181456"><span class="hs-identifier hs-var">c</span></a></span></span><span> </span><span class="annot"><span class="annottext">Bool
+</span><span class="hs-identifier">_</span></span><span> </span><span class="hs-glyph">|</span><span> </span><span class="annot"><span class="annottext">Bool
+</span><a href="#local-6989586621679181454"><span class="hs-identifier hs-var">leadingZerosAllowed</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Integer -&gt; Parsec Char -&gt; Char -&gt; Parsec Integer
+</span><a href="#local-6989586621679181407"><span class="hs-identifier hs-var">ofRadixBreak1</span></a></span><span> </span><span class="annot"><span class="annottext">Integer
+</span><span class="hs-number">16</span></span><span> </span><span class="annot"><span class="annottext">Parsec Char
+</span><a href="Text.Gigaparsec.Char.html#hexDigit"><span class="hs-identifier hs-var">hexDigit</span></a></span><span> </span><span class="annot"><span class="annottext">Char
+</span><a href="#local-6989586621679181456"><span class="hs-identifier hs-var">c</span></a></span><span>
+</span><span id="line-75"></span><span>          </span><span class="annot"><a href="Text.Gigaparsec.Token.Descriptions.html#BreakCharSupported"><span class="hs-identifier hs-type">BreakCharSupported</span></a></span><span> </span><span id="local-6989586621679181457"><span class="annot"><span class="annottext">Char
+</span><a href="#local-6989586621679181457"><span class="hs-identifier hs-var">c</span></a></span></span><span> </span><span class="annot"><span class="annottext">Bool
+</span><span class="hs-identifier">_</span></span><span>                       </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Integer -&gt; Parsec Char -&gt; Parsec Char -&gt; Char -&gt; Parsec Integer
+</span><a href="#local-6989586621679181410"><span class="hs-identifier hs-var">ofRadixBreak2</span></a></span><span> </span><span class="annot"><span class="annottext">Integer
+</span><span class="hs-number">16</span></span><span> </span><span class="annot"><span class="annottext">Parsec Char
+</span><a href="#local-6989586621679181431"><span class="hs-identifier hs-var">nonZeroHexDigit</span></a></span><span> </span><span class="annot"><span class="annottext">Parsec Char
+</span><a href="Text.Gigaparsec.Char.html#hexDigit"><span class="hs-identifier hs-var">hexDigit</span></a></span><span> </span><span class="annot"><span class="annottext">Char
+</span><a href="#local-6989586621679181457"><span class="hs-identifier hs-var">c</span></a></span><span> </span><span class="annot"><span class="annottext">Parsec Integer -&gt; Parsec Integer -&gt; Parsec Integer
+forall a. Parsec a -&gt; Parsec a -&gt; Parsec a
+forall (f :: * -&gt; *) a. Alternative f =&gt; f a -&gt; f a -&gt; f a
+</span><span class="hs-operator hs-var">&lt;|&gt;</span></span><span> </span><span class="annot"><span class="annottext">Parsec Integer
+</span><a href="#local-6989586621679181443"><span class="hs-identifier hs-var">secretZero</span></a></span><span>
+</span><span id="line-76"></span><span>
+</span><span id="line-77"></span><span>        </span><span id="local-6989586621679181396"><span class="annot"><span class="annottext">plainOctal :: NumericDesc -&gt; Parsec Integer
+</span><a href="#local-6989586621679181396"><span class="hs-identifier hs-var hs-var">plainOctal</span></a></span></span><span> </span><span class="annot"><a href="Text.Gigaparsec.Token.Descriptions.html#NumericDesc"><span class="hs-identifier hs-type">NumericDesc</span></a></span><span class="hs-special">{</span><span id="local-6989586621679181459"><span class="annot"><span class="annottext">Bool
+leadingZerosAllowed :: NumericDesc -&gt; Bool
+leadingZerosAllowed :: Bool
+</span><a href="Text.Gigaparsec.Token.Descriptions.html#leadingZerosAllowed"><span class="hs-identifier hs-var hs-var">leadingZerosAllowed</span></a></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679181460"><span class="annot"><span class="annottext">BreakCharDesc
+literalBreakChar :: NumericDesc -&gt; BreakCharDesc
+literalBreakChar :: BreakCharDesc
+</span><a href="Text.Gigaparsec.Token.Descriptions.html#literalBreakChar"><span class="hs-identifier hs-var hs-var">literalBreakChar</span></a></span></span><span class="hs-special">}</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">case</span><span> </span><span class="annot"><span class="annottext">BreakCharDesc
+</span><a href="#local-6989586621679181460"><span class="hs-identifier hs-var">literalBreakChar</span></a></span><span> </span><span class="hs-keyword">of</span><span>
+</span><span id="line-78"></span><span>          </span><span class="annot"><span class="annottext">BreakCharDesc
+</span><a href="Text.Gigaparsec.Token.Descriptions.html#NoBreakChar"><span class="hs-identifier hs-var">NoBreakChar</span></a></span><span> </span><span class="hs-glyph">|</span><span> </span><span class="annot"><span class="annottext">Bool
+</span><a href="#local-6989586621679181459"><span class="hs-identifier hs-var">leadingZerosAllowed</span></a></span><span>            </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Parsec Integer
+</span><a href="#local-6989586621679181386"><span class="hs-identifier hs-var">zeroAllowedDecimal</span></a></span><span>
+</span><span id="line-79"></span><span>          </span><span class="annot"><span class="annottext">BreakCharDesc
+</span><a href="Text.Gigaparsec.Token.Descriptions.html#NoBreakChar"><span class="hs-identifier hs-var">NoBreakChar</span></a></span><span>                                  </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Parsec Integer
+</span><a href="#local-6989586621679181390"><span class="hs-identifier hs-var">zeroNotAllowedDecimal</span></a></span><span>
+</span><span id="line-80"></span><span>          </span><span class="annot"><a href="Text.Gigaparsec.Token.Descriptions.html#BreakCharSupported"><span class="hs-identifier hs-type">BreakCharSupported</span></a></span><span> </span><span id="local-6989586621679181461"><span class="annot"><span class="annottext">Char
+</span><a href="#local-6989586621679181461"><span class="hs-identifier hs-var">c</span></a></span></span><span> </span><span class="annot"><span class="annottext">Bool
+</span><span class="hs-identifier">_</span></span><span> </span><span class="hs-glyph">|</span><span> </span><span class="annot"><span class="annottext">Bool
+</span><a href="#local-6989586621679181459"><span class="hs-identifier hs-var">leadingZerosAllowed</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Integer -&gt; Parsec Char -&gt; Char -&gt; Parsec Integer
+</span><a href="#local-6989586621679181407"><span class="hs-identifier hs-var">ofRadixBreak1</span></a></span><span> </span><span class="annot"><span class="annottext">Integer
+</span><span class="hs-number">8</span></span><span> </span><span class="annot"><span class="annottext">Parsec Char
+</span><a href="Text.Gigaparsec.Char.html#octDigit"><span class="hs-identifier hs-var">octDigit</span></a></span><span> </span><span class="annot"><span class="annottext">Char
+</span><a href="#local-6989586621679181461"><span class="hs-identifier hs-var">c</span></a></span><span>
+</span><span id="line-81"></span><span>          </span><span class="annot"><a href="Text.Gigaparsec.Token.Descriptions.html#BreakCharSupported"><span class="hs-identifier hs-type">BreakCharSupported</span></a></span><span> </span><span id="local-6989586621679181462"><span class="annot"><span class="annottext">Char
+</span><a href="#local-6989586621679181462"><span class="hs-identifier hs-var">c</span></a></span></span><span> </span><span class="annot"><span class="annottext">Bool
+</span><span class="hs-identifier">_</span></span><span>                       </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Integer -&gt; Parsec Char -&gt; Parsec Char -&gt; Char -&gt; Parsec Integer
+</span><a href="#local-6989586621679181410"><span class="hs-identifier hs-var">ofRadixBreak2</span></a></span><span> </span><span class="annot"><span class="annottext">Integer
+</span><span class="hs-number">8</span></span><span> </span><span class="annot"><span class="annottext">Parsec Char
+</span><a href="#local-6989586621679181437"><span class="hs-identifier hs-var">nonZeroOctDigit</span></a></span><span> </span><span class="annot"><span class="annottext">Parsec Char
+</span><a href="Text.Gigaparsec.Char.html#octDigit"><span class="hs-identifier hs-var">octDigit</span></a></span><span> </span><span class="annot"><span class="annottext">Char
+</span><a href="#local-6989586621679181462"><span class="hs-identifier hs-var">c</span></a></span><span> </span><span class="annot"><span class="annottext">Parsec Integer -&gt; Parsec Integer -&gt; Parsec Integer
+forall a. Parsec a -&gt; Parsec a -&gt; Parsec a
+forall (f :: * -&gt; *) a. Alternative f =&gt; f a -&gt; f a -&gt; f a
+</span><span class="hs-operator hs-var">&lt;|&gt;</span></span><span> </span><span class="annot"><span class="annottext">Parsec Integer
+</span><a href="#local-6989586621679181443"><span class="hs-identifier hs-var">secretZero</span></a></span><span>
+</span><span id="line-82"></span><span>
+</span><span id="line-83"></span><span>        </span><span id="local-6989586621679181397"><span class="annot"><span class="annottext">plainBinary :: NumericDesc -&gt; Parsec Integer
+</span><a href="#local-6989586621679181397"><span class="hs-identifier hs-var hs-var">plainBinary</span></a></span></span><span> </span><span class="annot"><a href="Text.Gigaparsec.Token.Descriptions.html#NumericDesc"><span class="hs-identifier hs-type">NumericDesc</span></a></span><span class="hs-special">{</span><span id="local-6989586621679181464"><span class="annot"><span class="annottext">Bool
+leadingZerosAllowed :: NumericDesc -&gt; Bool
+leadingZerosAllowed :: Bool
+</span><a href="Text.Gigaparsec.Token.Descriptions.html#leadingZerosAllowed"><span class="hs-identifier hs-var hs-var">leadingZerosAllowed</span></a></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679181465"><span class="annot"><span class="annottext">BreakCharDesc
+literalBreakChar :: NumericDesc -&gt; BreakCharDesc
+literalBreakChar :: BreakCharDesc
+</span><a href="Text.Gigaparsec.Token.Descriptions.html#literalBreakChar"><span class="hs-identifier hs-var hs-var">literalBreakChar</span></a></span></span><span class="hs-special">}</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">case</span><span> </span><span class="annot"><span class="annottext">BreakCharDesc
+</span><a href="#local-6989586621679181465"><span class="hs-identifier hs-var">literalBreakChar</span></a></span><span> </span><span class="hs-keyword">of</span><span>
+</span><span id="line-84"></span><span>          </span><span class="annot"><span class="annottext">BreakCharDesc
+</span><a href="Text.Gigaparsec.Token.Descriptions.html#NoBreakChar"><span class="hs-identifier hs-var">NoBreakChar</span></a></span><span> </span><span class="hs-glyph">|</span><span> </span><span class="annot"><span class="annottext">Bool
+</span><a href="#local-6989586621679181464"><span class="hs-identifier hs-var">leadingZerosAllowed</span></a></span><span>            </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Parsec Integer
+</span><a href="#local-6989586621679181386"><span class="hs-identifier hs-var">zeroAllowedDecimal</span></a></span><span>
+</span><span id="line-85"></span><span>          </span><span class="annot"><span class="annottext">BreakCharDesc
+</span><a href="Text.Gigaparsec.Token.Descriptions.html#NoBreakChar"><span class="hs-identifier hs-var">NoBreakChar</span></a></span><span>                                  </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Parsec Integer
+</span><a href="#local-6989586621679181390"><span class="hs-identifier hs-var">zeroNotAllowedDecimal</span></a></span><span>
+</span><span id="line-86"></span><span>          </span><span class="annot"><a href="Text.Gigaparsec.Token.Descriptions.html#BreakCharSupported"><span class="hs-identifier hs-type">BreakCharSupported</span></a></span><span> </span><span id="local-6989586621679181466"><span class="annot"><span class="annottext">Char
+</span><a href="#local-6989586621679181466"><span class="hs-identifier hs-var">c</span></a></span></span><span> </span><span class="annot"><span class="annottext">Bool
+</span><span class="hs-identifier">_</span></span><span> </span><span class="hs-glyph">|</span><span> </span><span class="annot"><span class="annottext">Bool
+</span><a href="#local-6989586621679181464"><span class="hs-identifier hs-var">leadingZerosAllowed</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Integer -&gt; Parsec Char -&gt; Char -&gt; Parsec Integer
+</span><a href="#local-6989586621679181407"><span class="hs-identifier hs-var">ofRadixBreak1</span></a></span><span> </span><span class="annot"><span class="annottext">Integer
+</span><span class="hs-number">2</span></span><span> </span><span class="annot"><span class="annottext">Parsec Char
+</span><a href="Text.Gigaparsec.Char.html#bit"><span class="hs-identifier hs-var">bit</span></a></span><span> </span><span class="annot"><span class="annottext">Char
+</span><a href="#local-6989586621679181466"><span class="hs-identifier hs-var">c</span></a></span><span>
+</span><span id="line-87"></span><span>          </span><span class="annot"><a href="Text.Gigaparsec.Token.Descriptions.html#BreakCharSupported"><span class="hs-identifier hs-type">BreakCharSupported</span></a></span><span> </span><span id="local-6989586621679181467"><span class="annot"><span class="annottext">Char
+</span><a href="#local-6989586621679181467"><span class="hs-identifier hs-var">c</span></a></span></span><span> </span><span class="annot"><span class="annottext">Bool
+</span><span class="hs-identifier">_</span></span><span>                       </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Integer -&gt; Parsec Char -&gt; Parsec Char -&gt; Char -&gt; Parsec Integer
+</span><a href="#local-6989586621679181410"><span class="hs-identifier hs-var">ofRadixBreak2</span></a></span><span> </span><span class="annot"><span class="annottext">Integer
+</span><span class="hs-number">2</span></span><span> </span><span class="annot"><span class="annottext">Parsec Char
+</span><a href="#local-6989586621679181442"><span class="hs-identifier hs-var">nonZeroBit</span></a></span><span> </span><span class="annot"><span class="annottext">Parsec Char
+</span><a href="Text.Gigaparsec.Char.html#bit"><span class="hs-identifier hs-var">bit</span></a></span><span> </span><span class="annot"><span class="annottext">Char
+</span><a href="#local-6989586621679181467"><span class="hs-identifier hs-var">c</span></a></span><span> </span><span class="annot"><span class="annottext">Parsec Integer -&gt; Parsec Integer -&gt; Parsec Integer
+forall a. Parsec a -&gt; Parsec a -&gt; Parsec a
+forall (f :: * -&gt; *) a. Alternative f =&gt; f a -&gt; f a -&gt; f a
+</span><span class="hs-operator hs-var">&lt;|&gt;</span></span><span> </span><span class="annot"><span class="annottext">Parsec Integer
+</span><a href="#local-6989586621679181443"><span class="hs-identifier hs-var">secretZero</span></a></span><span>
+</span><span id="line-88"></span><span>
+</span><span id="line-89"></span><span class="annot"><a href="Text.Gigaparsec.Internal.Token.Generic.html#withDigit"><span class="hs-identifier hs-type">withDigit</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Integer</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Integer</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Char</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Integer</span></span><span>
+</span><span id="line-90"></span><span id="withDigit"><span class="annot"><span class="annottext">withDigit :: Integer -&gt; Integer -&gt; Char -&gt; Integer
+</span><a href="Text.Gigaparsec.Internal.Token.Generic.html#withDigit"><span class="hs-identifier hs-var hs-var">withDigit</span></a></span></span><span> </span><span id="local-6989586621679181468"><span class="annot"><span class="annottext">Integer
+</span><a href="#local-6989586621679181468"><span class="hs-identifier hs-var">radix</span></a></span></span><span> </span><span id="local-6989586621679181469"><span class="annot"><span class="annottext">Integer
+</span><a href="#local-6989586621679181469"><span class="hs-identifier hs-var">n</span></a></span></span><span> </span><span id="local-6989586621679181470"><span class="annot"><span class="annottext">Char
+</span><a href="#local-6989586621679181470"><span class="hs-identifier hs-var">d</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Integer
+</span><a href="#local-6989586621679181469"><span class="hs-identifier hs-var">n</span></a></span><span> </span><span class="annot"><span class="annottext">Integer -&gt; Integer -&gt; Integer
+forall a. Num a =&gt; a -&gt; a -&gt; a
+</span><span class="hs-operator hs-var">*</span></span><span> </span><span class="annot"><span class="annottext">Integer
+</span><a href="#local-6989586621679181468"><span class="hs-identifier hs-var">radix</span></a></span><span> </span><span class="annot"><span class="annottext">Integer -&gt; Integer -&gt; Integer
+forall a. Num a =&gt; a -&gt; a -&gt; a
+</span><span class="hs-operator hs-var">+</span></span><span> </span><span class="annot"><span class="annottext">Int -&gt; Integer
+forall a b. (Integral a, Num b) =&gt; a -&gt; b
+</span><span class="hs-identifier hs-var">fromIntegral</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Char -&gt; Int
+</span><span class="hs-identifier hs-var">digitToInt</span></span><span> </span><span class="annot"><span class="annottext">Char
+</span><a href="#local-6989586621679181470"><span class="hs-identifier hs-var">d</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-91"></span></pre></body></html>
