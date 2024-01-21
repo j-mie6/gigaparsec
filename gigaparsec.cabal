@@ -112,10 +112,10 @@ library
                       Text.Gigaparsec.Internal.Token.Text,
 
     -- this can probably be loosened?
-    build-depends:    containers      >= 0.6 && < 0.7,
-                      selective       >= 0.6 && < 0.8,
-                      pretty-terminal >= 0.1.0   && < 0.2,
-                      template-haskell
+    build-depends:    containers       >= 0.6   && < 0.7,
+                      selective        >= 0.6   && < 0.8,
+                      pretty-terminal  >= 0.1.0 && < 0.2,
+                      template-haskell >= 2.16  && < 3
 
     -- Modules included in this library but not exported.
     -- other-modules:
