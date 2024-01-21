@@ -142,6 +142,7 @@ mkEscape EscapeDesc{..} gen = Escape {..}
              | c < toInteger (ord maxValue) = Just (chr (fromInteger c))
              | otherwise = Nothing
             err = specializedGen { messages = messages }
+            messages :: Integer -> [String]
             messages c
               | c > toInteger (ord maxValue) =
                   [showIntAtBase (toInteger radix) intToDigit c
@@ -165,7 +166,8 @@ mkEscape EscapeDesc{..} gen = Escape {..}
       mapMaybeSWith (specializedGen {messages = messages})
                     (\(num, m) -> if m == full then Just num else Nothing)
                     (atMost' radix dig atMostR <~> gets atMostR (full -))
-      where messages got =
+      where messages :: (Integer, Word) -> [String]
+            messages (_, got) =
               [toString ("numeric escape requires " <> formatted <> "digits, but only got" <> from got)]
             ~(Just formatted) = disjunct True (map show (NonEmpty.toList reqDigits))
 
