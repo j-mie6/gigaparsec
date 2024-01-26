@@ -1,5 +1,5 @@
 {-# LANGUAGE Safe #-}
-{-# LANGUAGE NamedFieldPuns, BinaryLiterals, NumericUnderscores, DataKinds, MonoLocalBinds, BangPatterns #-}
+{-# LANGUAGE GADTs, NamedFieldPuns, BinaryLiterals, NumericUnderscores, DataKinds, BangPatterns #-}
 {-# OPTIONS_GHC -Wno-missing-import-lists #-}
 module Text.Gigaparsec.Internal.Errors.DefuncError (
     DefuncError,
