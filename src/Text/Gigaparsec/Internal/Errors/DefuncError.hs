@@ -42,11 +42,6 @@ isFlexibleCaret DefuncError{flags} = testBit flags flexibleCaretBit
 isLexical :: DefuncError -> Bool
 isLexical DefuncError{flags} = testBit flags lexicalBit
 
---TODO: make one for Word + DefuncError_
-underlyingOffset :: DefuncError -> Word
-underlyingOffset (DefuncError _ _ presentationOffset Base{}) = presentationOffset
-underlyingOffset (DefuncError _ _ _ Op{_underlyingOffset}) = _underlyingOffset
-
 merge :: DefuncError -> DefuncError -> DefuncError
 merge err1 err2 = case compare (underlyingOffset err1) (underlyingOffset err2) of
   GT -> err1
@@ -55,73 +50,72 @@ merge err1 err2 = case compare (underlyingOffset err1) (underlyingOffset err2) o
     GT -> err1
     LT -> err2
     EQ -> case err1 of
-      DefuncError IsSpecialised _ _ errTy1
-        | DefuncError IsSpecialised _ _ errTy2 <- err2 ->
+      DefuncError IsSpecialised _ _ _ errTy1
+        | DefuncError IsSpecialised _ _ _ errTy2 <- err2 ->
             mergeSame err1 (flags err2) IsSpecialised errTy1 errTy2
-        | DefuncError IsVanilla _ _ errTy2 <- err2
+        | DefuncError IsVanilla _ _ _ errTy2 <- err2
         , isFlexibleCaret err1                    -> adjustCaret err1 errTy1 errTy2
         | otherwise                               -> err1
-      DefuncError IsVanilla _ _ errTy1
-        | DefuncError IsVanilla _ _ errTy2 <- err2     ->
+      DefuncError IsVanilla _ _ _ errTy1
+        | DefuncError IsVanilla _ _ _ errTy2 <- err2     ->
             mergeSame err1 (flags err2) IsVanilla errTy1 errTy2
-        | DefuncError IsSpecialised _ _ errTy2 <- err2
+        | DefuncError IsSpecialised _ _ _ errTy2 <- err2
         , isFlexibleCaret err2                    -> adjustCaret err1 errTy2 errTy1
         | otherwise                               -> err2
 
 withHints :: DefuncHints -> DefuncError -> DefuncError
 withHints Blank err = err
-withHints hints err@(DefuncError IsVanilla flags pOff errTy) =
-  DefuncError IsVanilla (clearBit flags expectedEmptyBit) pOff
-              (Op (underlyingOffset err) (WithHints errTy hints))
+withHints hints (DefuncError IsVanilla flags pOff uOff errTy) =
+  DefuncError IsVanilla (clearBit flags expectedEmptyBit) pOff uOff (Op (WithHints errTy hints))
 withHints _ err = err
 
 withReasonAndOffset :: String -> Word -> DefuncError -> DefuncError
-withReasonAndOffset !reason !off err@(DefuncError IsVanilla flags pOff errTy) | pOff == off =
-  DefuncError IsVanilla flags pOff (Op (underlyingOffset err) (WithReason errTy reason))
+withReasonAndOffset !reason !off (DefuncError IsVanilla flags pOff uOff errTy) | pOff == off =
+  DefuncError IsVanilla flags pOff uOff (Op (WithReason errTy reason))
 withReasonAndOffset _ _ err = err
 
 withReason :: String -> DefuncError -> DefuncError
 withReason !reason err = withReasonAndOffset reason (presentationOffset err) err
 
 label :: Set String -> Word -> DefuncError -> DefuncError
-label !labels !off err@(DefuncError IsVanilla flags pOff errTy) | pOff == off =
-  DefuncError IsVanilla flags' pOff (Op (underlyingOffset err) (WithLabel errTy labels))
+label !labels !off (DefuncError IsVanilla flags pOff uOff errTy) | pOff == off =
+  DefuncError IsVanilla flags' pOff uOff (Op (WithLabel errTy labels))
   where !flags'
           | Set.null labels = setBit flags expectedEmptyBit
           | otherwise       = clearBit flags expectedEmptyBit
 label _ _ err = err
 
 amend :: Bool -> Word -> Word -> Word -> DefuncError -> DefuncError
-amend !partial !pOff !line !col err@(DefuncError k flags _ errTy)
+amend !partial !pOff !line !col err@(DefuncError k flags _ uOff errTy)
   | entrenched err = err
-  | otherwise = DefuncError k flags pOff (Op uOff (Amended k line col errTy))
+  | otherwise = DefuncError k flags pOff uOff' (Op (Amended k line col errTy))
   where
-    !uOff = if partial then underlyingOffset err else pOff
+    !uOff' = if partial then uOff else pOff
 
 entrench :: DefuncError -> DefuncError
-entrench (DefuncError k flags pOff errTy) = DefuncError k (flags + 1) pOff errTy
+entrench (DefuncError k flags pOff uOff errTy) = DefuncError k (flags + 1) pOff uOff errTy
 
 dislodge :: Word32 -> DefuncError -> DefuncError
-dislodge by err@(DefuncError k flags pOff errTy)
+dislodge by err@(DefuncError k flags pOff uOff errTy)
   | eBy == 0  = err
-  | eBy > by  = DefuncError k (flags - by) pOff errTy
-  | otherwise = DefuncError k (flags .&. complement entrenchedMask) pOff errTy
+  | eBy > by  = DefuncError k (flags - by) pOff uOff errTy
+  | otherwise = DefuncError k (flags .&. complement entrenchedMask) pOff uOff errTy
   where !eBy = entrenchedBy err
 
 markAsLexical :: Word -> DefuncError -> DefuncError
-markAsLexical !off err@(DefuncError IsVanilla flags pOff errTy) | off == pOff =
-  DefuncError IsVanilla (setBit flags lexicalBit) pOff (Op (underlyingOffset err) (Lexical errTy))
+markAsLexical !off (DefuncError IsVanilla flags pOff uOff errTy) | off == pOff =
+  DefuncError IsVanilla (setBit flags lexicalBit) pOff uOff (Op (Lexical errTy))
 markAsLexical _ err = err
 
 {-# INLINABLE adjustCaret #-}
 adjustCaret :: DefuncError -> DefuncError_ 'Specialised -> DefuncError_ 'Vanilla -> DefuncError
-adjustCaret err@(DefuncError _ flags pOff _) err1 err2 =
-  DefuncError IsSpecialised flags pOff (Op (underlyingOffset err) (AdjustCaret err1 err2))
+adjustCaret (DefuncError _ flags pOff uOff _) err1 err2 =
+  DefuncError IsSpecialised flags pOff uOff (Op (AdjustCaret err1 err2))
 
 {-# INLINABLE mergeSame #-}
 mergeSame :: DefuncError -> Word32 -> ErrKindSingleton k -> DefuncError_ k -> DefuncError_ k -> DefuncError
-mergeSame err@(DefuncError _ flags1 uOff _) !flags2 k err1 err2 =
-  DefuncError k (flags1 .&. flags2) uOff (Op (underlyingOffset err) (Merged k err1 err2))
+mergeSame (DefuncError _ flags1 pOff uOff _) !flags2 k err1 err2 =
+  DefuncError k (flags1 .&. flags2) pOff uOff (Op (Merged k err1 err2))
 
 -- FLAG MASKS
 {-# INLINE vanillaBit #-}

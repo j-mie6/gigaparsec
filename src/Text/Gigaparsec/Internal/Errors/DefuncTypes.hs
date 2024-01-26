@@ -30,6 +30,7 @@ data DefuncError = forall k. DefuncError {
     errKind :: {-# UNPACK #-} !(ErrKindSingleton k),
     flags :: {-# UNPACK #-} !Word32,
     presentationOffset :: {-# UNPACK #-} !Word,
+    underlyingOffset :: {-# UNPACK #-} !Word,
     errTy :: {-# UNPACK #-} !(DefuncError_ k)
   }
 
@@ -40,9 +41,7 @@ data DefuncError_ k where
           , base :: {-# UNPACK #-} !(BaseError k)
           }
        -> DefuncError_ k
-  Op :: { _underlyingOffset :: {-# UNPACK #-} !Word
-        , op :: {-# UNPACK #-} !(ErrorOp k)
-        } -> DefuncError_ k
+  Op :: { op :: {-# UNPACK #-} !(ErrorOp k) } -> DefuncError_ k
 
 
 type BaseError :: ErrKind -> UnliftedDatatype
