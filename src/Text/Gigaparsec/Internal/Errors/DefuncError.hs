@@ -88,7 +88,7 @@ label _ _ err = err
 amend :: Bool -> Word -> Word -> Word -> DefuncError -> DefuncError
 amend !partial !pOff !line !col err@(DefuncError k flags _ uOff errTy)
   | entrenched err = err
-  | otherwise = DefuncError k flags pOff uOff' (Op (Amended k line col errTy))
+  | otherwise = DefuncError k flags pOff uOff' (Op (Amended line col errTy))
   where
     !uOff' = if partial then uOff else pOff
 
@@ -104,7 +104,7 @@ dislodge by err@(DefuncError k flags pOff uOff errTy)
 
 markAsLexical :: Word -> DefuncError -> DefuncError
 markAsLexical !off (DefuncError IsVanilla flags pOff uOff errTy) | off == pOff =
-  DefuncError IsVanilla (setBit flags lexicalBit) pOff uOff (Op (Lexical errTy))
+  DefuncError IsVanilla (setBit flags lexicalBit) pOff uOff errTy
 markAsLexical _ err = err
 
 {-# INLINABLE adjustCaret #-}
@@ -115,7 +115,7 @@ adjustCaret (DefuncError _ flags pOff uOff _) err1 err2 =
 {-# INLINABLE mergeSame #-}
 mergeSame :: DefuncError -> Word32 -> ErrKindSingleton k -> DefuncError_ k -> DefuncError_ k -> DefuncError
 mergeSame (DefuncError _ flags1 pOff uOff _) !flags2 k err1 err2 =
-  DefuncError k (flags1 .&. flags2) pOff uOff (Op (Merged k err1 err2))
+  DefuncError k (flags1 .&. flags2) pOff uOff (Op (Merged err1 err2))
 
 -- FLAG MASKS
 {-# INLINE vanillaBit #-}
