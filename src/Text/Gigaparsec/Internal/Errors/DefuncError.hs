@@ -3,20 +3,24 @@
 {-# OPTIONS_GHC -Wno-missing-import-lists #-}
 module Text.Gigaparsec.Internal.Errors.DefuncError (
     DefuncError,
+    specialisedError, expectedError, unexpectedError, emptyError,
     merge, withHints, withReason, withReasonAndOffset, label,
     amend, entrench, dislodge, markAsLexical,
     isVanilla, isExpectedEmpty, isLexical
   ) where
 
 import Data.Word (Word32)
-import Data.Bits ((.&.), testBit, clearBit, setBit, complement)
+import Data.Bits ((.&.), testBit, clearBit, setBit, complement, bit)
 import Data.Set (Set)
 import Data.Set qualified as Set (null)
 
+import Text.Gigaparsec.Internal.Errors.CaretControl (CaretWidth, Span, isFlexible)
 import Text.Gigaparsec.Internal.Errors.DefuncTypes (
-    DefuncError(..), DefuncError_(..), ErrKindSingleton(..), ErrorOp(..),
+    DefuncError(..), DefuncError_(..), ErrKindSingleton(..),
+    ErrorOp(..), BaseError(..),
     DefuncHints(..)
   )
+import Text.Gigaparsec.Internal.Errors.ErrorItem (ExpectItem)
 
 {-# INLINABLE isVanilla #-}
 isVanilla :: DefuncError -> Bool
@@ -42,6 +46,38 @@ isFlexibleCaret DefuncError{flags} = testBit flags flexibleCaretBit
 isLexical :: DefuncError -> Bool
 isLexical DefuncError{flags} = testBit flags lexicalBit
 
+-- Base Errors
+specialisedError :: Word -> Word -> Word -> [String] -> CaretWidth -> DefuncError
+specialisedError !pOff !line !col !msgs caret =
+  DefuncError IsSpecialised flags pOff pOff (Base line col (ClassicSpecialised msgs caret))
+  where flags :: Word32
+        !flags
+          | isFlexible caret = setBit (bit expectedEmptyBit) flexibleCaretBit
+          | otherwise        = bit expectedEmptyBit
+
+emptyError :: Word -> Word -> Word -> Span -> DefuncError
+emptyError !pOff !line !col !unexWidth =
+  DefuncError IsVanilla flags pOff pOff (Base line col (Empty unexWidth))
+  where flags :: Word32
+        !flags = setBit (bit vanillaBit) expectedEmptyBit
+
+expectedError :: Word -> Word -> Word -> Set ExpectItem -> Span -> DefuncError
+expectedError !pOff !line !col !exs !unexWidth =
+  DefuncError IsVanilla flags pOff pOff (Base line col (Expected exs unexWidth))
+  where flags :: Word32
+        !flags
+          | Set.null exs = setBit (bit vanillaBit) expectedEmptyBit
+          | otherwise    = bit vanillaBit
+
+unexpectedError :: Word -> Word -> Word -> Set ExpectItem -> String -> CaretWidth -> DefuncError
+unexpectedError !pOff !line !col !exs !unex caretWidth =
+  DefuncError IsVanilla flags pOff pOff (Base line col (Unexpected exs unex caretWidth))
+  where flags :: Word32
+        !flags
+          | Set.null exs = setBit (bit vanillaBit) expectedEmptyBit
+          | otherwise    = bit vanillaBit
+
+-- Operations
 merge :: DefuncError -> DefuncError -> DefuncError
 merge err1@(DefuncError k1 flags1 pOff1 uOff1 errTy1)
       err2@(DefuncError k2 flags2 pOff2 uOff2 errTy2) =

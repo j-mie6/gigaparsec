@@ -46,12 +46,10 @@ data DefuncError_ k where
 
 type BaseError :: ErrKind -> UnliftedDatatype
 data BaseError k where
-  ClassicSpecialised :: ![String] -> BaseError 'Specialised
+  ClassicSpecialised :: ![String] -> {-# UNPACK #-} !CaretWidth -> BaseError 'Specialised
   Expected :: !(Set ExpectItem) -> {-# UNPACK #-} !Span -> BaseError 'Vanilla
-  ExpectedWithReason :: !(Set ExpectItem) -> !String -> {-# UNPACK #-} !Span -> BaseError 'Vanilla
   Unexpected :: !(Set ExpectItem) -> !String -> {-# UNPACK #-} !CaretWidth -> BaseError 'Vanilla
   Empty :: {-# UNPACK #-} !Span -> BaseError 'Vanilla
-  EmptyWithReason :: !String -> {-# UNPACK #-} !Span -> BaseError 'Vanilla
 
 type ErrorOp :: ErrKind -> UnliftedDatatype
 data ErrorOp k where
