@@ -43,27 +43,27 @@ isLexical :: DefuncError -> Bool
 isLexical DefuncError{flags} = testBit flags lexicalBit
 
 merge :: DefuncError -> DefuncError -> DefuncError
-merge err1 err2 = case compare (underlyingOffset err1) (underlyingOffset err2) of
-  GT -> err1
-  LT -> err2
-  EQ -> case compare (presentationOffset err1) (presentationOffset err2) of
+merge err1@(DefuncError k1 flags1 pOff1 uOff1 errTy1)
+      err2@(DefuncError k2 flags2 pOff2 uOff2 errTy2) =
+  case compare uOff1 uOff2 of
     GT -> err1
     LT -> err2
-    EQ -> case err1 of
-      DefuncError IsSpecialised flags1 pOff uOff errTy1
-        | DefuncError IsSpecialised flags2 _ _ errTy2 <- err2 ->
-            DefuncError IsSpecialised (flags1 .&. flags2) pOff uOff (Op (Merged errTy1 errTy2))
-        | DefuncError IsVanilla _ _ _ errTy2 <- err2
-        , isFlexibleCaret err1                    ->
-            DefuncError IsSpecialised flags1 pOff uOff (Op (AdjustCaret errTy1 errTy2))
-        | otherwise                               -> err1
-      DefuncError IsVanilla flags1 pOff uOff errTy1
-        | DefuncError IsVanilla flags2 _ _ errTy2 <- err2     ->
-            DefuncError IsVanilla (flags1 .&. flags2) pOff uOff (Op (Merged errTy1 errTy2))
-        | DefuncError IsSpecialised _ _ _ errTy2 <- err2
-        , isFlexibleCaret err2                    ->
-            DefuncError IsSpecialised flags1 pOff uOff (Op (AdjustCaret errTy2 errTy1))
-        | otherwise                               -> err2
+    EQ -> case compare pOff1 pOff2 of
+      GT -> err1
+      LT -> err2
+      EQ -> case k1 of
+        IsSpecialised -> case k2 of
+          IsSpecialised ->
+            DefuncError IsSpecialised (flags1 .&. flags2) pOff1 uOff1 (Op (Merged errTy1 errTy2))
+          IsVanilla | isFlexibleCaret err1 ->
+            DefuncError IsSpecialised flags1 pOff1 uOff1 (Op (AdjustCaret errTy1 errTy2))
+          _ -> err1
+        IsVanilla -> case k2 of
+          IsVanilla ->
+            DefuncError IsVanilla (flags1 .&. flags2) pOff1 uOff1 (Op (Merged errTy1 errTy2))
+          IsSpecialised | isFlexibleCaret err2 ->
+            DefuncError IsSpecialised flags1 pOff1 uOff1 (Op (AdjustCaret errTy2 errTy1))
+          _ -> err2
 
 withHints :: DefuncHints -> DefuncError -> DefuncError
 withHints Blank err = err
