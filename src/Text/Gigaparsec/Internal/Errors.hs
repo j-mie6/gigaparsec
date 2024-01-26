@@ -5,7 +5,10 @@
 #include "portable-unlifted.h"
 -- Yes, this is redundant, however, it is necessary to get the UNPACK to fire on CaretWidth
 {-# OPTIONS_GHC -Wno-redundant-strictness-flags #-}
-module Text.Gigaparsec.Internal.Errors (module Text.Gigaparsec.Internal.Errors) where
+module Text.Gigaparsec.Internal.Errors (
+    module Text.Gigaparsec.Internal.Errors,
+    CaretWidth(..), ExpectItem(..)
+  ) where
 
 import Prelude hiding (lines)
 
@@ -17,18 +20,10 @@ import Text.Gigaparsec.Errors.ErrorBuilder (ErrorBuilder, Token)
 import Text.Gigaparsec.Errors.ErrorBuilder qualified as Builder (ErrorBuilder(..))
 import Text.Gigaparsec.Errors.ErrorBuilder qualified as Token (Token(..))
 
+import Text.Gigaparsec.Internal.Errors.CaretControl
+import Text.Gigaparsec.Internal.Errors.ErrorItem
+
 CPP_import_PortableUnlifted
-
-type Span :: *
-type Span = Word
-
-type CaretWidth :: UnliftedDatatype
-data CaretWidth = FlexibleCaret { width :: {-# UNPACK #-} !Span }
-                | RigidCaret { width :: {-# UNPACK #-} !Span }
-
-isFlexible :: CaretWidth -> Bool
-isFlexible FlexibleCaret{} = True
-isFlexible _               = False
 
 type ParseError :: UnliftedDatatype
 data ParseError = VanillaError { presentationOffset :: {-# UNPACK #-} !Word
@@ -54,18 +49,6 @@ data ParseError = VanillaError { presentationOffset :: {-# UNPACK #-} !Word
                                    , underlyingOffset :: {-# UNPACK #-} !Word
                                    , entrenchment :: {-# UNPACK #-} !Word
                                    }
-
-type Input :: *
-type Input = NonEmpty Char
-type UnexpectItem :: *
-data UnexpectItem = UnexpectRaw !Input {-# UNPACK #-} !Word
-                  | UnexpectNamed !String {-# UNPACK #-} !CaretWidth
-                  | UnexpectEndOfInput
-type ExpectItem :: *
-data ExpectItem = ExpectRaw !String
-                | ExpectNamed !String
-                | ExpectEndOfInput
-                deriving stock (Eq, Ord, Show)
 
 entrenched :: ParseError -> Bool
 entrenched err = entrenchment err /= 0

@@ -102,7 +102,9 @@ library
                       -- Internals
                       Text.Gigaparsec.Internal,
                       Text.Gigaparsec.Internal.Errors,
-                      Text.Gigaparsec.Internal.Errors.DefuncError,
+                      Text.Gigaparsec.Internal.Errors.CaretControl,
+                      Text.Gigaparsec.Internal.Errors.DefuncTypes,
+                      Text.Gigaparsec.Internal.Errors.ErrorItem,
                       Text.Gigaparsec.Internal.RT,
                       Text.Gigaparsec.Internal.Require,
                       Text.Gigaparsec.Internal.Token.Generic,
