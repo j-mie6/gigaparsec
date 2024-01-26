@@ -14,7 +14,7 @@ import Data.Set (Set)
 import Data.Set qualified as Set (null)
 
 import Text.Gigaparsec.Internal.Errors.DefuncTypes (
-    DefuncError(..), DefuncError_(..), ErrKindSingleton(..), ErrorOp(..), ErrKind(..),
+    DefuncError(..), DefuncError_(..), ErrKindSingleton(..), ErrorOp(..),
     DefuncHints(..)
   )
 
@@ -50,17 +50,19 @@ merge err1 err2 = case compare (underlyingOffset err1) (underlyingOffset err2) o
     GT -> err1
     LT -> err2
     EQ -> case err1 of
-      DefuncError IsSpecialised _ _ _ errTy1
-        | DefuncError IsSpecialised _ _ _ errTy2 <- err2 ->
-            mergeSame err1 (flags err2) IsSpecialised errTy1 errTy2
+      DefuncError IsSpecialised flags1 pOff uOff errTy1
+        | DefuncError IsSpecialised flags2 _ _ errTy2 <- err2 ->
+            DefuncError IsSpecialised (flags1 .&. flags2) pOff uOff (Op (Merged errTy1 errTy2))
         | DefuncError IsVanilla _ _ _ errTy2 <- err2
-        , isFlexibleCaret err1                    -> adjustCaret err1 errTy1 errTy2
+        , isFlexibleCaret err1                    ->
+            DefuncError IsSpecialised flags1 pOff uOff (Op (AdjustCaret errTy1 errTy2))
         | otherwise                               -> err1
-      DefuncError IsVanilla _ _ _ errTy1
-        | DefuncError IsVanilla _ _ _ errTy2 <- err2     ->
-            mergeSame err1 (flags err2) IsVanilla errTy1 errTy2
+      DefuncError IsVanilla flags1 pOff uOff errTy1
+        | DefuncError IsVanilla flags2 _ _ errTy2 <- err2     ->
+            DefuncError IsVanilla (flags1 .&. flags2) pOff uOff (Op (Merged errTy1 errTy2))
         | DefuncError IsSpecialised _ _ _ errTy2 <- err2
-        , isFlexibleCaret err2                    -> adjustCaret err1 errTy2 errTy1
+        , isFlexibleCaret err2                    ->
+            DefuncError IsSpecialised flags1 pOff uOff (Op (AdjustCaret errTy2 errTy1))
         | otherwise                               -> err2
 
 withHints :: DefuncHints -> DefuncError -> DefuncError
@@ -106,16 +108,6 @@ markAsLexical :: Word -> DefuncError -> DefuncError
 markAsLexical !off (DefuncError IsVanilla flags pOff uOff errTy) | off == pOff =
   DefuncError IsVanilla (setBit flags lexicalBit) pOff uOff errTy
 markAsLexical _ err = err
-
-{-# INLINABLE adjustCaret #-}
-adjustCaret :: DefuncError -> DefuncError_ 'Specialised -> DefuncError_ 'Vanilla -> DefuncError
-adjustCaret (DefuncError _ flags pOff uOff _) err1 err2 =
-  DefuncError IsSpecialised flags pOff uOff (Op (AdjustCaret err1 err2))
-
-{-# INLINABLE mergeSame #-}
-mergeSame :: DefuncError -> Word32 -> ErrKindSingleton k -> DefuncError_ k -> DefuncError_ k -> DefuncError
-mergeSame (DefuncError _ flags1 pOff uOff _) !flags2 k err1 err2 =
-  DefuncError k (flags1 .&. flags2) pOff uOff (Op (Merged err1 err2))
 
 -- FLAG MASKS
 {-# INLINE vanillaBit #-}
