@@ -4,15 +4,13 @@
 module Main (main) where
 
 import Gauge (defaultMain, bench, nf)
-import Text.Gigaparsec (Parsec, Result(Success, Failure), parse, atomic, (<|>))
+import Text.Gigaparsec (Parsec, Result, parse, atomic, (<|>))
 import Text.Gigaparsec.Char (string)
 import Control.DeepSeq (NFData)
-import GHC.Generics (Generic)
 
 p :: Parsec String
 p = atomic (string "hello wold") <|> atomic (string "hi") <|> string "hello world"
 
-deriving stock instance Generic (Result e a)
 deriving anyclass instance (NFData a, NFData e) => NFData (Result e a)
 
 main :: IO ()

@@ -1,8 +1,10 @@
 {-# LANGUAGE Trustworthy #-}
 {-# LANGUAGE RecordWildCards, BangPatterns, NamedFieldPuns, CPP #-}
-#include "portable-unlifted.h"
 {-# OPTIONS_GHC -Wno-partial-fields -Wno-all-missed-specialisations -Wno-missing-import-lists #-}
 {-# OPTIONS_HADDOCK hide #-}
+#include "portable-unlifted.h"
+-- Yes, this is redundant, however, it is necessary to get the UNPACK to fire on CaretWidth
+{-# OPTIONS_GHC -Wno-redundant-strictness-flags #-}
 module Text.Gigaparsec.Internal.Errors (module Text.Gigaparsec.Internal.Errors) where
 
 import Prelude hiding (lines)
@@ -47,7 +49,7 @@ data ParseError = VanillaError { presentationOffset :: {-# UNPACK #-} !Word
                                    , col :: {-# UNPACK #-} !Word
                                    , msgs :: ![String]
                                    --, caretWidth :: {-# UNPACK #-} !Span --FIXME: need defunc before this goes away
-                                   , caretWidth :: CaretWidth
+                                   , caretWidth :: {-# UNPACK #-} !CaretWidth
                                    -- TODO: remove:
                                    , underlyingOffset :: {-# UNPACK #-} !Word
                                    , entrenchment :: {-# UNPACK #-} !Word
@@ -57,7 +59,7 @@ type Input :: *
 type Input = NonEmpty Char
 type UnexpectItem :: *
 data UnexpectItem = UnexpectRaw !Input {-# UNPACK #-} !Word
-                  | UnexpectNamed !String CaretWidth
+                  | UnexpectNamed !String {-# UNPACK #-} !CaretWidth
                   | UnexpectEndOfInput
 type ExpectItem :: *
 data ExpectItem = ExpectRaw !String
