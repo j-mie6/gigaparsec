@@ -1,6 +1,5 @@
 {-# LANGUAGE Trustworthy #-}
 {-# LANGUAGE BangPatterns, CPP, DataKinds, GADTs #-}
-{-# OPTIONS_GHC -Wno-partial-fields -Wno-all-missed-specialisations -Wno-missing-import-lists #-}
 {-# OPTIONS_HADDOCK hide #-}
 -- Yes, this is redundant, however, it is necessary to get the UNPACK to fire
 {-# OPTIONS_GHC -Wno-redundant-strictness-flags #-}
@@ -36,12 +35,11 @@ data DefuncError = forall k. DefuncError {
 
 type DefuncError_ :: ErrKind -> UnliftedDatatype
 data DefuncError_ k where
-  Base :: { line :: {-# UNPACK #-} !Word
-          , col :: {-# UNPACK #-} !Word
-          , base :: {-# UNPACK #-} !(BaseError k)
-          }
+  Base :: {-# UNPACK #-} !Word -- ^ line
+       -> {-# UNPACK #-} !Word -- ^ col
+       -> {-# UNPACK #-} !(BaseError k)
        -> DefuncError_ k
-  Op :: { op :: {-# UNPACK #-} !(ErrorOp k) } -> DefuncError_ k
+  Op :: {-# UNPACK #-} !(ErrorOp k) -> DefuncError_ k
 
 
 type BaseError :: ErrKind -> UnliftedDatatype
