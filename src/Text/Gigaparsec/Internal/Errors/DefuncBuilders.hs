@@ -3,7 +3,7 @@
 {-# OPTIONS_HADDOCK hide #-}
 {-# OPTIONS_GHC -Wno-unused-imports #-}
 -- Yes, this is redundant, however, it is necessary to get the UNPACK to fire
-{-# OPTIONS_GHC -Wno-redundant-strictness-flags #-}
+{-# OPTIONS_GHC -Wno-redundant-strictness-flags -Wno-missing-kind-signatures #-}
 #include "portable-unlifted.h"
 module Text.Gigaparsec.Internal.Errors.DefuncBuilders (
     asParseError
@@ -79,7 +79,6 @@ asParseError !input e@DefuncError{..} = case errKind of
             (# _, _, exs', unex', reasons' #) ->
               (# line', col', exs', unex', reasons' #)
 
--- FIXME: unlifted
 type BuilderUnexpectItem :: UnliftedDatatype
 data BuilderUnexpectItem = NoItem {-# UNPACK #-} !Word
                          | RawItem {-# UNPACK #-} !Word
@@ -98,7 +97,7 @@ updateUnexpected' :: String -> CaretWidth -> BuilderUnexpectItem -> BuilderUnexp
 updateUnexpected' item cw = pickHigher (NamedItem item cw)
 
 pickHigher :: BuilderUnexpectItem -> BuilderUnexpectItem -> BuilderUnexpectItem
-pickHigher _ _ = undefined
+pickHigher _ _ = undefined -- TODO:
 
 addLabels :: Bool -> Set ExpectItem -> Set ExpectItem -> Set ExpectItem
 addLabels True !exs !exs' = Set.union exs exs'
@@ -113,7 +112,6 @@ toErrorItem input off (RawItem w) =
     Nothing -> Right UnexpectEndOfInput
     Just cs -> Right (UnexpectRaw cs w)
 
-type UMaybe :: * -> TYPE ('SumRep '[ZeroBitRep, LiftedRep])
 type UMaybe a = (# (# #) | a #)
 {-# COMPLETE UJust, UNothing #-}
 pattern UJust :: a -> UMaybe a
