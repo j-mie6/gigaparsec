@@ -11,15 +11,16 @@ module Text.Gigaparsec.Internal.Errors.DefuncBuilders (
 
 import Text.Gigaparsec.Internal.Errors.DefuncTypes (
     DefuncHints(Blank, Merge, AddErr, Replace),
-    ErrorOp(Amended, WithLabel, WithHints, Merged, WithReason),
-    BaseError(Unexpected, Empty, Expected),
+    ErrorOp(Amended, WithLabel, WithHints, Merged, WithReason, AdjustCaret),
+    BaseError(Unexpected, Empty, Expected, ClassicSpecialised),
     DefuncError_(Op, Base),
     DefuncError(DefuncError, presentationOffset, errKind, errTy),
     ErrKindSingleton(IsSpecialised, IsVanilla),
-    ErrKind(Vanilla),
+    ErrKind(Vanilla, Specialised),
     expecteds, unexpectedWidth
   )
-import Text.Gigaparsec.Internal.Errors (ParseError(VanillaError, SpecialisedError), CaretWidth)
+import Text.Gigaparsec.Internal.Errors (ParseError(VanillaError, SpecialisedError))
+import Text.Gigaparsec.Internal.Errors.CaretControl (CaretWidth(FlexibleCaret, width), isFlexible)
 import Text.Gigaparsec.Internal.Errors.DefuncError (isLexical)
 import Text.Gigaparsec.Internal.Errors.ErrorItem (
     ExpectItem(ExpectNamed),
@@ -27,7 +28,7 @@ import Text.Gigaparsec.Internal.Errors.ErrorItem (
   )
 
 import Data.Set (Set)
-import Data.Set qualified as Set
+import Data.Set qualified as Set (empty, insert, union, member, map)
 import Data.List.NonEmpty (nonEmpty)
 
 CPP_import_PortableUnlifted
@@ -37,7 +38,9 @@ asParseError !input e@DefuncError{..} = case errKind of
   IsVanilla -> case makeVanilla 0 0 Set.empty (NoItem 0) Set.empty True errTy of
     (# line, col, exs, unex, reasons #) ->
       VanillaError presentationOffset line col (toErrorItem input presentationOffset unex) exs reasons (isLexical e) 0 0
-  IsSpecialised -> undefined
+  IsSpecialised -> case makeSpec 0 0 0 True id errTy of
+    (# line, col, width, _, dmsgs #) ->
+      SpecialisedError presentationOffset line col (distinct (dmsgs [])) (FlexibleCaret width) 0 0
   where
     !outOfRange = presentationOffset < fromIntegral (length input)
 
@@ -78,6 +81,25 @@ asParseError !input e@DefuncError{..} = case errKind of
             (# _, _, exs', unex', reasons' #) ->
               (# line', col', exs', unex', reasons' #)
 
+    makeSpec :: Word -> Word -> Word -> Bool -> ([String] -> [String])
+             -> DefuncError_ 'Specialised
+             -> (# Word, Word, Word, Bool, [String] -> [String] #)
+    makeSpec !_ !_ !w !flexible !dmsgs (Base line col (ClassicSpecialised msgs cw)) =
+      let (# w', flexible' #) = updateCaretWidth flexible cw w
+      in (# line, col, w', flexible', dmsgs . (msgs ++) #)
+    makeSpec line col w flexible dmsgs (Op op) = case op of
+      Merged err1 err2->
+        case makeSpec line col w flexible dmsgs err1 of
+          (# line', col', w', flexible', dmsgs' #) ->
+            makeSpec line' col' w' flexible' dmsgs' err2
+      AdjustCaret err1 err2 ->
+        case makeSpec line col w flexible dmsgs err1 of
+          (# line', col', w', flexible', dmsgs' #) ->
+              -- assuming flexible == True
+              (# line', col', adjustCaret w' err2, flexible', dmsgs' #)
+      Amended line' col' err -> case makeSpec line col w flexible dmsgs err of
+        (# _, _, w', flexible', dmsgs' #) -> (# line', col', w', flexible', dmsgs' #)
+
 type BuilderUnexpectItem :: UnliftedDatatype
 data BuilderUnexpectItem = NoItem {-# UNPACK #-} !Word
                          | RawItem {-# UNPACK #-} !Word
@@ -96,7 +118,29 @@ updateUnexpected' :: String -> CaretWidth -> BuilderUnexpectItem -> BuilderUnexp
 updateUnexpected' item cw = pickHigher (NamedItem item cw)
 
 pickHigher :: BuilderUnexpectItem -> BuilderUnexpectItem -> BuilderUnexpectItem
-pickHigher _ _ = undefined -- TODO:
+pickHigher EndOfInput _ = EndOfInput
+pickHigher _ EndOfInput = EndOfInput
+pickHigher x@(RawItem w1) y@(RawItem w2)
+  | w1 > w2   = x
+  | otherwise = y
+pickHigher x@(NoItem w1) y@(NoItem w2)
+  | w1 > w2   = x
+  | otherwise = y
+pickHigher x@(NamedItem _ cw1) y@(NamedItem _ cw2)
+  | isFlexible cw1 /= isFlexible cw2 = if isFlexible cw1 then x else y
+  | width cw1 > width cw2            = x
+  | otherwise                        = y
+pickHigher x@(RawItem w1) (NoItem w2)
+  | w1 > w2   = x
+  | otherwise = RawItem w2
+pickHigher x@(NamedItem name (FlexibleCaret w1)) (RawItem w2)
+  | w1 > w2   = x
+  | otherwise = NamedItem name (FlexibleCaret w2)
+pickHigher x@(NamedItem name (FlexibleCaret w1)) (NoItem w2)
+  | w1 > w2   = x
+  | otherwise = NamedItem name (FlexibleCaret w2)
+pickHigher x@NamedItem{} _ = x
+pickHigher x y = pickHigher y x
 
 addLabels :: Bool -> Set ExpectItem -> Set ExpectItem -> Set ExpectItem
 addLabels True !exs !exs' = Set.union exs exs'
@@ -146,3 +190,27 @@ collectHintsErr exs width (Op op) = case op of
 updateWidth :: UMaybe Word -> Word -> UMaybe Word
 updateWidth UNothing !w = UJust w
 updateWidth (UJust w) w' = UJust (max w w')
+
+distinct :: forall a. Ord a => [a] -> [a]
+distinct = go Set.empty
+  where
+    go :: Set a -> [a] -> [a]
+    go _ [] = []
+    go seen (x:xs)
+      | Set.member x seen = go seen xs
+      | otherwise         = x : go (Set.insert x seen) xs
+
+updateCaretWidth :: Bool -> CaretWidth -> Word -> (# Word, Bool #)
+updateCaretWidth flexible cw !w
+  | isFlexible cw == flexible = (# max (width cw) w, flexible #)
+  | isFlexible cw             = (# w, flexible #)
+  | otherwise                 = (# width cw, False #)
+
+adjustCaret :: Word -> DefuncError_ 'Vanilla -> Word
+adjustCaret w (Base _ _ err) = max (unexpectedWidth err) w
+adjustCaret w (Op op) = case op of
+  WithLabel err _  -> adjustCaret w err
+  WithHints err _  -> adjustCaret w err
+  WithReason err _ -> adjustCaret w err
+  Amended _ _ err  -> adjustCaret w err
+  Merged err1 err2 -> adjustCaret (adjustCaret w err1) err2
