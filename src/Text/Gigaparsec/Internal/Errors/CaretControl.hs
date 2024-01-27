@@ -1,5 +1,6 @@
 {-# LANGUAGE Trustworthy #-}
 {-# LANGUAGE CPP #-}
+{-# OPTIONS_HADDOCK hide #-}
 #include "portable-unlifted.h"
 module Text.Gigaparsec.Internal.Errors.CaretControl (
     module Text.Gigaparsec.Internal.Errors.CaretControl

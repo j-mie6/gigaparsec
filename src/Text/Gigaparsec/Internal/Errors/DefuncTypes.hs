@@ -8,11 +8,12 @@ module Text.Gigaparsec.Internal.Errors.DefuncTypes (
     module Text.Gigaparsec.Internal.Errors.DefuncTypes
   ) where
 
-import Text.Gigaparsec.Internal.Errors.CaretControl (CaretWidth, Span)
+import Text.Gigaparsec.Internal.Errors.CaretControl (CaretWidth (width), Span)
 import Text.Gigaparsec.Internal.Errors.ErrorItem (ExpectItem)
 
 import Data.Word (Word32)
 import Data.Set (Set)
+import Data.Set qualified as Set (empty)
 
 CPP_import_PortableUnlifted
 
@@ -48,6 +49,19 @@ data BaseError k where
   Expected :: !(Set ExpectItem) -> {-# UNPACK #-} !Span -> BaseError 'Vanilla
   Unexpected :: !(Set ExpectItem) -> !String -> {-# UNPACK #-} !CaretWidth -> BaseError 'Vanilla
   Empty :: {-# UNPACK #-} !Span -> BaseError 'Vanilla
+
+{-# INLINABLE expecteds #-}
+expecteds :: BaseError 'Vanilla -> Set ExpectItem
+expecteds (Expected exs _) = exs
+expecteds (Unexpected exs _ _) = exs
+expecteds Empty{} = Set.empty
+
+{-# INLINEABLE unexpectedWidth #-}
+unexpectedWidth :: BaseError 'Vanilla -> Word
+unexpectedWidth (Expected _ w) = w
+unexpectedWidth (Unexpected _ _ cw) = width cw
+unexpectedWidth (Empty w) = w
+
 
 type ErrorOp :: ErrKind -> UnliftedDatatype
 data ErrorOp k where
