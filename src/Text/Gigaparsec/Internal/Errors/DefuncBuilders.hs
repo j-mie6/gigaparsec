@@ -1,5 +1,5 @@
 {-# LANGUAGE Trustworthy #-}
-{-# LANGUAGE GADTs, DataKinds, UnboxedTuples, UnboxedSums, PatternSynonyms, CPP #-}
+{-# LANGUAGE GADTs, DataKinds, UnboxedTuples, PatternSynonyms, CPP #-}
 {-# OPTIONS_HADDOCK hide #-}
 {-# OPTIONS_GHC -Wno-unused-imports #-}
 -- Yes, this is redundant, however, it is necessary to get the UNPACK to fire
@@ -19,7 +19,7 @@ import Text.Gigaparsec.Internal.Errors.DefuncTypes (
     ErrKind(Vanilla, Specialised),
     expecteds, unexpectedWidth
   )
-import Text.Gigaparsec.Internal.Errors (ParseError(VanillaError, SpecialisedError))
+import Text.Gigaparsec.Internal.Errors.ParseError (ParseError(VanillaError, SpecialisedError))
 import Text.Gigaparsec.Internal.Errors.CaretControl (CaretWidth(FlexibleCaret, width), isFlexible)
 import Text.Gigaparsec.Internal.Errors.DefuncError (isLexical)
 import Text.Gigaparsec.Internal.Errors.ErrorItem (
@@ -37,10 +37,10 @@ asParseError :: String -> DefuncError -> ParseError
 asParseError !input e@DefuncError{..} = case errKind of
   IsVanilla -> case makeVanilla 0 0 Set.empty (NoItem 0) Set.empty True errTy of
     (# line, col, exs, unex, reasons #) ->
-      VanillaError presentationOffset line col (toErrorItem input presentationOffset unex) exs reasons (isLexical e) 0 0
+      VanillaError presentationOffset line col (toErrorItem input presentationOffset unex) exs reasons (isLexical e)
   IsSpecialised -> case makeSpec 0 0 0 True id errTy of
     (# line, col, width, _, dmsgs #) ->
-      SpecialisedError presentationOffset line col (distinct (dmsgs [])) (FlexibleCaret width) 0 0
+      SpecialisedError presentationOffset line col (distinct (dmsgs [])) width
   where
     !outOfRange = presentationOffset < fromIntegral (length input)
 

@@ -107,6 +107,7 @@ library
                       Text.Gigaparsec.Internal.Errors.DefuncError,
                       Text.Gigaparsec.Internal.Errors.DefuncTypes,
                       Text.Gigaparsec.Internal.Errors.ErrorItem,
+                      Text.Gigaparsec.Internal.Errors.ParseError,
                       Text.Gigaparsec.Internal.RT,
                       Text.Gigaparsec.Internal.Require,
                       Text.Gigaparsec.Internal.Token.Generic,
