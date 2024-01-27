@@ -31,7 +31,6 @@ import Data.Set qualified as Set
 import Data.List.NonEmpty (nonEmpty)
 
 CPP_import_PortableUnlifted
-import GHC.Exts (TYPE, RuntimeRep(SumRep), LiftedRep, ZeroBitRep)
 
 asParseError :: String -> DefuncError -> ParseError
 asParseError !input e@DefuncError{..} = case errKind of
