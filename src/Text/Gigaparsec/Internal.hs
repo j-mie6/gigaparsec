@@ -187,7 +187,7 @@ data State = State {
     -- | the valid for which hints can be used
     hintsValidOffset :: {-# UNPACK #-} !Word,
     -- | the hints at this point in time
-    hints :: !Hints,
+    hints :: Hints,
     -- | Debug nesting
     debugLevel :: {-# UNPACK #-} !Int
   }

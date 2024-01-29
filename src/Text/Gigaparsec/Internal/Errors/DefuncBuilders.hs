@@ -42,7 +42,7 @@ asParseError !input e@DefuncError{..} = case errKind of
     (# line, col, width, _, dmsgs #) ->
       SpecialisedError presentationOffset line col (distinct (dmsgs [])) width
   where
-    !outOfRange = presentationOffset < fromIntegral (length input)
+    !outOfRange = presentationOffset >= fromIntegral (length input)
 
     makeVanilla :: Word -> Word -> Set ExpectItem -> BuilderUnexpectItem -> Set String -> Bool
                 -> DefuncError_ 'Vanilla

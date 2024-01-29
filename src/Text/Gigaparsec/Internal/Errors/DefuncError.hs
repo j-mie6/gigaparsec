@@ -3,7 +3,7 @@
 {-# OPTIONS_HADDOCK hide #-}
 {-# OPTIONS_GHC -Wno-missing-import-lists #-}
 module Text.Gigaparsec.Internal.Errors.DefuncError (
-    DefuncError,
+    DefuncError(presentationOffset),
     specialisedError, expectedError, unexpectedError, emptyError,
     merge, withHints, withReason, withReasonAndOffset, label,
     amend, entrench, dislodge, markAsLexical,
@@ -116,8 +116,8 @@ withReasonAndOffset _ _ err = err
 withReason :: String -> DefuncError -> DefuncError
 withReason !reason err = withReasonAndOffset reason (presentationOffset err) err
 
-label :: Set String -> Word -> DefuncError -> DefuncError
-label !labels !off (DefuncError IsVanilla flags pOff uOff errTy) | pOff == off =
+label :: Word -> Set String -> DefuncError -> DefuncError
+label !off !labels (DefuncError IsVanilla flags pOff uOff errTy) | pOff == off =
   DefuncError IsVanilla flags' pOff uOff (Op (WithLabel errTy labels))
   where !flags'
           | Set.null labels = setBit flags expectedEmptyBit

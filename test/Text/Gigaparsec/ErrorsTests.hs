@@ -101,7 +101,7 @@ emptyTests = testGroup "empty should"
   , testCase "produce an expected error under the influence of label in <|> chain" do
       testParse (char 'a' <|> label ["something, at least"] empty) "b" @?=
         Failure (TestError (1, 1) (VanillaError (Just (Raw "b")) [Raw "a", Named "something, at least"] [] 1))
-  , expectFailBecause "no widening for carets in vanilla" $ testCase "have an effect if its caret is wider" do
+  , testCase "have an effect if its caret is wider" do
       testParse (char 'a' <|> emptyWide 3) "bcd" @?=
         Failure (TestError (1, 1) (VanillaError (Just (Raw "bcd")) [Raw "a"] [] 3))
   ]
@@ -127,7 +127,7 @@ failTests = testGroup "fail should"
   [ testCase "yield a raw message" do
       testParse @Int (fail ["hi"]) "b" @?=
         Failure (TestError (1, 1) (SpecialisedError ["hi"] 1))
-  , expectFailBecause "no cross-error width merging" $ testCase "be flexible when the width is unspecified" do
+  , testCase "be flexible when the width is unspecified" do
       testParse (string "abc" <|> fail ["hi"]) "xyz" @?=
         Failure (TestError (1, 1) (SpecialisedError ["hi"] 3))
   , testCase "dominate otherwise" do
@@ -143,7 +143,7 @@ unexpectedTests = testGroup "unexpected should"
   , testCase "produce expected message under influence of label, along with original message" do
       testParse (char 'a' <|> label ["something less cute"] (unexpected "bee")) "b" @?=
         Failure (TestError (1, 1) (VanillaError (Just (Named "bee")) [Raw "a", Named "something less cute"] [] 1))
-  , expectFailBecause "no widening for carets in vanilla" $ testCase "be flexible when the width is unspecified" do
+  , testCase "be flexible when the width is unspecified" do
       testParse (string "abc" <|> unexpected "bee") "xyz" @?=
         Failure (TestError (1, 1) (VanillaError (Just (Named "bee")) [Raw "abc"] [] 3))
   , testCase "dominate otherwise" do
@@ -389,8 +389,7 @@ regressionTests = testGroup "thou shalt not regress"
             err -> assertFailure $ "error message " ++ show err ++ " did not match"
       ]
   , testGroup "amend should"
-      -- FIXME: unclear why this would be the case
-      [ expectFail $ testCase "ensure that errors pick up a new unexpected token" do
+      [ testCase "ensure that errors pick up a new unexpected token" do
           let greeting = string "hello world" <* char '!'
           testParse (amend greeting <?> ["greeting"]) "hello world." @?=
             Failure (TestError (1, 1) (VanillaError (Just (Raw "h")) [Named "greeting"] [] 1))

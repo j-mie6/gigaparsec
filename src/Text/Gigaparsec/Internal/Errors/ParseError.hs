@@ -35,9 +35,9 @@ data ParseError = VanillaError { presentationOffset :: {-# UNPACK #-} !Word
                                    , caretWidth :: {-# UNPACK #-} !Span
                                    }
 
-{-# INLINABLE fromError #-}
-fromError :: forall err. ErrorBuilder err => Maybe FilePath -> String -> ParseError -> err
-fromError srcFile input err =
+{-# INLINABLE fromParseError #-}
+fromParseError :: forall err. ErrorBuilder err => Maybe FilePath -> String -> ParseError -> err
+fromParseError srcFile input err =
   Builder.format (Builder.pos @err (line err) (col err)) (Builder.source @err srcFile)
                  (formatErr err)
   where formatErr :: ParseError -> Builder.ErrorInfoLines err
