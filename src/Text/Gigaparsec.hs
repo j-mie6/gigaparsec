@@ -86,7 +86,7 @@ module Text.Gigaparsec (
 import Text.Gigaparsec.Internal (Parsec(Parsec), emptyState, manyr, somer)
 import Text.Gigaparsec.Internal qualified as Internal (State(..), useHints, expectedErr)
 import Text.Gigaparsec.Internal.RT qualified as Internal (RT, runRT, rtToIO)
-import Text.Gigaparsec.Internal.Errors qualified as Internal (ParseError, ExpectItem(ExpectEndOfInput), fromParseError)
+import Text.Gigaparsec.Internal.Errors qualified as Internal (Error, ExpectItem(ExpectEndOfInput), fromError)
 
 import Text.Gigaparsec.Errors.ErrorBuilder (ErrorBuilder)
 import Text.Gigaparsec.Errors.Combinator (filterSWith, mapMaybeSWith)
@@ -191,8 +191,8 @@ _parse :: forall err a. ErrorBuilder err => Maybe FilePath -> Parsec a -> String
 _parse file (Parsec p) inp = p (emptyState inp) good bad
   where good :: a -> Internal.State -> Internal.RT (Result err a)
         good x _  = return (Success x)
-        bad :: Internal.ParseError -> Internal.State -> Internal.RT (Result err a)
-        bad err _ = return (Failure (Internal.fromParseError file inp err))
+        bad :: Internal.Error -> Internal.State -> Internal.RT (Result err a)
+        bad err _ = return (Failure (Internal.fromError file inp err))
 
 {-|
 This combinator parses its argument @p@, but rolls back any consumed input on failure.

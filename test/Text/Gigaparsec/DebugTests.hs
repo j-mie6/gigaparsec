@@ -57,7 +57,7 @@ ioParse :: Parsec a -> String -> IO ()
 ioParse (Internal.Parsec p) inp = Internal.rtToIO $ p (Internal.emptyState inp) good bad
   where good :: a -> Internal.State -> Internal.RT ()
         good _ _  = return ()
-        bad :: Internal.ParseError -> Internal.State -> Internal.RT ()
+        bad :: Internal.Error -> Internal.State -> Internal.RT ()
         bad _ _ = return ()
 
 mockDebug :: String -> (DebugConfig -> Parsec a) -> IO String

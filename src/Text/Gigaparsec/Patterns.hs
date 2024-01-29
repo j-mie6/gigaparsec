@@ -102,7 +102,7 @@ splitFun' (AppT (AppT (AppT MulArrowT _) a) b) = a : splitFun' b -- linear funct
 splitFun' ty                                   = [ty]
 
 -- When KindSignatures is off, the default (a :: *) that TH generates is broken!
-#if __GLASGOW_HASKELL__ >= 902
+#if __GLASGOW_HASKELL__ >= 900
 sanitiseStarT :: TyVarBndr flag -> TyVarBndr flag
 sanitiseStarT (KindedTV ty flag StarT) = PlainTV ty flag
 sanitiseStarT ty = ty

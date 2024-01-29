@@ -130,6 +130,6 @@ instance Show LiftedState where
                                                       . shows col
                                                       . showString ", hintsValidOffset = "
                                                       . shows hintsValidOffset
-                                                      . showString ", hints = "
-                                                      . shows hints
+                                                      -- . showString ", hints = "
+                                                      -- . shows hints
                                                       . showChar '}'

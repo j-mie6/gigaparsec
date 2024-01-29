@@ -20,7 +20,7 @@ name:               gigaparsec
 -- PVP summary:     +-+------- breaking API changes
 --                  | | +----- non-breaking API additions
 --                  | | | +--- code changes with no API change
-version:            0.2.2.1
+version:            0.2.2.2
 
 -- A short (one-line) description of the package.
 synopsis:
@@ -102,6 +102,13 @@ library
                       -- Internals
                       Text.Gigaparsec.Internal,
                       Text.Gigaparsec.Internal.Errors,
+                      Text.Gigaparsec.Internal.Errors.CaretControl,
+                      Text.Gigaparsec.Internal.Errors.DefuncBuilders,
+                      Text.Gigaparsec.Internal.Errors.DefuncError,
+                      Text.Gigaparsec.Internal.Errors.DefuncHints,
+                      Text.Gigaparsec.Internal.Errors.DefuncTypes,
+                      Text.Gigaparsec.Internal.Errors.ErrorItem,
+                      Text.Gigaparsec.Internal.Errors.ParseError,
                       Text.Gigaparsec.Internal.RT,
                       Text.Gigaparsec.Internal.Require,
                       Text.Gigaparsec.Internal.Token.Generic,
@@ -173,7 +180,7 @@ test-suite gigaparsec-test
         gigaparsec,
         containers >= 0.6 && < 0.7,
         deepseq >= 1.4 && < 1.6,
-        bytestring >= 0.10 && < 0.12,
+        bytestring >= 0.9 && < 0.13,
         --deriving-compat >= 0.6 && < 0.7,
         tasty >=1.1 && <1.6,
         tasty-expected-failure >=0.11 && <0.13,
