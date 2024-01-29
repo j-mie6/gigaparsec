@@ -1,0 +1,84 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><link rel="stylesheet" type="text/css" href="style.css" /><script type="text/javascript" src="highlight.js"></script></head><body><pre><span class="hs-pragma">{-# LANGUAGE Safe #-}</span><span>
+</span><span id="line-2"></span><span class="hs-pragma">{-# OPTIONS_HADDOCK hide #-}</span><span>
+</span><span id="line-3"></span><span class="hs-comment">-- Yes, this is redundant, however, it is necessary to get the UNPACK to fire on CaretWidth</span><span>
+</span><span id="line-4"></span><span class="hs-pragma">{-# OPTIONS_GHC -Wno-redundant-strictness-flags #-}</span><span>
+</span><span id="line-5"></span><span class="hs-keyword">module</span><span> </span><span class="hs-identifier">Text.Gigaparsec.Internal.Errors.ErrorItem</span><span> </span><span class="hs-special">(</span><span>
+</span><span id="line-6"></span><span>    </span><span class="hs-keyword">module</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.Errors.ErrorItem.html"><span class="hs-identifier">Text.Gigaparsec.Internal.Errors.ErrorItem</span></a></span><span>
+</span><span id="line-7"></span><span>  </span><span class="hs-special">)</span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-8"></span><span>
+</span><span id="line-9"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.List.NonEmpty</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">NonEmpty</span></span><span class="hs-special">)</span><span>
+</span><span id="line-10"></span><span>
+</span><span id="line-11"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.Errors.CaretControl.html"><span class="hs-identifier">Text.Gigaparsec.Internal.Errors.CaretControl</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Text.Gigaparsec.Internal.Errors.CaretControl.html#CaretWidth"><span class="hs-identifier">CaretWidth</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-12"></span><span>
+</span><span id="line-13"></span><span class="hs-keyword">type</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.Errors.ErrorItem.html#Input"><span class="hs-identifier hs-type">Input</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-operator">*</span></span><span>
+</span><span id="line-14"></span><span class="hs-keyword">type</span><span> </span><span id="Input"><span class="annot"><a href="Text.Gigaparsec.Internal.Errors.ErrorItem.html#Input"><span class="hs-identifier hs-var">Input</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-identifier hs-type">NonEmpty</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Char</span></span><span>
+</span><span id="line-15"></span><span class="hs-keyword">type</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.Errors.ErrorItem.html#UnexpectItem"><span class="hs-identifier hs-type">UnexpectItem</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-operator">*</span></span><span>
+</span><span id="line-16"></span><span class="hs-keyword">data</span><span> </span><span id="UnexpectItem"><span class="annot"><a href="Text.Gigaparsec.Internal.Errors.ErrorItem.html#UnexpectItem"><span class="hs-identifier hs-var">UnexpectItem</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="UnexpectRaw"><span class="annot"><a href="Text.Gigaparsec.Internal.Errors.ErrorItem.html#UnexpectRaw"><span class="hs-identifier hs-var">UnexpectRaw</span></a></span></span><span> </span><span class="hs-glyph">!</span><span class="annot"><a href="Text.Gigaparsec.Internal.Errors.ErrorItem.html#Input"><span class="hs-identifier hs-type">Input</span></a></span><span> </span><span class="hs-pragma">{-# UNPACK</span><span> </span><span class="hs-pragma">#-}</span><span> </span><span class="hs-glyph">!</span><span class="annot"><span class="hs-identifier hs-type">Word</span></span><span>
+</span><span id="line-17"></span><span>                  </span><span class="hs-glyph">|</span><span> </span><span id="UnexpectNamed"><span class="annot"><a href="Text.Gigaparsec.Internal.Errors.ErrorItem.html#UnexpectNamed"><span class="hs-identifier hs-var">UnexpectNamed</span></a></span></span><span> </span><span class="hs-glyph">!</span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span> </span><span class="hs-pragma">{-# UNPACK</span><span> </span><span class="hs-pragma">#-}</span><span> </span><span class="hs-glyph">!</span><span class="annot"><a href="Text.Gigaparsec.Internal.Errors.CaretControl.html#CaretWidth"><span class="hs-identifier hs-type">CaretWidth</span></a></span><span>
+</span><span id="line-18"></span><span>                  </span><span class="hs-glyph">|</span><span> </span><span id="UnexpectEndOfInput"><span class="annot"><a href="Text.Gigaparsec.Internal.Errors.ErrorItem.html#UnexpectEndOfInput"><span class="hs-identifier hs-var">UnexpectEndOfInput</span></a></span></span><span>
+</span><span id="line-19"></span><span class="hs-keyword">type</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.Errors.ErrorItem.html#ExpectItem"><span class="hs-identifier hs-type">ExpectItem</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-operator">*</span></span><span>
+</span><span id="line-20"></span><span class="hs-keyword">data</span><span> </span><span id="ExpectItem"><span class="annot"><a href="Text.Gigaparsec.Internal.Errors.ErrorItem.html#ExpectItem"><span class="hs-identifier hs-var">ExpectItem</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="ExpectRaw"><span class="annot"><a href="Text.Gigaparsec.Internal.Errors.ErrorItem.html#ExpectRaw"><span class="hs-identifier hs-var">ExpectRaw</span></a></span></span><span> </span><span class="hs-glyph">!</span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span>
+</span><span id="line-21"></span><span>                </span><span class="hs-glyph">|</span><span> </span><span id="ExpectNamed"><span class="annot"><a href="Text.Gigaparsec.Internal.Errors.ErrorItem.html#ExpectNamed"><span class="hs-identifier hs-var">ExpectNamed</span></a></span></span><span> </span><span class="hs-glyph">!</span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span>
+</span><span id="line-22"></span><span>                </span><span class="hs-glyph">|</span><span> </span><span id="ExpectEndOfInput"><span class="annot"><a href="Text.Gigaparsec.Internal.Errors.ErrorItem.html#ExpectEndOfInput"><span class="hs-identifier hs-var">ExpectEndOfInput</span></a></span></span><span>
+</span><span id="line-23"></span><span>                </span><span class="hs-keyword">deriving</span><span> </span><span class="annot"><span class="hs-keyword">stock</span></span><span> </span><span class="hs-special">(</span><span id="local-6989586621679187118"><span id="local-6989586621679187124"><span class="annot"><span class="annottext">ExpectItem -&gt; ExpectItem -&gt; Bool
+(ExpectItem -&gt; ExpectItem -&gt; Bool)
+-&gt; (ExpectItem -&gt; ExpectItem -&gt; Bool) -&gt; Eq ExpectItem
+forall a. (a -&gt; a -&gt; Bool) -&gt; (a -&gt; a -&gt; Bool) -&gt; Eq a
+$c== :: ExpectItem -&gt; ExpectItem -&gt; Bool
+== :: ExpectItem -&gt; ExpectItem -&gt; Bool
+$c/= :: ExpectItem -&gt; ExpectItem -&gt; Bool
+/= :: ExpectItem -&gt; ExpectItem -&gt; Bool
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Eq</span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679187132"><span id="local-6989586621679187138"><span id="local-6989586621679187143"><span id="local-6989586621679187147"><span id="local-6989586621679187150"><span id="local-6989586621679187153"><span id="local-6989586621679187156"><span class="annot"><span class="annottext">Eq ExpectItem
+Eq ExpectItem =&gt;
+(ExpectItem -&gt; ExpectItem -&gt; Ordering)
+-&gt; (ExpectItem -&gt; ExpectItem -&gt; Bool)
+-&gt; (ExpectItem -&gt; ExpectItem -&gt; Bool)
+-&gt; (ExpectItem -&gt; ExpectItem -&gt; Bool)
+-&gt; (ExpectItem -&gt; ExpectItem -&gt; Bool)
+-&gt; (ExpectItem -&gt; ExpectItem -&gt; ExpectItem)
+-&gt; (ExpectItem -&gt; ExpectItem -&gt; ExpectItem)
+-&gt; Ord ExpectItem
+ExpectItem -&gt; ExpectItem -&gt; Bool
+ExpectItem -&gt; ExpectItem -&gt; Ordering
+ExpectItem -&gt; ExpectItem -&gt; ExpectItem
+forall a.
+Eq a =&gt;
+(a -&gt; a -&gt; Ordering)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; Ord a
+$ccompare :: ExpectItem -&gt; ExpectItem -&gt; Ordering
+compare :: ExpectItem -&gt; ExpectItem -&gt; Ordering
+$c&lt; :: ExpectItem -&gt; ExpectItem -&gt; Bool
+&lt; :: ExpectItem -&gt; ExpectItem -&gt; Bool
+$c&lt;= :: ExpectItem -&gt; ExpectItem -&gt; Bool
+&lt;= :: ExpectItem -&gt; ExpectItem -&gt; Bool
+$c&gt; :: ExpectItem -&gt; ExpectItem -&gt; Bool
+&gt; :: ExpectItem -&gt; ExpectItem -&gt; Bool
+$c&gt;= :: ExpectItem -&gt; ExpectItem -&gt; Bool
+&gt;= :: ExpectItem -&gt; ExpectItem -&gt; Bool
+$cmax :: ExpectItem -&gt; ExpectItem -&gt; ExpectItem
+max :: ExpectItem -&gt; ExpectItem -&gt; ExpectItem
+$cmin :: ExpectItem -&gt; ExpectItem -&gt; ExpectItem
+min :: ExpectItem -&gt; ExpectItem -&gt; ExpectItem
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Ord</span></span></span></span></span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679187161"><span id="local-6989586621679187170"><span id="local-6989586621679187174"><span class="annot"><span class="annottext">Int -&gt; ExpectItem -&gt; ShowS
+[ExpectItem] -&gt; ShowS
+ExpectItem -&gt; String
+(Int -&gt; ExpectItem -&gt; ShowS)
+-&gt; (ExpectItem -&gt; String)
+-&gt; ([ExpectItem] -&gt; ShowS)
+-&gt; Show ExpectItem
+forall a.
+(Int -&gt; a -&gt; ShowS) -&gt; (a -&gt; String) -&gt; ([a] -&gt; ShowS) -&gt; Show a
+$cshowsPrec :: Int -&gt; ExpectItem -&gt; ShowS
+showsPrec :: Int -&gt; ExpectItem -&gt; ShowS
+$cshow :: ExpectItem -&gt; String
+show :: ExpectItem -&gt; String
+$cshowList :: [ExpectItem] -&gt; ShowS
+showList :: [ExpectItem] -&gt; ShowS
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Show</span></span></span></span></span><span class="hs-special">)</span><span>
+</span><span id="line-24"></span></pre></body></html>

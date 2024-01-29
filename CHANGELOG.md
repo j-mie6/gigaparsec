@@ -1,7 +1,11 @@
 # Revision history for gigaparsec
 
-## 0.2.2.1 -- 2014-01-29
-* Fixed bug where case sensitive keywords where parsed insensitively and vice-versa
+## 0.2.2.2 -- 2024-01-29
+* Optimised the error system using `DefuncError` and `DefuncHints`.
+* Fixed bugs with amending and token merging.
+
+## 0.2.2.1 -- 2024-01-29
+* Fixed bug where case sensitive keywords where parsed insensitively and vice-versa.
 
 ## 0.2.2.0 -- 2024-01-21
 
