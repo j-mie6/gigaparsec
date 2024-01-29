@@ -142,7 +142,7 @@ dislodge by err@(DefuncError k flags pOff uOff errTy)
   where !eBy = entrenchedBy err
 
 markAsLexical :: Word -> DefuncError -> DefuncError
-markAsLexical !off (DefuncError IsVanilla flags pOff uOff errTy) | off == pOff =
+markAsLexical !off (DefuncError IsVanilla flags pOff uOff errTy) | off < pOff =
   DefuncError IsVanilla (setBit flags lexicalBit) pOff uOff errTy
 markAsLexical _ err = err
 
