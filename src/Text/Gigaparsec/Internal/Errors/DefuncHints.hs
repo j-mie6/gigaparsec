@@ -3,8 +3,8 @@
 {-# OPTIONS_HADDOCK hide #-}
 {-# OPTIONS_GHC -Wno-missing-import-lists #-}
 module Text.Gigaparsec.Internal.Errors.DefuncHints (
-    DefuncHints,
-    empty, replace, addError, merge
+    DefuncHints(Blank),
+    replace, addError, merge
   ) where
 
 import Text.Gigaparsec.Internal.Errors.DefuncTypes (
@@ -13,10 +13,6 @@ import Text.Gigaparsec.Internal.Errors.DefuncTypes (
   )
 
 import Data.Set (Set)
-
-{-# INLINE empty #-}
-empty :: () -> DefuncHints
-empty _ = Blank
 
 {-# INLINABLE replace #-}
 replace :: Set String -> DefuncHints -> DefuncHints

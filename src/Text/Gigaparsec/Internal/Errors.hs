@@ -6,7 +6,7 @@
 module Text.Gigaparsec.Internal.Errors (
     module Text.Gigaparsec.Internal.Errors,
     CaretWidth(..), ExpectItem(..),
-    Error.presentationOffset, Error.isExpectedEmpty
+    Error.presentationOffset, Error.isExpectedEmpty, DefuncHints(Blank)
   ) where
 
 import Data.Set (Set)
@@ -15,7 +15,7 @@ import Text.Gigaparsec.Errors.ErrorBuilder (ErrorBuilder)
 
 import Text.Gigaparsec.Internal.Errors.DefuncError (DefuncError)
 import Text.Gigaparsec.Internal.Errors.DefuncError qualified as Error
-import Text.Gigaparsec.Internal.Errors.DefuncHints (DefuncHints)
+import Text.Gigaparsec.Internal.Errors.DefuncHints (DefuncHints(Blank))
 import Text.Gigaparsec.Internal.Errors.DefuncHints qualified as Hints
 
 import Text.Gigaparsec.Internal.Errors.CaretControl (CaretWidth(FlexibleCaret, RigidCaret))
@@ -29,9 +29,6 @@ type Error :: UnliftedDatatype
 type Error = DefuncError
 type Hints :: UnliftedDatatype
 type Hints = DefuncHints
-
-emptyHints :: () -> Hints
-emptyHints = Hints.empty
 
 addError :: Hints -> Error -> Hints
 addError = Hints.addError

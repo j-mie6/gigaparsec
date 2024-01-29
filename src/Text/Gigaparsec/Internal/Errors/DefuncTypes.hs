@@ -20,20 +20,22 @@ CPP_import_PortableUnlifted
 type ErrKind :: *
 data ErrKind = Vanilla | Specialised
 
-type ErrKindSingleton :: ErrKind -> UnliftedDatatype
+-- Don't make this unlifted, it breaks GHC, unsure why
+type ErrKindSingleton :: ErrKind -> *
 data ErrKindSingleton k where
   IsVanilla :: ErrKindSingleton 'Vanilla
   IsSpecialised :: ErrKindSingleton 'Specialised
 
 type DefuncError :: UnliftedDatatype
 data DefuncError = forall k. DefuncError {
-    errKind :: {-# UNPACK #-} !(ErrKindSingleton k),
+    errKind :: !(ErrKindSingleton k),
     flags :: {-# UNPACK #-} !Word32,
     presentationOffset :: {-# UNPACK #-} !Word,
     underlyingOffset :: {-# UNPACK #-} !Word,
-    errTy :: {-# UNPACK #-} !(DefuncError_ k)
+    errTy :: !(DefuncError_ k)
   }
 
+-- We don't UNPACK this, reduces the allocations in other parts
 type DefuncError_ :: ErrKind -> UnliftedDatatype
 data DefuncError_ k where
   Base :: {-# UNPACK #-} !Word -- ^ line
@@ -65,20 +67,20 @@ unexpectedWidth (Empty w) = w
 
 type ErrorOp :: ErrKind -> UnliftedDatatype
 data ErrorOp k where
-  Merged      :: {-# UNPACK #-} !(DefuncError_ k) -> {-# UNPACK #-} !(DefuncError_ k) -> ErrorOp k
-  AdjustCaret :: {-# UNPACK #-} !(DefuncError_ 'Specialised)
-              -> {-# UNPACK #-} !(DefuncError_ 'Vanilla) -- ^ caretAdjuster
+  Merged      :: !(DefuncError_ k) -> !(DefuncError_ k) -> ErrorOp k
+  AdjustCaret :: !(DefuncError_ 'Specialised)
+              -> !(DefuncError_ 'Vanilla) -- ^ caretAdjuster
               -> ErrorOp 'Specialised
-  WithHints   :: {-# UNPACK #-} !(DefuncError_ 'Vanilla) -> !DefuncHints -> ErrorOp 'Vanilla
-  WithReason  :: {-# UNPACK #-} !(DefuncError_ 'Vanilla) -> !String -> ErrorOp 'Vanilla
-  WithLabel   :: {-# UNPACK #-} !(DefuncError_ 'Vanilla) -> !(Set String) -> ErrorOp 'Vanilla
+  WithHints   :: !(DefuncError_ 'Vanilla) -> !DefuncHints -> ErrorOp 'Vanilla
+  WithReason  :: !(DefuncError_ 'Vanilla) -> !String -> ErrorOp 'Vanilla
+  WithLabel   :: !(DefuncError_ 'Vanilla) -> !(Set String) -> ErrorOp 'Vanilla
   Amended     :: {-# UNPACK #-} !Word -- ^ line
               -> {-# UNPACK #-} !Word -- ^ col
-              -> {-# UNPACK #-} !(DefuncError_ k) -> ErrorOp k
+              -> !(DefuncError_ k) -> ErrorOp k
 
 type DefuncHints :: UnliftedDatatype
 data DefuncHints where
   Blank :: DefuncHints
   Replace :: !(Set String) -> DefuncHints
   Merge :: !DefuncHints -> !DefuncHints -> DefuncHints
-  AddErr :: !DefuncHints -> {-# UNPACK #-} !(DefuncError_ 'Vanilla) -> DefuncHints
+  AddErr :: !DefuncHints -> !(DefuncError_ 'Vanilla) -> DefuncHints

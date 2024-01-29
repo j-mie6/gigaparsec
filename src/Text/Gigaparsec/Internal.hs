@@ -21,7 +21,7 @@ import Text.Gigaparsec.Internal.RT (RT)
 import Text.Gigaparsec.Internal.Errors (Error, Hints, ExpectItem, CaretWidth)
 import Text.Gigaparsec.Internal.Errors qualified as Errors (
     emptyErr, expectedErr, specialisedErr, mergeErr, unexpectedErr,
-    isExpectedEmpty, presentationOffset, useHints, emptyHints, addError
+    isExpectedEmpty, presentationOffset, useHints, DefuncHints(Blank), addError
   )
 
 import Control.Applicative (Applicative(liftA2), Alternative(empty, (<|>), many, some)) -- liftA2 required until 9.6
@@ -198,7 +198,7 @@ emptyState !str = State { input = str
                         , line = 1
                         , col = 1
                         , hintsValidOffset = 0
-                        , hints = Errors.emptyHints ()
+                        , hints = Errors.Blank
                         , debugLevel = 0
                         }
 
@@ -218,14 +218,14 @@ errorToHints :: State -> Error -> State
 errorToHints st@State{..} err
   | consumed == Errors.presentationOffset err
   , not (Errors.isExpectedEmpty err) =
-    if hintsValidOffset < consumed then st { hints = Errors.addError (Errors.emptyHints ()) err, hintsValidOffset = consumed }
+    if hintsValidOffset < consumed then st { hints = Errors.addError (Errors.Blank) err, hintsValidOffset = consumed }
     else                                st { hints = Errors.addError hints err }
 errorToHints st _ = st
 
 useHints :: (Error -> State -> RT r) -> (Error -> State -> RT r)
 useHints bad err st@State{hintsValidOffset, hints}
   | presentationOffset == hintsValidOffset = bad (Errors.useHints hints err) st
-  | otherwise                              = bad err st{ hintsValidOffset = presentationOffset, hints = Errors.emptyHints () }
+  | otherwise                              = bad err st{ hintsValidOffset = presentationOffset, hints = Errors.Blank }
   where !presentationOffset = Errors.presentationOffset err
 
 adjustErr :: (Error -> Error) -> Parsec a -> Parsec a
