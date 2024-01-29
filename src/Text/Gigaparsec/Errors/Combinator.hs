@@ -369,18 +369,30 @@ filterSWith :: ErrorGen a -> (a -> Bool) -> Parsec a -> Parsec a
 filterSWith errGen f p = amendThenDislodgeBy 1 $ withWidth (entrench p) >>= \(x, w) ->
   if f x then pure x else ErrorGen.asErr errGen x w
 
+{-
+@since 0.2.2.0
+-}
 filterOut :: (a -> Maybe String) -> Parsec a -> Parsec a
 filterOut p =
   filterSWith (vanillaGen { ErrorGen.reason = p }) (isNothing . p)
 
+{-
+@since 0.2.2.0
+-}
 guardAgainst :: (a -> Maybe [String]) -> Parsec a -> Parsec a
 guardAgainst p =
   filterSWith (specializedGen { ErrorGen.messages = fromJust . p }) (isNothing . p)
 
+{-
+@since 0.2.2.0
+-}
 unexpectedWhen :: (a -> Maybe String) -> Parsec a -> Parsec a
 unexpectedWhen p =
   filterSWith (vanillaGen { ErrorGen.unexpected = ErrorGen.NamedItem . fromJust . p }) (isNothing . p)
 
+{-
+@since 0.2.2.0
+-}
 unexpectedWithReasonWhen :: (a -> Maybe (String, String)) -> Parsec a -> Parsec a
 unexpectedWithReasonWhen p =
   filterSWith (vanillaGen { ErrorGen.unexpected = ErrorGen.NamedItem . fst . fromJust . p

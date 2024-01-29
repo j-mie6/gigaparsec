@@ -40,11 +40,31 @@ import Language.Haskell.TH (
 import Language.Haskell.TH (Type(MulArrowT))
 #endif
 
-posAp :: Bool -> Q Exp -> Q Exp
-posAp True  p = [e| pos <**> $p |]
-posAp False p = p
+{-|
+This function is used to automatically generate /Lifted Constructors/, which are
+one of the patterns in /"Design Patterns for Parser Combinators/". It is provided
+with a prefix, which is used to denote an application of the constructor, and
+then a list of "ticked" constructors to generate lifted constructors for. This
+means adding a single @'@ in front of the constructor name. For example:
 
-deriveLiftedConstructors :: String -> [Name] -> Q [Dec]
+> {-# LANGUAGE TemplateHaskell #-}
+> data Foo = Foo a | Bar Int String
+> $(deriveLiftedConstructors "mk" ['Foo, 'Bar])
+
+Will generate two lifted constructors of the shape:
+
+> mkFoo :: Parsec a -> Parsec (Foo a)
+> mkBar :: Parsec Int -> Parsec String -> Parsec (Foo a)
+
+Furthermore, if one of the arguments to the constructor has type `Text.Gigaparsec.Position.Pos`,
+the @pos@ combinator will be applied automatically, and this will not be apparent in the signature
+of the generated constructor.
+
+@since 0.2.2.0
+-}
+deriveLiftedConstructors :: String -- ^ The prefix to be added to generated names
+                         -> [Name] -- ^ The list of "ticked" constructors to generate for
+                         -> Q [Dec]
 deriveLiftedConstructors prefix = fmap concat . traverse deriveCon
   where
     deriveCon :: Name -> Q [Dec]
@@ -59,7 +79,32 @@ deriveLiftedConstructors prefix = fmap concat . traverse deriveCon
     applyArgs :: Q Exp -> [Name] -> Q Exp
     applyArgs = foldl' (\rest arg -> [e|$rest <*> $(varE arg)|])
 
-deriveDeferredConstructors :: String -> [Name] -> Q [Dec]
+
+{-|
+This function is used to automatically generate /Deferred Constructors/, which are
+one of the patterns in /"Design Patterns for Parser Combinators/". It is provided
+with a prefix, which is used to denote an application of the constructor, and
+then a list of "ticked" constructors to generate deferred constructors for. This
+means adding a single @'@ in front of the constructor name. For example:
+
+> {-# LANGUAGE TemplateHaskell #-}
+> data Foo = Foo a | Bar Int String
+> $(deriveDeferredConstructors "mk" ['Foo, 'Bar])
+
+Will generate two deferred constructors of the shape:
+
+> mkFoo :: Parsec (a -> Foo a)
+> mkBar :: Parsec (Int -> String -> Foo a)
+
+Furthermore, if one of the arguments to the constructor has type `Text.Gigaparsec.Position.Pos`,
+the @pos@ combinator will be applied automatically, and this will not be apparent in the signature
+of the generated constructor.
+
+@since 0.2.2.0
+-}
+deriveDeferredConstructors :: String -- ^ The prefix to be added to generated names
+                           -> [Name] -- ^ The list of "ticked" constructors to generate for
+                           -> Q [Dec]
 deriveDeferredConstructors prefix = fmap concat . traverse deriveCon
   where
     deriveCon :: Name -> Q [Dec]
@@ -68,6 +113,10 @@ deriveDeferredConstructors prefix = fmap concat . traverse deriveCon
       sequence [ sigD con' ty
                , funD con' [clause [] (normalB (posAp posFound [e|pure $func|])) []]
                ]
+
+posAp :: Bool -> Q Exp -> Q Exp
+posAp True  p = [e| pos <**> $p |]
+posAp False p = p
 
 funcType :: [Q Type] -> Q Type
 funcType = foldr1 (\ty rest -> [t| $ty -> $rest |])
