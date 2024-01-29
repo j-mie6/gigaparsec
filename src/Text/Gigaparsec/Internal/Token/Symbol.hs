@@ -44,8 +44,8 @@ lexeme lexe Symbol{..} = Symbol { softKeyword = lexe . softKeyword
 
 _softKeyword :: Bool -> CharPredicate -> String -> Parsec ()
 _softKeyword caseSensitive letter kw
-  | caseSensitive = atomic (nfb letter caseString)
-  | otherwise     = atomic (nfb letter (string kw))
+  | not caseSensitive = atomic (nfb letter caseString)
+  | otherwise         = atomic (nfb letter (string kw))
   where nfb Nothing p = void p
         nfb (Just c) p = p *> (notFollowedBy (satisfy c) <?> ["end of " ++ kw])
         n = length kw
