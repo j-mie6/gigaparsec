@@ -18,17 +18,16 @@ own risk.
 module Text.Gigaparsec.Internal (module Text.Gigaparsec.Internal) where
 
 import Text.Gigaparsec.Internal.RT (RT)
-import Text.Gigaparsec.Internal.Errors (ParseError, ExpectItem, CaretWidth)
+import Text.Gigaparsec.Internal.Errors (ParseError, Hints, ExpectItem, CaretWidth)
 import Text.Gigaparsec.Internal.Errors qualified as Errors (
     emptyErr, expectedErr, specialisedErr, mergeErr, unexpectedErr,
-    expecteds, isExpectedEmpty, presentationOffset, useHints
+    isExpectedEmpty, presentationOffset, useHints, emptyHints, addError
   )
 
 import Control.Applicative (Applicative(liftA2), Alternative(empty, (<|>), many, some)) -- liftA2 required until 9.6
 import Control.Selective (Selective(select))
 
 import Data.Set (Set)
-import Data.Set qualified as Set (empty, union)
 
 CPP_import_PortableUnlifted
 
@@ -188,7 +187,7 @@ data State = State {
     -- | the valid for which hints can be used
     hintsValidOffset :: {-# UNPACK #-} !Word,
     -- | the hints at this point in time
-    hints :: !(Set ExpectItem),
+    hints :: !Hints,
     -- | Debug nesting
     debugLevel :: {-# UNPACK #-} !Int
   }
@@ -199,7 +198,7 @@ emptyState !str = State { input = str
                         , line = 1
                         , col = 1
                         , hintsValidOffset = 0
-                        , hints = Set.empty
+                        , hints = Errors.emptyHints
                         , debugLevel = 0
                         }
 
@@ -219,14 +218,14 @@ errorToHints :: State -> ParseError -> State
 errorToHints st@State{..} err
   | consumed == Errors.presentationOffset err
   , not (Errors.isExpectedEmpty err) =
-    if hintsValidOffset < consumed then st { hints = Errors.expecteds err, hintsValidOffset = consumed }
-    else                                st { hints = Set.union hints (Errors.expecteds err) }
+    if hintsValidOffset < consumed then st { hints = Errors.addError Errors.emptyHints err, hintsValidOffset = consumed }
+    else                                st { hints = Errors.addError hints err }
 errorToHints st _ = st
 
 useHints :: (ParseError -> State -> RT r) -> (ParseError -> State -> RT r)
 useHints bad err st@State{hintsValidOffset, hints}
   | presentationOffset == hintsValidOffset = bad (Errors.useHints hints err) st
-  | otherwise                              = bad err st{ hintsValidOffset = presentationOffset, hints = Set.empty }
+  | otherwise                              = bad err st{ hintsValidOffset = presentationOffset, hints = Errors.emptyHints }
   where !presentationOffset = Errors.presentationOffset err
 
 adjustErr :: (ParseError -> ParseError) -> Parsec a -> Parsec a

@@ -25,6 +25,17 @@ import Text.Gigaparsec.Internal.Errors.ErrorItem
 
 CPP_import_PortableUnlifted
 
+newtype Hints = Hints (Set ExpectItem)
+
+emptyHints :: Hints
+emptyHints = Hints Set.empty
+
+addError :: Hints -> ParseError -> Hints
+addError !(Hints hints) err = Hints $ Set.union hints (expecteds err)
+
+replaceHints :: Set String -> Hints
+replaceHints = Hints . Set.map ExpectNamed
+
 type ParseError :: UnliftedDatatype
 data ParseError = VanillaError { presentationOffset :: {-# UNPACK #-} !Word
                                , line :: {-# UNPACK #-} !Word
@@ -146,8 +157,8 @@ setLexical :: ParseError -> ParseError
 setLexical err@VanillaError{} = err { lexicalError = True }
 setLexical err = err
 
-useHints :: Set ExpectItem -> ParseError -> ParseError
-useHints !hints err@VanillaError{expecteds} = err { expecteds = Set.union hints expecteds }
+useHints :: Hints -> ParseError -> ParseError
+useHints !(Hints hints) err@VanillaError{expecteds} = err { expecteds = Set.union hints expecteds }
 useHints _ err = err
 
 mergeErr :: ParseError -> ParseError -> ParseError

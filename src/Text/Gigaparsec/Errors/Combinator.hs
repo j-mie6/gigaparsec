@@ -78,13 +78,13 @@ import Text.Gigaparsec.Errors.ErrorGen qualified as ErrorGen
 -- We want to use this to make the docs point to the right definition for users.
 import Text.Gigaparsec.Internal (Parsec)
 import Text.Gigaparsec.Internal qualified as Internal (Parsec(Parsec), line, col, emptyErr, specialisedErr, raise, unexpectedErr, hints, consumed, useHints, adjustErr, hints, hintsValidOffset)
-import Text.Gigaparsec.Internal.Errors (ParseError, CaretWidth(FlexibleCaret, RigidCaret), ExpectItem(ExpectNamed))
-import Text.Gigaparsec.Internal.Errors qualified as Internal (setLexical, amendErr, entrenchErr, dislodgeErr, partialAmendErr, labelErr, explainErr)
+import Text.Gigaparsec.Internal.Errors (ParseError, CaretWidth(FlexibleCaret, RigidCaret))
+import Text.Gigaparsec.Internal.Errors qualified as Internal (setLexical, amendErr, entrenchErr, dislodgeErr, partialAmendErr, labelErr, explainErr, replaceHints)
 import Text.Gigaparsec.Internal.Require (require)
 import Text.Gigaparsec.Position (withWidth)
 
 import Data.Set (Set)
-import Data.Set qualified as Set (empty, map)
+import Data.Set qualified as Set (empty)
 import Data.List.NonEmpty (NonEmpty)
 import Data.List.NonEmpty qualified as NonEmpty (toList)
 import Data.Maybe (isNothing, fromJust)
@@ -105,7 +105,7 @@ label ls (Internal.Parsec p) =
       let !origConsumed = Internal.consumed st
           good' x st'
             | Internal.consumed st' /= origConsumed = good x st'
-            | otherwise = good x st' { Internal.hints = Set.map ExpectNamed ls }
+            | otherwise = good x st' { Internal.hints = Internal.replaceHints ls }
           bad' err = Internal.useHints bad (Internal.labelErr origConsumed ls err)
       in p st good' bad'
 
