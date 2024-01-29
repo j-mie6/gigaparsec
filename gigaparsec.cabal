@@ -105,6 +105,7 @@ library
                       Text.Gigaparsec.Internal.Errors.CaretControl,
                       Text.Gigaparsec.Internal.Errors.DefuncBuilders,
                       Text.Gigaparsec.Internal.Errors.DefuncError,
+                      Text.Gigaparsec.Internal.Errors.DefuncHints,
                       Text.Gigaparsec.Internal.Errors.DefuncTypes,
                       Text.Gigaparsec.Internal.Errors.ErrorItem,
                       Text.Gigaparsec.Internal.Errors.ParseError,

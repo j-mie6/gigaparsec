@@ -105,7 +105,7 @@ label ls (Internal.Parsec p) =
       let !origConsumed = Internal.consumed st
           good' x st'
             | Internal.consumed st' /= origConsumed = good x st'
-            | otherwise = good x st' { Internal.hints = Internal.replaceHints ls }
+            | otherwise = good x st' { Internal.hints = Internal.replaceHints ls (Internal.hints st') }
           bad' err = Internal.useHints bad (Internal.labelErr origConsumed ls err)
       in p st good' bad'
 
