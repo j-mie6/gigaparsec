@@ -6,7 +6,7 @@ module Text.Gigaparsec.Errors.ErrorGen (
   ) where
 import Text.Gigaparsec.Internal (Parsec)
 import Text.Gigaparsec.Internal qualified as Internal (Parsec(Parsec), State, specialisedErr, emptyErr, expectedErr, unexpectedErr, raise)
-import Text.Gigaparsec.Internal.Errors qualified as Internal (ParseError, CaretWidth(RigidCaret), addReason)
+import Text.Gigaparsec.Internal.Errors qualified as Internal (Error, CaretWidth(RigidCaret), addReason)
 
 type ErrorGen :: * -> *
 data ErrorGen a = SpecializedGen { messages :: a -> [String]
@@ -45,18 +45,18 @@ asSelect errGen (Internal.Parsec p) = Internal.Parsec $ \st good bad ->
       good' (Left (x, w)) st' = bad (genErr errGen st' x w) st'
   in p st good' bad
 
-genErr :: ErrorGen a -> Internal.State -> a -> Word -> Internal.ParseError
+genErr :: ErrorGen a -> Internal.State -> a -> Word -> Internal.Error
 genErr SpecializedGen{..} st x w =
   Internal.specialisedErr st (messages x) (Internal.RigidCaret (adjustWidth x w))
 genErr VanillaGen{..} st x w =
   addReason (reason x) (makeError (unexpected x) st (adjustWidth x w))
 
-makeError :: UnexpectedItem -> Internal.State -> Word -> Internal.ParseError
+makeError :: UnexpectedItem -> Internal.State -> Word -> Internal.Error
 makeError RawItem st cw = Internal.expectedErr st [] cw
 makeError EmptyItem st cw = Internal.emptyErr st cw
 makeError (NamedItem name) st cw = Internal.unexpectedErr st [] name (Internal.RigidCaret cw)
 
 -- no fold, unlifed type
-addReason :: Maybe String -> Internal.ParseError -> Internal.ParseError
+addReason :: Maybe String -> Internal.Error -> Internal.Error
 addReason Nothing err = err
 addReason (Just reason) err = Internal.addReason reason err

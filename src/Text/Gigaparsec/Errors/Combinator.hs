@@ -78,7 +78,7 @@ import Text.Gigaparsec.Errors.ErrorGen qualified as ErrorGen
 -- We want to use this to make the docs point to the right definition for users.
 import Text.Gigaparsec.Internal (Parsec)
 import Text.Gigaparsec.Internal qualified as Internal (Parsec(Parsec), line, col, emptyErr, specialisedErr, raise, unexpectedErr, hints, consumed, useHints, adjustErr, hints, hintsValidOffset)
-import Text.Gigaparsec.Internal.Errors (ParseError, CaretWidth(FlexibleCaret, RigidCaret))
+import Text.Gigaparsec.Internal.Errors (Error, CaretWidth(FlexibleCaret, RigidCaret))
 import Text.Gigaparsec.Internal.Errors qualified as Internal (setLexical, amendErr, entrenchErr, dislodgeErr, partialAmendErr, labelErr, explainErr, replaceHints)
 import Text.Gigaparsec.Internal.Require (require)
 import Text.Gigaparsec.Position (withWidth)
@@ -264,7 +264,7 @@ partialAmend :: Parsec a -> Parsec a
 partialAmend = _amend Internal.partialAmendErr
 
 {-# INLINE _amend #-}
-_amend :: (Word -> Word -> Word -> ParseError -> ParseError) -> Parsec a -> Parsec a
+_amend :: (Word -> Word -> Word -> Error -> Error) -> Parsec a -> Parsec a
 _amend f (Internal.Parsec p) =
   Internal.Parsec $ \st good bad ->
     let !origConsumed = Internal.consumed st

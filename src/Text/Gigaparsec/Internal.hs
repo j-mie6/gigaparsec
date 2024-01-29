@@ -18,7 +18,7 @@ own risk.
 module Text.Gigaparsec.Internal (module Text.Gigaparsec.Internal) where
 
 import Text.Gigaparsec.Internal.RT (RT)
-import Text.Gigaparsec.Internal.Errors (ParseError, Hints, ExpectItem, CaretWidth)
+import Text.Gigaparsec.Internal.Errors (Error, Hints, ExpectItem, CaretWidth)
 import Text.Gigaparsec.Internal.Errors qualified as Errors (
     emptyErr, expectedErr, specialisedErr, mergeErr, unexpectedErr,
     isExpectedEmpty, presentationOffset, useHints, emptyHints, addError
@@ -56,8 +56,8 @@ libraries like @parsec@ and @gigaparsec@.
 type Parsec :: * -> *
 newtype Parsec a = Parsec {
     unParsec :: forall r. State
-             -> (a -> State -> RT r) -- the good continuation
-             -> (ParseError -> State -> RT r)      -- the bad continuation
+             -> (a -> State -> RT r)     -- the good continuation
+             -> (Error -> State -> RT r) -- the bad continuation
              -> RT r
   }
 
@@ -125,7 +125,7 @@ instance Monad Parsec where
   {-# INLINE return #-}
   {-# INLINE (>>=) #-}
 
-raise :: (State -> ParseError) -> Parsec a
+raise :: (State -> Error) -> Parsec a
 raise mkErr = Parsec $ \st _ bad -> useHints bad (mkErr st) st
 
 instance Alternative Parsec where
@@ -198,35 +198,35 @@ emptyState !str = State { input = str
                         , line = 1
                         , col = 1
                         , hintsValidOffset = 0
-                        , hints = Errors.emptyHints
+                        , hints = Errors.emptyHints ()
                         , debugLevel = 0
                         }
 
-emptyErr :: State -> Word -> ParseError
+emptyErr :: State -> Word -> Error
 emptyErr State{..} = Errors.emptyErr consumed line col
 
-expectedErr :: State -> Set ExpectItem -> Word -> ParseError
+expectedErr :: State -> Set ExpectItem -> Word -> Error
 expectedErr State{..} = Errors.expectedErr input consumed line col
 
-specialisedErr :: State -> [String] -> CaretWidth -> ParseError
+specialisedErr :: State -> [String] -> CaretWidth -> Error
 specialisedErr State{..} = Errors.specialisedErr consumed line col
 
-unexpectedErr :: State -> Set ExpectItem -> String -> CaretWidth -> ParseError
+unexpectedErr :: State -> Set ExpectItem -> String -> CaretWidth -> Error
 unexpectedErr State{..} = Errors.unexpectedErr consumed line col
 
-errorToHints :: State -> ParseError -> State
+errorToHints :: State -> Error -> State
 errorToHints st@State{..} err
   | consumed == Errors.presentationOffset err
   , not (Errors.isExpectedEmpty err) =
-    if hintsValidOffset < consumed then st { hints = Errors.addError Errors.emptyHints err, hintsValidOffset = consumed }
+    if hintsValidOffset < consumed then st { hints = Errors.addError (Errors.emptyHints ()) err, hintsValidOffset = consumed }
     else                                st { hints = Errors.addError hints err }
 errorToHints st _ = st
 
-useHints :: (ParseError -> State -> RT r) -> (ParseError -> State -> RT r)
+useHints :: (Error -> State -> RT r) -> (Error -> State -> RT r)
 useHints bad err st@State{hintsValidOffset, hints}
   | presentationOffset == hintsValidOffset = bad (Errors.useHints hints err) st
-  | otherwise                              = bad err st{ hintsValidOffset = presentationOffset, hints = Errors.emptyHints }
+  | otherwise                              = bad err st{ hintsValidOffset = presentationOffset, hints = Errors.emptyHints () }
   where !presentationOffset = Errors.presentationOffset err
 
-adjustErr :: (ParseError -> ParseError) -> Parsec a -> Parsec a
+adjustErr :: (Error -> Error) -> Parsec a -> Parsec a
 adjustErr f (Parsec p) = Parsec $ \st good bad -> p st good $ \err -> bad (f err)

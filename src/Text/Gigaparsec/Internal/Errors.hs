@@ -25,17 +25,20 @@ import Text.Gigaparsec.Internal.Errors.ErrorItem
 
 CPP_import_PortableUnlifted
 
-newtype Hints = Hints (Set ExpectItem) deriving (Show, Eq)
+type Error :: UnliftedDatatype
+type Error = ParseError
+type Hints :: *
+newtype Hints = Hints (Set ExpectItem) deriving stock (Show, Eq)
 
-emptyHints :: Hints
-emptyHints = Hints Set.empty
+emptyHints :: () -> Hints
+emptyHints _ = Hints Set.empty
 
 addError :: Hints -> ParseError -> Hints
 addError !(Hints hints) err = Hints $ Set.union hints (expecteds err)
 
 replaceHints :: Set String -> Hints -> Hints
 replaceHints !ls (Hints exs)
-  | Set.null exs = emptyHints
+  | Set.null exs = emptyHints ()
   | otherwise    = Hints (Set.map ExpectNamed ls)
 
 type ParseError :: UnliftedDatatype
@@ -214,12 +217,12 @@ isExpectedEmpty :: ParseError -> Bool
 isExpectedEmpty VanillaError{expecteds} = Set.null expecteds
 isExpectedEmpty _                       = True
 
-{-# INLINABLE fromParseError #-}
-fromParseError :: forall err. ErrorBuilder err => Maybe FilePath -> String -> ParseError -> err
-fromParseError srcFile input err =
+{-# INLINABLE fromError #-}
+fromError :: forall err. ErrorBuilder err => Maybe FilePath -> String -> Error -> err
+fromError srcFile input err =
   Builder.format (Builder.pos @err (line err) (col err)) (Builder.source @err srcFile)
                  (formatErr err)
-  where formatErr :: ParseError -> Builder.ErrorInfoLines err
+  where formatErr :: Error -> Builder.ErrorInfoLines err
         formatErr VanillaError{..} =
           Builder.vanillaError @err
             (Builder.unexpected @err (either (const Nothing) (Just . fst) unexpectedTok))
