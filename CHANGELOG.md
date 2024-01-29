@@ -1,7 +1,10 @@
 # Revision history for gigaparsec
 
+## 0.2.3.0 -- 2024-01-29
+* Added _Verified Errors_ and _Preventative Errors_ in `Text.Gigaparsec.Errors.Patterns`.
+
 ## 0.2.2.3 -- 2024-01-29
-* Fixed bug where `markAsToken` doesn't apply at the correct offsets
+* Fixed bug where `markAsToken` doesn't apply at the correct offsets.
 
 ## 0.2.2.2 -- 2024-01-29
 * Optimised the error system using `DefuncError` and `DefuncHints`.
