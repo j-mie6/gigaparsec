@@ -1,5 +1,8 @@
 # Revision history for gigaparsec
 
+## 0.2.2.1 -- 2014-01-29
+* Fixed bug where case sensitive keywords where parsed insensitively and vice-versa
+
 ## 0.2.2.0 -- 2024-01-21
 
 * Added `manyMap` and `someMap` combinators.
