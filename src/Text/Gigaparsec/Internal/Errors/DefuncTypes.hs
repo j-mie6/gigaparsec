@@ -82,5 +82,4 @@ type DefuncHints :: UnliftedDatatype
 data DefuncHints where
   Blank :: DefuncHints
   Replace :: !(Set String) -> DefuncHints
-  Merge :: !DefuncHints -> !DefuncHints -> DefuncHints
   AddErr :: !DefuncHints -> !(DefuncError_ 'Vanilla) -> DefuncHints

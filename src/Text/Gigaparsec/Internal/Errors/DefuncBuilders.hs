@@ -10,7 +10,7 @@ module Text.Gigaparsec.Internal.Errors.DefuncBuilders (
   ) where
 
 import Text.Gigaparsec.Internal.Errors.DefuncTypes (
-    DefuncHints(Blank, Merge, AddErr, Replace),
+    DefuncHints(Blank, AddErr, Replace),
     ErrorOp(Amended, WithLabel, WithHints, Merged, WithReason, AdjustCaret),
     BaseError(Unexpected, Empty, Expected, ClassicSpecialised),
     DefuncError_(Op, Base),
@@ -165,9 +165,6 @@ pattern UNothing = (# (# #) | #)
 collectHints :: Set ExpectItem -> UMaybe Word -> DefuncHints -> (# Set ExpectItem, UMaybe Word #)
 collectHints !exs width Blank = (# exs, width #)
 collectHints exs width (Replace ls) = (# Set.union exs (Set.map ExpectNamed ls), width #)
-collectHints exs width (Merge hints1 hints2) =
-  let !(# exs', width' #) = collectHints exs width hints1
-  in  collectHints exs' width' hints2
 collectHints exs width (AddErr hints err) =
   let !(# exs', width' #) = collectHintsErr exs width err
   in collectHints exs' width' hints
