@@ -45,7 +45,9 @@ module Text.Gigaparsec.Errors.Combinator (
     amend, partialAmend, entrench, dislodge, dislodgeBy,
     amendThenDislodge, amendThenDislodgeBy, partialAmendThenDislodge, partialAmendThenDislodgeBy,
     markAsToken,
-    filterSWith, mapMaybeSWith, filterOut, guardAgainst, unexpectedWhen, unexpectedWithReasonWhen
+    filterSWith, mapMaybeSWith,
+    filterOut, guardAgainst, unexpectedWhen, unexpectedWithReasonWhen,
+    mapEitherS
   ) where
 
 {-
@@ -379,6 +381,7 @@ filterOut p =
 {-
 @since 0.2.2.0
 -}
+-- FIXME: 0.3.0.0 change to NonEmptyList
 guardAgainst :: (a -> Maybe [String]) -> Parsec a -> Parsec a
 guardAgainst p =
   filterSWith (specializedGen { ErrorGen.messages = fromJust . p }) (isNothing . p)
@@ -406,3 +409,10 @@ unexpectedWithReasonWhen p =
 mapMaybeSWith :: ErrorGen a -> (a -> Maybe b) -> Parsec a -> Parsec b
 mapMaybeSWith errGen f p = amendThenDislodgeBy 1 $ withWidth (entrench p) >>= \(x, w) ->
   maybe (ErrorGen.asErr errGen x w) pure (f x)
+
+{-
+@since 0.2.4.0
+-}
+mapEitherS :: (a -> Either (NonEmpty String) b) -> Parsec a -> Parsec b
+mapEitherS f p = amendThenDislodgeBy 1 $ withWidth (entrench p) >>= \(x, w) ->
+  either (failWide w) pure (f x)

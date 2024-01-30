@@ -9,7 +9,7 @@ import Text.Gigaparsec.Internal qualified as Internal (Parsec(Parsec), State, sp
 import Text.Gigaparsec.Internal.Errors qualified as Internal (Error, CaretWidth(RigidCaret), addReason)
 
 type ErrorGen :: * -> *
-data ErrorGen a = SpecializedGen { messages :: a -> [String]
+data ErrorGen a = SpecializedGen { messages :: a -> [String] -- FIXME: 0.3.0.0 change to NonEmptyList
                                  , adjustWidth :: a -> Word -> Word
                                  }
                 | VanillaGen { unexpected :: a -> UnexpectedItem
