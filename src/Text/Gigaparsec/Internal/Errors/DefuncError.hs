@@ -11,7 +11,7 @@ module Text.Gigaparsec.Internal.Errors.DefuncError (
   ) where
 
 import Data.Word (Word32)
-import Data.Bits ((.&.), testBit, clearBit, setBit, complement, bit)
+import Data.Bits ((.&.), (.|.), testBit, clearBit, setBit, complement, bit)
 import Data.Set (Set)
 import Data.Set qualified as Set (null)
 
@@ -91,16 +91,18 @@ merge err1@(DefuncError k1 flags1 pOff1 uOff1 errTy1)
       EQ -> case k1 of
         IsSpecialised -> case k2 of
           IsSpecialised ->
-            DefuncError IsSpecialised (flags1 .&. flags2) pOff1 uOff1 (Op (Merged errTy1 errTy2))
+            DefuncError IsSpecialised (combineFlags flags1 flags2) pOff1 uOff1 (Op (Merged errTy1 errTy2))
           IsVanilla | isFlexibleCaret err1 ->
             DefuncError IsSpecialised flags1 pOff1 uOff1 (Op (AdjustCaret errTy1 errTy2))
           _ -> err1
         IsVanilla -> case k2 of
           IsVanilla ->
-            DefuncError IsVanilla (flags1 .&. flags2) pOff1 uOff1 (Op (Merged errTy1 errTy2))
+            DefuncError IsVanilla (combineFlags flags1 flags2) pOff1 uOff1 (Op (Merged errTy1 errTy2))
           IsSpecialised | isFlexibleCaret err2 ->
             DefuncError IsSpecialised flags1 pOff1 uOff1 (Op (AdjustCaret errTy2 errTy1))
           _ -> err2
+  where combineFlags f1 f2 =
+          (f1 .&. f2 .&. complement entrenchedMask) .|. max (f1 .&. entrenchedMask) (f2 .&. entrenchedMask)
 
 withHints :: DefuncHints -> DefuncError -> DefuncError
 withHints Blank err = err
