@@ -1,5 +1,6 @@
 {-# LANGUAGE Safe #-}
-{-# LANGUAGE NoMonomorphismRestriction, BlockArguments #-}
+{-# LANGUAGE NoMonomorphismRestriction, BlockArguments, OverloadedLists, OverloadedStrings #-}
+{-# OPTIONS_GHC -Wno-incomplete-uni-patterns #-}
 module Text.Gigaparsec.Token.Errors (
     ErrorConfig(
       labelNumericBreakChar, labelIntegerUnsignedDecimal,
@@ -14,7 +15,19 @@ module Text.Gigaparsec.Token.Errors (
       filterIntegerOutOfBounds,
       labelNameIdentifier, labelNameOperator,
       unexpectedNameIllegalIdentifier, unexpectedNameIllegalOperator,
-      filterNameIllFormedIdentifier, filterNameIllFormedOperator
+      filterNameIllFormedIdentifier, filterNameIllFormedOperator,
+      labelCharAscii, labelCharLatin1, labelCharUnicode,
+      labelCharAsciiEnd, labelCharLatin1End, labelCharUnicodeEnd,
+      labelStringAscii, labelStringLatin1, labelStringUnicode,
+      labelStringAsciiEnd, labelStringLatin1End, labelStringUnicodeEnd,
+      labelStringCharacter, labelGraphicCharacter, labelEscapeSequence,
+      labelEscapeNumeric, labelEscapeNumericEnd, labelEscapeEnd,
+      labelStringEscapeEmpty, labelStringEscapeGap, labelStringEscapeGapEnd,
+      filterCharNonAscii, filterCharNonLatin1, filterStringNonAscii, filterStringNonLatin1,
+      filterEscapeCharRequiresExactDigits, filterEscapeCharNumericSequenceIllegal,
+      --verifiedCharBadCharsUsedInLiteral, verifiedStringBadCharsUsedInLiteral,
+      labelSymbol, labelSymbolEndOfKeyword, labelSymbolEndOfOperator,
+      labelSpaceEndOfLineComment, labelSpaceEndOfMultiComment
     ),
     defaultErrorConfig,
     LabelWithExplainConfig, LabelWithExplainConfigurable(..),
@@ -29,10 +42,22 @@ module Text.Gigaparsec.Token.Errors (
   ) where
 
 import Data.Set (Set)
+import Data.Map (Map)
+import Data.Map qualified as Map (empty)
+import Data.List.NonEmpty (NonEmpty)
+import Data.List.NonEmpty qualified as NonEmpty (toList)
 import Data.Kind (Constraint)
 import Text.Gigaparsec.Internal.Token.Numeric (Bits(B8, B16, B32, B64))
 import Numeric (showIntAtBase)
-import Data.Char (intToDigit)
+import Data.Char (intToDigit, ord)
+import Text.Gigaparsec.Errors.DefaultErrorBuilder (from, disjunct, toString)
+import Text.Gigaparsec.Internal.Token.Errors (
+    LabelWithExplainConfig(LELabelAndReason, LELabel, LEHidden, LEReason, LENotConfigured),
+    LabelConfig(LLabel, LHidden, LNotConfigured), ExplainConfig(EReason, ENotConfigured),
+    FilterConfig(VSBecause, VSUnexpected, VSUnexpectedBecause, VSBasicFilter, VSSpecializedFilter),
+    SpecializedFilterConfig(SSpecializedFilter, SBasicFilter),
+    VanillaFilterConfig(VBecause, VUnexpected, VUnexpectedBecause, VBasicFilter)
+  )
 
 type ErrorConfig :: *
 data ErrorConfig =
@@ -59,77 +84,45 @@ data ErrorConfig =
               , unexpectedNameIllegalOperator :: String -> String
               , filterNameIllFormedIdentifier :: FilterConfig String
               , filterNameIllFormedOperator :: FilterConfig String
+              , labelCharAscii :: LabelWithExplainConfig
+              , labelCharLatin1 :: LabelWithExplainConfig
+              , labelCharUnicode :: LabelWithExplainConfig
+              , labelCharAsciiEnd :: LabelConfig
+              , labelCharLatin1End :: LabelConfig
+              , labelCharUnicodeEnd :: LabelConfig
+              , labelStringAscii :: Bool -> Bool -> LabelWithExplainConfig
+              , labelStringLatin1 :: Bool -> Bool -> LabelWithExplainConfig
+              , labelStringUnicode :: Bool -> Bool -> LabelWithExplainConfig
+              , labelStringAsciiEnd :: Bool -> Bool -> LabelConfig
+              , labelStringLatin1End :: Bool -> Bool -> LabelConfig
+              , labelStringUnicodeEnd :: Bool -> Bool -> LabelConfig
+              , labelStringCharacter :: LabelConfig
+              , labelGraphicCharacter :: LabelWithExplainConfig
+              , labelEscapeSequence :: LabelWithExplainConfig
+              , labelEscapeNumeric :: Int -> LabelWithExplainConfig
+              , labelEscapeNumericEnd :: Char -> Int -> LabelWithExplainConfig
+              , labelEscapeEnd :: LabelWithExplainConfig
+              , labelStringEscapeEmpty :: LabelConfig
+              , labelStringEscapeGap :: LabelConfig
+              , labelStringEscapeGapEnd :: LabelConfig
+              , filterCharNonAscii :: VanillaFilterConfig Char
+              , filterCharNonLatin1 :: VanillaFilterConfig Char
+              , filterStringNonAscii :: SpecializedFilterConfig String
+              , filterStringNonLatin1 :: SpecializedFilterConfig String
+              , filterEscapeCharRequiresExactDigits :: Int -> NonEmpty Int -> SpecializedFilterConfig Int
+              , filterEscapeCharNumericSequenceIllegal :: Char -> Int -> SpecializedFilterConfig Integer
+              --, verifiedCharBadCharsUsedInLiteral :: VerifiedBadChars
+              --, verifiedStringBadCharsUsedInLiteral :: VerifiedBarChars
+              , labelSymbol :: Map String LabelWithExplainConfig
+              -- don't bother with these until parsley standardises
+              --, defaultSymbolKeyword :: Labeller
+              --, defaultSymbolOperator :: Labeller
+              --, defaultSymbolPunctuaton :: Labeller
+              , labelSymbolEndOfKeyword :: String -> String
+              , labelSymbolEndOfOperator :: String -> String
+              , labelSpaceEndOfLineComment :: LabelWithExplainConfig
+              , labelSpaceEndOfMultiComment :: LabelWithExplainConfig
               }
-
-{-
-def labelCharAscii: LabelWithExplainConfig = NotConfigured
-def labelCharLatin1: LabelWithExplainConfig = NotConfigured
-def labelCharBasicMultilingualPlane: LabelWithExplainConfig = NotConfigured
-def labelCharUtf16: LabelWithExplainConfig = NotConfigured
-def labelCharAsciiEnd: LabelConfig = NotConfigured
-def labelCharLatin1End: LabelConfig = NotConfigured
-def labelCharBasicMultilingualPlaneEnd: LabelConfig = NotConfigured
-def labelCharUtf16End: LabelConfig = NotConfigured
-def labelStringAscii(@unused multi: Boolean, @unused raw: Boolean): LabelWithExplainConfig = NotConfigured
-def labelStringLatin1(@unused multi: Boolean, @unused raw: Boolean): LabelWithExplainConfig = NotConfigured
-def labelStringUtf16(@unused multi: Boolean, @unused raw: Boolean): LabelWithExplainConfig = NotConfigured
-def labelStringAsciiEnd(@unused multi: Boolean, @unused raw: Boolean): LabelConfig = NotConfigured
-def labelStringLatin1End(@unused multi: Boolean, @unused raw: Boolean): LabelConfig = NotConfigured
-def labelStringUtf16End(@unused multi: Boolean, @unused raw: Boolean): LabelConfig = NotConfigured
-def labelStringCharacter: LabelConfig = Label("string character")
-def labelGraphicCharacter: LabelWithExplainConfig = Label("graphic character")
-def labelEscapeSequence: LabelWithExplainConfig = Label("escape sequence") //different to "invalid escape sequence"!
-def labelEscapeNumeric(@unused radix: Int): LabelWithExplainConfig = NotConfigured
-def labelEscapeNumericEnd(@unused prefix: Char, @unused radix: Int): LabelWithExplainConfig = NotConfigured
-def labelEscapeEnd: LabelWithExplainConfig = LabelAndReason("end of escape sequence", "invalid escape sequence")
-def labelStringEscapeEmpty: LabelConfig = NotConfigured
-def labelStringEscapeGap: LabelConfig = Label("string gap")
-def labelStringEscapeGapEnd: LabelConfig = Label("end of string gap")
-def filterCharNonBasicMultilingualPlane: VanillaFilterConfig[Int] = new Because[Int] {
-        def reason(@unused x: Int) = "non-BMP character"
-    }
-def filterCharNonAscii: VanillaFilterConfig[Int] = new Because[Int] {
-        def reason(@unused x: Int) = "non-ascii character"
-    }
-def filterCharNonLatin1: VanillaFilterConfig[Int] = new Because[Int] {
-        def reason(@unused x: Int) = "non-latin1 character"
-    }
-def filterStringNonAscii: SpecialisedFilterConfig[StringBuilder] = new SpecialisedMessage[StringBuilder] {
-        def message(@unused s: StringBuilder) = Seq("non-ascii characters in string literal, this is not allowed")
-    }
-def filterStringNonLatin1: SpecialisedFilterConfig[StringBuilder] = new SpecialisedMessage[StringBuilder] {
-        def message(@unused s: StringBuilder) = Seq("non-latin1 characters in string literal, this is not allowed")
-    }
-def filterEscapeCharRequiresExactDigits(@unused radix: Int, needed: Seq[Int]): SpecialisedFilterConfig[Int] =
-        new SpecialisedMessage[Int] {
-            def message(got: Int) = {
-                assume(needed.nonEmpty, "cannot be empty!")
-                val Some(formatted) = parsley.errors.helpers.disjunct(needed.toList.map(_.toString), oxfordComma = true): @unchecked
-                Seq(s"numeric escape requires $formatted digits, but only got $got")
-            }
-        }
-def filterEscapeCharNumericSequenceIllegal(maxEscape: Int, radix: Int): SpecialisedFilterConfig[BigInt] =
-        new SpecialisedMessage[BigInt] {
-            def message(escapeChar: BigInt) = Seq(
-                if (escapeChar > BigInt(maxEscape)) {
-                    s"${escapeChar.toString(radix)} is greater than the maximum character value of ${BigInt(maxEscape).toString(radix)}"
-                }
-                else s"illegal unicode codepoint: ${escapeChar.toString(radix)}"
-            )
-        }
-def verifiedCharBadCharsUsedInLiteral: VerifiedBadChars = Unverified
-def verifiedStringBadCharsUsedInLiteral: VerifiedBadChars = Unverified
-def labelSymbol: Map[String, LabelWithExplainConfig] = Map.empty
-// To unify, or not to unify
-private [parsley] def defaultSymbolKeyword: Labeller = Label
-private [parsley] def defaultSymbolOperator: Labeller = Label
-// Other?
-private [parsley] def defaultSymbolPunctuation: Labeller = NotConfigured
-def labelSymbolEndOfKeyword(symbol: String): String = s"end of $symbol"
-def labelSymbolEndOfOperator(symbol: String): String = s"end of $symbol"
-def labelSpaceEndOfLineComment: LabelWithExplainConfig = Label("end of comment")
-def labelSpaceEndOfMultiComment: LabelWithExplainConfig = Label("end of comment")
--}
 
 defaultErrorConfig :: ErrorConfig
 defaultErrorConfig = ErrorConfig {..}
@@ -157,6 +150,56 @@ defaultErrorConfig = ErrorConfig {..}
         unexpectedNameIllegalOperator = ("reserved operator " ++)
         filterNameIllFormedIdentifier = unexpected ("identifier " ++)
         filterNameIllFormedOperator = unexpected ("operator " ++)
+        labelCharAscii = notConfigured
+        labelCharLatin1 = notConfigured
+        labelCharUnicode = notConfigured
+        labelCharAsciiEnd = notConfigured
+        labelCharLatin1End = notConfigured
+        labelCharUnicodeEnd = notConfigured
+        labelStringAscii _ _ = notConfigured
+        labelStringLatin1 _ _ = notConfigured
+        labelStringUnicode _ _ = notConfigured
+        labelStringAsciiEnd _ _ = notConfigured
+        labelStringLatin1End _ _ = notConfigured
+        labelStringUnicodeEnd _ _ = notConfigured
+        labelStringCharacter = label ["string character"]
+        labelGraphicCharacter = label ["graphic character"]
+        labelEscapeSequence = label ["escape sequence"]
+        labelEscapeNumeric _ = notConfigured
+        labelEscapeNumericEnd _ _ = notConfigured
+        labelEscapeEnd = labelAndReason ["end of escape sequence"] "invalid escape sequence"
+        labelStringEscapeEmpty = notConfigured
+        labelStringEscapeGap = label ["string gap"]
+        labelStringEscapeGapEnd = label ["end of string gap"]
+        filterCharNonAscii = because (const "non-ascii character")
+        filterCharNonLatin1 = because (const "non-latin1 character")
+        filterStringNonAscii =
+          specializedFilter (const ["non-ascii characters in string literal, this is not allowed"])
+        filterStringNonLatin1 =
+          specializedFilter (const ["non-latin1 characters in string literal, this is not allowed"])
+        filterEscapeCharRequiresExactDigits _ needed = specializedFilter \got ->
+          let ~(Just formatted) = disjunct True (map show (NonEmpty.toList needed))
+          in [toString ("numeric escape requires " <> formatted <> "digits, but only got" <> from got)]
+        filterEscapeCharNumericSequenceIllegal maxEscape radix =
+          let messages :: Integer -> [String]
+              messages c
+                | c > toInteger (ord maxEscape) =
+                    [showIntAtBase (toInteger radix) intToDigit c
+                      (" is greater than the maximum character value of "
+                      ++ showIntAtBase (toInteger radix) intToDigit (toInteger (ord maxEscape)) "")]
+                | otherwise = ["illegal unicode character: "
+                            ++ showIntAtBase (toInteger radix) intToDigit c ""]
+          in specializedFilter messages
+        -- verifiedCharBadCharsUsedInLiteral = Unverified
+        -- verifiedStringBadCharsUsedInLiteral = Unverified
+        labelSymbol = Map.empty
+        -- defaultSymbolKeyword = Label
+        -- defaultSymbolOperator = Label
+        -- defaultSymbolOperator = NotConfigured
+        labelSymbolEndOfKeyword = ("end of " ++)
+        labelSymbolEndOfOperator = ("end of " ++)
+        labelSpaceEndOfLineComment = label ["end of comment"]
+        labelSpaceEndOfMultiComment = label ["end of comment"]
 
 outOfBounds :: Integer -> Integer -> Int -> Integer -> [String]
 outOfBounds small big radix _n = [
@@ -165,24 +208,6 @@ outOfBounds small big radix _n = [
   where resign n
           | n < 0 = ('-' :) . showIntAtBase (toInteger radix) intToDigit (abs n)
           | otherwise = showIntAtBase (toInteger radix) intToDigit n
-
-
--- TODO: move to internal module, except the typeclasses
-type LabelWithExplainConfig :: *
-data LabelWithExplainConfig = LENotConfigured
-                            | LELabel !(Set String)
-                            | LEReason !String
-                            | LEHidden
-                            | LELabelAndReason !(Set String) !String
-
-type LabelConfig :: *
-data LabelConfig = LNotConfigured
-                 | LLabel !(Set String)
-                 | LHidden
-
-type ExplainConfig :: *
-data ExplainConfig = ENotConfigured
-                   | EReason !String
 
 type LabelConfigurable :: * -> Constraint
 class LabelConfigurable config where
@@ -216,23 +241,6 @@ class NotConfigurable config where
 instance NotConfigurable LabelWithExplainConfig where notConfigured = LENotConfigured
 instance NotConfigurable LabelConfig where notConfigured = LNotConfigured
 instance NotConfigurable ExplainConfig where notConfigured = ENotConfigured
-
-type FilterConfig :: * -> *
-data FilterConfig a = VSBasicFilter
-                    | VSSpecializedFilter (a -> [String])
-                    | VSUnexpected (a -> String)
-                    | VSBecause (a -> String)
-                    | VSUnexpectedBecause (a -> String) (a -> String)
-
-type VanillaFilterConfig :: * -> *
-data VanillaFilterConfig a = VBasicFilter
-                           | VUnexpected (a -> String)
-                           | VBecause (a -> String)
-                           | VUnexpectedBecause (a -> String) (a -> String)
-
-type SpecializedFilterConfig :: * -> *
-data SpecializedFilterConfig a = SBasicFilter
-                               | SSpecializedFilter (a -> [String])
 
 type VanillaFilterConfigurable :: (* -> *) -> Constraint
 class VanillaFilterConfigurable config where

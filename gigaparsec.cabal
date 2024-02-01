@@ -113,6 +113,7 @@ library
                       Text.Gigaparsec.Internal.Errors.ParseError,
                       Text.Gigaparsec.Internal.RT,
                       Text.Gigaparsec.Internal.Require,
+                      Text.Gigaparsec.Internal.Token.Errors,
                       Text.Gigaparsec.Internal.Token.Generic,
                       Text.Gigaparsec.Internal.Token.Lexer,
                       Text.Gigaparsec.Internal.Token.Names,
