@@ -97,6 +97,7 @@ library
                       Text.Gigaparsec.Position,
                       Text.Gigaparsec.Registers,
                       Text.Gigaparsec.Token.Descriptions,
+                      Text.Gigaparsec.Token.Errors,
                       Text.Gigaparsec.Token.Lexer,
                       Text.Gigaparsec.Token.Patterns,
 
