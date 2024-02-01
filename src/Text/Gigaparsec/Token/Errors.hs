@@ -25,7 +25,7 @@ module Text.Gigaparsec.Token.Errors (
       labelStringEscapeEmpty, labelStringEscapeGap, labelStringEscapeGapEnd,
       filterCharNonAscii, filterCharNonLatin1, filterStringNonAscii, filterStringNonLatin1,
       filterEscapeCharRequiresExactDigits, filterEscapeCharNumericSequenceIllegal,
-      --verifiedCharBadCharsUsedInLiteral, verifiedStringBadCharsUsedInLiteral,
+      verifiedCharBadCharsUsedInLiteral, verifiedStringBadCharsUsedInLiteral,
       labelSymbol, labelSymbolEndOfKeyword, labelSymbolEndOfOperator,
       labelSpaceEndOfLineComment, labelSpaceEndOfMultiComment
     ),
@@ -38,6 +38,8 @@ module Text.Gigaparsec.Token.Errors (
     VanillaFilterConfig, VanillaFilterConfigurable(..),
     SpecializedFilterConfig, SpecializedFilterConfigurable(..),
     BasicFilterConfigurable(..),
+    VerifiedBadChars, badCharsFail, badCharsReason,
+    Unverified(..),
     Bits(B8, B16, B32, B64)
   ) where
 
@@ -56,7 +58,8 @@ import Text.Gigaparsec.Internal.Token.Errors (
     LabelConfig(LLabel, LHidden, LNotConfigured), ExplainConfig(EReason, ENotConfigured),
     FilterConfig(VSBecause, VSUnexpected, VSUnexpectedBecause, VSBasicFilter, VSSpecializedFilter),
     SpecializedFilterConfig(SSpecializedFilter, SBasicFilter),
-    VanillaFilterConfig(VBecause, VUnexpected, VUnexpectedBecause, VBasicFilter)
+    VanillaFilterConfig(VBecause, VUnexpected, VUnexpectedBecause, VBasicFilter),
+    VerifiedBadChars(BadCharsUnverified, BadCharsFail, BadCharsReason)
   )
 
 type ErrorConfig :: *
@@ -111,8 +114,8 @@ data ErrorConfig =
               , filterStringNonLatin1 :: SpecializedFilterConfig String
               , filterEscapeCharRequiresExactDigits :: Int -> NonEmpty Int -> SpecializedFilterConfig Int
               , filterEscapeCharNumericSequenceIllegal :: Char -> Int -> SpecializedFilterConfig Integer
-              --, verifiedCharBadCharsUsedInLiteral :: VerifiedBadChars
-              --, verifiedStringBadCharsUsedInLiteral :: VerifiedBarChars
+              , verifiedCharBadCharsUsedInLiteral :: VerifiedBadChars
+              , verifiedStringBadCharsUsedInLiteral :: VerifiedBadChars
               , labelSymbol :: Map String LabelWithExplainConfig
               -- don't bother with these until parsley standardises
               --, defaultSymbolKeyword :: Labeller
@@ -190,8 +193,8 @@ defaultErrorConfig = ErrorConfig {..}
                 | otherwise = ["illegal unicode character: "
                             ++ showIntAtBase (toInteger radix) intToDigit c ""]
           in specializedFilter messages
-        -- verifiedCharBadCharsUsedInLiteral = Unverified
-        -- verifiedStringBadCharsUsedInLiteral = Unverified
+        verifiedCharBadCharsUsedInLiteral = unverified
+        verifiedStringBadCharsUsedInLiteral = unverified
         labelSymbol = Map.empty
         -- defaultSymbolKeyword = Label
         -- defaultSymbolOperator = Label
@@ -274,3 +277,14 @@ class BasicFilterConfigurable config where
 instance BasicFilterConfigurable FilterConfig where basicFilter = VSBasicFilter
 instance BasicFilterConfigurable VanillaFilterConfig where basicFilter = VBasicFilter
 instance BasicFilterConfigurable SpecializedFilterConfig where basicFilter = SBasicFilter
+
+badCharsFail :: Map Char [String] -> VerifiedBadChars
+badCharsFail = BadCharsFail
+badCharsReason :: Map Char String -> VerifiedBadChars
+badCharsReason = BadCharsReason
+
+type Unverified :: * -> Constraint
+class Unverified config where
+  unverified :: config
+
+instance Unverified VerifiedBadChars where unverified = BadCharsUnverified

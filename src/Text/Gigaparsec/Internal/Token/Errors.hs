@@ -2,6 +2,7 @@
 module Text.Gigaparsec.Internal.Token.Errors (module Text.Gigaparsec.Internal.Token.Errors) where
 
 import Data.Set (Set)
+import Data.Map (Map)
 
 type LabelWithExplainConfig :: *
 data LabelWithExplainConfig = LENotConfigured
@@ -35,3 +36,8 @@ data VanillaFilterConfig a = VBasicFilter
 type SpecializedFilterConfig :: * -> *
 data SpecializedFilterConfig a = SBasicFilter
                                | SSpecializedFilter (a -> [String])
+
+type VerifiedBadChars :: *
+data VerifiedBadChars = BadCharsFail !(Map Char [String])
+                      | BadCharsReason !(Map Char String)
+                      | BadCharsUnverified
