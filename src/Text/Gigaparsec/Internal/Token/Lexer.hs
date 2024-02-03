@@ -1,9 +1,8 @@
 {-# LANGUAGE Trustworthy #-}
-{-# LANGUAGE OverloadedLists #-}
 {-# OPTIONS_GHC -Wno-partial-fields #-}
 {-# OPTIONS_HADDOCK hide #-}
 module Text.Gigaparsec.Internal.Token.Lexer (
-    Lexer, mkLexer,
+    Lexer, mkLexer, mkLexerWithErrorConfig,
     Lexeme, lexeme, nonlexeme, fully, space,
     apply, sym, symbol, names, -- more go here, no numeric and no text
     -- Numeric
@@ -19,9 +18,14 @@ import Text.Gigaparsec (Parsec, eof, void, empty, (<|>), atomic, unit)
 import Text.Gigaparsec.Char (satisfy, string, item, endOfLine)
 import Text.Gigaparsec.Combinator (skipMany, skipManyTill)
 import Text.Gigaparsec.Registers (put, get, localWith, rollback)
-import Text.Gigaparsec.Errors.Combinator (hide, (<?>))
+import Text.Gigaparsec.Errors.Combinator (hide)
 
 import Text.Gigaparsec.Token.Descriptions qualified as Desc
+import Text.Gigaparsec.Token.Errors (
+    ErrorConfig (labelSpaceEndOfLineComment, labelSpaceEndOfMultiComment),
+    defaultErrorConfig
+  )
+import Text.Gigaparsec.Internal.Token.Errors (annotate)
 import Text.Gigaparsec.Internal.Token.Generic (mkGeneric)
 import Text.Gigaparsec.Internal.Token.Symbol (Symbol, mkSym, mkSymbol)
 import Text.Gigaparsec.Internal.Token.Symbol qualified as Symbol (lexeme)
@@ -31,8 +35,8 @@ import Text.Gigaparsec.Internal.Token.Numeric (
     IntegerParsers, mkSigned, mkUnsigned,
     --FloatingParsers, mkSignedFloating, mkUnsignedFloating,
     --CombinedParsers, mkSignedCombined, mkUnsignedCombined,
-    CanHoldSigned, CanHoldUnsigned
   )
+import Text.Gigaparsec.Internal.Token.BitBounds (CanHoldSigned, CanHoldUnsigned)
 import Text.Gigaparsec.Internal.Token.Numeric qualified as Numeric (lexemeInteger, {-lexemeFloating, lexemeCombined-})
 import Text.Gigaparsec.Internal.Token.Text (
     TextParsers,
@@ -57,9 +61,12 @@ data Lexer = Lexer { lexeme :: !Lexeme
                    }
 
 mkLexer :: Desc.LexicalDesc -> Lexer
-mkLexer Desc.LexicalDesc{..} = Lexer {..}
+mkLexer !desc = mkLexerWithErrorConfig desc defaultErrorConfig
+
+mkLexerWithErrorConfig :: Desc.LexicalDesc -> ErrorConfig -> Lexer
+mkLexerWithErrorConfig Desc.LexicalDesc{..} !errConfig = Lexer {..}
   where apply p = p <* whiteSpace space
-        gen = mkGeneric
+        gen = mkGeneric errConfig
         lexeme = Lexeme { apply = apply
                         , sym = apply . sym nonlexeme
                         , symbol = Symbol.lexeme apply (symbol nonlexeme)
@@ -77,32 +84,32 @@ mkLexer Desc.LexicalDesc{..} = Lexer {..}
                         , rawMultiStringLiteral = Text.lexeme apply (rawMultiStringLiteral nonlexeme)
                         , charLiteral = Text.lexeme apply (charLiteral nonlexeme)
                         }
-        nonlexeme = NonLexeme { sym = mkSym symbolDesc (symbol nonlexeme)
-                              , symbol = mkSymbol symbolDesc nameDesc
-                              , names = mkNames nameDesc symbolDesc
-                              , natural = mkUnsigned numericDesc gen
-                              , integer = mkSigned numericDesc (natural nonlexeme)
+        nonlexeme = NonLexeme { sym = mkSym symbolDesc (symbol nonlexeme) errConfig
+                              , symbol = mkSymbol symbolDesc nameDesc errConfig
+                              , names = mkNames nameDesc symbolDesc errConfig
+                              , natural = mkUnsigned numericDesc gen errConfig
+                              , integer = mkSigned numericDesc (natural nonlexeme) errConfig
                               {-, floating = mkSignedFloating numericDesc positiveFloating
                               , unsignedCombined = mkUnsignedCombined numericDesc (natural nonlexeme) positiveFloating
                               , signedCombined = mkSignedCombined numericDesc (unsignedCombined nonlexeme)-}
-                              , stringLiteral = mkStringParsers stringEnds escapeChar graphicCharacter False
-                              , rawStringLiteral = mkStringParsers stringEnds rawChar graphicCharacter False
-                              , multiStringLiteral = mkStringParsers multiStringEnds escapeChar graphicCharacter True
-                              , rawMultiStringLiteral = mkStringParsers multiStringEnds rawChar graphicCharacter True
-                              , charLiteral = mkCharacterParsers textDesc escape
+                              , stringLiteral = mkStringParsers stringEnds escapeChar graphicCharacter False errConfig
+                              , rawStringLiteral = mkStringParsers stringEnds rawChar graphicCharacter False errConfig
+                              , multiStringLiteral = mkStringParsers multiStringEnds escapeChar graphicCharacter True errConfig
+                              , rawMultiStringLiteral = mkStringParsers multiStringEnds rawChar graphicCharacter True errConfig
+                              , charLiteral = mkCharacterParsers textDesc escape errConfig
                               }
         --positiveFloating = mkUnsignedFloating numericDesc (natural nonlexeme) gen
-        !escape = mkEscape (Desc.escapeSequences textDesc) mkGeneric -- this is mkGeneric because of errors
+        !escape = mkEscape (Desc.escapeSequences textDesc) gen errConfig
         graphicCharacter = Desc.graphicCharacter textDesc
         stringEnds = Desc.stringEnds textDesc
         multiStringEnds = Desc.multiStringEnds textDesc
         rawChar = RawChar
-        escapeChar = mkEscapeChar (Desc.escapeSequences textDesc) escape (whiteSpace space)
+        escapeChar = mkEscapeChar (Desc.escapeSequences textDesc) escape (whiteSpace space) errConfig
         fully' p = whiteSpace space *> p <* eof
         fully p
           | Desc.whitespaceIsContextDependent spaceDesc = initSpace space *> fully' p
           | otherwise                                   = fully' p
-        space = mkSpace spaceDesc
+        space = mkSpace spaceDesc errConfig
 
 --TODO: better name for this, I guess?
 type Lexeme :: *
@@ -147,20 +154,20 @@ data Space = Space { whiteSpace :: !(Parsec ())
                    , initSpace :: Parsec ()
                    }
 
-mkSpace :: Desc.SpaceDesc -> Space
-mkSpace desc@Desc.SpaceDesc{..} = Space {..}
+mkSpace :: Desc.SpaceDesc -> ErrorConfig -> Space
+mkSpace desc@Desc.SpaceDesc{..} !errConfig = Space {..}
   where -- don't think we can trust doing initialisation here, it'll happen in some random order
         {-# NOINLINE wsImpl #-}
         !wsImpl = fromIORef (unsafePerformIO (newIORef (error "uninitialised space")))
         comment = commentParser desc -- do not make this strict
         implOf
-          | supportsComments desc = hide . maybe skipComments (skipMany . (<|> comment) . void . satisfy)
+          | supportsComments desc = hide . maybe skipComments (skipMany . (<|> comment errConfig) . void . satisfy)
           | otherwise             = hide . maybe empty (skipMany . satisfy)
         !configuredWhitespace = implOf space
         !whiteSpace
           | whitespaceIsContextDependent = join (get wsImpl)
           | otherwise                    = configuredWhitespace
-        !skipComments = skipMany comment
+        !skipComments = skipMany (comment errConfig)
         alter p
           | whitespaceIsContextDependent = rollback wsImpl . localWith wsImpl (implOf p)
           | otherwise                    = throw (UnsupportedOperation badAlter)
@@ -178,15 +185,15 @@ We have the following invariances to be checked up front:
 -- TODO: needs error messages put in (is the hide correct)
 -- TODO: remove guard, configure properly
 -}
-commentParser :: Desc.SpaceDesc -> Parsec ()
-commentParser Desc.SpaceDesc{..} =
+commentParser :: Desc.SpaceDesc -> ErrorConfig -> Parsec ()
+commentParser Desc.SpaceDesc{..} !errConfig =
   require (multiEnabled || singleEnabled) "skipComments" noComments $
     require (not (multiEnabled && isPrefixOf multiLineCommentStart lineCommentStart)) "skipComments" noOverlap $
       hide (multiLine <|> singleLine)
   where
     -- can't make these strict until guard is gone
     openComment = atomic (string multiLineCommentStart)
-    closeComment = atomic (string multiLineCommentEnd) <?> ["end of comment"]
+    closeComment = annotate (labelSpaceEndOfMultiComment errConfig) (atomic (string multiLineCommentEnd))
     multiLine = guard multiEnabled *> openComment *> wellNested 1
     wellNested :: Int -> Parsec ()
     wellNested 0 = unit
@@ -195,7 +202,7 @@ commentParser Desc.SpaceDesc{..} =
                <|> item *> wellNested n
     singleLine = guard singleEnabled
               *> atomic (string lineCommentStart)
-              *> skipManyTill item (endOfLineComment <?> ["end of comment"])
+              *> skipManyTill item (annotate (labelSpaceEndOfLineComment errConfig) endOfLineComment)
 
     endOfLineComment
       | lineCommentAllowsEOF = void endOfLine <|> eof

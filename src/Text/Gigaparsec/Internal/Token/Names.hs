@@ -21,6 +21,10 @@ import Text.Gigaparsec.Token.Descriptions (
     CharPredicate
   )
 import Data.Char (toLower)
+import Text.Gigaparsec.Token.Errors (
+    ErrorConfig (labelNameIdentifier, unexpectedNameIllegalIdentifier, labelNameOperator, unexpectedNameIllegalOperator, filterNameIllFormedIdentifier, filterNameIllFormedOperator)
+  )
+import Text.Gigaparsec.Internal.Token.Errors (filterS)
 
 -- TODO: primes are gross, better way?
 type Names :: *
@@ -30,21 +34,16 @@ data Names = Names { identifier :: !(Parsec String)
                    , userDefinedOperator' :: !(CharPredicate -> Parsec String)
                    }
 
-mkNames :: NameDesc -> SymbolDesc -> Names
-mkNames NameDesc{..} symbolDesc@SymbolDesc{..} = Names {..}
+mkNames :: NameDesc -> SymbolDesc -> ErrorConfig -> Names
+mkNames NameDesc{..} symbolDesc@SymbolDesc{..} err = Names {..}
   where
-    -- TODO: error transformers
     !isReserved = isReservedName symbolDesc
     !identifier =
-      keyOrOp identifierStart identifierLetter isReserved "identifier" ("keyword " ++)
-    identifier' start =
-      unexpectedWhen (\v -> if startsWith start v then Nothing else Just ("identifier " ++ v))
-                     identifier
+      keyOrOp identifierStart identifierLetter isReserved (labelNameIdentifier err) (unexpectedNameIllegalIdentifier err)
+    identifier' start = filterS (filterNameIllFormedIdentifier err) (startsWith start) identifier
     !userDefinedOperator =
-      keyOrOp operatorStart operatorLetter (flip Set.member hardOperators) "operator" ("reserved operator " ++)
-    userDefinedOperator' start =
-      unexpectedWhen (\v -> if startsWith start v then Nothing else Just ("operator " ++ v))
-                     userDefinedOperator
+      keyOrOp operatorStart operatorLetter (flip Set.member hardOperators) (labelNameOperator err) (unexpectedNameIllegalOperator err)
+    userDefinedOperator' start = filterS (filterNameIllFormedOperator err) (startsWith start) userDefinedOperator
 
     keyOrOp :: CharPredicate -> CharPredicate -> (String -> Bool) -> String -> (String -> String) -> Parsec String
     keyOrOp start letter illegal name unexpectedIllegal =

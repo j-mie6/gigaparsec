@@ -1,6 +1,9 @@
 {-# LANGUAGE Safe #-}
 {-# LANGUAGE OverloadedLists #-}
 {-# OPTIONS_GHC -Wno-partial-fields #-}
+-- TODO: In next major, don't expose the constructors of the descriptions,
+-- we want them built up by record copy for forwards compatible evolution
+-- We can move this into an internal module to accommodate that if we want
 module Text.Gigaparsec.Token.Descriptions (module Text.Gigaparsec.Token.Descriptions) where
 
 import Data.Char (isSpace)

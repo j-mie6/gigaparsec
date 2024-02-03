@@ -14,21 +14,36 @@ import Text.Gigaparsec.Token.Descriptions (
     CharPredicate,
     NumberOfDigits(Exactly, AtMost, Unbounded)
   )
-import Text.Gigaparsec.Internal.Token.Generic (GenericNumeric(zeroAllowedDecimal, zeroAllowedHexadecimal, zeroAllowedOctal, zeroAllowedBinary))
-import Data.Char (isSpace, chr, ord, digitToInt, isAscii, isLatin1, intToDigit)
+import Text.Gigaparsec.Token.Errors (
+    ErrorConfig(verifiedCharBadCharsUsedInLiteral, verifiedStringBadCharsUsedInLiteral,
+                filterCharNonAscii, filterCharNonLatin1,
+                labelCharAscii, labelCharAsciiEnd, labelCharLatin1, labelCharLatin1End,
+                labelCharUnicodeEnd, labelCharUnicode,
+                labelGraphicCharacter, labelStringCharacter,
+                filterStringNonAscii, filterStringNonLatin1,
+                labelEscapeEnd, labelEscapeSequence, filterEscapeCharNumericSequenceIllegal,
+                filterEscapeCharRequiresExactDigits, labelEscapeNumericEnd, labelEscapeNumeric,
+                labelStringEscapeGap, labelStringEscapeGapEnd, labelStringEscapeEmpty,
+                labelStringAscii, labelStringAsciiEnd, labelStringLatin1, labelStringLatin1End,
+                labelStringUnicode, labelStringUnicodeEnd),
+    NotConfigurable (notConfigured)
+  )
+import Text.Gigaparsec.Internal.Token.Errors (
+    checkBadChar, filterS, annotate, mapMaybeS, mapMaybeS',
+    LabelWithExplainConfig, LabelConfig
+  )
+import Text.Gigaparsec.Internal.Token.Generic (
+    GenericNumeric(zeroAllowedDecimal, zeroAllowedHexadecimal, zeroAllowedOctal, zeroAllowedBinary)
+  )
+import Data.Char (isSpace, chr, ord, digitToInt, isAscii, isLatin1)
 import Data.Map qualified as Map (insert, map)
 import Data.Set (Set)
 import Data.Set qualified as Set (toList)
 import Data.List.NonEmpty (NonEmpty((:|)), sort)
-import Data.List.NonEmpty qualified as NonEmpty (toList)
 import Text.Gigaparsec.Registers (Reg, make, unsafeMake, gets, modify, put, get)
 import Text.Gigaparsec.Combinator (guardS, choice, manyTill)
-import Text.Gigaparsec.Errors.Combinator (filterOut, (<?>), label, explain, mapMaybeSWith)
 import Control.Applicative (liftA3)
 import Data.Maybe (catMaybes)
-import Text.Gigaparsec.Errors.ErrorGen (specializedGen, messages)
-import Text.Gigaparsec.Errors.DefaultErrorBuilder (disjunct, toString, from)
-import Numeric (showIntAtBase)
 
 -- TODO: is it possible to /actually/ support Text/Bytestring in future?
 -- Perhaps something like the Numeric stuff?
@@ -45,67 +60,72 @@ type StringParsers = TextParsers String
 type CharacterParsers :: *
 type CharacterParsers = TextParsers Char
 
-mkCharacterParsers :: TextDesc -> Escape -> CharacterParsers
-mkCharacterParsers TextDesc{..} escape = TextParsers {..}
-  where unicode = lit uncheckedUniLetter
-        ascii = lit (filterOut (\c -> if c > '\x7f' then Just "non-ascii character" else Nothing) uncheckedUniLetter)
-        latin1 = lit (filterOut (\c -> if c > '\xff' then Just "non-latin1 character" else Nothing) uncheckedUniLetter)
+mkCharacterParsers :: TextDesc -> Escape -> ErrorConfig -> CharacterParsers
+mkCharacterParsers TextDesc{..} escape !err = TextParsers {..}
+  where unicode = lit (labelCharUnicode err) (labelCharUnicodeEnd err) uncheckedUniLetter
+        ascii = lit (labelCharAscii err) (labelCharAsciiEnd err) (filterS (filterCharNonAscii err) (> '\x7f') uncheckedUniLetter)
+        latin1 = lit (labelCharLatin1 err) (labelCharLatin1End err) (filterS (filterCharNonLatin1 err) (> '\xff') uncheckedUniLetter)
 
         quote = char characterLiteralEnd
-        lit c = quote *> c <* quote
-        uncheckedUniLetter = escapeChar escape <|> graphic
+        lit label endLabel c = annotate label quote *> c <* annotate endLabel quote
+        uncheckedUniLetter = escapeChar escape <|> graphic <|> checkBadChar (verifiedCharBadCharsUsedInLiteral err)
 
-        graphic = maybe empty satisfy (letter characterLiteralEnd False graphicCharacter) <?> ["graphic character"]
+        graphic = annotate (labelGraphicCharacter err) $ maybe empty satisfy (letter characterLiteralEnd False graphicCharacter)
 
 type StringChar :: *
 data StringChar = RawChar
                 | EscapeChar {-# UNPACK #-} !Char (Parsec (Maybe Char))
 
-mkEscapeChar :: EscapeDesc -> Escape -> Parsec () -> StringChar
-mkEscapeChar !desc !esc !space = EscapeChar (escBegin desc) stringEsc
+mkEscapeChar :: EscapeDesc -> Escape -> Parsec () -> ErrorConfig -> StringChar
+mkEscapeChar !desc !esc !space !err = EscapeChar (escBegin desc) stringEsc
   where stringEsc = escapeBegin esc *> (escapeGap $> Nothing <|>
                                         escapeEmpty $> Nothing <|>
                                         Just <$> escapeCode esc)
-        escapeEmpty = maybe empty char (emptyEscape desc)
+        escapeEmpty = maybe empty (annotate (labelStringEscapeEmpty err) . char) (emptyEscape desc)
         escapeGap
-          | gapsSupported desc = some (space <?> ["string gap"]) *> (escapeBegin esc <?> ["end of string gap"])
+          | gapsSupported desc = some (annotate (labelStringEscapeGap err) space)
+                              *> annotate (labelStringEscapeGapEnd err) (escapeBegin esc)
           | otherwise = empty
 
-mkChar :: StringChar -> CharPredicate -> Parsec (Maybe Char)
-mkChar RawChar = maybe empty (fmap Just . label ["string character"] . satisfy)
-mkChar (EscapeChar escBegin stringEsc) =
-  foldr (\p -> label ["string character"] . (<|> fmap Just (satisfy (\c -> p c && c /= escBegin) <?> ["graphic character"])))
+mkChar :: StringChar -> ErrorConfig -> CharPredicate -> Parsec (Maybe Char)
+mkChar RawChar !err = maybe empty ((<|> checkBadChar (verifiedStringBadCharsUsedInLiteral err)) . fmap Just . annotate (labelStringCharacter err) . satisfy)
+mkChar (EscapeChar escBegin stringEsc) err =
+  foldr (\p -> annotate (labelStringCharacter err) . (<|> checkBadChar (verifiedStringBadCharsUsedInLiteral err)) . (<|> fmap Just (annotate (labelGraphicCharacter err) (satisfy (\c -> p c && c /= escBegin)))))
         stringEsc
 
 isRawChar :: StringChar -> Bool
 isRawChar RawChar = True
 isRawChar EscapeChar{} = False
 
-ensureAscii :: Parsec String -> Parsec String
-ensureAscii = filterOut $ \s ->
-  if not (all isAscii s) then Just "non-ascii characters in string literal, this is not allowed"
-  else Nothing
+ensureAscii :: ErrorConfig -> Parsec String -> Parsec String
+ensureAscii !err = filterS (filterStringNonAscii err) (not . all isAscii)
 
-ensureLatin1 :: Parsec String -> Parsec String
-ensureLatin1 = filterOut $ \s ->
-  if not (all isLatin1 s) then Just "non-latin1 characters in string literal, this is not allowed"
-  else Nothing
+ensureLatin1 :: ErrorConfig -> Parsec String -> Parsec String
+ensureLatin1 !err = filterS (filterStringNonLatin1 err) (not . all isLatin1)
 
-mkStringParsers :: Set (String, String) -> StringChar -> CharPredicate -> Bool -> StringParsers
-mkStringParsers !ends !stringChar !isGraphic !allowsAllSpace = TextParsers {..}
-  where ascii = stringLiteral ensureAscii
-        latin1 = stringLiteral ensureLatin1
-        unicode = stringLiteral id
+mkStringParsers :: Set (String, String) -> StringChar -> CharPredicate -> Bool -> ErrorConfig -> StringParsers
+mkStringParsers !ends !stringChar !isGraphic !allowsAllSpace !err = TextParsers {..}
+  where ascii = stringLiteral (ensureAscii err) (labelStringAscii err) (labelStringAsciiEnd err)
+        latin1 = stringLiteral (ensureLatin1 err) (labelStringLatin1 err) (labelStringLatin1End err)
+        unicode = stringLiteral id (labelStringUnicode err) (labelStringUnicodeEnd err)
 
-        stringLiteral :: (Parsec String -> Parsec String) -> Parsec String
-        stringLiteral valid = choice (map (uncurry (makeStringParser valid)) (Set.toList ends))
+        stringLiteral :: (Parsec String -> Parsec String)
+                      -> (Bool -> Bool -> LabelWithExplainConfig)
+                      -> (Bool -> Bool -> LabelConfig)
+                      -> Parsec String
+        stringLiteral valid openLabel closeLabel =
+          choice (map (uncurry (makeStringParser valid openLabel closeLabel)) (Set.toList ends))
 
-        makeStringParser :: (Parsec String -> Parsec String) -> String -> String -> Parsec String
-        makeStringParser valid begin end@(terminalInit : _) =
-          let strChar = mkChar stringChar (letter terminalInit allowsAllSpace isGraphic)
-          in (string begin *>) . valid $
-               catMaybes <$> manyTill (Just <$> char terminalInit <|> strChar) (atomic (string end))
-        makeStringParser _ _ [] = error "string terminals cannot be empty"
+        makeStringParser :: (Parsec String -> Parsec String)
+                         -> (Bool -> Bool -> LabelWithExplainConfig)
+                         -> (Bool -> Bool -> LabelConfig)
+                         -> String -> String -> Parsec String
+        makeStringParser valid openLabel closeLabel begin end@(terminalInit : _) =
+          let strChar = mkChar stringChar err (letter terminalInit allowsAllSpace isGraphic)
+          in (annotate (openLabel allowsAllSpace (isRawChar stringChar)) (string begin) *>) . valid $
+               catMaybes <$> manyTill (Just <$> char terminalInit <|> strChar)
+                                      (annotate (closeLabel allowsAllSpace (isRawChar stringChar)) (atomic (string end)))
+        makeStringParser _ _ _ _ [] = error "string terminals cannot be empty"
 
 letter :: Char -> Bool -> CharPredicate -> CharPredicate
 letter !terminalLead !allowsAllSpace (Just g)
@@ -119,11 +139,11 @@ data Escape = Escape { escapeCode :: !(Parsec Char)
                      , escapeChar :: !(Parsec Char)
                      }
 
-mkEscape :: EscapeDesc -> GenericNumeric -> Escape
-mkEscape EscapeDesc{..} gen = Escape {..}
+mkEscape :: EscapeDesc -> GenericNumeric -> ErrorConfig -> Escape
+mkEscape EscapeDesc{..} gen !err = Escape {..}
   where
-    escapeBegin = void (char escBegin) <?> ["escape sequence"]
-    escapeCode = explain "invalid escape sequence" $ label ["end of escape sequence"] $
+    escapeBegin = annotate (labelEscapeSequence err) $ void (char escBegin)
+    escapeCode = annotate (labelEscapeEnd err) $
       escMapped <|> numericEscape
     escapeChar = escapeBegin *> escapeCode
 
@@ -132,26 +152,20 @@ mkEscape EscapeDesc{..} gen = Escape {..}
 
     numericEscape = decimalEsc <|> hexadecimalEsc <|> octalEsc <|> binaryEsc
 
-    decimalEsc = fromDesc 10 decimalEscape (zeroAllowedDecimal gen) digit
-    hexadecimalEsc = fromDesc 16 hexadecimalEscape (zeroAllowedHexadecimal gen) hexDigit
-    octalEsc = fromDesc 8 octalEscape (zeroAllowedOctal gen) octDigit
-    binaryEsc = fromDesc 2 binaryEscape (zeroAllowedBinary gen) bit
+    decimalEsc = fromDesc 10 decimalEscape (zeroAllowedDecimal gen notConfigured) digit
+    hexadecimalEsc = fromDesc 16 hexadecimalEscape (zeroAllowedHexadecimal gen notConfigured) hexDigit
+    octalEsc = fromDesc 8 octalEscape (zeroAllowedOctal gen notConfigured) octDigit
+    binaryEsc = fromDesc 2 binaryEscape (zeroAllowedBinary gen notConfigured) bit
 
     boundedChar :: Parsec Integer -> Char -> Maybe Char -> Int -> Parsec Char
-    boundedChar p maxValue prefix radix = foldr (\c t -> char c *> t) (mapMaybeSWith err f p) prefix
-      where f c
+    boundedChar p maxValue prefix radix = annotate (labelEscapeNumeric err radix) $
+      foldr (\c t -> char c *> annotate (labelEscapeNumericEnd err c radix) t)
+            (mapMaybeS config f p)
+            prefix
+      where config = filterEscapeCharNumericSequenceIllegal err maxValue radix
+            f c
              | c < toInteger (ord maxValue) = Just (chr (fromInteger c))
              | otherwise = Nothing
-            err = specializedGen { messages = messages }
-            messages :: Integer -> [String]
-            messages c
-              | c > toInteger (ord maxValue) =
-                  [showIntAtBase (toInteger radix) intToDigit c
-                    (" is greater than the maximum character value of "
-                    ++ showIntAtBase (toInteger radix) intToDigit (toInteger (ord maxValue)) "")]
-              | otherwise = ["illegal unicode character: "
-                          ++ showIntAtBase (toInteger radix) intToDigit c ""]
-
 
     atMost' :: Int -> Parsec Char -> Reg r Word -> Parsec Integer
     atMost' radix dig atMostR =
@@ -164,13 +178,9 @@ mkEscape EscapeDesc{..} gen = Escape {..}
 
     exactly :: Word -> Word -> Int -> Parsec Char -> NonEmpty Word -> Parsec Integer
     exactly n full radix dig reqDigits = make n $ \atMostR ->
-      mapMaybeSWith (specializedGen {messages = messages})
-                    (\(num, m) -> if m == full then Just num else Nothing)
-                    (atMost' radix dig atMostR <~> gets atMostR (full -))
-      where messages :: (Integer, Word) -> [String]
-            messages (_, got) =
-              [toString ("numeric escape requires " <> formatted <> "digits, but only got" <> from got)]
-            ~(Just formatted) = disjunct True (map show (NonEmpty.toList reqDigits))
+      mapMaybeS' snd (filterEscapeCharRequiresExactDigits err radix reqDigits)
+                 (\(num, m) -> if m == full then Just num else Nothing)
+                 (atMost' radix dig atMostR <~> gets atMostR (full -))
 
     oneOfExactly' :: NonEmpty Word -> Word -> Word -> [Word] -> Int -> Parsec Char -> Reg r Word -> Parsec Integer
     oneOfExactly' reqDigits digits m [] radix dig digitsParsed =
