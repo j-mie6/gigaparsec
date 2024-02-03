@@ -18,21 +18,22 @@ import Text.Gigaparsec.Errors.Combinator (amend, emptyWide, (<?>))
 import Data.Set (Set)
 import Data.Maybe (mapMaybe)
 import Text.Gigaparsec.Internal.Require (require)
+import Text.Gigaparsec.Token.Errors (ErrorConfig)
 
 type Symbol :: *
 data Symbol = Symbol { softKeyword :: !(String -> Parsec ())
                      , softOperator :: !(String -> Parsec ())
                      }
 
-mkSymbol :: SymbolDesc -> NameDesc -> Symbol
-mkSymbol SymbolDesc{..} NameDesc{..} = Symbol {..}
+mkSymbol :: SymbolDesc -> NameDesc -> ErrorConfig -> Symbol
+mkSymbol SymbolDesc{..} NameDesc{..} _ = Symbol {..}
   where softKeyword name = require (not (null name)) "softKeyword" "keywords may not be empty"
           (_softKeyword caseSensitive identifierLetter name <?> [name])
         softOperator name = require (not (null name)) "softOperator" "operators may not be empty"
           (_softOperator hardOperators operatorLetter name <?> [name])
 
-mkSym :: SymbolDesc -> Symbol -> (String -> Parsec ())
-mkSym SymbolDesc{..} Symbol{..} str
+mkSym :: SymbolDesc -> Symbol -> ErrorConfig -> (String -> Parsec ())
+mkSym SymbolDesc{..} Symbol{..} _ str
   | Set.member str hardKeywords  = softKeyword str
   | Set.member str hardOperators = softOperator str
   | otherwise                    = void (atomic (string str))

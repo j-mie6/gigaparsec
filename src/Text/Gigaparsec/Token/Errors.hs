@@ -47,9 +47,9 @@ import Data.Set (Set)
 import Data.Map (Map)
 import Data.Map qualified as Map (empty)
 import Data.List.NonEmpty (NonEmpty)
-import Data.List.NonEmpty qualified as NonEmpty (toList)
+import Data.List.NonEmpty qualified as NonEmpty (toList, singleton)
 import Data.Kind (Constraint)
-import Text.Gigaparsec.Internal.Token.Numeric (Bits(B8, B16, B32, B64))
+import Text.Gigaparsec.Internal.Token.BitBounds (Bits(B8, B16, B32, B64))
 import Numeric (showIntAtBase)
 import Data.Char (intToDigit, ord)
 import Text.Gigaparsec.Errors.DefaultErrorBuilder (from, disjunct, toString)
@@ -123,8 +123,8 @@ data ErrorConfig =
               --, defaultSymbolPunctuaton :: Labeller -- TODO:
               , labelSymbolEndOfKeyword :: String -> String -- TODO:
               , labelSymbolEndOfOperator :: String -> String -- TODO:
-              , labelSpaceEndOfLineComment :: LabelWithExplainConfig -- TODO:
-              , labelSpaceEndOfMultiComment :: LabelWithExplainConfig -- TODO:
+              , labelSpaceEndOfLineComment :: LabelWithExplainConfig
+              , labelSpaceEndOfMultiComment :: LabelWithExplainConfig
               }
 
 defaultErrorConfig :: ErrorConfig
@@ -184,14 +184,14 @@ defaultErrorConfig = ErrorConfig {..}
           let ~(Just formatted) = disjunct True (map show (NonEmpty.toList needed))
           in [toString ("numeric escape requires " <> formatted <> "digits, but only got" <> from got)]
         filterEscapeCharNumericSequenceIllegal maxEscape radix =
-          let messages :: Integer -> [String]
+          let messages :: Integer -> NonEmpty String
               messages c
-                | c > toInteger (ord maxEscape) =
-                    [showIntAtBase (toInteger radix) intToDigit c
+                | c > toInteger (ord maxEscape) = NonEmpty.singleton $
+                    showIntAtBase (toInteger radix) intToDigit c
                       (" is greater than the maximum character value of "
-                      ++ showIntAtBase (toInteger radix) intToDigit (toInteger (ord maxEscape)) "")]
-                | otherwise = ["illegal unicode character: "
-                            ++ showIntAtBase (toInteger radix) intToDigit c ""]
+                      ++ showIntAtBase (toInteger radix) intToDigit (toInteger (ord maxEscape)) "")
+                | otherwise = NonEmpty.singleton $ "illegal unicode character: "
+                                                 ++ showIntAtBase (toInteger radix) intToDigit c ""
           in specializedFilter messages
         verifiedCharBadCharsUsedInLiteral = unverified
         verifiedStringBadCharsUsedInLiteral = unverified
@@ -204,10 +204,9 @@ defaultErrorConfig = ErrorConfig {..}
         labelSpaceEndOfLineComment = label ["end of comment"]
         labelSpaceEndOfMultiComment = label ["end of comment"]
 
-outOfBounds :: Integer -> Integer -> Int -> Integer -> [String]
-outOfBounds small big radix _n = [
+outOfBounds :: Integer -> Integer -> Int -> Integer -> NonEmpty String
+outOfBounds small big radix _n = NonEmpty.singleton $
     "literal is not within the range " ++ resign small (" to " ++ resign big "")
-  ]
   where resign n
           | n < 0 = ('-' :) . showIntAtBase (toInteger radix) intToDigit (abs n)
           | otherwise = showIntAtBase (toInteger radix) intToDigit n
@@ -263,7 +262,7 @@ instance VanillaFilterConfigurable VanillaFilterConfig where
 
 type SpecializedFilterConfigurable :: (* -> *) -> Constraint
 class SpecializedFilterConfigurable config where
-  specializedFilter :: (a -> [String]) -> config a
+  specializedFilter :: (a -> NonEmpty String) -> config a
 
 instance SpecializedFilterConfigurable FilterConfig where
   specializedFilter = VSSpecializedFilter
@@ -278,7 +277,7 @@ instance BasicFilterConfigurable FilterConfig where basicFilter = VSBasicFilter
 instance BasicFilterConfigurable VanillaFilterConfig where basicFilter = VBasicFilter
 instance BasicFilterConfigurable SpecializedFilterConfig where basicFilter = SBasicFilter
 
-badCharsFail :: Map Char [String] -> VerifiedBadChars
+badCharsFail :: Map Char (NonEmpty String) -> VerifiedBadChars
 badCharsFail = BadCharsFail
 badCharsReason :: Map Char String -> VerifiedBadChars
 badCharsReason = BadCharsReason

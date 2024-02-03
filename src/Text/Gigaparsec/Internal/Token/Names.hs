@@ -21,6 +21,7 @@ import Text.Gigaparsec.Token.Descriptions (
     CharPredicate
   )
 import Data.Char (toLower)
+import Text.Gigaparsec.Token.Errors (ErrorConfig)
 
 -- TODO: primes are gross, better way?
 type Names :: *
@@ -30,8 +31,8 @@ data Names = Names { identifier :: !(Parsec String)
                    , userDefinedOperator' :: !(CharPredicate -> Parsec String)
                    }
 
-mkNames :: NameDesc -> SymbolDesc -> Names
-mkNames NameDesc{..} symbolDesc@SymbolDesc{..} = Names {..}
+mkNames :: NameDesc -> SymbolDesc -> ErrorConfig -> Names
+mkNames NameDesc{..} symbolDesc@SymbolDesc{..} _errConfig = Names {..}
   where
     -- TODO: error transformers
     !isReserved = isReservedName symbolDesc

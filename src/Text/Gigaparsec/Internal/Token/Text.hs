@@ -48,7 +48,7 @@ type CharacterParsers :: *
 type CharacterParsers = TextParsers Char
 
 mkCharacterParsers :: TextDesc -> Escape -> ErrorConfig -> CharacterParsers
-mkCharacterParsers TextDesc{..} escape errConfig = TextParsers {..}
+mkCharacterParsers TextDesc{..} escape !errConfig = TextParsers {..}
   where unicode = lit uncheckedUniLetter
         ascii = lit (filterOut (\c -> if c > '\x7f' then Just "non-ascii character" else Nothing) uncheckedUniLetter)
         latin1 = lit (filterOut (\c -> if c > '\xff' then Just "non-latin1 character" else Nothing) uncheckedUniLetter)
@@ -94,7 +94,7 @@ ensureLatin1 = filterOut $ \s ->
   else Nothing
 
 mkStringParsers :: Set (String, String) -> StringChar -> CharPredicate -> Bool -> ErrorConfig -> StringParsers
-mkStringParsers !ends !stringChar !isGraphic !allowsAllSpace errConfig = TextParsers {..}
+mkStringParsers !ends !stringChar !isGraphic !allowsAllSpace !errConfig = TextParsers {..}
   where ascii = stringLiteral ensureAscii
         latin1 = stringLiteral ensureLatin1
         unicode = stringLiteral id

@@ -46,7 +46,7 @@ import Text.Gigaparsec.Internal.Token.Numeric (
     octal8, octal16, octal32, octal64,
     binary8, binary16, binary32, binary64
   )
-import Text.Gigaparsec.Internal.Token.Numeric qualified as Internal
+import Text.Gigaparsec.Internal.Token.BitBounds qualified as Internal
 import Text.Gigaparsec.Internal.Token.Text (
     TextParsers, ascii, unicode, latin1
   )
