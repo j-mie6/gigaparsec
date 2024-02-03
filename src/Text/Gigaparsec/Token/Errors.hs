@@ -46,8 +46,8 @@ module Text.Gigaparsec.Token.Errors (
 import Data.Set (Set)
 import Data.Map (Map)
 import Data.Map qualified as Map (empty)
-import Data.List.NonEmpty (NonEmpty)
-import Data.List.NonEmpty qualified as NonEmpty (toList, singleton)
+import Data.List.NonEmpty (NonEmpty((:|)))
+import Data.List.NonEmpty qualified as NonEmpty (toList)
 import Data.Kind (Constraint)
 import Text.Gigaparsec.Internal.Token.BitBounds (Bits(B8, B16, B32, B64))
 import Numeric (showIntAtBase)
@@ -186,12 +186,12 @@ defaultErrorConfig = ErrorConfig {..}
         filterEscapeCharNumericSequenceIllegal maxEscape radix =
           let messages :: Integer -> NonEmpty String
               messages c
-                | c > toInteger (ord maxEscape) = NonEmpty.singleton $
+                | c > toInteger (ord maxEscape) = singleton $
                     showIntAtBase (toInteger radix) intToDigit c
                       (" is greater than the maximum character value of "
                       ++ showIntAtBase (toInteger radix) intToDigit (toInteger (ord maxEscape)) "")
-                | otherwise = NonEmpty.singleton $ "illegal unicode character: "
-                                                 ++ showIntAtBase (toInteger radix) intToDigit c ""
+                | otherwise = singleton $ "illegal unicode character: "
+                                        ++ showIntAtBase (toInteger radix) intToDigit c ""
           in specializedFilter messages
         verifiedCharBadCharsUsedInLiteral = unverified
         verifiedStringBadCharsUsedInLiteral = unverified
@@ -205,7 +205,7 @@ defaultErrorConfig = ErrorConfig {..}
         labelSpaceEndOfMultiComment = label ["end of comment"]
 
 outOfBounds :: Integer -> Integer -> Int -> Integer -> NonEmpty String
-outOfBounds small big radix _n = NonEmpty.singleton $
+outOfBounds small big radix _n = singleton $
     "literal is not within the range " ++ resign small (" to " ++ resign big "")
   where resign n
           | n < 0 = ('-' :) . showIntAtBase (toInteger radix) intToDigit (abs n)
@@ -287,3 +287,6 @@ class Unverified config where
   unverified :: config
 
 instance Unverified VerifiedBadChars where unverified = BadCharsUnverified
+
+singleton :: a -> NonEmpty a
+singleton x = x :| []

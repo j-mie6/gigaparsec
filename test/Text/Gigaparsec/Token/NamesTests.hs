@@ -14,6 +14,7 @@ import Text.Gigaparsec.Internal.Test
 import Control.Monad (forM_)
 import Data.Char (isLetter, isAlphaNum)
 import Text.Gigaparsec.Internal.TestError
+import Text.Gigaparsec.Token.Errors (defaultErrorConfig)
 
 tests :: TestTree
 tests = testGroup "Names"
@@ -96,6 +97,7 @@ namesFor start letter sensitive = lexeme (<* spaces) $
                        , hardKeywords = ["keyword", "HARD"]
                        , hardOperators = ["+", "<", "<="]
                        })
+          defaultErrorConfig
 
 basicNames :: Names
 basicNames = namesFor (Just isLetter) (Just isAlphaNum) True

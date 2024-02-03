@@ -21,7 +21,9 @@ import Text.Gigaparsec.Token.Descriptions (
     CharPredicate
   )
 import Data.Char (toLower)
-import Text.Gigaparsec.Token.Errors (ErrorConfig)
+import Text.Gigaparsec.Token.Errors (
+    ErrorConfig (labelNameIdentifier, unexpectedNameIllegalIdentifier)
+  )
 
 -- TODO: primes are gross, better way?
 type Names :: *
@@ -32,12 +34,12 @@ data Names = Names { identifier :: !(Parsec String)
                    }
 
 mkNames :: NameDesc -> SymbolDesc -> ErrorConfig -> Names
-mkNames NameDesc{..} symbolDesc@SymbolDesc{..} _errConfig = Names {..}
+mkNames NameDesc{..} symbolDesc@SymbolDesc{..} err = Names {..}
   where
     -- TODO: error transformers
     !isReserved = isReservedName symbolDesc
     !identifier =
-      keyOrOp identifierStart identifierLetter isReserved "identifier" ("keyword " ++)
+      keyOrOp identifierStart identifierLetter isReserved (labelNameIdentifier err) (unexpectedNameIllegalIdentifier err)
     identifier' start =
       unexpectedWhen (\v -> if startsWith start v then Nothing else Just ("identifier " ++ v))
                      identifier

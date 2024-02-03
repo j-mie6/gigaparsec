@@ -1,5 +1,5 @@
 {-# LANGUAGE Safe #-}
-{-# LANGUAGE DataKinds, AllowAmbiguousTypes, KindSignatures, MonoLocalBinds #-}
+{-# LANGUAGE DataKinds, ConstraintKinds, AllowAmbiguousTypes, KindSignatures, MonoLocalBinds #-}
 {-# OPTIONS_GHC -Wno-incomplete-record-updates #-}
 {-# OPTIONS_HADDOCK hide #-}
 module Text.Gigaparsec.Internal.Token.Numeric (module Text.Gigaparsec.Internal.Token.Numeric) where
