@@ -64,23 +64,23 @@ import Text.Gigaparsec.Internal.Token.Errors (
 
 type ErrorConfig :: *
 data ErrorConfig =
-  ErrorConfig { labelNumericBreakChar :: !LabelWithExplainConfig -- TODO:
-              , labelIntegerUnsignedDecimal :: Maybe Bits -> LabelWithExplainConfig -- TODO:
-              , labelIntegerUnsignedHexadecimal :: Maybe Bits -> LabelWithExplainConfig -- TODO:
-              , labelIntegerUnsignedOctal :: Maybe Bits -> LabelWithExplainConfig -- TODO:
-              , labelIntegerUnsignedBinary :: Maybe Bits -> LabelWithExplainConfig -- TODO:
-              , labelIntegerUnsignedNumber :: Maybe Bits -> LabelWithExplainConfig -- TODO:
-              , labelIntegerSignedDecimal :: Maybe Bits -> LabelWithExplainConfig -- TODO:
-              , labelIntegerSignedHexadecimal :: Maybe Bits -> LabelWithExplainConfig -- TODO:
-              , labelIntegerSignedOctal :: Maybe Bits -> LabelWithExplainConfig -- TODO:
-              , labelIntegerSignedBinary :: Maybe Bits -> LabelWithExplainConfig -- TODO:
-              , labelIntegerSignedNumber :: Maybe Bits -> LabelWithExplainConfig -- TODO:
-              , labelIntegerDecimalEnd :: Maybe Bits -> LabelConfig -- TODO:
-              , labelIntegerHexadecimalEnd :: Maybe Bits -> LabelConfig -- TODO:
-              , labelIntegerOctalEnd :: Maybe Bits -> LabelConfig -- TODO:
-              , labelIntegerBinaryEnd :: Maybe Bits -> LabelConfig -- TODO:
-              , labelIntegerNumberEnd :: Maybe Bits -> LabelConfig -- TODO:
-              , filterIntegerOutOfBounds :: Integer -> Integer -> Int -> FilterConfig Integer -- TODO:
+  ErrorConfig { labelNumericBreakChar :: !LabelWithExplainConfig
+              , labelIntegerUnsignedDecimal :: Maybe Bits -> LabelWithExplainConfig
+              , labelIntegerUnsignedHexadecimal :: Maybe Bits -> LabelWithExplainConfig
+              , labelIntegerUnsignedOctal :: Maybe Bits -> LabelWithExplainConfig
+              , labelIntegerUnsignedBinary :: Maybe Bits -> LabelWithExplainConfig
+              , labelIntegerUnsignedNumber :: Maybe Bits -> LabelWithExplainConfig
+              , labelIntegerSignedDecimal :: Maybe Bits -> LabelWithExplainConfig
+              , labelIntegerSignedHexadecimal :: Maybe Bits -> LabelWithExplainConfig
+              , labelIntegerSignedOctal :: Maybe Bits -> LabelWithExplainConfig
+              , labelIntegerSignedBinary :: Maybe Bits -> LabelWithExplainConfig
+              , labelIntegerSignedNumber :: Maybe Bits -> LabelWithExplainConfig
+              , labelIntegerDecimalEnd :: LabelConfig
+              , labelIntegerHexadecimalEnd :: LabelConfig
+              , labelIntegerOctalEnd :: LabelConfig
+              , labelIntegerBinaryEnd :: LabelConfig
+              , labelIntegerNumberEnd :: LabelConfig
+              , filterIntegerOutOfBounds :: Integer -> Integer -> Int -> FilterConfig Integer
               , labelNameIdentifier :: String
               , labelNameOperator :: String
               , unexpectedNameIllegalIdentifier :: String -> String
@@ -140,11 +140,11 @@ defaultErrorConfig = ErrorConfig {..}
         labelIntegerSignedOctal = const notConfigured
         labelIntegerSignedBinary = const notConfigured
         labelIntegerSignedNumber = const notConfigured
-        labelIntegerDecimalEnd = const notConfigured
-        labelIntegerHexadecimalEnd = const notConfigured
-        labelIntegerOctalEnd = const notConfigured
-        labelIntegerBinaryEnd = const notConfigured
-        labelIntegerNumberEnd = const notConfigured
+        labelIntegerDecimalEnd = notConfigured
+        labelIntegerHexadecimalEnd = notConfigured
+        labelIntegerOctalEnd = notConfigured
+        labelIntegerBinaryEnd = notConfigured
+        labelIntegerNumberEnd = notConfigured
         filterIntegerOutOfBounds small big nativeRadix = specializedFilter
           (outOfBounds small big nativeRadix)
         labelNameIdentifier = "identifier"

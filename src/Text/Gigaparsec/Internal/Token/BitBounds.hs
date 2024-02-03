@@ -87,31 +87,31 @@ class BitBounds b where
   upperSigned :: Integer
   lowerSigned :: Integer
   upperUnsigned :: Integer
-  bits :: Int
+  bits :: Bits
   type BitsNat b :: Nat
 instance BitBounds 'B8 where
   upperSigned = fromIntegral (maxBound @Int8)
   lowerSigned = fromIntegral (minBound @Int8)
   upperUnsigned = fromIntegral (maxBound @Word8)
-  bits = 8
+  bits = B8
   type BitsNat 'B8 = 8
 instance BitBounds 'B16 where
   upperSigned = fromIntegral (maxBound @Int16)
   lowerSigned = fromIntegral (minBound @Int16)
   upperUnsigned = fromIntegral (maxBound @Word16)
-  bits = 16
+  bits = B16
   type BitsNat 'B16 = 16
 instance BitBounds 'B32 where
   upperSigned = fromIntegral (maxBound @Int32)
   lowerSigned = fromIntegral (minBound @Int32)
   upperUnsigned = fromIntegral (maxBound @Word32)
-  bits = 32
+  bits = B32
   type BitsNat 'B32 = 32
 instance BitBounds 'B64 where
   upperSigned = fromIntegral (maxBound @Int64)
   lowerSigned = fromIntegral (minBound @Int64)
   upperUnsigned = fromIntegral (maxBound @Word64)
-  bits = 64
+  bits = B64
   type BitsNat 'B64 = 64
 
 type CanHoldSigned :: Bits -> * -> Constraint

@@ -7,8 +7,6 @@ module Text.Gigaparsec.Internal.Token.Numeric (module Text.Gigaparsec.Internal.T
 import Text.Gigaparsec (Parsec, unit, void, atomic, (<|>), ($>))
 import Text.Gigaparsec.Char (char, oneOf)
 import Text.Gigaparsec.Combinator (optional, optionalAs)
-import Text.Gigaparsec.Errors.Combinator (mapMaybeSWith)
-import Text.Gigaparsec.Errors.ErrorGen (specializedGen, messages)
 import Text.Gigaparsec.Token.Descriptions
     ( BreakCharDesc(BreakCharSupported, NoBreakChar),
       NumericDesc( NumericDesc, positiveSign, literalBreakChar
@@ -21,38 +19,53 @@ import Text.Gigaparsec.Internal.Token.Generic (GenericNumeric(plainDecimal, plai
 import Text.Gigaparsec.Internal.Token.BitBounds (
     CanHoldUnsigned, CanHoldSigned,
     BitBounds(upperSigned, upperUnsigned, lowerSigned),
-    Bits(B8, B16, B32, B64)
+    Bits(B8, B16, B32, B64), bits
   )
-import Text.Gigaparsec.Token.Errors (ErrorConfig)
-import Data.Char (intToDigit)
+import Text.Gigaparsec.Token.Errors (ErrorConfig (filterIntegerOutOfBounds, labelIntegerSignedDecimal, labelIntegerUnsignedDecimal, labelIntegerSignedHexadecimal, labelIntegerUnsignedHexadecimal, labelIntegerSignedOctal, labelIntegerUnsignedOctal, labelIntegerSignedBinary, labelIntegerUnsignedBinary, labelIntegerSignedNumber, labelIntegerUnsignedNumber, labelIntegerDecimalEnd, labelIntegerHexadecimalEnd, labelIntegerOctalEnd, labelIntegerBinaryEnd, labelIntegerNumberEnd))
 import Data.Kind (Constraint)
 import Data.Proxy (Proxy(Proxy))
 import Control.Monad (when, unless)
-import Numeric (showIntAtBase)
+import Text.Gigaparsec.Internal.Token.Errors (mapMaybeS, LabelWithExplainConfig, annotate)
 
+-- TODO: switch to private versions in future
 type IntegerParsers :: (Bits -> * -> Constraint) -> *
 data IntegerParsers canHold = IntegerParsers { decimal :: Parsec Integer
                                              , hexadecimal :: Parsec Integer
                                              , octal :: Parsec Integer
                                              , binary :: Parsec Integer
                                              , number :: Parsec Integer
-                                             , _bounded :: forall (bits :: Bits) t. canHold bits t => Proxy bits -> Parsec Integer -> Int -> Parsec t
+                                             , _bounded :: forall (bits :: Bits) t. canHold bits t
+                                                        => Proxy bits
+                                                        -> Parsec Integer
+                                                        -> Int
+                                                        -> (ErrorConfig -> Bool -> Maybe Bits -> LabelWithExplainConfig)
+                                                        -> Parsec t
                                              }
 
 decimalBounded :: forall (bits :: Bits) canHold t. canHold bits t => IntegerParsers canHold -> Parsec t
-decimalBounded IntegerParsers{..} = _bounded (Proxy @bits) decimal 10
+decimalBounded IntegerParsers{..} = _bounded (Proxy @bits) decimal 10 label
+  where label !err True = labelIntegerSignedDecimal err
+        label err False = labelIntegerUnsignedDecimal err
 
 hexadecimalBounded :: forall (bits :: Bits) canHold t. canHold bits t => IntegerParsers canHold -> Parsec t
-hexadecimalBounded IntegerParsers{..} = _bounded (Proxy @bits) hexadecimal 16
+hexadecimalBounded IntegerParsers{..} = _bounded (Proxy @bits) hexadecimal 16 label
+  where label !err True = labelIntegerSignedHexadecimal err
+        label err False = labelIntegerUnsignedHexadecimal err
 
 octalBounded :: forall (bits :: Bits) canHold t. canHold bits t => IntegerParsers canHold -> Parsec t
-octalBounded IntegerParsers{..} = _bounded (Proxy @bits) octal 8
+octalBounded IntegerParsers{..} = _bounded (Proxy @bits) octal 8 label
+  where label !err True  = labelIntegerSignedOctal err
+        label err False = labelIntegerUnsignedOctal err
 
 binaryBounded :: forall (bits :: Bits) canHold t. canHold bits t => IntegerParsers canHold -> Parsec t
-binaryBounded IntegerParsers{..} = _bounded (Proxy @bits) binary 2
+binaryBounded IntegerParsers{..} = _bounded (Proxy @bits) binary 2 label
+  where label !err True = labelIntegerSignedBinary err
+        label err False = labelIntegerUnsignedBinary err
 
 numberBounded :: forall (bits :: Bits) canHold t. canHold bits t => IntegerParsers canHold -> Parsec t
-numberBounded IntegerParsers{..} = _bounded (Proxy @bits) number 10
+numberBounded IntegerParsers{..} = _bounded (Proxy @bits) number 10 label
+  where label !err True = labelIntegerSignedNumber err
+        label err False = labelIntegerUnsignedNumber err
 
 decimal8 :: forall a canHold. canHold 'B8 a => IntegerParsers canHold -> Parsec a
 decimal8 = decimalBounded @'B8
@@ -98,22 +111,16 @@ binary64 = binaryBounded @'B64
 number64 :: forall a canHold. canHold 'B64 a => IntegerParsers canHold -> Parsec a
 number64 = numberBounded @'B64
 
-outOfBounds :: Integer -> Integer -> Int -> Integer -> [String]
-outOfBounds small big radix _n = [
-    "literal is not within the range " ++ resign small (" to " ++ resign big "")
-  ]
-  where resign n
-          | n < 0 = ('-' :) . showIntAtBase (toInteger radix) intToDigit (abs n)
-          | otherwise = showIntAtBase (toInteger radix) intToDigit n
-
 mkUnsigned :: NumericDesc -> GenericNumeric -> ErrorConfig -> IntegerParsers CanHoldUnsigned
-mkUnsigned desc@NumericDesc{..} gen _ = IntegerParsers {..}
-  where _bounded :: forall (bits :: Bits) t. CanHoldUnsigned bits t
-                 => Proxy bits -> Parsec Integer -> Int -> Parsec t
-        _bounded _ num radix = mapMaybeSWith
-          (specializedGen { messages = outOfBounds 0 (upperUnsigned @bits) radix })
-          (\n -> if n >= 0 && n <= upperUnsigned @bits then Just (fromInteger n) else Nothing)
-          num
+mkUnsigned desc@NumericDesc{..} !gen !err = IntegerParsers {..}
+  where _bounded :: forall (b :: Bits) t. CanHoldUnsigned b t
+                 => Proxy b -> Parsec Integer -> Int
+                 -> (ErrorConfig -> Bool -> Maybe Bits -> LabelWithExplainConfig)
+                 -> Parsec t
+        _bounded _ num radix label = annotate (label err False (Just (bits @b))) $
+          mapMaybeS (filterIntegerOutOfBounds err 0 (upperUnsigned @b) radix)
+                    (\n -> if n >= 0 && n <= upperUnsigned @b then Just (fromInteger n) else Nothing)
+                    num
 
         leadingBreakChar = case literalBreakChar of
           NoBreakChar -> unit
@@ -123,27 +130,28 @@ mkUnsigned desc@NumericDesc{..} gen _ = IntegerParsers {..}
         noZeroHexadecimal = do
           unless (null hexadecimalLeads) (void (oneOf hexadecimalLeads))
           leadingBreakChar
-          plainHexadecimal gen desc
+          annotate (labelIntegerHexadecimalEnd err) (plainHexadecimal gen desc (labelIntegerHexadecimalEnd err))
 
         noZeroOctal = do
           unless (null octalLeads) (void (oneOf octalLeads))
           leadingBreakChar
-          plainOctal gen desc
+          annotate (labelIntegerOctalEnd err) (plainOctal gen desc (labelIntegerOctalEnd err))
 
         noZeroBinary = do
           unless (null binaryLeads) (void (oneOf binaryLeads))
           leadingBreakChar
-          plainBinary gen desc
+          annotate (labelIntegerBinaryEnd err) (plainBinary gen desc (labelIntegerBinaryEnd err))
 
-        decimal = plainDecimal gen desc
-        hexadecimal = atomic (char '0' *> noZeroHexadecimal)
-        octal = atomic (char '0' *> noZeroOctal)
-        binary = atomic (char '0' *> noZeroBinary)
+        decimal = annotate (labelIntegerUnsignedDecimal err Nothing) $ plainDecimal gen desc (labelIntegerDecimalEnd err)
+        hexadecimal = annotate (labelIntegerUnsignedHexadecimal err Nothing) $ atomic (char '0' *> noZeroHexadecimal)
+        octal = annotate (labelIntegerUnsignedOctal err Nothing) $ atomic (char '0' *> noZeroOctal)
+        binary = annotate (labelIntegerUnsignedBinary err Nothing) $ atomic (char '0' *> noZeroBinary)
+        -- FIXME: numberEnd label is not applied here!
         number
           | not integerNumbersCanBeBinary
           , not integerNumbersCanBeHexadecimal
-          , not integerNumbersCanBeOctal = decimal
-          | otherwise = atomic (zeroLead <|> decimal)
+          , not integerNumbersCanBeOctal = annotate (labelIntegerUnsignedNumber err Nothing) decimal
+          | otherwise = annotate (labelIntegerUnsignedNumber err Nothing) $ atomic (zeroLead <|> decimal)
           where zeroLead = char '0' *> addHex (addOct (addBin (decimal <|> pure 0)))
                 addHex
                   | integerNumbersCanBeHexadecimal = (noZeroHexadecimal <|>)
@@ -156,7 +164,7 @@ mkUnsigned desc@NumericDesc{..} gen _ = IntegerParsers {..}
                   | otherwise = id
 
 mkSigned :: NumericDesc -> IntegerParsers c -> ErrorConfig -> IntegerParsers CanHoldSigned
-mkSigned NumericDesc{..} unsigned _ = IntegerParsers {
+mkSigned NumericDesc{..} !unsigned !err = IntegerParsers {
     decimal = _decimal,
     hexadecimal = _hexadecimal,
     octal = _octal,
@@ -164,25 +172,32 @@ mkSigned NumericDesc{..} unsigned _ = IntegerParsers {
     number = _number,
     ..
   }
-  where _bounded :: forall (bits :: Bits) t. CanHoldSigned bits t
-                 => Proxy bits -> Parsec Integer -> Int -> Parsec t
-        _bounded _ num radix = mapMaybeSWith
-          (specializedGen { messages = outOfBounds (lowerSigned @bits) (upperSigned @bits) radix })
-          (\n -> if n >= lowerSigned @bits && n <= upperSigned @bits
-                 then Just (fromInteger n)
-                 else Nothing)
-          num
+  where _bounded :: forall (b :: Bits) t. CanHoldSigned b t
+                 => Proxy b -> Parsec Integer -> Int
+                 -> (ErrorConfig -> Bool -> Maybe Bits -> LabelWithExplainConfig)
+                 -> Parsec t
+        _bounded _ num radix label = annotate (label err True (Just (bits @b))) $
+          mapMaybeS (filterIntegerOutOfBounds err (lowerSigned @b) (upperSigned @b) radix)
+                    (\n -> if n >= lowerSigned @b && n <= upperSigned @b
+                           then Just (fromInteger n)
+                           else Nothing)
+                    num
 
         sign :: Parsec (Integer -> Integer)
         sign = case positiveSign of
           PlusRequired -> char '+' $> id <|> char '-' $> negate
           PlusOptional -> char '-' $> negate <|> optionalAs id (char '+')
           PlusIllegal  -> pure id
-        _decimal = atomic (sign <*> decimal unsigned)
-        _hexadecimal = atomic (sign <*> hexadecimal unsigned)
-        _octal = atomic (sign <*> octal unsigned)
-        _binary = atomic (sign <*> binary unsigned)
-        _number = atomic (sign <*> number unsigned)
+        _decimal = annotate (labelIntegerSignedDecimal err Nothing) $
+          atomic (sign <*> annotate (labelIntegerDecimalEnd err) (decimal unsigned))
+        _hexadecimal = annotate (labelIntegerSignedHexadecimal err Nothing) $
+          atomic (sign <*> annotate (labelIntegerHexadecimalEnd err) (hexadecimal unsigned))
+        _octal = annotate (labelIntegerSignedOctal err Nothing) $
+          atomic (sign <*> annotate (labelIntegerOctalEnd err) (octal unsigned))
+        _binary = annotate (labelIntegerSignedBinary err Nothing) $
+          atomic (sign <*> annotate (labelIntegerBinaryEnd err) (binary unsigned))
+        _number = annotate (labelIntegerSignedNumber err Nothing) $
+          atomic (sign <*> annotate (labelIntegerNumberEnd err) (number unsigned))
 
 {-type FloatingParsers :: *
 data FloatingParsers = FloatingParsers {}
@@ -209,7 +224,7 @@ lexemeInteger lexe IntegerParsers{..} = IntegerParsers {
     octal = lexe octal,
     binary = lexe binary,
     number = lexe number,
-    _bounded = \n b radix -> lexe (_bounded n b radix)
+    _bounded = \n b radix label -> lexe (_bounded n b radix label)
   }
 
 {-lexemeFloating :: (forall a. Parsec a -> Parsec a) -> FloatingParsers -> FloatingParsers

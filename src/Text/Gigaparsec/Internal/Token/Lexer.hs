@@ -66,7 +66,7 @@ mkLexer !desc = mkLexerWithErrorConfig desc defaultErrorConfig
 mkLexerWithErrorConfig :: Desc.LexicalDesc -> ErrorConfig -> Lexer
 mkLexerWithErrorConfig Desc.LexicalDesc{..} !errConfig = Lexer {..}
   where apply p = p <* whiteSpace space
-        gen = mkGeneric
+        gen = mkGeneric errConfig
         lexeme = Lexeme { apply = apply
                         , sym = apply . sym nonlexeme
                         , symbol = Symbol.lexeme apply (symbol nonlexeme)
@@ -99,7 +99,7 @@ mkLexerWithErrorConfig Desc.LexicalDesc{..} !errConfig = Lexer {..}
                               , charLiteral = mkCharacterParsers textDesc escape errConfig
                               }
         --positiveFloating = mkUnsignedFloating numericDesc (natural nonlexeme) gen
-        !escape = mkEscape (Desc.escapeSequences textDesc) mkGeneric errConfig -- this is mkGeneric because of errors
+        !escape = mkEscape (Desc.escapeSequences textDesc) gen errConfig
         graphicCharacter = Desc.graphicCharacter textDesc
         stringEnds = Desc.stringEnds textDesc
         multiStringEnds = Desc.multiStringEnds textDesc
