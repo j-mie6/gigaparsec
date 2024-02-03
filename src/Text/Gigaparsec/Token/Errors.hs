@@ -87,33 +87,33 @@ data ErrorConfig =
               , unexpectedNameIllegalOperator :: String -> String
               , filterNameIllFormedIdentifier :: FilterConfig String
               , filterNameIllFormedOperator :: FilterConfig String
-              , labelCharAscii :: LabelWithExplainConfig -- TODO:
-              , labelCharLatin1 :: LabelWithExplainConfig -- TODO:
-              , labelCharUnicode :: LabelWithExplainConfig -- TODO:
-              , labelCharAsciiEnd :: LabelConfig -- TODO:
-              , labelCharLatin1End :: LabelConfig -- TODO:
-              , labelCharUnicodeEnd :: LabelConfig -- TODO:
-              , labelStringAscii :: Bool -> Bool -> LabelWithExplainConfig -- TODO:
-              , labelStringLatin1 :: Bool -> Bool -> LabelWithExplainConfig -- TODO:
-              , labelStringUnicode :: Bool -> Bool -> LabelWithExplainConfig -- TODO:
-              , labelStringAsciiEnd :: Bool -> Bool -> LabelConfig -- TODO:
-              , labelStringLatin1End :: Bool -> Bool -> LabelConfig -- TODO:
-              , labelStringUnicodeEnd :: Bool -> Bool -> LabelConfig -- TODO:
-              , labelStringCharacter :: LabelConfig -- TODO:
-              , labelGraphicCharacter :: LabelWithExplainConfig -- TODO:
-              , labelEscapeSequence :: LabelWithExplainConfig -- TODO:
-              , labelEscapeNumeric :: Int -> LabelWithExplainConfig -- TODO:
-              , labelEscapeNumericEnd :: Char -> Int -> LabelWithExplainConfig -- TODO:
-              , labelEscapeEnd :: LabelWithExplainConfig -- TODO:
-              , labelStringEscapeEmpty :: LabelConfig -- TODO:
-              , labelStringEscapeGap :: LabelConfig -- TODO:
-              , labelStringEscapeGapEnd :: LabelConfig -- TODO:
-              , filterCharNonAscii :: VanillaFilterConfig Char -- TODO:
-              , filterCharNonLatin1 :: VanillaFilterConfig Char -- TODO:
-              , filterStringNonAscii :: SpecializedFilterConfig String -- TODO:
-              , filterStringNonLatin1 :: SpecializedFilterConfig String -- TODO:
-              , filterEscapeCharRequiresExactDigits :: Int -> NonEmpty Int -> SpecializedFilterConfig Int -- TODO:
-              , filterEscapeCharNumericSequenceIllegal :: Char -> Int -> SpecializedFilterConfig Integer -- TODO:
+              , labelCharAscii :: LabelWithExplainConfig
+              , labelCharLatin1 :: LabelWithExplainConfig
+              , labelCharUnicode :: LabelWithExplainConfig
+              , labelCharAsciiEnd :: LabelConfig
+              , labelCharLatin1End :: LabelConfig
+              , labelCharUnicodeEnd :: LabelConfig
+              , labelStringAscii :: Bool -> Bool -> LabelWithExplainConfig
+              , labelStringLatin1 :: Bool -> Bool -> LabelWithExplainConfig
+              , labelStringUnicode :: Bool -> Bool -> LabelWithExplainConfig
+              , labelStringAsciiEnd :: Bool -> Bool -> LabelConfig
+              , labelStringLatin1End :: Bool -> Bool -> LabelConfig
+              , labelStringUnicodeEnd :: Bool -> Bool -> LabelConfig
+              , labelStringCharacter :: LabelConfig
+              , labelGraphicCharacter :: LabelWithExplainConfig
+              , labelEscapeSequence :: LabelWithExplainConfig
+              , labelEscapeNumeric :: Int -> LabelWithExplainConfig
+              , labelEscapeNumericEnd :: Char -> Int -> LabelWithExplainConfig
+              , labelEscapeEnd :: LabelWithExplainConfig
+              , labelStringEscapeEmpty :: LabelConfig
+              , labelStringEscapeGap :: LabelConfig
+              , labelStringEscapeGapEnd :: LabelConfig
+              , filterCharNonAscii :: VanillaFilterConfig Char
+              , filterCharNonLatin1 :: VanillaFilterConfig Char
+              , filterStringNonAscii :: SpecializedFilterConfig String
+              , filterStringNonLatin1 :: SpecializedFilterConfig String
+              , filterEscapeCharRequiresExactDigits :: Int -> NonEmpty Word -> SpecializedFilterConfig Word
+              , filterEscapeCharNumericSequenceIllegal :: Char -> Int -> SpecializedFilterConfig Integer
               , verifiedCharBadCharsUsedInLiteral :: VerifiedBadChars
               , verifiedStringBadCharsUsedInLiteral :: VerifiedBadChars
               , labelSymbol :: Map String LabelWithExplainConfig

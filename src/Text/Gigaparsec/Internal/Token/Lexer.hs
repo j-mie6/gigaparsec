@@ -99,12 +99,12 @@ mkLexerWithErrorConfig Desc.LexicalDesc{..} !errConfig = Lexer {..}
                               , charLiteral = mkCharacterParsers textDesc escape errConfig
                               }
         --positiveFloating = mkUnsignedFloating numericDesc (natural nonlexeme) gen
-        !escape = mkEscape (Desc.escapeSequences textDesc) mkGeneric -- this is mkGeneric because of errors
+        !escape = mkEscape (Desc.escapeSequences textDesc) mkGeneric errConfig -- this is mkGeneric because of errors
         graphicCharacter = Desc.graphicCharacter textDesc
         stringEnds = Desc.stringEnds textDesc
         multiStringEnds = Desc.multiStringEnds textDesc
         rawChar = RawChar
-        escapeChar = mkEscapeChar (Desc.escapeSequences textDesc) escape (whiteSpace space)
+        escapeChar = mkEscapeChar (Desc.escapeSequences textDesc) escape (whiteSpace space) errConfig
         fully' p = whiteSpace space *> p <* eof
         fully p
           | Desc.whitespaceIsContextDependent spaceDesc = initSpace space *> fully' p
