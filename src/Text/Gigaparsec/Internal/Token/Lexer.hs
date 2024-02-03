@@ -3,7 +3,7 @@
 {-# OPTIONS_GHC -Wno-partial-fields #-}
 {-# OPTIONS_HADDOCK hide #-}
 module Text.Gigaparsec.Internal.Token.Lexer (
-    Lexer, mkLexer,
+    Lexer, mkLexer, mkLexerWithErrorConfig,
     Lexeme, lexeme, nonlexeme, fully, space,
     apply, sym, symbol, names, -- more go here, no numeric and no text
     -- Numeric
@@ -22,6 +22,7 @@ import Text.Gigaparsec.Registers (put, get, localWith, rollback)
 import Text.Gigaparsec.Errors.Combinator (hide, (<?>))
 
 import Text.Gigaparsec.Token.Descriptions qualified as Desc
+import Text.Gigaparsec.Token.Errors (ErrorConfig, defaultErrorConfig)
 import Text.Gigaparsec.Internal.Token.Generic (mkGeneric)
 import Text.Gigaparsec.Internal.Token.Symbol (Symbol, mkSym, mkSymbol)
 import Text.Gigaparsec.Internal.Token.Symbol qualified as Symbol (lexeme)
@@ -57,7 +58,10 @@ data Lexer = Lexer { lexeme :: !Lexeme
                    }
 
 mkLexer :: Desc.LexicalDesc -> Lexer
-mkLexer Desc.LexicalDesc{..} = Lexer {..}
+mkLexer !desc = mkLexerWithErrorConfig desc defaultErrorConfig
+
+mkLexerWithErrorConfig :: Desc.LexicalDesc -> ErrorConfig -> Lexer
+mkLexerWithErrorConfig Desc.LexicalDesc{..} !errConfig = Lexer {..}
   where apply p = p <* whiteSpace space
         gen = mkGeneric
         lexeme = Lexeme { apply = apply
@@ -85,11 +89,11 @@ mkLexer Desc.LexicalDesc{..} = Lexer {..}
                               {-, floating = mkSignedFloating numericDesc positiveFloating
                               , unsignedCombined = mkUnsignedCombined numericDesc (natural nonlexeme) positiveFloating
                               , signedCombined = mkSignedCombined numericDesc (unsignedCombined nonlexeme)-}
-                              , stringLiteral = mkStringParsers stringEnds escapeChar graphicCharacter False
-                              , rawStringLiteral = mkStringParsers stringEnds rawChar graphicCharacter False
-                              , multiStringLiteral = mkStringParsers multiStringEnds escapeChar graphicCharacter True
-                              , rawMultiStringLiteral = mkStringParsers multiStringEnds rawChar graphicCharacter True
-                              , charLiteral = mkCharacterParsers textDesc escape
+                              , stringLiteral = mkStringParsers stringEnds escapeChar graphicCharacter False errConfig
+                              , rawStringLiteral = mkStringParsers stringEnds rawChar graphicCharacter False errConfig
+                              , multiStringLiteral = mkStringParsers multiStringEnds escapeChar graphicCharacter True errConfig
+                              , rawMultiStringLiteral = mkStringParsers multiStringEnds rawChar graphicCharacter True errConfig
+                              , charLiteral = mkCharacterParsers textDesc escape errConfig
                               }
         --positiveFloating = mkUnsignedFloating numericDesc (natural nonlexeme) gen
         !escape = mkEscape (Desc.escapeSequences textDesc) mkGeneric -- this is mkGeneric because of errors

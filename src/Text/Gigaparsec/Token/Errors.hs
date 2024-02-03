@@ -64,67 +64,67 @@ import Text.Gigaparsec.Internal.Token.Errors (
 
 type ErrorConfig :: *
 data ErrorConfig =
-  ErrorConfig { labelNumericBreakChar :: !LabelWithExplainConfig
-              , labelIntegerUnsignedDecimal :: Maybe Bits -> LabelWithExplainConfig
-              , labelIntegerUnsignedHexadecimal :: Maybe Bits -> LabelWithExplainConfig
-              , labelIntegerUnsignedOctal :: Maybe Bits -> LabelWithExplainConfig
-              , labelIntegerUnsignedBinary :: Maybe Bits -> LabelWithExplainConfig
-              , labelIntegerUnsignedNumber :: Maybe Bits -> LabelWithExplainConfig
-              , labelIntegerSignedDecimal :: Maybe Bits -> LabelWithExplainConfig
-              , labelIntegerSignedHexadecimal :: Maybe Bits -> LabelWithExplainConfig
-              , labelIntegerSignedOctal :: Maybe Bits -> LabelWithExplainConfig
-              , labelIntegerSignedBinary :: Maybe Bits -> LabelWithExplainConfig
-              , labelIntegerSignedNumber :: Maybe Bits -> LabelWithExplainConfig
-              , labelIntegerDecimalEnd :: Maybe Bits -> LabelConfig
-              , labelIntegerHexadecimalEnd :: Maybe Bits -> LabelConfig
-              , labelIntegerOctalEnd :: Maybe Bits -> LabelConfig
-              , labelIntegerBinaryEnd :: Maybe Bits -> LabelConfig
-              , labelIntegerNumberEnd :: Maybe Bits -> LabelConfig
-              , filterIntegerOutOfBounds :: Integer -> Integer -> Int -> FilterConfig Integer
-              , labelNameIdentifier :: String
-              , labelNameOperator :: String
-              , unexpectedNameIllegalIdentifier :: String -> String
-              , unexpectedNameIllegalOperator :: String -> String
-              , filterNameIllFormedIdentifier :: FilterConfig String
-              , filterNameIllFormedOperator :: FilterConfig String
-              , labelCharAscii :: LabelWithExplainConfig
-              , labelCharLatin1 :: LabelWithExplainConfig
-              , labelCharUnicode :: LabelWithExplainConfig
-              , labelCharAsciiEnd :: LabelConfig
-              , labelCharLatin1End :: LabelConfig
-              , labelCharUnicodeEnd :: LabelConfig
-              , labelStringAscii :: Bool -> Bool -> LabelWithExplainConfig
-              , labelStringLatin1 :: Bool -> Bool -> LabelWithExplainConfig
-              , labelStringUnicode :: Bool -> Bool -> LabelWithExplainConfig
-              , labelStringAsciiEnd :: Bool -> Bool -> LabelConfig
-              , labelStringLatin1End :: Bool -> Bool -> LabelConfig
-              , labelStringUnicodeEnd :: Bool -> Bool -> LabelConfig
-              , labelStringCharacter :: LabelConfig
-              , labelGraphicCharacter :: LabelWithExplainConfig
-              , labelEscapeSequence :: LabelWithExplainConfig
-              , labelEscapeNumeric :: Int -> LabelWithExplainConfig
-              , labelEscapeNumericEnd :: Char -> Int -> LabelWithExplainConfig
-              , labelEscapeEnd :: LabelWithExplainConfig
-              , labelStringEscapeEmpty :: LabelConfig
-              , labelStringEscapeGap :: LabelConfig
-              , labelStringEscapeGapEnd :: LabelConfig
-              , filterCharNonAscii :: VanillaFilterConfig Char
-              , filterCharNonLatin1 :: VanillaFilterConfig Char
-              , filterStringNonAscii :: SpecializedFilterConfig String
-              , filterStringNonLatin1 :: SpecializedFilterConfig String
-              , filterEscapeCharRequiresExactDigits :: Int -> NonEmpty Int -> SpecializedFilterConfig Int
-              , filterEscapeCharNumericSequenceIllegal :: Char -> Int -> SpecializedFilterConfig Integer
+  ErrorConfig { labelNumericBreakChar :: !LabelWithExplainConfig -- TODO:
+              , labelIntegerUnsignedDecimal :: Maybe Bits -> LabelWithExplainConfig -- TODO:
+              , labelIntegerUnsignedHexadecimal :: Maybe Bits -> LabelWithExplainConfig -- TODO:
+              , labelIntegerUnsignedOctal :: Maybe Bits -> LabelWithExplainConfig -- TODO:
+              , labelIntegerUnsignedBinary :: Maybe Bits -> LabelWithExplainConfig -- TODO:
+              , labelIntegerUnsignedNumber :: Maybe Bits -> LabelWithExplainConfig -- TODO:
+              , labelIntegerSignedDecimal :: Maybe Bits -> LabelWithExplainConfig -- TODO:
+              , labelIntegerSignedHexadecimal :: Maybe Bits -> LabelWithExplainConfig -- TODO:
+              , labelIntegerSignedOctal :: Maybe Bits -> LabelWithExplainConfig -- TODO:
+              , labelIntegerSignedBinary :: Maybe Bits -> LabelWithExplainConfig -- TODO:
+              , labelIntegerSignedNumber :: Maybe Bits -> LabelWithExplainConfig -- TODO:
+              , labelIntegerDecimalEnd :: Maybe Bits -> LabelConfig -- TODO:
+              , labelIntegerHexadecimalEnd :: Maybe Bits -> LabelConfig -- TODO:
+              , labelIntegerOctalEnd :: Maybe Bits -> LabelConfig -- TODO:
+              , labelIntegerBinaryEnd :: Maybe Bits -> LabelConfig -- TODO:
+              , labelIntegerNumberEnd :: Maybe Bits -> LabelConfig -- TODO:
+              , filterIntegerOutOfBounds :: Integer -> Integer -> Int -> FilterConfig Integer -- TODO:
+              , labelNameIdentifier :: String -- TODO:
+              , labelNameOperator :: String -- TODO:
+              , unexpectedNameIllegalIdentifier :: String -> String -- TODO:
+              , unexpectedNameIllegalOperator :: String -> String -- TODO:
+              , filterNameIllFormedIdentifier :: FilterConfig String -- TODO:
+              , filterNameIllFormedOperator :: FilterConfig String -- TODO:
+              , labelCharAscii :: LabelWithExplainConfig -- TODO:
+              , labelCharLatin1 :: LabelWithExplainConfig -- TODO:
+              , labelCharUnicode :: LabelWithExplainConfig -- TODO:
+              , labelCharAsciiEnd :: LabelConfig -- TODO:
+              , labelCharLatin1End :: LabelConfig -- TODO:
+              , labelCharUnicodeEnd :: LabelConfig -- TODO:
+              , labelStringAscii :: Bool -> Bool -> LabelWithExplainConfig -- TODO:
+              , labelStringLatin1 :: Bool -> Bool -> LabelWithExplainConfig -- TODO:
+              , labelStringUnicode :: Bool -> Bool -> LabelWithExplainConfig -- TODO:
+              , labelStringAsciiEnd :: Bool -> Bool -> LabelConfig -- TODO:
+              , labelStringLatin1End :: Bool -> Bool -> LabelConfig -- TODO:
+              , labelStringUnicodeEnd :: Bool -> Bool -> LabelConfig -- TODO:
+              , labelStringCharacter :: LabelConfig -- TODO:
+              , labelGraphicCharacter :: LabelWithExplainConfig -- TODO:
+              , labelEscapeSequence :: LabelWithExplainConfig -- TODO:
+              , labelEscapeNumeric :: Int -> LabelWithExplainConfig -- TODO:
+              , labelEscapeNumericEnd :: Char -> Int -> LabelWithExplainConfig -- TODO:
+              , labelEscapeEnd :: LabelWithExplainConfig -- TODO:
+              , labelStringEscapeEmpty :: LabelConfig -- TODO:
+              , labelStringEscapeGap :: LabelConfig -- TODO:
+              , labelStringEscapeGapEnd :: LabelConfig -- TODO:
+              , filterCharNonAscii :: VanillaFilterConfig Char -- TODO:
+              , filterCharNonLatin1 :: VanillaFilterConfig Char -- TODO:
+              , filterStringNonAscii :: SpecializedFilterConfig String -- TODO:
+              , filterStringNonLatin1 :: SpecializedFilterConfig String -- TODO:
+              , filterEscapeCharRequiresExactDigits :: Int -> NonEmpty Int -> SpecializedFilterConfig Int -- TODO:
+              , filterEscapeCharNumericSequenceIllegal :: Char -> Int -> SpecializedFilterConfig Integer -- TODO:
               , verifiedCharBadCharsUsedInLiteral :: VerifiedBadChars
               , verifiedStringBadCharsUsedInLiteral :: VerifiedBadChars
-              , labelSymbol :: Map String LabelWithExplainConfig
+              , labelSymbol :: Map String LabelWithExplainConfig -- TODO:
               -- don't bother with these until parsley standardises
-              --, defaultSymbolKeyword :: Labeller
-              --, defaultSymbolOperator :: Labeller
-              --, defaultSymbolPunctuaton :: Labeller
-              , labelSymbolEndOfKeyword :: String -> String
-              , labelSymbolEndOfOperator :: String -> String
-              , labelSpaceEndOfLineComment :: LabelWithExplainConfig
-              , labelSpaceEndOfMultiComment :: LabelWithExplainConfig
+              --, defaultSymbolKeyword :: Labeller -- TODO:
+              --, defaultSymbolOperator :: Labeller -- TODO:
+              --, defaultSymbolPunctuaton :: Labeller -- TODO:
+              , labelSymbolEndOfKeyword :: String -> String -- TODO:
+              , labelSymbolEndOfOperator :: String -> String -- TODO:
+              , labelSpaceEndOfLineComment :: LabelWithExplainConfig -- TODO:
+              , labelSpaceEndOfMultiComment :: LabelWithExplainConfig -- TODO:
               }
 
 defaultErrorConfig :: ErrorConfig

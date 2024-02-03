@@ -14,6 +14,8 @@ import Text.Gigaparsec.Token.Descriptions (
     CharPredicate,
     NumberOfDigits(Exactly, AtMost, Unbounded)
   )
+import Text.Gigaparsec.Token.Errors (ErrorConfig(verifiedCharBadCharsUsedInLiteral, verifiedStringBadCharsUsedInLiteral))
+import Text.Gigaparsec.Internal.Token.Errors(checkBadChar)
 import Text.Gigaparsec.Internal.Token.Generic (GenericNumeric(zeroAllowedDecimal, zeroAllowedHexadecimal, zeroAllowedOctal, zeroAllowedBinary))
 import Data.Char (isSpace, chr, ord, digitToInt, isAscii, isLatin1, intToDigit)
 import Data.Map qualified as Map (insert, map)
@@ -45,15 +47,15 @@ type StringParsers = TextParsers String
 type CharacterParsers :: *
 type CharacterParsers = TextParsers Char
 
-mkCharacterParsers :: TextDesc -> Escape -> CharacterParsers
-mkCharacterParsers TextDesc{..} escape = TextParsers {..}
+mkCharacterParsers :: TextDesc -> Escape -> ErrorConfig -> CharacterParsers
+mkCharacterParsers TextDesc{..} escape errConfig = TextParsers {..}
   where unicode = lit uncheckedUniLetter
         ascii = lit (filterOut (\c -> if c > '\x7f' then Just "non-ascii character" else Nothing) uncheckedUniLetter)
         latin1 = lit (filterOut (\c -> if c > '\xff' then Just "non-latin1 character" else Nothing) uncheckedUniLetter)
 
         quote = char characterLiteralEnd
         lit c = quote *> c <* quote
-        uncheckedUniLetter = escapeChar escape <|> graphic
+        uncheckedUniLetter = escapeChar escape <|> graphic <|> checkBadChar (verifiedCharBadCharsUsedInLiteral errConfig)
 
         graphic = maybe empty satisfy (letter characterLiteralEnd False graphicCharacter) <?> ["graphic character"]
 
@@ -71,10 +73,10 @@ mkEscapeChar !desc !esc !space = EscapeChar (escBegin desc) stringEsc
           | gapsSupported desc = some (space <?> ["string gap"]) *> (escapeBegin esc <?> ["end of string gap"])
           | otherwise = empty
 
-mkChar :: StringChar -> CharPredicate -> Parsec (Maybe Char)
-mkChar RawChar = maybe empty (fmap Just . label ["string character"] . satisfy)
-mkChar (EscapeChar escBegin stringEsc) =
-  foldr (\p -> label ["string character"] . (<|> fmap Just (satisfy (\c -> p c && c /= escBegin) <?> ["graphic character"])))
+mkChar :: StringChar -> ErrorConfig -> CharPredicate -> Parsec (Maybe Char)
+mkChar RawChar !errConfig = maybe empty ((<|> checkBadChar (verifiedStringBadCharsUsedInLiteral errConfig)) . fmap Just . label ["string character"] . satisfy)
+mkChar (EscapeChar escBegin stringEsc) !errConfig =
+  foldr (\p -> label ["string character"] . (<|> checkBadChar (verifiedStringBadCharsUsedInLiteral errConfig)). (<|> fmap Just (satisfy (\c -> p c && c /= escBegin) <?> ["graphic character"])))
         stringEsc
 
 isRawChar :: StringChar -> Bool
@@ -91,8 +93,8 @@ ensureLatin1 = filterOut $ \s ->
   if not (all isLatin1 s) then Just "non-latin1 characters in string literal, this is not allowed"
   else Nothing
 
-mkStringParsers :: Set (String, String) -> StringChar -> CharPredicate -> Bool -> StringParsers
-mkStringParsers !ends !stringChar !isGraphic !allowsAllSpace = TextParsers {..}
+mkStringParsers :: Set (String, String) -> StringChar -> CharPredicate -> Bool -> ErrorConfig -> StringParsers
+mkStringParsers !ends !stringChar !isGraphic !allowsAllSpace errConfig = TextParsers {..}
   where ascii = stringLiteral ensureAscii
         latin1 = stringLiteral ensureLatin1
         unicode = stringLiteral id
@@ -102,7 +104,7 @@ mkStringParsers !ends !stringChar !isGraphic !allowsAllSpace = TextParsers {..}
 
         makeStringParser :: (Parsec String -> Parsec String) -> String -> String -> Parsec String
         makeStringParser valid begin end@(terminalInit : _) =
-          let strChar = mkChar stringChar (letter terminalInit allowsAllSpace isGraphic)
+          let strChar = mkChar stringChar errConfig (letter terminalInit allowsAllSpace isGraphic)
           in (string begin *>) . valid $
                catMaybes <$> manyTill (Just <$> char terminalInit <|> strChar) (atomic (string end))
         makeStringParser _ _ [] = error "string terminals cannot be empty"
