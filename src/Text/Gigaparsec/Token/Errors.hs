@@ -116,13 +116,13 @@ data ErrorConfig =
               , filterEscapeCharNumericSequenceIllegal :: Char -> Int -> SpecializedFilterConfig Integer -- TODO:
               , verifiedCharBadCharsUsedInLiteral :: VerifiedBadChars
               , verifiedStringBadCharsUsedInLiteral :: VerifiedBadChars
-              , labelSymbol :: Map String LabelWithExplainConfig -- TODO:
+              , labelSymbol :: Map String LabelWithExplainConfig
               -- don't bother with these until parsley standardises
-              --, defaultSymbolKeyword :: Labeller -- TODO:
-              --, defaultSymbolOperator :: Labeller -- TODO:
-              --, defaultSymbolPunctuaton :: Labeller -- TODO:
-              , labelSymbolEndOfKeyword :: String -> String -- TODO:
-              , labelSymbolEndOfOperator :: String -> String -- TODO:
+              --, defaultSymbolKeyword :: Labeller
+              --, defaultSymbolOperator :: Labeller
+              --, defaultSymbolPunctuaton :: Labeller
+              , labelSymbolEndOfKeyword :: String -> String
+              , labelSymbolEndOfOperator :: String -> String
               , labelSpaceEndOfLineComment :: LabelWithExplainConfig
               , labelSpaceEndOfMultiComment :: LabelWithExplainConfig
               }
