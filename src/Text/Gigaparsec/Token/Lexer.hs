@@ -3,7 +3,7 @@
 -- Ideally, we should probably expose all the functionally via this one file
 -- for ergonomics
 module Text.Gigaparsec.Token.Lexer (
-    Lexer, mkLexer,
+    Lexer, mkLexer, mkLexerWithErrorConfig,
     Lexeme, lexeme, nonlexeme, fully, space,
     apply, sym, symbol, names,
     -- Symbol
@@ -27,7 +27,7 @@ module Text.Gigaparsec.Token.Lexer (
   ) where
 
 import Text.Gigaparsec.Internal.Token.Lexer (
-    Lexer, mkLexer,
+    Lexer, mkLexer, mkLexerWithErrorConfig,
     Lexeme (rawMultiStringLiteral), lexeme, nonlexeme, fully, space,
     apply, sym, symbol, names,
     integer, natural,

@@ -1,5 +1,9 @@
 # Revision history for gigaparsec
 
+## 0.2.4.0 -- 2024-02-03
+* Added `ErrorConfig` and related types, along with `mkLexerWithErrorConfig`, to now allow
+  for custom lexing errors.
+
 ## 0.2.3.0 -- 2024-01-29
 * Added _Verified Errors_ and _Preventative Errors_ in `Text.Gigaparsec.Errors.Patterns`.
 
