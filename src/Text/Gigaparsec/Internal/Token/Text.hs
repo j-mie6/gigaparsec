@@ -14,9 +14,27 @@ import Text.Gigaparsec.Token.Descriptions (
     CharPredicate,
     NumberOfDigits(Exactly, AtMost, Unbounded)
   )
-import Text.Gigaparsec.Token.Errors (ErrorConfig(verifiedCharBadCharsUsedInLiteral, verifiedStringBadCharsUsedInLiteral, filterCharNonAscii, filterCharNonLatin1, labelCharAscii, labelCharAsciiEnd, labelCharLatin1, labelCharLatin1End, labelCharUnicodeEnd, labelCharUnicode, labelGraphicCharacter, labelStringCharacter, filterStringNonAscii, filterStringNonLatin1, labelEscapeEnd, labelEscapeSequence, filterEscapeCharNumericSequenceIllegal, filterEscapeCharRequiresExactDigits, labelEscapeNumericEnd, labelEscapeNumeric, labelStringEscapeGap, labelStringEscapeGapEnd, labelStringEscapeEmpty, labelStringAscii, labelStringAsciiEnd, labelStringLatin1, labelStringLatin1End, labelStringUnicode, labelStringUnicodeEnd), NotConfigurable (notConfigured))
-import Text.Gigaparsec.Internal.Token.Errors(checkBadChar, filterS, annotate, mapMaybeS, mapMaybeS', LabelWithExplainConfig, LabelConfig)
-import Text.Gigaparsec.Internal.Token.Generic (GenericNumeric(zeroAllowedDecimal, zeroAllowedHexadecimal, zeroAllowedOctal, zeroAllowedBinary))
+import Text.Gigaparsec.Token.Errors (
+    ErrorConfig(verifiedCharBadCharsUsedInLiteral, verifiedStringBadCharsUsedInLiteral,
+                filterCharNonAscii, filterCharNonLatin1,
+                labelCharAscii, labelCharAsciiEnd, labelCharLatin1, labelCharLatin1End,
+                labelCharUnicodeEnd, labelCharUnicode,
+                labelGraphicCharacter, labelStringCharacter,
+                filterStringNonAscii, filterStringNonLatin1,
+                labelEscapeEnd, labelEscapeSequence, filterEscapeCharNumericSequenceIllegal,
+                filterEscapeCharRequiresExactDigits, labelEscapeNumericEnd, labelEscapeNumeric,
+                labelStringEscapeGap, labelStringEscapeGapEnd, labelStringEscapeEmpty,
+                labelStringAscii, labelStringAsciiEnd, labelStringLatin1, labelStringLatin1End,
+                labelStringUnicode, labelStringUnicodeEnd),
+    NotConfigurable (notConfigured)
+  )
+import Text.Gigaparsec.Internal.Token.Errors (
+    checkBadChar, filterS, annotate, mapMaybeS, mapMaybeS',
+    LabelWithExplainConfig, LabelConfig
+  )
+import Text.Gigaparsec.Internal.Token.Generic (
+    GenericNumeric(zeroAllowedDecimal, zeroAllowedHexadecimal, zeroAllowedOctal, zeroAllowedBinary)
+  )
 import Data.Char (isSpace, chr, ord, digitToInt, isAscii, isLatin1)
 import Data.Map qualified as Map (insert, map)
 import Data.Set (Set)

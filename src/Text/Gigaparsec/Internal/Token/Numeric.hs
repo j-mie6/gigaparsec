@@ -15,13 +15,22 @@ import Text.Gigaparsec.Token.Descriptions
                  , hexadecimalLeads, octalLeads, binaryLeads
                  ),
       PlusSignPresence(PlusIllegal, PlusRequired, PlusOptional) )
-import Text.Gigaparsec.Internal.Token.Generic (GenericNumeric(plainDecimal, plainHexadecimal, plainOctal, plainBinary))
+import Text.Gigaparsec.Internal.Token.Generic (
+    GenericNumeric(plainDecimal, plainHexadecimal, plainOctal, plainBinary)
+  )
 import Text.Gigaparsec.Internal.Token.BitBounds (
     CanHoldUnsigned, CanHoldSigned,
     BitBounds(upperSigned, upperUnsigned, lowerSigned),
     Bits(B8, B16, B32, B64), bits
   )
-import Text.Gigaparsec.Token.Errors (ErrorConfig (filterIntegerOutOfBounds, labelIntegerSignedDecimal, labelIntegerUnsignedDecimal, labelIntegerSignedHexadecimal, labelIntegerUnsignedHexadecimal, labelIntegerSignedOctal, labelIntegerUnsignedOctal, labelIntegerSignedBinary, labelIntegerUnsignedBinary, labelIntegerSignedNumber, labelIntegerUnsignedNumber, labelIntegerDecimalEnd, labelIntegerHexadecimalEnd, labelIntegerOctalEnd, labelIntegerBinaryEnd, labelIntegerNumberEnd))
+import Text.Gigaparsec.Token.Errors (
+    ErrorConfig (filterIntegerOutOfBounds, labelIntegerSignedDecimal, labelIntegerUnsignedDecimal,
+                 labelIntegerSignedHexadecimal, labelIntegerUnsignedHexadecimal,
+                 labelIntegerSignedOctal, labelIntegerUnsignedOctal, labelIntegerSignedBinary,
+                 labelIntegerUnsignedBinary, labelIntegerSignedNumber, labelIntegerUnsignedNumber,
+                 labelIntegerDecimalEnd, labelIntegerHexadecimalEnd, labelIntegerOctalEnd,
+                 labelIntegerBinaryEnd, labelIntegerNumberEnd)
+  )
 import Data.Kind (Constraint)
 import Data.Proxy (Proxy(Proxy))
 import Control.Monad (when, unless)
