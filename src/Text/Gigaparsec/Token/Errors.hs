@@ -81,12 +81,12 @@ data ErrorConfig =
               , labelIntegerBinaryEnd :: Maybe Bits -> LabelConfig -- TODO:
               , labelIntegerNumberEnd :: Maybe Bits -> LabelConfig -- TODO:
               , filterIntegerOutOfBounds :: Integer -> Integer -> Int -> FilterConfig Integer -- TODO:
-              , labelNameIdentifier :: String -- TODO:
-              , labelNameOperator :: String -- TODO:
-              , unexpectedNameIllegalIdentifier :: String -> String -- TODO:
-              , unexpectedNameIllegalOperator :: String -> String -- TODO:
-              , filterNameIllFormedIdentifier :: FilterConfig String -- TODO:
-              , filterNameIllFormedOperator :: FilterConfig String -- TODO:
+              , labelNameIdentifier :: String
+              , labelNameOperator :: String
+              , unexpectedNameIllegalIdentifier :: String -> String
+              , unexpectedNameIllegalOperator :: String -> String
+              , filterNameIllFormedIdentifier :: FilterConfig String
+              , filterNameIllFormedOperator :: FilterConfig String
               , labelCharAscii :: LabelWithExplainConfig -- TODO:
               , labelCharLatin1 :: LabelWithExplainConfig -- TODO:
               , labelCharUnicode :: LabelWithExplainConfig -- TODO:
