@@ -35,7 +35,7 @@ data Names = Names { identifier :: !(Parsec String)
                    }
 
 mkNames :: NameDesc -> SymbolDesc -> ErrorConfig -> Names
-mkNames NameDesc{..} symbolDesc@SymbolDesc{..} err = Names {..}
+mkNames NameDesc{..} symbolDesc@SymbolDesc{..} !err = Names {..}
   where
     !isReserved = isReservedName symbolDesc
     !identifier =

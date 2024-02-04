@@ -28,14 +28,14 @@ data Symbol = Symbol { softKeyword :: !(String -> Parsec ())
                      }
 
 mkSymbol :: SymbolDesc -> NameDesc -> ErrorConfig -> Symbol
-mkSymbol SymbolDesc{..} NameDesc{..} err = Symbol {..}
+mkSymbol SymbolDesc{..} NameDesc{..} !err = Symbol {..}
   where softKeyword name = require (not (null name)) "softKeyword" "keywords may not be empty"
           (_softKeyword caseSensitive identifierLetter name err <?> [name])
         softOperator name = require (not (null name)) "softOperator" "operators may not be empty"
           (_softOperator hardOperators operatorLetter name err <?> [name])
 
 mkSym :: SymbolDesc -> Symbol -> ErrorConfig -> (String -> Parsec ())
-mkSym SymbolDesc{..} Symbol{..} err str =
+mkSym SymbolDesc{..} Symbol{..} !err str =
   annotate (Map.findWithDefault notConfigured str (labelSymbol err)) $
     if | Set.member str hardKeywords  -> softKeyword str
        | Set.member str hardOperators -> softOperator str
@@ -47,7 +47,7 @@ lexeme lexe Symbol{..} = Symbol { softKeyword = lexe . softKeyword
                                 }
 
 _softKeyword :: Bool -> CharPredicate -> String -> ErrorConfig -> Parsec ()
-_softKeyword caseSensitive letter kw err
+_softKeyword !caseSensitive !letter !kw !err
   | not caseSensitive = atomic (nfb letter caseString) <?> [kw]
   | otherwise         = atomic (nfb letter (string kw)) <?> [kw]
   where nfb Nothing p = void p
@@ -61,7 +61,7 @@ _softKeyword caseSensitive letter kw err
 
 -- TODO: trie-based implementation
 _softOperator :: Set String -> CharPredicate -> String -> ErrorConfig -> Parsec ()
-_softOperator hardOperators letter op err = label [op] $
+_softOperator !hardOperators !letter !op !err = label [op] $
   if Set.null ends then atomic (string op *> notFollowedBy letter')
   else atomic (string op *> (notFollowedBy (void letter' <|> void (strings ends)) <?> [labelSymbolEndOfOperator err op]))
   where ends = Set.fromList (mapMaybe (flip strip op) (Set.toList hardOperators))

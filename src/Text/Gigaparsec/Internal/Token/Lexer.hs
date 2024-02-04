@@ -67,11 +67,12 @@ mkLexerWithErrorConfig :: Desc.LexicalDesc -> ErrorConfig -> Lexer
 mkLexerWithErrorConfig Desc.LexicalDesc{..} !errConfig = Lexer {..}
   where apply p = p <* whiteSpace space
         gen = mkGeneric errConfig
+        -- DO NOT HAVE MUTUALLY RECURSIVE FIELDS
         lexeme = Lexeme { apply = apply
                         , sym = apply . sym nonlexeme
-                        , symbol = Symbol.lexeme apply (symbol nonlexeme)
+                        , symbol = Symbol.lexeme apply symbolNonLexeme
                         , names = Names.lexeme apply (names nonlexeme)
-                        , natural = Numeric.lexemeInteger apply (natural nonlexeme)
+                        , natural = Numeric.lexemeInteger apply naturalNonLexeme
                         , integer = Numeric.lexemeInteger apply (integer nonlexeme)
                         {-, floating = Numeric.lexemeFloating apply (floating nonlexeme)
                         , unsignedCombined =
@@ -84,13 +85,13 @@ mkLexerWithErrorConfig Desc.LexicalDesc{..} !errConfig = Lexer {..}
                         , rawMultiStringLiteral = Text.lexeme apply (rawMultiStringLiteral nonlexeme)
                         , charLiteral = Text.lexeme apply (charLiteral nonlexeme)
                         }
-        nonlexeme = NonLexeme { sym = mkSym symbolDesc (symbol nonlexeme) errConfig
-                              , symbol = mkSymbol symbolDesc nameDesc errConfig
+        nonlexeme = NonLexeme { sym = mkSym symbolDesc symbolNonLexeme errConfig
+                              , symbol = symbolNonLexeme
                               , names = mkNames nameDesc symbolDesc errConfig
-                              , natural = mkUnsigned numericDesc gen errConfig
-                              , integer = mkSigned numericDesc (natural nonlexeme) errConfig
+                              , natural = naturalNonLexeme
+                              , integer = mkSigned numericDesc naturalNonLexeme errConfig
                               {-, floating = mkSignedFloating numericDesc positiveFloating
-                              , unsignedCombined = mkUnsignedCombined numericDesc (natural nonlexeme) positiveFloating
+                              , unsignedCombined = mkUnsignedCombined numericDesc naturalNonLexeme positiveFloating
                               , signedCombined = mkSignedCombined numericDesc (unsignedCombined nonlexeme)-}
                               , stringLiteral = mkStringParsers stringEnds escapeChar graphicCharacter False errConfig
                               , rawStringLiteral = mkStringParsers stringEnds rawChar graphicCharacter False errConfig
@@ -98,7 +99,9 @@ mkLexerWithErrorConfig Desc.LexicalDesc{..} !errConfig = Lexer {..}
                               , rawMultiStringLiteral = mkStringParsers multiStringEnds rawChar graphicCharacter True errConfig
                               , charLiteral = mkCharacterParsers textDesc escape errConfig
                               }
-        --positiveFloating = mkUnsignedFloating numericDesc (natural nonlexeme) gen
+        !symbolNonLexeme = mkSymbol symbolDesc nameDesc errConfig
+        !naturalNonLexeme = mkUnsigned numericDesc gen errConfig
+        --positiveFloating = mkUnsignedFloating numericDesc naturalNonLexeme gen
         !escape = mkEscape (Desc.escapeSequences textDesc) gen errConfig
         graphicCharacter = Desc.graphicCharacter textDesc
         stringEnds = Desc.stringEnds textDesc
