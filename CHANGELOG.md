@@ -1,5 +1,8 @@
 # Revision history for gigaparsec
 
+## 0.2.4.1 -- 2024-02-04
+* Fixed infinite loop in lexer arising from forcing a knot-tie, the knot has been massaged out.
+
 ## 0.2.4.0 -- 2024-02-03
 * Added `ErrorConfig` and related types, along with `mkLexerWithErrorConfig`, to now allow
   for custom lexing errors.
