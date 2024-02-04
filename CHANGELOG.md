@@ -1,5 +1,9 @@
 # Revision history for gigaparsec
 
+## 0.2.5.0 -- 2024-02-04
+* Supported `Text.Gigaparsec.Errors.TokenExtractors`, which allows for recipes for token extraction
+  during error message creation.
+
 ## 0.2.4.1 -- 2024-02-04
 * Fixed infinite loop in lexer arising from forcing a knot-tie, the knot has been massaged out.
 
