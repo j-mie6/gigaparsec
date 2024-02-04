@@ -1,6 +1,21 @@
 {-# LANGUAGE Safe #-}
 {-# LANGUAGE ViewPatterns #-}
 {-# OPTIONS_GHC -Wno-incomplete-uni-patterns #-}
+{-|
+Module      : Text.Gigaparsec.Errors.TokenExtractors
+Description : This module contains implementations of token extractors that can be used in the
+              @ErrorBuilder@ to decide how to extract unexpected tokens from the residual input left
+              over from a parse error.
+License     : BSD-3-Clause
+Maintainer  : Jamie Willis, Gigaparsec Maintainers
+Stability   : stable
+
+These are common strategies, and something here is likely to be what is needed. They are all careful
+to handle unprintable characters and whitespace in a sensible way, and account for unicode codepoints
+that are wider than a single 16-bit character.
+
+@since 0.2.5.0
+-}
 module Text.Gigaparsec.Errors.TokenExtractors (
     Token(..), TokenExtractor,
     tillNextWhitespace,
@@ -123,16 +138,84 @@ whitespaceOrUnprintable (c :| _)
     _ -> Nothing
   where unprintable = Just $ Named ("non-printable character (\\x" ++ showHex (ord c) ")") 1
 
+{-|
+This extractor provides an implementation for 'Text.Gigaparsec.ErrorBuilder.unexpectedToken':
+it will try and parse the residual input to identify a valid lexical token to report.
+
+When parsing a grammar that as a dedicated lexical distinction, it is nice to be able to report
+problematic tokens relevant to that grammar as opposed to generic input lifted straight from the
+input stream. The easiest way of doing this would be having a pre-lexing pass and parsing based
+on tokens, but this is deliberately not how Parsley is designed. Instead, this extractor can
+try and parse the remaining input to try and identify a token on demand.
+
+If the @lexicalError@ flag of the @unexpectedToken@ function is not set, which would indicate a
+problem within a token reported by a classical lexer and not the parser, the extractor will
+try to parse each of the provided @tokens@ in turn: whichever is the longest matched of these
+tokens will be reported as the problematic one, where an earlier token arbitrates ties
+('lexTokenWithSelect' can alter which is chosen). For best effect, these tokens should not consume
+whitespace (which would otherwise be included at the end of the token!): this means that, if
+using the @Lexer@, the functionality in __@nonlexeme@__ should be used. If one of the
+givens tokens cannot be parsed, the input until the /next/ valid parsable token (or end of input)
+is returned as a @Raw@.
+
+If @lexicalError@ is true, then the given token extractor will be used instead to extract a
+default token.
+
+@since 0.2.5.0
+-}
 {-# INLINABLE lexToken #-}
-lexToken :: [Parsec String]
-         -> TokenExtractor
+lexToken :: [Parsec String] -- ^ The tokens that should be recognised by this extractor: each parser should return the
+                            -- intended name of the token exactly as it should appear in the "Named" token.
+                            --
+                            -- This /should/ include a whitespace parser for "unexpected whitespace". However, with the
+                            -- exception of the whitespace parser, these tokens should not consume trailing (and
+                            -- certainly not leading) whitespace: if using definitions from "Text.Gigaparsec.Token.Lexer"
+                            -- functionality, the @nonlexeme@ versions of the tokens should be used.
+         -> TokenExtractor  -- ^ If the parser failed during the parsing of a token, this
+                            -- function extracts the problematic item from the remaining input.
          -> TokenExtractor
 lexToken = lexTokenWithSelect (maximumBy (compare `on` snd))
 
+{-|
+This extractor provides an implementation for 'Text.Gigaparsec.ErrorBuilder.unexpectedToken':
+it will try and parse the residual input to identify a valid lexical token to report.
+
+When parsing a grammar that as a dedicated lexical distinction, it is nice to be able to report
+problematic tokens relevant to that grammar as opposed to generic input lifted straight from the
+input stream. The easiest way of doing this would be having a pre-lexing pass and parsing based
+on tokens, but this is deliberately not how Parsley is designed. Instead, this extractor can
+try and parse the remaining input to try and identify a token on demand.
+
+If the @lexicalError@ flag of the @unexpectedToken@ function is not set, which would indicate a
+problem within a token reported by a classical lexer and not the parser, the extractor will
+try to parse each of the provided @tokens@ in turn: the given function is used to select which
+is returned.
+For best effect, these tokens should not consume
+whitespace (which would otherwise be included at the end of the token!): this means that, if
+using the @Lexer@, the functionality in __@nonlexeme@__ should be used. If one of the
+givens tokens cannot be parsed, the input until the /next/ valid parsable token (or end of input)
+is returned as a @Raw@.
+
+If @lexicalError@ is true, then the given token extractor will be used instead to extract a
+default token.
+
+@since 0.2.5.0
+-}
 {-# INLINABLE lexTokenWithSelect #-}
 lexTokenWithSelect :: (NonEmpty (String, Word) -> (String, Word))
+                   -- ^ If the extractor is successful in identifying tokens that can be parsed from
+                   -- the residual input, this function will select /one/ of them to report back.
                    -> [Parsec String]
+                   -- ^ The tokens that should be recognised by this extractor: each parser should return the
+                   -- intended name of the token exactly as it should appear in the "Named" token.
+                   --
+                   -- This /should/ include a whitespace parser for "unexpected whitespace". However, with the
+                   -- exception of the whitespace parser, these tokens should not consume trailing (and
+                   -- certainly not leading) whitespace: if using definitions from "Text.Gigaparsec.Token.Lexer"
+                   -- functionality, the @nonlexeme@ versions of the tokens should be used.
                    -> TokenExtractor
+                   -- ^ If the parser failed during the parsing of a token, this
+                   -- function extracts the problematic item from the remaining input.
                    -> TokenExtractor
 lexTokenWithSelect selectToken tokens extractItem cs parserDemanded lexical
   | lexical = extractItem cs parserDemanded True
