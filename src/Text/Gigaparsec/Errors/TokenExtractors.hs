@@ -10,6 +10,10 @@ License     : BSD-3-Clause
 Maintainer  : Jamie Willis, Gigaparsec Maintainers
 Stability   : stable
 
+This module contains implementations of token extractors that can be used in the
+"Text.Gigaparsec.Errors.ErrorBuilder" to decide how to extract unexpected tokens from the residual
+input left over from a parse error.
+
 These are common strategies, and something here is likely to be what is needed. They are all careful
 to handle unprintable characters and whitespace in a sensible way, and account for unicode codepoints
 that are wider than a single 16-bit character.
