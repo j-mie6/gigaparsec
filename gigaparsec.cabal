@@ -20,7 +20,7 @@ name:               gigaparsec
 -- PVP summary:     +-+------- breaking API changes
 --                  | | +----- non-breaking API additions
 --                  | | | +--- code changes with no API change
-version:            0.2.4.1
+version:            0.2.5.0
 
 -- A short (one-line) description of the package.
 synopsis:
@@ -78,8 +78,6 @@ common base
 library
     import:           warnings, extensions, base
 
-    other-modules:    Text.Gigaparsec.Errors.TokenExtractors
-
     -- Modules exported by the library.
     exposed-modules:  Text.Gigaparsec,
                       Text.Gigaparsec.Char,
@@ -91,7 +89,7 @@ library
                       Text.Gigaparsec.Errors.ErrorBuilder,
                       Text.Gigaparsec.Errors.ErrorGen,
                       Text.Gigaparsec.Errors.Patterns,
-
+                      Text.Gigaparsec.Errors.TokenExtractors,
                       Text.Gigaparsec.Expr,
                       Text.Gigaparsec.Expr.Chain,
                       Text.Gigaparsec.Expr.Infix,

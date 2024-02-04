@@ -1,21 +1,31 @@
 {-# LANGUAGE Safe #-}
 {-# LANGUAGE ViewPatterns #-}
+{-# OPTIONS_GHC -Wno-incomplete-uni-patterns #-}
 module Text.Gigaparsec.Errors.TokenExtractors (
     Token(..), TokenExtractor,
     tillNextWhitespace,
     singleChar,
-    matchParserDemand--,
-    --lexToken
+    matchParserDemand,
+    lexToken, lexTokenWithSelect
   ) where
 
-import Text.Gigaparsec (Parsec)
+import Text.Gigaparsec (
+    Parsec, Result(Success), parse,
+    atomic, lookAhead, notFollowedBy, some, (<+>), (<~>), mapMaybeS
+  )
+import Text.Gigaparsec.Char (item)
+import Text.Gigaparsec.Combinator (option)
+import Text.Gigaparsec.Position (offset)
 
 import Data.Char (generalCategory, ord, GeneralCategory(Format, Surrogate, PrivateUse, NotAssigned, Control))
 import Data.Char qualified as Char (isSpace)
-import Data.List.NonEmpty (NonEmpty((:|)))
+import Data.List.NonEmpty (NonEmpty((:|)), nonEmpty)
+import Data.List.NonEmpty qualified as NonEmpty (toList)
+import Data.Void (Void)
 import Data.Foldable (maximumBy)
 import Numeric (showHex)
 import Data.Function (on)
+import Data.Maybe (catMaybes)
 
 type TokenExtractor :: *
 type TokenExtractor = NonEmpty Char -> Word -> Bool -> Token
@@ -66,8 +76,27 @@ whitespaceOrUnprintable (c :| _)
     _ -> Nothing
   where unprintable = Just $ Named ("non-printable character (\\x" ++ showHex (ord c) ")") 1
 
-lexToken :: [Parsec String] -> TokenExtractor -> TokenExtractor
+lexToken :: [Parsec String]
+         -> TokenExtractor
+         -> TokenExtractor
 lexToken = lexTokenWithSelect (maximumBy (compare `on` snd))
 
-lexTokenWithSelect :: (NonEmpty (String, Word) -> (String, Word)) -> [Parsec String] -> TokenExtractor -> TokenExtractor
-lexTokenWithSelect = undefined
+lexTokenWithSelect :: (NonEmpty (String, Word) -> (String, Word))
+                   -> [Parsec String]
+                   -> TokenExtractor
+                   -> TokenExtractor
+lexTokenWithSelect selectToken tokens extractItem cs parserDemanded lexical
+  | lexical = extractItem cs parserDemanded True
+  | otherwise = extractToken cs
+  where
+    extractToken :: NonEmpty Char -> Token
+    extractToken inp =
+      let Success rawOrToks = parse @Void parser (NonEmpty.toList inp)
+      in either (uncurry Named . selectToken) Raw rawOrToks
+
+    parser :: Parsec (Either (NonEmpty (String, Word)) String)
+    parser =
+      let toks = mapMaybeS (nonEmpty . catMaybes)
+                           (traverse (\t -> option (lookAhead (atomic t <~> offset))) tokens)
+          rawTok = some (traverse notFollowedBy tokens *> item)
+      in toks <+> rawTok
