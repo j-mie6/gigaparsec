@@ -89,6 +89,7 @@ library
                       Text.Gigaparsec.Errors.ErrorBuilder,
                       Text.Gigaparsec.Errors.ErrorGen,
                       Text.Gigaparsec.Errors.Patterns,
+                      Text.Gigaparsec.Errors.TokenExtractors,
                       Text.Gigaparsec.Expr,
                       Text.Gigaparsec.Expr.Chain,
                       Text.Gigaparsec.Expr.Infix,
