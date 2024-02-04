@@ -114,6 +114,7 @@ The overall structure of a /Specialised/ error is given in the following diagram
 
 @since 0.2.0.0
 -}
+-- TODO: at 0.3.0.0, remove the Token re-export, because hs-boot doesn't carry docs
 module Text.Gigaparsec.Errors.ErrorBuilder (ErrorBuilder(..), Token(..)) where
 
 import Text.Gigaparsec.Errors.DefaultErrorBuilder ( StringBuilder, formatDefault
@@ -278,7 +279,8 @@ class (Ord (Item err)) => ErrorBuilder err where
   can be reported instead. This can take many forms, for instance trimming the token to the
   next whitespace, only taking one character, or even trying to lex a token out of the stream.
 
-  TODO: talk about the token extractors when they are added.
+  This method can be easily implemented by using an appropriate /token extractor/ from
+  "Text.Gigaparsec.Errors.TokenExtractors".
   -}
   unexpectedToken :: NonEmpty Char -- ^ the remaining input, @cs@, at point of failure.
                   -> Word          -- ^ the input the parser tried to read when it failed
