@@ -26,35 +26,35 @@
 </span><span id="line-26"></span><span class="hs-pragma">{-# INLINABLE</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.Errors.DefuncError.html#isVanilla"><span class="hs-pragma hs-type">isVanilla</span></a></span><span> </span><span class="hs-pragma">#-}</span><span>
 </span><span id="line-27"></span><span class="annot"><a href="Text.Gigaparsec.Internal.Errors.DefuncError.html#isVanilla"><span class="hs-identifier hs-type">isVanilla</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.Errors.DefuncTypes.html#DefuncError"><span class="hs-identifier hs-type">DefuncError</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Bool</span></span><span>
 </span><span id="line-28"></span><span id="isVanilla"><span class="annot"><span class="annottext">isVanilla :: DefuncError -&gt; Bool
-</span><a href="Text.Gigaparsec.Internal.Errors.DefuncError.html#isVanilla"><span class="hs-identifier hs-var hs-var">isVanilla</span></a></span></span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.Errors.DefuncTypes.html#DefuncError"><span class="hs-identifier hs-type">DefuncError</span></a></span><span class="hs-special">{</span><span id="local-6989586621679231391"><span class="annot"><span class="annottext">Word32
+</span><a href="Text.Gigaparsec.Internal.Errors.DefuncError.html#isVanilla"><span class="hs-identifier hs-var hs-var">isVanilla</span></a></span></span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.Errors.DefuncTypes.html#DefuncError"><span class="hs-identifier hs-type">DefuncError</span></a></span><span class="hs-special">{</span><span id="local-6989586621679231600"><span class="annot"><span class="annottext">Word32
 flags :: Word32
 flags :: DefuncError -&gt; Word32
-</span><a href="#local-6989586621679231391"><span class="hs-identifier hs-var hs-var">flags</span></a></span></span><span class="hs-special">}</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Word32 -&gt; Int -&gt; Bool
+</span><a href="#local-6989586621679231600"><span class="hs-identifier hs-var hs-var">flags</span></a></span></span><span class="hs-special">}</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Word32 -&gt; Int -&gt; Bool
 forall a. Bits a =&gt; a -&gt; Int -&gt; Bool
 </span><span class="hs-identifier hs-var">testBit</span></span><span> </span><span class="annot"><span class="annottext">Word32
-</span><a href="#local-6989586621679231391"><span class="hs-identifier hs-var">flags</span></a></span><span> </span><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679231600"><span class="hs-identifier hs-var">flags</span></a></span><span> </span><span class="annot"><span class="annottext">Int
 </span><a href="Text.Gigaparsec.Internal.Errors.DefuncError.html#vanillaBit"><span class="hs-identifier hs-var">vanillaBit</span></a></span><span>
 </span><span id="line-29"></span><span>
 </span><span id="line-30"></span><span class="hs-pragma">{-# INLINABLE</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.Errors.DefuncError.html#isExpectedEmpty"><span class="hs-pragma hs-type">isExpectedEmpty</span></a></span><span> </span><span class="hs-pragma">#-}</span><span>
 </span><span id="line-31"></span><span class="annot"><a href="Text.Gigaparsec.Internal.Errors.DefuncError.html#isExpectedEmpty"><span class="hs-identifier hs-type">isExpectedEmpty</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.Errors.DefuncTypes.html#DefuncError"><span class="hs-identifier hs-type">DefuncError</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Bool</span></span><span>
 </span><span id="line-32"></span><span id="isExpectedEmpty"><span class="annot"><span class="annottext">isExpectedEmpty :: DefuncError -&gt; Bool
-</span><a href="Text.Gigaparsec.Internal.Errors.DefuncError.html#isExpectedEmpty"><span class="hs-identifier hs-var hs-var">isExpectedEmpty</span></a></span></span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.Errors.DefuncTypes.html#DefuncError"><span class="hs-identifier hs-type">DefuncError</span></a></span><span class="hs-special">{</span><span id="local-6989586621679231395"><span class="annot"><span class="annottext">Word32
+</span><a href="Text.Gigaparsec.Internal.Errors.DefuncError.html#isExpectedEmpty"><span class="hs-identifier hs-var hs-var">isExpectedEmpty</span></a></span></span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.Errors.DefuncTypes.html#DefuncError"><span class="hs-identifier hs-type">DefuncError</span></a></span><span class="hs-special">{</span><span id="local-6989586621679231604"><span class="annot"><span class="annottext">Word32
 flags :: DefuncError -&gt; Word32
 flags :: Word32
 </span><a href="Text.Gigaparsec.Internal.Errors.DefuncTypes.html#flags"><span class="hs-identifier hs-var hs-var">flags</span></a></span></span><span class="hs-special">}</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Word32 -&gt; Int -&gt; Bool
 forall a. Bits a =&gt; a -&gt; Int -&gt; Bool
 </span><span class="hs-identifier hs-var">testBit</span></span><span> </span><span class="annot"><span class="annottext">Word32
-</span><a href="#local-6989586621679231395"><span class="hs-identifier hs-var">flags</span></a></span><span> </span><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679231604"><span class="hs-identifier hs-var">flags</span></a></span><span> </span><span class="annot"><span class="annottext">Int
 </span><a href="Text.Gigaparsec.Internal.Errors.DefuncError.html#expectedEmptyBit"><span class="hs-identifier hs-var">expectedEmptyBit</span></a></span><span>
 </span><span id="line-33"></span><span>
 </span><span id="line-34"></span><span class="hs-pragma">{-# INLINABLE</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.Errors.DefuncError.html#entrenchedBy"><span class="hs-pragma hs-type">entrenchedBy</span></a></span><span> </span><span class="hs-pragma">#-}</span><span>
 </span><span id="line-35"></span><span class="annot"><a href="Text.Gigaparsec.Internal.Errors.DefuncError.html#entrenchedBy"><span class="hs-identifier hs-type">entrenchedBy</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.Errors.DefuncTypes.html#DefuncError"><span class="hs-identifier hs-type">DefuncError</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Word32</span></span><span>
 </span><span id="line-36"></span><span id="entrenchedBy"><span class="annot"><span class="annottext">entrenchedBy :: DefuncError -&gt; Word32
-</span><a href="Text.Gigaparsec.Internal.Errors.DefuncError.html#entrenchedBy"><span class="hs-identifier hs-var hs-var">entrenchedBy</span></a></span></span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.Errors.DefuncTypes.html#DefuncError"><span class="hs-identifier hs-type">DefuncError</span></a></span><span class="hs-special">{</span><span id="local-6989586621679231399"><span class="annot"><span class="annottext">Word32
+</span><a href="Text.Gigaparsec.Internal.Errors.DefuncError.html#entrenchedBy"><span class="hs-identifier hs-var hs-var">entrenchedBy</span></a></span></span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.Errors.DefuncTypes.html#DefuncError"><span class="hs-identifier hs-type">DefuncError</span></a></span><span class="hs-special">{</span><span id="local-6989586621679231608"><span class="annot"><span class="annottext">Word32
 flags :: DefuncError -&gt; Word32
 flags :: Word32
 </span><a href="Text.Gigaparsec.Internal.Errors.DefuncTypes.html#flags"><span class="hs-identifier hs-var hs-var">flags</span></a></span></span><span class="hs-special">}</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Word32
-</span><a href="#local-6989586621679231399"><span class="hs-identifier hs-var">flags</span></a></span><span> </span><span class="annot"><span class="annottext">Word32 -&gt; Word32 -&gt; Word32
+</span><a href="#local-6989586621679231608"><span class="hs-identifier hs-var">flags</span></a></span><span> </span><span class="annot"><span class="annottext">Word32 -&gt; Word32 -&gt; Word32
 forall a. Bits a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">.&amp;.</span></span><span> </span><span class="annot"><span class="annottext">Word32
 </span><a href="Text.Gigaparsec.Internal.Errors.DefuncError.html#entrenchedMask"><span class="hs-identifier hs-var">entrenchedMask</span></a></span><span>
@@ -62,10 +62,10 @@ forall a. Bits a =&gt; a -&gt; a -&gt; a
 </span><span id="line-38"></span><span class="hs-pragma">{-# INLINABLE</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.Errors.DefuncError.html#entrenched"><span class="hs-pragma hs-type">entrenched</span></a></span><span> </span><span class="hs-pragma">#-}</span><span>
 </span><span id="line-39"></span><span class="annot"><a href="Text.Gigaparsec.Internal.Errors.DefuncError.html#entrenched"><span class="hs-identifier hs-type">entrenched</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.Errors.DefuncTypes.html#DefuncError"><span class="hs-identifier hs-type">DefuncError</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Bool</span></span><span>
 </span><span id="line-40"></span><span id="entrenched"><span class="annot"><span class="annottext">entrenched :: DefuncError -&gt; Bool
-</span><a href="Text.Gigaparsec.Internal.Errors.DefuncError.html#entrenched"><span class="hs-identifier hs-var hs-var">entrenched</span></a></span></span><span> </span><span id="local-6989586621679231402"><span class="annot"><span class="annottext">DefuncError
-</span><a href="#local-6989586621679231402"><span class="hs-identifier hs-var">err</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">DefuncError -&gt; Word32
+</span><a href="Text.Gigaparsec.Internal.Errors.DefuncError.html#entrenched"><span class="hs-identifier hs-var hs-var">entrenched</span></a></span></span><span> </span><span id="local-6989586621679231611"><span class="annot"><span class="annottext">DefuncError
+</span><a href="#local-6989586621679231611"><span class="hs-identifier hs-var">err</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">DefuncError -&gt; Word32
 </span><a href="Text.Gigaparsec.Internal.Errors.DefuncError.html#entrenchedBy"><span class="hs-identifier hs-var">entrenchedBy</span></a></span><span> </span><span class="annot"><span class="annottext">DefuncError
-</span><a href="#local-6989586621679231402"><span class="hs-identifier hs-var">err</span></a></span><span> </span><span class="annot"><span class="annottext">Word32 -&gt; Word32 -&gt; Bool
+</span><a href="#local-6989586621679231611"><span class="hs-identifier hs-var">err</span></a></span><span> </span><span class="annot"><span class="annottext">Word32 -&gt; Word32 -&gt; Bool
 forall a. Ord a =&gt; a -&gt; a -&gt; Bool
 </span><span class="hs-operator hs-var">&gt;</span></span><span> </span><span class="annot"><span class="annottext">Word32
 </span><span class="hs-number">0</span></span><span>
@@ -73,36 +73,36 @@ forall a. Ord a =&gt; a -&gt; a -&gt; Bool
 </span><span id="line-42"></span><span class="hs-pragma">{-# INLINABLE</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.Errors.DefuncError.html#isFlexibleCaret"><span class="hs-pragma hs-type">isFlexibleCaret</span></a></span><span> </span><span class="hs-pragma">#-}</span><span>
 </span><span id="line-43"></span><span class="annot"><a href="Text.Gigaparsec.Internal.Errors.DefuncError.html#isFlexibleCaret"><span class="hs-identifier hs-type">isFlexibleCaret</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.Errors.DefuncTypes.html#DefuncError"><span class="hs-identifier hs-type">DefuncError</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Bool</span></span><span>
 </span><span id="line-44"></span><span id="isFlexibleCaret"><span class="annot"><span class="annottext">isFlexibleCaret :: DefuncError -&gt; Bool
-</span><a href="Text.Gigaparsec.Internal.Errors.DefuncError.html#isFlexibleCaret"><span class="hs-identifier hs-var hs-var">isFlexibleCaret</span></a></span></span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.Errors.DefuncTypes.html#DefuncError"><span class="hs-identifier hs-type">DefuncError</span></a></span><span class="hs-special">{</span><span id="local-6989586621679231406"><span class="annot"><span class="annottext">Word32
+</span><a href="Text.Gigaparsec.Internal.Errors.DefuncError.html#isFlexibleCaret"><span class="hs-identifier hs-var hs-var">isFlexibleCaret</span></a></span></span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.Errors.DefuncTypes.html#DefuncError"><span class="hs-identifier hs-type">DefuncError</span></a></span><span class="hs-special">{</span><span id="local-6989586621679231615"><span class="annot"><span class="annottext">Word32
 flags :: DefuncError -&gt; Word32
 flags :: Word32
 </span><a href="Text.Gigaparsec.Internal.Errors.DefuncTypes.html#flags"><span class="hs-identifier hs-var hs-var">flags</span></a></span></span><span class="hs-special">}</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Word32 -&gt; Int -&gt; Bool
 forall a. Bits a =&gt; a -&gt; Int -&gt; Bool
 </span><span class="hs-identifier hs-var">testBit</span></span><span> </span><span class="annot"><span class="annottext">Word32
-</span><a href="#local-6989586621679231406"><span class="hs-identifier hs-var">flags</span></a></span><span> </span><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679231615"><span class="hs-identifier hs-var">flags</span></a></span><span> </span><span class="annot"><span class="annottext">Int
 </span><a href="Text.Gigaparsec.Internal.Errors.DefuncError.html#flexibleCaretBit"><span class="hs-identifier hs-var">flexibleCaretBit</span></a></span><span>
 </span><span id="line-45"></span><span>
 </span><span id="line-46"></span><span class="hs-pragma">{-# INLINABLE</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.Errors.DefuncError.html#isLexical"><span class="hs-pragma hs-type">isLexical</span></a></span><span> </span><span class="hs-pragma">#-}</span><span>
 </span><span id="line-47"></span><span class="annot"><a href="Text.Gigaparsec.Internal.Errors.DefuncError.html#isLexical"><span class="hs-identifier hs-type">isLexical</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.Errors.DefuncTypes.html#DefuncError"><span class="hs-identifier hs-type">DefuncError</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Bool</span></span><span>
 </span><span id="line-48"></span><span id="isLexical"><span class="annot"><span class="annottext">isLexical :: DefuncError -&gt; Bool
-</span><a href="Text.Gigaparsec.Internal.Errors.DefuncError.html#isLexical"><span class="hs-identifier hs-var hs-var">isLexical</span></a></span></span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.Errors.DefuncTypes.html#DefuncError"><span class="hs-identifier hs-type">DefuncError</span></a></span><span class="hs-special">{</span><span id="local-6989586621679231409"><span class="annot"><span class="annottext">Word32
+</span><a href="Text.Gigaparsec.Internal.Errors.DefuncError.html#isLexical"><span class="hs-identifier hs-var hs-var">isLexical</span></a></span></span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.Errors.DefuncTypes.html#DefuncError"><span class="hs-identifier hs-type">DefuncError</span></a></span><span class="hs-special">{</span><span id="local-6989586621679231618"><span class="annot"><span class="annottext">Word32
 flags :: DefuncError -&gt; Word32
 flags :: Word32
 </span><a href="Text.Gigaparsec.Internal.Errors.DefuncTypes.html#flags"><span class="hs-identifier hs-var hs-var">flags</span></a></span></span><span class="hs-special">}</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Word32 -&gt; Int -&gt; Bool
 forall a. Bits a =&gt; a -&gt; Int -&gt; Bool
 </span><span class="hs-identifier hs-var">testBit</span></span><span> </span><span class="annot"><span class="annottext">Word32
-</span><a href="#local-6989586621679231409"><span class="hs-identifier hs-var">flags</span></a></span><span> </span><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679231618"><span class="hs-identifier hs-var">flags</span></a></span><span> </span><span class="annot"><span class="annottext">Int
 </span><a href="Text.Gigaparsec.Internal.Errors.DefuncError.html#lexicalBit"><span class="hs-identifier hs-var">lexicalBit</span></a></span><span>
 </span><span id="line-49"></span><span>
 </span><span id="line-50"></span><span class="hs-comment">-- Base Errors</span><span>
 </span><span id="line-51"></span><span class="annot"><a href="Text.Gigaparsec.Internal.Errors.DefuncError.html#specialisedError"><span class="hs-identifier hs-type">specialisedError</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Word</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Word</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Word</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-special">[</span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span class="hs-special">]</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.Errors.CaretControl.html#CaretWidth"><span class="hs-identifier hs-type">CaretWidth</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.Errors.DefuncTypes.html#DefuncError"><span class="hs-identifier hs-type">DefuncError</span></a></span><span>
 </span><span id="line-52"></span><span id="specialisedError"><span class="annot"><span class="annottext">specialisedError :: Word -&gt; Word -&gt; Word -&gt; [String] -&gt; CaretWidth -&gt; DefuncError
-</span><a href="Text.Gigaparsec.Internal.Errors.DefuncError.html#specialisedError"><span class="hs-identifier hs-var hs-var">specialisedError</span></a></span></span><span> </span><span class="hs-glyph">!</span><span id="local-6989586621679231411"><span class="annot"><span class="annottext">Word
-</span><a href="#local-6989586621679231411"><span class="hs-identifier hs-var">pOff</span></a></span></span><span> </span><span class="hs-glyph">!</span><span id="local-6989586621679231412"><span class="annot"><span class="annottext">Word
-</span><a href="#local-6989586621679231412"><span class="hs-identifier hs-var">line</span></a></span></span><span> </span><span class="hs-glyph">!</span><span id="local-6989586621679231413"><span class="annot"><span class="annottext">Word
-</span><a href="#local-6989586621679231413"><span class="hs-identifier hs-var">col</span></a></span></span><span> </span><span class="hs-glyph">!</span><span id="local-6989586621679231414"><span class="annot"><span class="annottext">[String]
-</span><a href="#local-6989586621679231414"><span class="hs-identifier hs-var">msgs</span></a></span></span><span> </span><span id="local-6989586621679231415"><span class="annot"><span class="annottext">CaretWidth
-</span><a href="#local-6989586621679231415"><span class="hs-identifier hs-var">caret</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
+</span><a href="Text.Gigaparsec.Internal.Errors.DefuncError.html#specialisedError"><span class="hs-identifier hs-var hs-var">specialisedError</span></a></span></span><span> </span><span class="hs-glyph">!</span><span id="local-6989586621679231620"><span class="annot"><span class="annottext">Word
+</span><a href="#local-6989586621679231620"><span class="hs-identifier hs-var">pOff</span></a></span></span><span> </span><span class="hs-glyph">!</span><span id="local-6989586621679231621"><span class="annot"><span class="annottext">Word
+</span><a href="#local-6989586621679231621"><span class="hs-identifier hs-var">line</span></a></span></span><span> </span><span class="hs-glyph">!</span><span id="local-6989586621679231622"><span class="annot"><span class="annottext">Word
+</span><a href="#local-6989586621679231622"><span class="hs-identifier hs-var">col</span></a></span></span><span> </span><span class="hs-glyph">!</span><span id="local-6989586621679231623"><span class="annot"><span class="annottext">[String]
+</span><a href="#local-6989586621679231623"><span class="hs-identifier hs-var">msgs</span></a></span></span><span> </span><span id="local-6989586621679231624"><span class="annot"><span class="annottext">CaretWidth
+</span><a href="#local-6989586621679231624"><span class="hs-identifier hs-var">caret</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
 </span><span id="line-53"></span><span>  </span><span class="annot"><span class="annottext">ErrKindSingleton 'Specialised
 -&gt; Word32
 -&gt; Word
@@ -114,23 +114,23 @@ ErrKindSingleton k
 -&gt; Word32 -&gt; Word -&gt; Word -&gt; DefuncError_ k -&gt; DefuncError
 </span><a href="Text.Gigaparsec.Internal.Errors.DefuncTypes.html#DefuncError"><span class="hs-identifier hs-var">DefuncError</span></a></span><span> </span><span class="annot"><span class="annottext">ErrKindSingleton 'Specialised
 </span><a href="Text.Gigaparsec.Internal.Errors.DefuncTypes.html#IsSpecialised"><span class="hs-identifier hs-var">IsSpecialised</span></a></span><span> </span><span class="annot"><span class="annottext">Word32
-</span><a href="#local-6989586621679231417"><span class="hs-identifier hs-var">flags</span></a></span><span> </span><span class="annot"><span class="annottext">Word
-</span><a href="#local-6989586621679231411"><span class="hs-identifier hs-var">pOff</span></a></span><span> </span><span class="annot"><span class="annottext">Word
-</span><a href="#local-6989586621679231411"><span class="hs-identifier hs-var">pOff</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Word -&gt; Word -&gt; BaseError 'Specialised -&gt; DefuncError_ 'Specialised
+</span><a href="#local-6989586621679231626"><span class="hs-identifier hs-var">flags</span></a></span><span> </span><span class="annot"><span class="annottext">Word
+</span><a href="#local-6989586621679231620"><span class="hs-identifier hs-var">pOff</span></a></span><span> </span><span class="annot"><span class="annottext">Word
+</span><a href="#local-6989586621679231620"><span class="hs-identifier hs-var">pOff</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Word -&gt; Word -&gt; BaseError 'Specialised -&gt; DefuncError_ 'Specialised
 forall (k :: ErrKind).
 Word -&gt; Word -&gt; BaseError k -&gt; DefuncError_ k
 </span><a href="Text.Gigaparsec.Internal.Errors.DefuncTypes.html#Base"><span class="hs-identifier hs-var">Base</span></a></span><span> </span><span class="annot"><span class="annottext">Word
-</span><a href="#local-6989586621679231412"><span class="hs-identifier hs-var">line</span></a></span><span> </span><span class="annot"><span class="annottext">Word
-</span><a href="#local-6989586621679231413"><span class="hs-identifier hs-var">col</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">[String] -&gt; CaretWidth -&gt; BaseError 'Specialised
+</span><a href="#local-6989586621679231621"><span class="hs-identifier hs-var">line</span></a></span><span> </span><span class="annot"><span class="annottext">Word
+</span><a href="#local-6989586621679231622"><span class="hs-identifier hs-var">col</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">[String] -&gt; CaretWidth -&gt; BaseError 'Specialised
 </span><a href="Text.Gigaparsec.Internal.Errors.DefuncTypes.html#ClassicSpecialised"><span class="hs-identifier hs-var">ClassicSpecialised</span></a></span><span> </span><span class="annot"><span class="annottext">[String]
-</span><a href="#local-6989586621679231414"><span class="hs-identifier hs-var">msgs</span></a></span><span> </span><span class="annot"><span class="annottext">CaretWidth
-</span><a href="#local-6989586621679231415"><span class="hs-identifier hs-var">caret</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
-</span><span id="line-54"></span><span>  </span><span class="hs-keyword">where</span><span> </span><span class="annot"><a href="#local-6989586621679231417"><span class="hs-identifier hs-type">flags</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Word32</span></span><span>
-</span><span id="line-55"></span><span>        </span><span class="hs-glyph">!</span><span id="local-6989586621679231417"><span class="annot"><span class="annottext">flags :: Word32
-</span><a href="#local-6989586621679231417"><span class="hs-identifier hs-var hs-var">flags</span></a></span></span><span>
+</span><a href="#local-6989586621679231623"><span class="hs-identifier hs-var">msgs</span></a></span><span> </span><span class="annot"><span class="annottext">CaretWidth
+</span><a href="#local-6989586621679231624"><span class="hs-identifier hs-var">caret</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-54"></span><span>  </span><span class="hs-keyword">where</span><span> </span><span class="annot"><a href="#local-6989586621679231626"><span class="hs-identifier hs-type">flags</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Word32</span></span><span>
+</span><span id="line-55"></span><span>        </span><span class="hs-glyph">!</span><span id="local-6989586621679231626"><span class="annot"><span class="annottext">flags :: Word32
+</span><a href="#local-6989586621679231626"><span class="hs-identifier hs-var hs-var">flags</span></a></span></span><span>
 </span><span id="line-56"></span><span>          </span><span class="hs-glyph">|</span><span> </span><span class="annot"><span class="annottext">CaretWidth -&gt; Bool
 </span><a href="Text.Gigaparsec.Internal.Errors.CaretControl.html#isFlexible"><span class="hs-identifier hs-var">isFlexible</span></a></span><span> </span><span class="annot"><span class="annottext">CaretWidth
-</span><a href="#local-6989586621679231415"><span class="hs-identifier hs-var">caret</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Word32 -&gt; Int -&gt; Word32
+</span><a href="#local-6989586621679231624"><span class="hs-identifier hs-var">caret</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Word32 -&gt; Int -&gt; Word32
 forall a. Bits a =&gt; a -&gt; Int -&gt; a
 </span><span class="hs-identifier hs-var">setBit</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Int -&gt; Word32
 forall a. Bits a =&gt; Int -&gt; a
@@ -145,11 +145,11 @@ forall a. Bits a =&gt; Int -&gt; a
 </span><span id="line-58"></span><span>
 </span><span id="line-59"></span><span class="annot"><a href="Text.Gigaparsec.Internal.Errors.DefuncError.html#emptyError"><span class="hs-identifier hs-type">emptyError</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Word</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Word</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Word</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.Errors.CaretControl.html#Span"><span class="hs-identifier hs-type">Span</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.Errors.DefuncTypes.html#DefuncError"><span class="hs-identifier hs-type">DefuncError</span></a></span><span>
 </span><span id="line-60"></span><span id="emptyError"><span class="annot"><span class="annottext">emptyError :: Word -&gt; Word -&gt; Word -&gt; Word -&gt; DefuncError
-</span><a href="Text.Gigaparsec.Internal.Errors.DefuncError.html#emptyError"><span class="hs-identifier hs-var hs-var">emptyError</span></a></span></span><span> </span><span class="hs-glyph">!</span><span id="local-6989586621679231420"><span class="annot"><span class="annottext">Word
-</span><a href="#local-6989586621679231420"><span class="hs-identifier hs-var">pOff</span></a></span></span><span> </span><span class="hs-glyph">!</span><span id="local-6989586621679231421"><span class="annot"><span class="annottext">Word
-</span><a href="#local-6989586621679231421"><span class="hs-identifier hs-var">line</span></a></span></span><span> </span><span class="hs-glyph">!</span><span id="local-6989586621679231422"><span class="annot"><span class="annottext">Word
-</span><a href="#local-6989586621679231422"><span class="hs-identifier hs-var">col</span></a></span></span><span> </span><span class="hs-glyph">!</span><span id="local-6989586621679231423"><span class="annot"><span class="annottext">Word
-</span><a href="#local-6989586621679231423"><span class="hs-identifier hs-var">unexWidth</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
+</span><a href="Text.Gigaparsec.Internal.Errors.DefuncError.html#emptyError"><span class="hs-identifier hs-var hs-var">emptyError</span></a></span></span><span> </span><span class="hs-glyph">!</span><span id="local-6989586621679231629"><span class="annot"><span class="annottext">Word
+</span><a href="#local-6989586621679231629"><span class="hs-identifier hs-var">pOff</span></a></span></span><span> </span><span class="hs-glyph">!</span><span id="local-6989586621679231630"><span class="annot"><span class="annottext">Word
+</span><a href="#local-6989586621679231630"><span class="hs-identifier hs-var">line</span></a></span></span><span> </span><span class="hs-glyph">!</span><span id="local-6989586621679231631"><span class="annot"><span class="annottext">Word
+</span><a href="#local-6989586621679231631"><span class="hs-identifier hs-var">col</span></a></span></span><span> </span><span class="hs-glyph">!</span><span id="local-6989586621679231632"><span class="annot"><span class="annottext">Word
+</span><a href="#local-6989586621679231632"><span class="hs-identifier hs-var">unexWidth</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
 </span><span id="line-61"></span><span>  </span><span class="annot"><span class="annottext">ErrKindSingleton 'Vanilla
 -&gt; Word32 -&gt; Word -&gt; Word -&gt; DefuncError_ 'Vanilla -&gt; DefuncError
 forall (k :: ErrKind).
@@ -157,19 +157,19 @@ ErrKindSingleton k
 -&gt; Word32 -&gt; Word -&gt; Word -&gt; DefuncError_ k -&gt; DefuncError
 </span><a href="Text.Gigaparsec.Internal.Errors.DefuncTypes.html#DefuncError"><span class="hs-identifier hs-var">DefuncError</span></a></span><span> </span><span class="annot"><span class="annottext">ErrKindSingleton 'Vanilla
 </span><a href="Text.Gigaparsec.Internal.Errors.DefuncTypes.html#IsVanilla"><span class="hs-identifier hs-var">IsVanilla</span></a></span><span> </span><span class="annot"><span class="annottext">Word32
-</span><a href="#local-6989586621679231425"><span class="hs-identifier hs-var">flags</span></a></span><span> </span><span class="annot"><span class="annottext">Word
-</span><a href="#local-6989586621679231420"><span class="hs-identifier hs-var">pOff</span></a></span><span> </span><span class="annot"><span class="annottext">Word
-</span><a href="#local-6989586621679231420"><span class="hs-identifier hs-var">pOff</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Word -&gt; Word -&gt; BaseError 'Vanilla -&gt; DefuncError_ 'Vanilla
+</span><a href="#local-6989586621679231634"><span class="hs-identifier hs-var">flags</span></a></span><span> </span><span class="annot"><span class="annottext">Word
+</span><a href="#local-6989586621679231629"><span class="hs-identifier hs-var">pOff</span></a></span><span> </span><span class="annot"><span class="annottext">Word
+</span><a href="#local-6989586621679231629"><span class="hs-identifier hs-var">pOff</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Word -&gt; Word -&gt; BaseError 'Vanilla -&gt; DefuncError_ 'Vanilla
 forall (k :: ErrKind).
 Word -&gt; Word -&gt; BaseError k -&gt; DefuncError_ k
 </span><a href="Text.Gigaparsec.Internal.Errors.DefuncTypes.html#Base"><span class="hs-identifier hs-var">Base</span></a></span><span> </span><span class="annot"><span class="annottext">Word
-</span><a href="#local-6989586621679231421"><span class="hs-identifier hs-var">line</span></a></span><span> </span><span class="annot"><span class="annottext">Word
-</span><a href="#local-6989586621679231422"><span class="hs-identifier hs-var">col</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Word -&gt; BaseError 'Vanilla
+</span><a href="#local-6989586621679231630"><span class="hs-identifier hs-var">line</span></a></span><span> </span><span class="annot"><span class="annottext">Word
+</span><a href="#local-6989586621679231631"><span class="hs-identifier hs-var">col</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Word -&gt; BaseError 'Vanilla
 </span><a href="Text.Gigaparsec.Internal.Errors.DefuncTypes.html#Empty"><span class="hs-identifier hs-var">Empty</span></a></span><span> </span><span class="annot"><span class="annottext">Word
-</span><a href="#local-6989586621679231423"><span class="hs-identifier hs-var">unexWidth</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
-</span><span id="line-62"></span><span>  </span><span class="hs-keyword">where</span><span> </span><span class="annot"><a href="#local-6989586621679231425"><span class="hs-identifier hs-type">flags</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Word32</span></span><span>
-</span><span id="line-63"></span><span>        </span><span class="hs-glyph">!</span><span id="local-6989586621679231425"><span class="annot"><span class="annottext">flags :: Word32
-</span><a href="#local-6989586621679231425"><span class="hs-identifier hs-var hs-var">flags</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Word32 -&gt; Int -&gt; Word32
+</span><a href="#local-6989586621679231632"><span class="hs-identifier hs-var">unexWidth</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-62"></span><span>  </span><span class="hs-keyword">where</span><span> </span><span class="annot"><a href="#local-6989586621679231634"><span class="hs-identifier hs-type">flags</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Word32</span></span><span>
+</span><span id="line-63"></span><span>        </span><span class="hs-glyph">!</span><span id="local-6989586621679231634"><span class="annot"><span class="annottext">flags :: Word32
+</span><a href="#local-6989586621679231634"><span class="hs-identifier hs-var hs-var">flags</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Word32 -&gt; Int -&gt; Word32
 forall a. Bits a =&gt; a -&gt; Int -&gt; a
 </span><span class="hs-identifier hs-var">setBit</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Int -&gt; Word32
 forall a. Bits a =&gt; Int -&gt; a
@@ -179,12 +179,12 @@ forall a. Bits a =&gt; Int -&gt; a
 </span><span id="line-64"></span><span>
 </span><span id="line-65"></span><span class="annot"><a href="Text.Gigaparsec.Internal.Errors.DefuncError.html#expectedError"><span class="hs-identifier hs-type">expectedError</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Word</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Word</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Word</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Set</span></span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.Errors.ErrorItem.html#ExpectItem"><span class="hs-identifier hs-type">ExpectItem</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.Errors.CaretControl.html#Span"><span class="hs-identifier hs-type">Span</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.Errors.DefuncTypes.html#DefuncError"><span class="hs-identifier hs-type">DefuncError</span></a></span><span>
 </span><span id="line-66"></span><span id="expectedError"><span class="annot"><span class="annottext">expectedError :: Word -&gt; Word -&gt; Word -&gt; Set ExpectItem -&gt; Word -&gt; DefuncError
-</span><a href="Text.Gigaparsec.Internal.Errors.DefuncError.html#expectedError"><span class="hs-identifier hs-var hs-var">expectedError</span></a></span></span><span> </span><span class="hs-glyph">!</span><span id="local-6989586621679231427"><span class="annot"><span class="annottext">Word
-</span><a href="#local-6989586621679231427"><span class="hs-identifier hs-var">pOff</span></a></span></span><span> </span><span class="hs-glyph">!</span><span id="local-6989586621679231428"><span class="annot"><span class="annottext">Word
-</span><a href="#local-6989586621679231428"><span class="hs-identifier hs-var">line</span></a></span></span><span> </span><span class="hs-glyph">!</span><span id="local-6989586621679231429"><span class="annot"><span class="annottext">Word
-</span><a href="#local-6989586621679231429"><span class="hs-identifier hs-var">col</span></a></span></span><span> </span><span class="hs-glyph">!</span><span id="local-6989586621679231430"><span class="annot"><span class="annottext">Set ExpectItem
-</span><a href="#local-6989586621679231430"><span class="hs-identifier hs-var">exs</span></a></span></span><span> </span><span class="hs-glyph">!</span><span id="local-6989586621679231431"><span class="annot"><span class="annottext">Word
-</span><a href="#local-6989586621679231431"><span class="hs-identifier hs-var">unexWidth</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
+</span><a href="Text.Gigaparsec.Internal.Errors.DefuncError.html#expectedError"><span class="hs-identifier hs-var hs-var">expectedError</span></a></span></span><span> </span><span class="hs-glyph">!</span><span id="local-6989586621679231636"><span class="annot"><span class="annottext">Word
+</span><a href="#local-6989586621679231636"><span class="hs-identifier hs-var">pOff</span></a></span></span><span> </span><span class="hs-glyph">!</span><span id="local-6989586621679231637"><span class="annot"><span class="annottext">Word
+</span><a href="#local-6989586621679231637"><span class="hs-identifier hs-var">line</span></a></span></span><span> </span><span class="hs-glyph">!</span><span id="local-6989586621679231638"><span class="annot"><span class="annottext">Word
+</span><a href="#local-6989586621679231638"><span class="hs-identifier hs-var">col</span></a></span></span><span> </span><span class="hs-glyph">!</span><span id="local-6989586621679231639"><span class="annot"><span class="annottext">Set ExpectItem
+</span><a href="#local-6989586621679231639"><span class="hs-identifier hs-var">exs</span></a></span></span><span> </span><span class="hs-glyph">!</span><span id="local-6989586621679231640"><span class="annot"><span class="annottext">Word
+</span><a href="#local-6989586621679231640"><span class="hs-identifier hs-var">unexWidth</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
 </span><span id="line-67"></span><span>  </span><span class="annot"><span class="annottext">ErrKindSingleton 'Vanilla
 -&gt; Word32 -&gt; Word -&gt; Word -&gt; DefuncError_ 'Vanilla -&gt; DefuncError
 forall (k :: ErrKind).
@@ -192,24 +192,24 @@ ErrKindSingleton k
 -&gt; Word32 -&gt; Word -&gt; Word -&gt; DefuncError_ k -&gt; DefuncError
 </span><a href="Text.Gigaparsec.Internal.Errors.DefuncTypes.html#DefuncError"><span class="hs-identifier hs-var">DefuncError</span></a></span><span> </span><span class="annot"><span class="annottext">ErrKindSingleton 'Vanilla
 </span><a href="Text.Gigaparsec.Internal.Errors.DefuncTypes.html#IsVanilla"><span class="hs-identifier hs-var">IsVanilla</span></a></span><span> </span><span class="annot"><span class="annottext">Word32
-</span><a href="#local-6989586621679231432"><span class="hs-identifier hs-var">flags</span></a></span><span> </span><span class="annot"><span class="annottext">Word
-</span><a href="#local-6989586621679231427"><span class="hs-identifier hs-var">pOff</span></a></span><span> </span><span class="annot"><span class="annottext">Word
-</span><a href="#local-6989586621679231427"><span class="hs-identifier hs-var">pOff</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Word -&gt; Word -&gt; BaseError 'Vanilla -&gt; DefuncError_ 'Vanilla
+</span><a href="#local-6989586621679231641"><span class="hs-identifier hs-var">flags</span></a></span><span> </span><span class="annot"><span class="annottext">Word
+</span><a href="#local-6989586621679231636"><span class="hs-identifier hs-var">pOff</span></a></span><span> </span><span class="annot"><span class="annottext">Word
+</span><a href="#local-6989586621679231636"><span class="hs-identifier hs-var">pOff</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Word -&gt; Word -&gt; BaseError 'Vanilla -&gt; DefuncError_ 'Vanilla
 forall (k :: ErrKind).
 Word -&gt; Word -&gt; BaseError k -&gt; DefuncError_ k
 </span><a href="Text.Gigaparsec.Internal.Errors.DefuncTypes.html#Base"><span class="hs-identifier hs-var">Base</span></a></span><span> </span><span class="annot"><span class="annottext">Word
-</span><a href="#local-6989586621679231428"><span class="hs-identifier hs-var">line</span></a></span><span> </span><span class="annot"><span class="annottext">Word
-</span><a href="#local-6989586621679231429"><span class="hs-identifier hs-var">col</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Set ExpectItem -&gt; Word -&gt; BaseError 'Vanilla
+</span><a href="#local-6989586621679231637"><span class="hs-identifier hs-var">line</span></a></span><span> </span><span class="annot"><span class="annottext">Word
+</span><a href="#local-6989586621679231638"><span class="hs-identifier hs-var">col</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Set ExpectItem -&gt; Word -&gt; BaseError 'Vanilla
 </span><a href="Text.Gigaparsec.Internal.Errors.DefuncTypes.html#Expected"><span class="hs-identifier hs-var">Expected</span></a></span><span> </span><span class="annot"><span class="annottext">Set ExpectItem
-</span><a href="#local-6989586621679231430"><span class="hs-identifier hs-var">exs</span></a></span><span> </span><span class="annot"><span class="annottext">Word
-</span><a href="#local-6989586621679231431"><span class="hs-identifier hs-var">unexWidth</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
-</span><span id="line-68"></span><span>  </span><span class="hs-keyword">where</span><span> </span><span class="annot"><a href="#local-6989586621679231432"><span class="hs-identifier hs-type">flags</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Word32</span></span><span>
-</span><span id="line-69"></span><span>        </span><span class="hs-glyph">!</span><span id="local-6989586621679231432"><span class="annot"><span class="annottext">flags :: Word32
-</span><a href="#local-6989586621679231432"><span class="hs-identifier hs-var hs-var">flags</span></a></span></span><span>
+</span><a href="#local-6989586621679231639"><span class="hs-identifier hs-var">exs</span></a></span><span> </span><span class="annot"><span class="annottext">Word
+</span><a href="#local-6989586621679231640"><span class="hs-identifier hs-var">unexWidth</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-68"></span><span>  </span><span class="hs-keyword">where</span><span> </span><span class="annot"><a href="#local-6989586621679231641"><span class="hs-identifier hs-type">flags</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Word32</span></span><span>
+</span><span id="line-69"></span><span>        </span><span class="hs-glyph">!</span><span id="local-6989586621679231641"><span class="annot"><span class="annottext">flags :: Word32
+</span><a href="#local-6989586621679231641"><span class="hs-identifier hs-var hs-var">flags</span></a></span></span><span>
 </span><span id="line-70"></span><span>          </span><span class="hs-glyph">|</span><span> </span><span class="annot"><span class="annottext">Set ExpectItem -&gt; Bool
 forall a. Set a -&gt; Bool
 </span><span class="hs-identifier hs-var">Set.null</span></span><span> </span><span class="annot"><span class="annottext">Set ExpectItem
-</span><a href="#local-6989586621679231430"><span class="hs-identifier hs-var">exs</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Word32 -&gt; Int -&gt; Word32
+</span><a href="#local-6989586621679231639"><span class="hs-identifier hs-var">exs</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Word32 -&gt; Int -&gt; Word32
 forall a. Bits a =&gt; a -&gt; Int -&gt; a
 </span><span class="hs-identifier hs-var">setBit</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Int -&gt; Word32
 forall a. Bits a =&gt; Int -&gt; a
@@ -230,13 +230,13 @@ forall a. Bits a =&gt; Int -&gt; a
 -&gt; String
 -&gt; CaretWidth
 -&gt; DefuncError
-</span><a href="Text.Gigaparsec.Internal.Errors.DefuncError.html#unexpectedError"><span class="hs-identifier hs-var hs-var">unexpectedError</span></a></span></span><span> </span><span class="hs-glyph">!</span><span id="local-6989586621679231434"><span class="annot"><span class="annottext">Word
-</span><a href="#local-6989586621679231434"><span class="hs-identifier hs-var">pOff</span></a></span></span><span> </span><span class="hs-glyph">!</span><span id="local-6989586621679231435"><span class="annot"><span class="annottext">Word
-</span><a href="#local-6989586621679231435"><span class="hs-identifier hs-var">line</span></a></span></span><span> </span><span class="hs-glyph">!</span><span id="local-6989586621679231436"><span class="annot"><span class="annottext">Word
-</span><a href="#local-6989586621679231436"><span class="hs-identifier hs-var">col</span></a></span></span><span> </span><span class="hs-glyph">!</span><span id="local-6989586621679231437"><span class="annot"><span class="annottext">Set ExpectItem
-</span><a href="#local-6989586621679231437"><span class="hs-identifier hs-var">exs</span></a></span></span><span> </span><span class="hs-glyph">!</span><span id="local-6989586621679231438"><span class="annot"><span class="annottext">String
-</span><a href="#local-6989586621679231438"><span class="hs-identifier hs-var">unex</span></a></span></span><span> </span><span id="local-6989586621679231439"><span class="annot"><span class="annottext">CaretWidth
-</span><a href="#local-6989586621679231439"><span class="hs-identifier hs-var">caretWidth</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
+</span><a href="Text.Gigaparsec.Internal.Errors.DefuncError.html#unexpectedError"><span class="hs-identifier hs-var hs-var">unexpectedError</span></a></span></span><span> </span><span class="hs-glyph">!</span><span id="local-6989586621679231643"><span class="annot"><span class="annottext">Word
+</span><a href="#local-6989586621679231643"><span class="hs-identifier hs-var">pOff</span></a></span></span><span> </span><span class="hs-glyph">!</span><span id="local-6989586621679231644"><span class="annot"><span class="annottext">Word
+</span><a href="#local-6989586621679231644"><span class="hs-identifier hs-var">line</span></a></span></span><span> </span><span class="hs-glyph">!</span><span id="local-6989586621679231645"><span class="annot"><span class="annottext">Word
+</span><a href="#local-6989586621679231645"><span class="hs-identifier hs-var">col</span></a></span></span><span> </span><span class="hs-glyph">!</span><span id="local-6989586621679231646"><span class="annot"><span class="annottext">Set ExpectItem
+</span><a href="#local-6989586621679231646"><span class="hs-identifier hs-var">exs</span></a></span></span><span> </span><span class="hs-glyph">!</span><span id="local-6989586621679231647"><span class="annot"><span class="annottext">String
+</span><a href="#local-6989586621679231647"><span class="hs-identifier hs-var">unex</span></a></span></span><span> </span><span id="local-6989586621679231648"><span class="annot"><span class="annottext">CaretWidth
+</span><a href="#local-6989586621679231648"><span class="hs-identifier hs-var">caretWidth</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
 </span><span id="line-75"></span><span>  </span><span class="annot"><span class="annottext">ErrKindSingleton 'Vanilla
 -&gt; Word32 -&gt; Word -&gt; Word -&gt; DefuncError_ 'Vanilla -&gt; DefuncError
 forall (k :: ErrKind).
@@ -244,25 +244,25 @@ ErrKindSingleton k
 -&gt; Word32 -&gt; Word -&gt; Word -&gt; DefuncError_ k -&gt; DefuncError
 </span><a href="Text.Gigaparsec.Internal.Errors.DefuncTypes.html#DefuncError"><span class="hs-identifier hs-var">DefuncError</span></a></span><span> </span><span class="annot"><span class="annottext">ErrKindSingleton 'Vanilla
 </span><a href="Text.Gigaparsec.Internal.Errors.DefuncTypes.html#IsVanilla"><span class="hs-identifier hs-var">IsVanilla</span></a></span><span> </span><span class="annot"><span class="annottext">Word32
-</span><a href="#local-6989586621679231440"><span class="hs-identifier hs-var">flags</span></a></span><span> </span><span class="annot"><span class="annottext">Word
-</span><a href="#local-6989586621679231434"><span class="hs-identifier hs-var">pOff</span></a></span><span> </span><span class="annot"><span class="annottext">Word
-</span><a href="#local-6989586621679231434"><span class="hs-identifier hs-var">pOff</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Word -&gt; Word -&gt; BaseError 'Vanilla -&gt; DefuncError_ 'Vanilla
+</span><a href="#local-6989586621679231649"><span class="hs-identifier hs-var">flags</span></a></span><span> </span><span class="annot"><span class="annottext">Word
+</span><a href="#local-6989586621679231643"><span class="hs-identifier hs-var">pOff</span></a></span><span> </span><span class="annot"><span class="annottext">Word
+</span><a href="#local-6989586621679231643"><span class="hs-identifier hs-var">pOff</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Word -&gt; Word -&gt; BaseError 'Vanilla -&gt; DefuncError_ 'Vanilla
 forall (k :: ErrKind).
 Word -&gt; Word -&gt; BaseError k -&gt; DefuncError_ k
 </span><a href="Text.Gigaparsec.Internal.Errors.DefuncTypes.html#Base"><span class="hs-identifier hs-var">Base</span></a></span><span> </span><span class="annot"><span class="annottext">Word
-</span><a href="#local-6989586621679231435"><span class="hs-identifier hs-var">line</span></a></span><span> </span><span class="annot"><span class="annottext">Word
-</span><a href="#local-6989586621679231436"><span class="hs-identifier hs-var">col</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Set ExpectItem -&gt; String -&gt; CaretWidth -&gt; BaseError 'Vanilla
+</span><a href="#local-6989586621679231644"><span class="hs-identifier hs-var">line</span></a></span><span> </span><span class="annot"><span class="annottext">Word
+</span><a href="#local-6989586621679231645"><span class="hs-identifier hs-var">col</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Set ExpectItem -&gt; String -&gt; CaretWidth -&gt; BaseError 'Vanilla
 </span><a href="Text.Gigaparsec.Internal.Errors.DefuncTypes.html#Unexpected"><span class="hs-identifier hs-var">Unexpected</span></a></span><span> </span><span class="annot"><span class="annottext">Set ExpectItem
-</span><a href="#local-6989586621679231437"><span class="hs-identifier hs-var">exs</span></a></span><span> </span><span class="annot"><span class="annottext">String
-</span><a href="#local-6989586621679231438"><span class="hs-identifier hs-var">unex</span></a></span><span> </span><span class="annot"><span class="annottext">CaretWidth
-</span><a href="#local-6989586621679231439"><span class="hs-identifier hs-var">caretWidth</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
-</span><span id="line-76"></span><span>  </span><span class="hs-keyword">where</span><span> </span><span class="annot"><a href="#local-6989586621679231440"><span class="hs-identifier hs-type">flags</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Word32</span></span><span>
-</span><span id="line-77"></span><span>        </span><span class="hs-glyph">!</span><span id="local-6989586621679231440"><span class="annot"><span class="annottext">flags :: Word32
-</span><a href="#local-6989586621679231440"><span class="hs-identifier hs-var hs-var">flags</span></a></span></span><span>
+</span><a href="#local-6989586621679231646"><span class="hs-identifier hs-var">exs</span></a></span><span> </span><span class="annot"><span class="annottext">String
+</span><a href="#local-6989586621679231647"><span class="hs-identifier hs-var">unex</span></a></span><span> </span><span class="annot"><span class="annottext">CaretWidth
+</span><a href="#local-6989586621679231648"><span class="hs-identifier hs-var">caretWidth</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-76"></span><span>  </span><span class="hs-keyword">where</span><span> </span><span class="annot"><a href="#local-6989586621679231649"><span class="hs-identifier hs-type">flags</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Word32</span></span><span>
+</span><span id="line-77"></span><span>        </span><span class="hs-glyph">!</span><span id="local-6989586621679231649"><span class="annot"><span class="annottext">flags :: Word32
+</span><a href="#local-6989586621679231649"><span class="hs-identifier hs-var hs-var">flags</span></a></span></span><span>
 </span><span id="line-78"></span><span>          </span><span class="hs-glyph">|</span><span> </span><span class="annot"><span class="annottext">Set ExpectItem -&gt; Bool
 forall a. Set a -&gt; Bool
 </span><span class="hs-identifier hs-var">Set.null</span></span><span> </span><span class="annot"><span class="annottext">Set ExpectItem
-</span><a href="#local-6989586621679231437"><span class="hs-identifier hs-var">exs</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Word32 -&gt; Int -&gt; Word32
+</span><a href="#local-6989586621679231646"><span class="hs-identifier hs-var">exs</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Word32 -&gt; Int -&gt; Word32
 forall a. Bits a =&gt; a -&gt; Int -&gt; a
 </span><span class="hs-identifier hs-var">setBit</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Int -&gt; Word32
 forall a. Bits a =&gt; Int -&gt; a
@@ -278,49 +278,49 @@ forall a. Bits a =&gt; Int -&gt; a
 </span><span id="line-81"></span><span class="hs-comment">-- Operations</span><span>
 </span><span id="line-82"></span><span class="annot"><a href="Text.Gigaparsec.Internal.Errors.DefuncError.html#merge"><span class="hs-identifier hs-type">merge</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.Errors.DefuncTypes.html#DefuncError"><span class="hs-identifier hs-type">DefuncError</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.Errors.DefuncTypes.html#DefuncError"><span class="hs-identifier hs-type">DefuncError</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.Errors.DefuncTypes.html#DefuncError"><span class="hs-identifier hs-type">DefuncError</span></a></span><span>
 </span><span id="line-83"></span><span id="merge"><span class="annot"><span class="annottext">merge :: DefuncError -&gt; DefuncError -&gt; DefuncError
-</span><a href="Text.Gigaparsec.Internal.Errors.DefuncError.html#merge"><span class="hs-identifier hs-var hs-var">merge</span></a></span></span><span> </span><span id="local-6989586621679231442"><span class="annot"><span class="annottext">err1 :: DefuncError
-</span><a href="#local-6989586621679231442"><span class="hs-identifier hs-var">err1</span></a></span></span><span class="hs-glyph">@</span><span class="hs-special">(</span><span class="annot"><a href="Text.Gigaparsec.Internal.Errors.DefuncTypes.html#DefuncError"><span class="hs-identifier hs-type">DefuncError</span></a></span><span> </span><span id="local-6989586621679231443"><span class="annot"><span class="annottext">ErrKindSingleton k
-</span><a href="#local-6989586621679231443"><span class="hs-identifier hs-var">k1</span></a></span></span><span> </span><span id="local-6989586621679231444"><span class="annot"><span class="annottext">Word32
-</span><a href="#local-6989586621679231444"><span class="hs-identifier hs-var">flags1</span></a></span></span><span> </span><span id="local-6989586621679231445"><span class="annot"><span class="annottext">Word
-</span><a href="#local-6989586621679231445"><span class="hs-identifier hs-var">pOff1</span></a></span></span><span> </span><span id="local-6989586621679231446"><span class="annot"><span class="annottext">Word
-</span><a href="#local-6989586621679231446"><span class="hs-identifier hs-var">uOff1</span></a></span></span><span> </span><span id="local-6989586621679231447"><span class="annot"><span class="annottext">DefuncError_ k
-</span><a href="#local-6989586621679231447"><span class="hs-identifier hs-var">errTy1</span></a></span></span><span class="hs-special">)</span><span>
-</span><span id="line-84"></span><span>      </span><span id="local-6989586621679231448"><span class="annot"><span class="annottext">err2 :: DefuncError
-</span><a href="#local-6989586621679231448"><span class="hs-identifier hs-var">err2</span></a></span></span><span class="hs-glyph">@</span><span class="hs-special">(</span><span class="annot"><a href="Text.Gigaparsec.Internal.Errors.DefuncTypes.html#DefuncError"><span class="hs-identifier hs-type">DefuncError</span></a></span><span> </span><span id="local-6989586621679231452"><span class="annot"><span class="annottext">ErrKindSingleton k
-</span><a href="#local-6989586621679231452"><span class="hs-identifier hs-var">k2</span></a></span></span><span> </span><span id="local-6989586621679231453"><span class="annot"><span class="annottext">Word32
-</span><a href="#local-6989586621679231453"><span class="hs-identifier hs-var">flags2</span></a></span></span><span> </span><span id="local-6989586621679231454"><span class="annot"><span class="annottext">Word
-</span><a href="#local-6989586621679231454"><span class="hs-identifier hs-var">pOff2</span></a></span></span><span> </span><span id="local-6989586621679231455"><span class="annot"><span class="annottext">Word
-</span><a href="#local-6989586621679231455"><span class="hs-identifier hs-var">uOff2</span></a></span></span><span> </span><span id="local-6989586621679231456"><span class="annot"><span class="annottext">DefuncError_ k
-</span><a href="#local-6989586621679231456"><span class="hs-identifier hs-var">errTy2</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span>
+</span><a href="Text.Gigaparsec.Internal.Errors.DefuncError.html#merge"><span class="hs-identifier hs-var hs-var">merge</span></a></span></span><span> </span><span id="local-6989586621679231651"><span class="annot"><span class="annottext">err1 :: DefuncError
+</span><a href="#local-6989586621679231651"><span class="hs-identifier hs-var">err1</span></a></span></span><span class="hs-glyph">@</span><span class="hs-special">(</span><span class="annot"><a href="Text.Gigaparsec.Internal.Errors.DefuncTypes.html#DefuncError"><span class="hs-identifier hs-type">DefuncError</span></a></span><span> </span><span id="local-6989586621679231652"><span class="annot"><span class="annottext">ErrKindSingleton k
+</span><a href="#local-6989586621679231652"><span class="hs-identifier hs-var">k1</span></a></span></span><span> </span><span id="local-6989586621679231653"><span class="annot"><span class="annottext">Word32
+</span><a href="#local-6989586621679231653"><span class="hs-identifier hs-var">flags1</span></a></span></span><span> </span><span id="local-6989586621679231654"><span class="annot"><span class="annottext">Word
+</span><a href="#local-6989586621679231654"><span class="hs-identifier hs-var">pOff1</span></a></span></span><span> </span><span id="local-6989586621679231655"><span class="annot"><span class="annottext">Word
+</span><a href="#local-6989586621679231655"><span class="hs-identifier hs-var">uOff1</span></a></span></span><span> </span><span id="local-6989586621679231656"><span class="annot"><span class="annottext">DefuncError_ k
+</span><a href="#local-6989586621679231656"><span class="hs-identifier hs-var">errTy1</span></a></span></span><span class="hs-special">)</span><span>
+</span><span id="line-84"></span><span>      </span><span id="local-6989586621679231657"><span class="annot"><span class="annottext">err2 :: DefuncError
+</span><a href="#local-6989586621679231657"><span class="hs-identifier hs-var">err2</span></a></span></span><span class="hs-glyph">@</span><span class="hs-special">(</span><span class="annot"><a href="Text.Gigaparsec.Internal.Errors.DefuncTypes.html#DefuncError"><span class="hs-identifier hs-type">DefuncError</span></a></span><span> </span><span id="local-6989586621679231661"><span class="annot"><span class="annottext">ErrKindSingleton k
+</span><a href="#local-6989586621679231661"><span class="hs-identifier hs-var">k2</span></a></span></span><span> </span><span id="local-6989586621679231662"><span class="annot"><span class="annottext">Word32
+</span><a href="#local-6989586621679231662"><span class="hs-identifier hs-var">flags2</span></a></span></span><span> </span><span id="local-6989586621679231663"><span class="annot"><span class="annottext">Word
+</span><a href="#local-6989586621679231663"><span class="hs-identifier hs-var">pOff2</span></a></span></span><span> </span><span id="local-6989586621679231664"><span class="annot"><span class="annottext">Word
+</span><a href="#local-6989586621679231664"><span class="hs-identifier hs-var">uOff2</span></a></span></span><span> </span><span id="local-6989586621679231665"><span class="annot"><span class="annottext">DefuncError_ k
+</span><a href="#local-6989586621679231665"><span class="hs-identifier hs-var">errTy2</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span>
 </span><span id="line-85"></span><span>  </span><span class="hs-keyword">case</span><span> </span><span class="annot"><span class="annottext">Word -&gt; Word -&gt; Ordering
 forall a. Ord a =&gt; a -&gt; a -&gt; Ordering
 </span><span class="hs-identifier hs-var">compare</span></span><span> </span><span class="annot"><span class="annottext">Word
-</span><a href="#local-6989586621679231446"><span class="hs-identifier hs-var">uOff1</span></a></span><span> </span><span class="annot"><span class="annottext">Word
-</span><a href="#local-6989586621679231455"><span class="hs-identifier hs-var">uOff2</span></a></span><span> </span><span class="hs-keyword">of</span><span>
+</span><a href="#local-6989586621679231655"><span class="hs-identifier hs-var">uOff1</span></a></span><span> </span><span class="annot"><span class="annottext">Word
+</span><a href="#local-6989586621679231664"><span class="hs-identifier hs-var">uOff2</span></a></span><span> </span><span class="hs-keyword">of</span><span>
 </span><span id="line-86"></span><span>    </span><span class="annot"><span class="annottext">Ordering
 </span><span class="hs-identifier hs-var">GT</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">DefuncError
-</span><a href="#local-6989586621679231442"><span class="hs-identifier hs-var">err1</span></a></span><span>
+</span><a href="#local-6989586621679231651"><span class="hs-identifier hs-var">err1</span></a></span><span>
 </span><span id="line-87"></span><span>    </span><span class="annot"><span class="annottext">Ordering
 </span><span class="hs-identifier hs-var">LT</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">DefuncError
-</span><a href="#local-6989586621679231448"><span class="hs-identifier hs-var">err2</span></a></span><span>
+</span><a href="#local-6989586621679231657"><span class="hs-identifier hs-var">err2</span></a></span><span>
 </span><span id="line-88"></span><span>    </span><span class="annot"><span class="annottext">Ordering
 </span><span class="hs-identifier hs-var">EQ</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-keyword">case</span><span> </span><span class="annot"><span class="annottext">Word -&gt; Word -&gt; Ordering
 forall a. Ord a =&gt; a -&gt; a -&gt; Ordering
 </span><span class="hs-identifier hs-var">compare</span></span><span> </span><span class="annot"><span class="annottext">Word
-</span><a href="#local-6989586621679231445"><span class="hs-identifier hs-var">pOff1</span></a></span><span> </span><span class="annot"><span class="annottext">Word
-</span><a href="#local-6989586621679231454"><span class="hs-identifier hs-var">pOff2</span></a></span><span> </span><span class="hs-keyword">of</span><span>
+</span><a href="#local-6989586621679231654"><span class="hs-identifier hs-var">pOff1</span></a></span><span> </span><span class="annot"><span class="annottext">Word
+</span><a href="#local-6989586621679231663"><span class="hs-identifier hs-var">pOff2</span></a></span><span> </span><span class="hs-keyword">of</span><span>
 </span><span id="line-89"></span><span>      </span><span class="annot"><span class="annottext">Ordering
 </span><span class="hs-identifier hs-var">GT</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">DefuncError
-</span><a href="#local-6989586621679231442"><span class="hs-identifier hs-var">err1</span></a></span><span>
+</span><a href="#local-6989586621679231651"><span class="hs-identifier hs-var">err1</span></a></span><span>
 </span><span id="line-90"></span><span>      </span><span class="annot"><span class="annottext">Ordering
 </span><span class="hs-identifier hs-var">LT</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">DefuncError
-</span><a href="#local-6989586621679231448"><span class="hs-identifier hs-var">err2</span></a></span><span>
+</span><a href="#local-6989586621679231657"><span class="hs-identifier hs-var">err2</span></a></span><span>
 </span><span id="line-91"></span><span>      </span><span class="annot"><span class="annottext">Ordering
 </span><span class="hs-identifier hs-var">EQ</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-keyword">case</span><span> </span><span class="annot"><span class="annottext">ErrKindSingleton k
-</span><a href="#local-6989586621679231443"><span class="hs-identifier hs-var">k1</span></a></span><span> </span><span class="hs-keyword">of</span><span>
+</span><a href="#local-6989586621679231652"><span class="hs-identifier hs-var">k1</span></a></span><span> </span><span class="hs-keyword">of</span><span>
 </span><span id="line-92"></span><span>        </span><span class="annot"><span class="annottext">ErrKindSingleton k
 </span><a href="Text.Gigaparsec.Internal.Errors.DefuncTypes.html#IsSpecialised"><span class="hs-identifier hs-var">IsSpecialised</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-keyword">case</span><span> </span><span class="annot"><span class="annottext">ErrKindSingleton k
-</span><a href="#local-6989586621679231452"><span class="hs-identifier hs-var">k2</span></a></span><span> </span><span class="hs-keyword">of</span><span>
+</span><a href="#local-6989586621679231661"><span class="hs-identifier hs-var">k2</span></a></span><span> </span><span class="hs-keyword">of</span><span>
 </span><span id="line-93"></span><span>          </span><span class="annot"><span class="annottext">ErrKindSingleton k
 </span><a href="Text.Gigaparsec.Internal.Errors.DefuncTypes.html#IsSpecialised"><span class="hs-identifier hs-var">IsSpecialised</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span>
 </span><span id="line-94"></span><span>            </span><span class="annot"><span class="annottext">ErrKindSingleton 'Specialised
@@ -334,11 +334,11 @@ ErrKindSingleton k
 -&gt; Word32 -&gt; Word -&gt; Word -&gt; DefuncError_ k -&gt; DefuncError
 </span><a href="Text.Gigaparsec.Internal.Errors.DefuncTypes.html#DefuncError"><span class="hs-identifier hs-var">DefuncError</span></a></span><span> </span><span class="annot"><span class="annottext">ErrKindSingleton 'Specialised
 </span><a href="Text.Gigaparsec.Internal.Errors.DefuncTypes.html#IsSpecialised"><span class="hs-identifier hs-var">IsSpecialised</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Word32 -&gt; Word32 -&gt; Word32
-</span><a href="#local-6989586621679231460"><span class="hs-identifier hs-var">combineFlags</span></a></span><span> </span><span class="annot"><span class="annottext">Word32
-</span><a href="#local-6989586621679231444"><span class="hs-identifier hs-var">flags1</span></a></span><span> </span><span class="annot"><span class="annottext">Word32
-</span><a href="#local-6989586621679231453"><span class="hs-identifier hs-var">flags2</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">Word
-</span><a href="#local-6989586621679231445"><span class="hs-identifier hs-var">pOff1</span></a></span><span> </span><span class="annot"><span class="annottext">Word
-</span><a href="#local-6989586621679231446"><span class="hs-identifier hs-var">uOff1</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">ErrorOp 'Specialised -&gt; DefuncError_ 'Specialised
+</span><a href="#local-6989586621679231669"><span class="hs-identifier hs-var">combineFlags</span></a></span><span> </span><span class="annot"><span class="annottext">Word32
+</span><a href="#local-6989586621679231653"><span class="hs-identifier hs-var">flags1</span></a></span><span> </span><span class="annot"><span class="annottext">Word32
+</span><a href="#local-6989586621679231662"><span class="hs-identifier hs-var">flags2</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">Word
+</span><a href="#local-6989586621679231654"><span class="hs-identifier hs-var">pOff1</span></a></span><span> </span><span class="annot"><span class="annottext">Word
+</span><a href="#local-6989586621679231655"><span class="hs-identifier hs-var">uOff1</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">ErrorOp 'Specialised -&gt; DefuncError_ 'Specialised
 forall (k :: ErrKind). ErrorOp k -&gt; DefuncError_ k
 </span><a href="Text.Gigaparsec.Internal.Errors.DefuncTypes.html#Op"><span class="hs-identifier hs-var">Op</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">DefuncError_ 'Specialised
 -&gt; DefuncError_ 'Specialised -&gt; ErrorOp 'Specialised
@@ -346,13 +346,13 @@ forall (k :: ErrKind).
 DefuncError_ k -&gt; DefuncError_ k -&gt; ErrorOp k
 </span><a href="Text.Gigaparsec.Internal.Errors.DefuncTypes.html#Merged"><span class="hs-identifier hs-var">Merged</span></a></span><span> </span><span class="annot"><span class="annottext">DefuncError_ k
 DefuncError_ 'Specialised
-</span><a href="#local-6989586621679231447"><span class="hs-identifier hs-var">errTy1</span></a></span><span> </span><span class="annot"><span class="annottext">DefuncError_ k
+</span><a href="#local-6989586621679231656"><span class="hs-identifier hs-var">errTy1</span></a></span><span> </span><span class="annot"><span class="annottext">DefuncError_ k
 DefuncError_ 'Specialised
-</span><a href="#local-6989586621679231456"><span class="hs-identifier hs-var">errTy2</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><a href="#local-6989586621679231665"><span class="hs-identifier hs-var">errTy2</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
 </span><span id="line-95"></span><span>          </span><span class="annot"><span class="annottext">ErrKindSingleton k
 </span><a href="Text.Gigaparsec.Internal.Errors.DefuncTypes.html#IsVanilla"><span class="hs-identifier hs-var">IsVanilla</span></a></span><span> </span><span class="hs-glyph">|</span><span> </span><span class="annot"><span class="annottext">DefuncError -&gt; Bool
 </span><a href="Text.Gigaparsec.Internal.Errors.DefuncError.html#isFlexibleCaret"><span class="hs-identifier hs-var">isFlexibleCaret</span></a></span><span> </span><span class="annot"><span class="annottext">DefuncError
-</span><a href="#local-6989586621679231442"><span class="hs-identifier hs-var">err1</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span>
+</span><a href="#local-6989586621679231651"><span class="hs-identifier hs-var">err1</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span>
 </span><span id="line-96"></span><span>            </span><span class="annot"><span class="annottext">ErrKindSingleton 'Specialised
 -&gt; Word32
 -&gt; Word
@@ -364,23 +364,23 @@ ErrKindSingleton k
 -&gt; Word32 -&gt; Word -&gt; Word -&gt; DefuncError_ k -&gt; DefuncError
 </span><a href="Text.Gigaparsec.Internal.Errors.DefuncTypes.html#DefuncError"><span class="hs-identifier hs-var">DefuncError</span></a></span><span> </span><span class="annot"><span class="annottext">ErrKindSingleton 'Specialised
 </span><a href="Text.Gigaparsec.Internal.Errors.DefuncTypes.html#IsSpecialised"><span class="hs-identifier hs-var">IsSpecialised</span></a></span><span> </span><span class="annot"><span class="annottext">Word32
-</span><a href="#local-6989586621679231444"><span class="hs-identifier hs-var">flags1</span></a></span><span> </span><span class="annot"><span class="annottext">Word
-</span><a href="#local-6989586621679231445"><span class="hs-identifier hs-var">pOff1</span></a></span><span> </span><span class="annot"><span class="annottext">Word
-</span><a href="#local-6989586621679231446"><span class="hs-identifier hs-var">uOff1</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">ErrorOp 'Specialised -&gt; DefuncError_ 'Specialised
+</span><a href="#local-6989586621679231653"><span class="hs-identifier hs-var">flags1</span></a></span><span> </span><span class="annot"><span class="annottext">Word
+</span><a href="#local-6989586621679231654"><span class="hs-identifier hs-var">pOff1</span></a></span><span> </span><span class="annot"><span class="annottext">Word
+</span><a href="#local-6989586621679231655"><span class="hs-identifier hs-var">uOff1</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">ErrorOp 'Specialised -&gt; DefuncError_ 'Specialised
 forall (k :: ErrKind). ErrorOp k -&gt; DefuncError_ k
 </span><a href="Text.Gigaparsec.Internal.Errors.DefuncTypes.html#Op"><span class="hs-identifier hs-var">Op</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">DefuncError_ 'Specialised
 -&gt; DefuncError_ 'Vanilla -&gt; ErrorOp 'Specialised
 </span><a href="Text.Gigaparsec.Internal.Errors.DefuncTypes.html#AdjustCaret"><span class="hs-identifier hs-var">AdjustCaret</span></a></span><span> </span><span class="annot"><span class="annottext">DefuncError_ k
 DefuncError_ 'Specialised
-</span><a href="#local-6989586621679231447"><span class="hs-identifier hs-var">errTy1</span></a></span><span> </span><span class="annot"><span class="annottext">DefuncError_ k
+</span><a href="#local-6989586621679231656"><span class="hs-identifier hs-var">errTy1</span></a></span><span> </span><span class="annot"><span class="annottext">DefuncError_ k
 DefuncError_ 'Vanilla
-</span><a href="#local-6989586621679231456"><span class="hs-identifier hs-var">errTy2</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><a href="#local-6989586621679231665"><span class="hs-identifier hs-var">errTy2</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
 </span><span id="line-97"></span><span>          </span><span class="annot"><span class="annottext">ErrKindSingleton k
 </span><span class="hs-identifier">_</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">DefuncError
-</span><a href="#local-6989586621679231442"><span class="hs-identifier hs-var">err1</span></a></span><span>
+</span><a href="#local-6989586621679231651"><span class="hs-identifier hs-var">err1</span></a></span><span>
 </span><span id="line-98"></span><span>        </span><span class="annot"><span class="annottext">ErrKindSingleton k
 </span><a href="Text.Gigaparsec.Internal.Errors.DefuncTypes.html#IsVanilla"><span class="hs-identifier hs-var">IsVanilla</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-keyword">case</span><span> </span><span class="annot"><span class="annottext">ErrKindSingleton k
-</span><a href="#local-6989586621679231452"><span class="hs-identifier hs-var">k2</span></a></span><span> </span><span class="hs-keyword">of</span><span>
+</span><a href="#local-6989586621679231661"><span class="hs-identifier hs-var">k2</span></a></span><span> </span><span class="hs-keyword">of</span><span>
 </span><span id="line-99"></span><span>          </span><span class="annot"><span class="annottext">ErrKindSingleton k
 </span><a href="Text.Gigaparsec.Internal.Errors.DefuncTypes.html#IsVanilla"><span class="hs-identifier hs-var">IsVanilla</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span>
 </span><span id="line-100"></span><span>            </span><span class="annot"><span class="annottext">ErrKindSingleton 'Vanilla
@@ -390,24 +390,24 @@ ErrKindSingleton k
 -&gt; Word32 -&gt; Word -&gt; Word -&gt; DefuncError_ k -&gt; DefuncError
 </span><a href="Text.Gigaparsec.Internal.Errors.DefuncTypes.html#DefuncError"><span class="hs-identifier hs-var">DefuncError</span></a></span><span> </span><span class="annot"><span class="annottext">ErrKindSingleton 'Vanilla
 </span><a href="Text.Gigaparsec.Internal.Errors.DefuncTypes.html#IsVanilla"><span class="hs-identifier hs-var">IsVanilla</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Word32 -&gt; Word32 -&gt; Word32
-</span><a href="#local-6989586621679231460"><span class="hs-identifier hs-var">combineFlags</span></a></span><span> </span><span class="annot"><span class="annottext">Word32
-</span><a href="#local-6989586621679231444"><span class="hs-identifier hs-var">flags1</span></a></span><span> </span><span class="annot"><span class="annottext">Word32
-</span><a href="#local-6989586621679231453"><span class="hs-identifier hs-var">flags2</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">Word
-</span><a href="#local-6989586621679231445"><span class="hs-identifier hs-var">pOff1</span></a></span><span> </span><span class="annot"><span class="annottext">Word
-</span><a href="#local-6989586621679231446"><span class="hs-identifier hs-var">uOff1</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">ErrorOp 'Vanilla -&gt; DefuncError_ 'Vanilla
+</span><a href="#local-6989586621679231669"><span class="hs-identifier hs-var">combineFlags</span></a></span><span> </span><span class="annot"><span class="annottext">Word32
+</span><a href="#local-6989586621679231653"><span class="hs-identifier hs-var">flags1</span></a></span><span> </span><span class="annot"><span class="annottext">Word32
+</span><a href="#local-6989586621679231662"><span class="hs-identifier hs-var">flags2</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">Word
+</span><a href="#local-6989586621679231654"><span class="hs-identifier hs-var">pOff1</span></a></span><span> </span><span class="annot"><span class="annottext">Word
+</span><a href="#local-6989586621679231655"><span class="hs-identifier hs-var">uOff1</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">ErrorOp 'Vanilla -&gt; DefuncError_ 'Vanilla
 forall (k :: ErrKind). ErrorOp k -&gt; DefuncError_ k
 </span><a href="Text.Gigaparsec.Internal.Errors.DefuncTypes.html#Op"><span class="hs-identifier hs-var">Op</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">DefuncError_ 'Vanilla -&gt; DefuncError_ 'Vanilla -&gt; ErrorOp 'Vanilla
 forall (k :: ErrKind).
 DefuncError_ k -&gt; DefuncError_ k -&gt; ErrorOp k
 </span><a href="Text.Gigaparsec.Internal.Errors.DefuncTypes.html#Merged"><span class="hs-identifier hs-var">Merged</span></a></span><span> </span><span class="annot"><span class="annottext">DefuncError_ k
 DefuncError_ 'Vanilla
-</span><a href="#local-6989586621679231447"><span class="hs-identifier hs-var">errTy1</span></a></span><span> </span><span class="annot"><span class="annottext">DefuncError_ k
+</span><a href="#local-6989586621679231656"><span class="hs-identifier hs-var">errTy1</span></a></span><span> </span><span class="annot"><span class="annottext">DefuncError_ k
 DefuncError_ 'Vanilla
-</span><a href="#local-6989586621679231456"><span class="hs-identifier hs-var">errTy2</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><a href="#local-6989586621679231665"><span class="hs-identifier hs-var">errTy2</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
 </span><span id="line-101"></span><span>          </span><span class="annot"><span class="annottext">ErrKindSingleton k
 </span><a href="Text.Gigaparsec.Internal.Errors.DefuncTypes.html#IsSpecialised"><span class="hs-identifier hs-var">IsSpecialised</span></a></span><span> </span><span class="hs-glyph">|</span><span> </span><span class="annot"><span class="annottext">DefuncError -&gt; Bool
 </span><a href="Text.Gigaparsec.Internal.Errors.DefuncError.html#isFlexibleCaret"><span class="hs-identifier hs-var">isFlexibleCaret</span></a></span><span> </span><span class="annot"><span class="annottext">DefuncError
-</span><a href="#local-6989586621679231448"><span class="hs-identifier hs-var">err2</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span>
+</span><a href="#local-6989586621679231657"><span class="hs-identifier hs-var">err2</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span>
 </span><span id="line-102"></span><span>            </span><span class="annot"><span class="annottext">ErrKindSingleton 'Specialised
 -&gt; Word32
 -&gt; Word
@@ -419,29 +419,29 @@ ErrKindSingleton k
 -&gt; Word32 -&gt; Word -&gt; Word -&gt; DefuncError_ k -&gt; DefuncError
 </span><a href="Text.Gigaparsec.Internal.Errors.DefuncTypes.html#DefuncError"><span class="hs-identifier hs-var">DefuncError</span></a></span><span> </span><span class="annot"><span class="annottext">ErrKindSingleton 'Specialised
 </span><a href="Text.Gigaparsec.Internal.Errors.DefuncTypes.html#IsSpecialised"><span class="hs-identifier hs-var">IsSpecialised</span></a></span><span> </span><span class="annot"><span class="annottext">Word32
-</span><a href="#local-6989586621679231444"><span class="hs-identifier hs-var">flags1</span></a></span><span> </span><span class="annot"><span class="annottext">Word
-</span><a href="#local-6989586621679231445"><span class="hs-identifier hs-var">pOff1</span></a></span><span> </span><span class="annot"><span class="annottext">Word
-</span><a href="#local-6989586621679231446"><span class="hs-identifier hs-var">uOff1</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">ErrorOp 'Specialised -&gt; DefuncError_ 'Specialised
+</span><a href="#local-6989586621679231653"><span class="hs-identifier hs-var">flags1</span></a></span><span> </span><span class="annot"><span class="annottext">Word
+</span><a href="#local-6989586621679231654"><span class="hs-identifier hs-var">pOff1</span></a></span><span> </span><span class="annot"><span class="annottext">Word
+</span><a href="#local-6989586621679231655"><span class="hs-identifier hs-var">uOff1</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">ErrorOp 'Specialised -&gt; DefuncError_ 'Specialised
 forall (k :: ErrKind). ErrorOp k -&gt; DefuncError_ k
 </span><a href="Text.Gigaparsec.Internal.Errors.DefuncTypes.html#Op"><span class="hs-identifier hs-var">Op</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">DefuncError_ 'Specialised
 -&gt; DefuncError_ 'Vanilla -&gt; ErrorOp 'Specialised
 </span><a href="Text.Gigaparsec.Internal.Errors.DefuncTypes.html#AdjustCaret"><span class="hs-identifier hs-var">AdjustCaret</span></a></span><span> </span><span class="annot"><span class="annottext">DefuncError_ k
 DefuncError_ 'Specialised
-</span><a href="#local-6989586621679231456"><span class="hs-identifier hs-var">errTy2</span></a></span><span> </span><span class="annot"><span class="annottext">DefuncError_ k
+</span><a href="#local-6989586621679231665"><span class="hs-identifier hs-var">errTy2</span></a></span><span> </span><span class="annot"><span class="annottext">DefuncError_ k
 DefuncError_ 'Vanilla
-</span><a href="#local-6989586621679231447"><span class="hs-identifier hs-var">errTy1</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><a href="#local-6989586621679231656"><span class="hs-identifier hs-var">errTy1</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
 </span><span id="line-103"></span><span>          </span><span class="annot"><span class="annottext">ErrKindSingleton k
 </span><span class="hs-identifier">_</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">DefuncError
-</span><a href="#local-6989586621679231448"><span class="hs-identifier hs-var">err2</span></a></span><span>
-</span><span id="line-104"></span><span>  </span><span class="hs-keyword">where</span><span> </span><span id="local-6989586621679231460"><span class="annot"><span class="annottext">combineFlags :: Word32 -&gt; Word32 -&gt; Word32
-</span><a href="#local-6989586621679231460"><span class="hs-identifier hs-var hs-var">combineFlags</span></a></span></span><span> </span><span id="local-6989586621679231475"><span class="annot"><span class="annottext">Word32
-</span><a href="#local-6989586621679231475"><span class="hs-identifier hs-var">f1</span></a></span></span><span> </span><span id="local-6989586621679231476"><span class="annot"><span class="annottext">Word32
-</span><a href="#local-6989586621679231476"><span class="hs-identifier hs-var">f2</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
+</span><a href="#local-6989586621679231657"><span class="hs-identifier hs-var">err2</span></a></span><span>
+</span><span id="line-104"></span><span>  </span><span class="hs-keyword">where</span><span> </span><span id="local-6989586621679231669"><span class="annot"><span class="annottext">combineFlags :: Word32 -&gt; Word32 -&gt; Word32
+</span><a href="#local-6989586621679231669"><span class="hs-identifier hs-var hs-var">combineFlags</span></a></span></span><span> </span><span id="local-6989586621679231684"><span class="annot"><span class="annottext">Word32
+</span><a href="#local-6989586621679231684"><span class="hs-identifier hs-var">f1</span></a></span></span><span> </span><span id="local-6989586621679231685"><span class="annot"><span class="annottext">Word32
+</span><a href="#local-6989586621679231685"><span class="hs-identifier hs-var">f2</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
 </span><span id="line-105"></span><span>          </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Word32
-</span><a href="#local-6989586621679231475"><span class="hs-identifier hs-var">f1</span></a></span><span> </span><span class="annot"><span class="annottext">Word32 -&gt; Word32 -&gt; Word32
+</span><a href="#local-6989586621679231684"><span class="hs-identifier hs-var">f1</span></a></span><span> </span><span class="annot"><span class="annottext">Word32 -&gt; Word32 -&gt; Word32
 forall a. Bits a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">.&amp;.</span></span><span> </span><span class="annot"><span class="annottext">Word32
-</span><a href="#local-6989586621679231476"><span class="hs-identifier hs-var">f2</span></a></span><span> </span><span class="annot"><span class="annottext">Word32 -&gt; Word32 -&gt; Word32
+</span><a href="#local-6989586621679231685"><span class="hs-identifier hs-var">f2</span></a></span><span> </span><span class="annot"><span class="annottext">Word32 -&gt; Word32 -&gt; Word32
 forall a. Bits a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">.&amp;.</span></span><span> </span><span class="annot"><span class="annottext">Word32 -&gt; Word32
 forall a. Bits a =&gt; a -&gt; a
@@ -451,11 +451,11 @@ forall a. Bits a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">.|.</span></span><span> </span><span class="annot"><span class="annottext">Word32 -&gt; Word32 -&gt; Word32
 forall a. Ord a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-identifier hs-var">max</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Word32
-</span><a href="#local-6989586621679231475"><span class="hs-identifier hs-var">f1</span></a></span><span> </span><span class="annot"><span class="annottext">Word32 -&gt; Word32 -&gt; Word32
+</span><a href="#local-6989586621679231684"><span class="hs-identifier hs-var">f1</span></a></span><span> </span><span class="annot"><span class="annottext">Word32 -&gt; Word32 -&gt; Word32
 forall a. Bits a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">.&amp;.</span></span><span> </span><span class="annot"><span class="annottext">Word32
 </span><a href="Text.Gigaparsec.Internal.Errors.DefuncError.html#entrenchedMask"><span class="hs-identifier hs-var">entrenchedMask</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Word32
-</span><a href="#local-6989586621679231476"><span class="hs-identifier hs-var">f2</span></a></span><span> </span><span class="annot"><span class="annottext">Word32 -&gt; Word32 -&gt; Word32
+</span><a href="#local-6989586621679231685"><span class="hs-identifier hs-var">f2</span></a></span><span> </span><span class="annot"><span class="annottext">Word32 -&gt; Word32 -&gt; Word32
 forall a. Bits a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">.&amp;.</span></span><span> </span><span class="annot"><span class="annottext">Word32
 </span><a href="Text.Gigaparsec.Internal.Errors.DefuncError.html#entrenchedMask"><span class="hs-identifier hs-var">entrenchedMask</span></a></span><span class="hs-special">)</span><span>
@@ -463,16 +463,16 @@ forall a. Bits a =&gt; a -&gt; a -&gt; a
 </span><span id="line-107"></span><span class="annot"><a href="Text.Gigaparsec.Internal.Errors.DefuncError.html#withHints"><span class="hs-identifier hs-type">withHints</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.Errors.DefuncTypes.html#DefuncHints"><span class="hs-identifier hs-type">DefuncHints</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.Errors.DefuncTypes.html#DefuncError"><span class="hs-identifier hs-type">DefuncError</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.Errors.DefuncTypes.html#DefuncError"><span class="hs-identifier hs-type">DefuncError</span></a></span><span>
 </span><span id="line-108"></span><span id="withHints"><span class="annot"><span class="annottext">withHints :: DefuncHints -&gt; DefuncError -&gt; DefuncError
 </span><a href="Text.Gigaparsec.Internal.Errors.DefuncError.html#withHints"><span class="hs-identifier hs-var hs-var">withHints</span></a></span></span><span> </span><span class="annot"><span class="annottext">DefuncHints
-</span><a href="Text.Gigaparsec.Internal.Errors.DefuncTypes.html#Blank"><span class="hs-identifier hs-var">Blank</span></a></span><span> </span><span id="local-6989586621679231479"><span class="annot"><span class="annottext">DefuncError
-</span><a href="#local-6989586621679231479"><span class="hs-identifier hs-var">err</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">DefuncError
-</span><a href="#local-6989586621679231479"><span class="hs-identifier hs-var">err</span></a></span><span>
-</span><span id="line-109"></span><span class="annot"><a href="Text.Gigaparsec.Internal.Errors.DefuncError.html#withHints"><span class="hs-identifier hs-var">withHints</span></a></span><span> </span><span id="local-6989586621679231480"><span class="annot"><span class="annottext">DefuncHints
-</span><a href="#local-6989586621679231480"><span class="hs-identifier hs-var">hints</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Text.Gigaparsec.Internal.Errors.DefuncTypes.html#DefuncError"><span class="hs-identifier hs-type">DefuncError</span></a></span><span> </span><span class="annot"><span class="annottext">ErrKindSingleton k
-</span><a href="Text.Gigaparsec.Internal.Errors.DefuncTypes.html#IsVanilla"><span class="hs-identifier hs-var">IsVanilla</span></a></span><span> </span><span id="local-6989586621679231483"><span class="annot"><span class="annottext">Word32
-</span><a href="#local-6989586621679231483"><span class="hs-identifier hs-var">flags</span></a></span></span><span> </span><span id="local-6989586621679231484"><span class="annot"><span class="annottext">Word
-</span><a href="#local-6989586621679231484"><span class="hs-identifier hs-var">pOff</span></a></span></span><span> </span><span id="local-6989586621679231485"><span class="annot"><span class="annottext">Word
-</span><a href="#local-6989586621679231485"><span class="hs-identifier hs-var">uOff</span></a></span></span><span> </span><span id="local-6989586621679231486"><span class="annot"><span class="annottext">DefuncError_ k
-</span><a href="#local-6989586621679231486"><span class="hs-identifier hs-var">errTy</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span>
+</span><a href="Text.Gigaparsec.Internal.Errors.DefuncTypes.html#Blank"><span class="hs-identifier hs-var">Blank</span></a></span><span> </span><span id="local-6989586621679231688"><span class="annot"><span class="annottext">DefuncError
+</span><a href="#local-6989586621679231688"><span class="hs-identifier hs-var">err</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">DefuncError
+</span><a href="#local-6989586621679231688"><span class="hs-identifier hs-var">err</span></a></span><span>
+</span><span id="line-109"></span><span class="annot"><a href="Text.Gigaparsec.Internal.Errors.DefuncError.html#withHints"><span class="hs-identifier hs-var">withHints</span></a></span><span> </span><span id="local-6989586621679231689"><span class="annot"><span class="annottext">DefuncHints
+</span><a href="#local-6989586621679231689"><span class="hs-identifier hs-var">hints</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Text.Gigaparsec.Internal.Errors.DefuncTypes.html#DefuncError"><span class="hs-identifier hs-type">DefuncError</span></a></span><span> </span><span class="annot"><span class="annottext">ErrKindSingleton k
+</span><a href="Text.Gigaparsec.Internal.Errors.DefuncTypes.html#IsVanilla"><span class="hs-identifier hs-var">IsVanilla</span></a></span><span> </span><span id="local-6989586621679231692"><span class="annot"><span class="annottext">Word32
+</span><a href="#local-6989586621679231692"><span class="hs-identifier hs-var">flags</span></a></span></span><span> </span><span id="local-6989586621679231693"><span class="annot"><span class="annottext">Word
+</span><a href="#local-6989586621679231693"><span class="hs-identifier hs-var">pOff</span></a></span></span><span> </span><span id="local-6989586621679231694"><span class="annot"><span class="annottext">Word
+</span><a href="#local-6989586621679231694"><span class="hs-identifier hs-var">uOff</span></a></span></span><span> </span><span id="local-6989586621679231695"><span class="annot"><span class="annottext">DefuncError_ k
+</span><a href="#local-6989586621679231695"><span class="hs-identifier hs-var">errTy</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span>
 </span><span id="line-110"></span><span>  </span><span class="annot"><span class="annottext">ErrKindSingleton 'Vanilla
 -&gt; Word32 -&gt; Word -&gt; Word -&gt; DefuncError_ 'Vanilla -&gt; DefuncError
 forall (k :: ErrKind).
@@ -482,35 +482,35 @@ ErrKindSingleton k
 </span><a href="Text.Gigaparsec.Internal.Errors.DefuncTypes.html#IsVanilla"><span class="hs-identifier hs-var">IsVanilla</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Word32 -&gt; Int -&gt; Word32
 forall a. Bits a =&gt; a -&gt; Int -&gt; a
 </span><span class="hs-identifier hs-var">clearBit</span></span><span> </span><span class="annot"><span class="annottext">Word32
-</span><a href="#local-6989586621679231483"><span class="hs-identifier hs-var">flags</span></a></span><span> </span><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679231692"><span class="hs-identifier hs-var">flags</span></a></span><span> </span><span class="annot"><span class="annottext">Int
 </span><a href="Text.Gigaparsec.Internal.Errors.DefuncError.html#expectedEmptyBit"><span class="hs-identifier hs-var">expectedEmptyBit</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">Word
-</span><a href="#local-6989586621679231484"><span class="hs-identifier hs-var">pOff</span></a></span><span> </span><span class="annot"><span class="annottext">Word
-</span><a href="#local-6989586621679231485"><span class="hs-identifier hs-var">uOff</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">ErrorOp 'Vanilla -&gt; DefuncError_ 'Vanilla
+</span><a href="#local-6989586621679231693"><span class="hs-identifier hs-var">pOff</span></a></span><span> </span><span class="annot"><span class="annottext">Word
+</span><a href="#local-6989586621679231694"><span class="hs-identifier hs-var">uOff</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">ErrorOp 'Vanilla -&gt; DefuncError_ 'Vanilla
 forall (k :: ErrKind). ErrorOp k -&gt; DefuncError_ k
 </span><a href="Text.Gigaparsec.Internal.Errors.DefuncTypes.html#Op"><span class="hs-identifier hs-var">Op</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">DefuncError_ 'Vanilla -&gt; DefuncHints -&gt; ErrorOp 'Vanilla
 </span><a href="Text.Gigaparsec.Internal.Errors.DefuncTypes.html#WithHints"><span class="hs-identifier hs-var">WithHints</span></a></span><span> </span><span class="annot"><span class="annottext">DefuncError_ k
 DefuncError_ 'Vanilla
-</span><a href="#local-6989586621679231486"><span class="hs-identifier hs-var">errTy</span></a></span><span> </span><span class="annot"><span class="annottext">DefuncHints
-</span><a href="#local-6989586621679231480"><span class="hs-identifier hs-var">hints</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><a href="#local-6989586621679231695"><span class="hs-identifier hs-var">errTy</span></a></span><span> </span><span class="annot"><span class="annottext">DefuncHints
+</span><a href="#local-6989586621679231689"><span class="hs-identifier hs-var">hints</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
 </span><span id="line-111"></span><span class="annot"><a href="Text.Gigaparsec.Internal.Errors.DefuncError.html#withHints"><span class="hs-identifier hs-var">withHints</span></a></span><span> </span><span class="annot"><span class="annottext">DefuncHints
-</span><span class="hs-identifier">_</span></span><span> </span><span id="local-6989586621679231488"><span class="annot"><span class="annottext">DefuncError
-</span><a href="#local-6989586621679231488"><span class="hs-identifier hs-var">err</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">DefuncError
-</span><a href="#local-6989586621679231488"><span class="hs-identifier hs-var">err</span></a></span><span>
+</span><span class="hs-identifier">_</span></span><span> </span><span id="local-6989586621679231697"><span class="annot"><span class="annottext">DefuncError
+</span><a href="#local-6989586621679231697"><span class="hs-identifier hs-var">err</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">DefuncError
+</span><a href="#local-6989586621679231697"><span class="hs-identifier hs-var">err</span></a></span><span>
 </span><span id="line-112"></span><span>
 </span><span id="line-113"></span><span class="annot"><a href="Text.Gigaparsec.Internal.Errors.DefuncError.html#withReasonAndOffset"><span class="hs-identifier hs-type">withReasonAndOffset</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Word</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.Errors.DefuncTypes.html#DefuncError"><span class="hs-identifier hs-type">DefuncError</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.Errors.DefuncTypes.html#DefuncError"><span class="hs-identifier hs-type">DefuncError</span></a></span><span>
 </span><span id="line-114"></span><span id="withReasonAndOffset"><span class="annot"><span class="annottext">withReasonAndOffset :: String -&gt; Word -&gt; DefuncError -&gt; DefuncError
-</span><a href="Text.Gigaparsec.Internal.Errors.DefuncError.html#withReasonAndOffset"><span class="hs-identifier hs-var hs-var">withReasonAndOffset</span></a></span></span><span> </span><span class="hs-glyph">!</span><span id="local-6989586621679231489"><span class="annot"><span class="annottext">String
-</span><a href="#local-6989586621679231489"><span class="hs-identifier hs-var">reason</span></a></span></span><span> </span><span class="hs-glyph">!</span><span id="local-6989586621679231490"><span class="annot"><span class="annottext">Word
-</span><a href="#local-6989586621679231490"><span class="hs-identifier hs-var">off</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Text.Gigaparsec.Internal.Errors.DefuncTypes.html#DefuncError"><span class="hs-identifier hs-type">DefuncError</span></a></span><span> </span><span class="annot"><span class="annottext">ErrKindSingleton k
-</span><a href="Text.Gigaparsec.Internal.Errors.DefuncTypes.html#IsVanilla"><span class="hs-identifier hs-var">IsVanilla</span></a></span><span> </span><span id="local-6989586621679231494"><span class="annot"><span class="annottext">Word32
-</span><a href="#local-6989586621679231494"><span class="hs-identifier hs-var">flags</span></a></span></span><span> </span><span id="local-6989586621679231495"><span class="annot"><span class="annottext">Word
-</span><a href="#local-6989586621679231495"><span class="hs-identifier hs-var">pOff</span></a></span></span><span> </span><span id="local-6989586621679231496"><span class="annot"><span class="annottext">Word
-</span><a href="#local-6989586621679231496"><span class="hs-identifier hs-var">uOff</span></a></span></span><span> </span><span id="local-6989586621679231497"><span class="annot"><span class="annottext">DefuncError_ k
-</span><a href="#local-6989586621679231497"><span class="hs-identifier hs-var">errTy</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">|</span><span> </span><span class="annot"><span class="annottext">Word
-</span><a href="#local-6989586621679231495"><span class="hs-identifier hs-var">pOff</span></a></span><span> </span><span class="annot"><span class="annottext">Word -&gt; Word -&gt; Bool
+</span><a href="Text.Gigaparsec.Internal.Errors.DefuncError.html#withReasonAndOffset"><span class="hs-identifier hs-var hs-var">withReasonAndOffset</span></a></span></span><span> </span><span class="hs-glyph">!</span><span id="local-6989586621679231698"><span class="annot"><span class="annottext">String
+</span><a href="#local-6989586621679231698"><span class="hs-identifier hs-var">reason</span></a></span></span><span> </span><span class="hs-glyph">!</span><span id="local-6989586621679231699"><span class="annot"><span class="annottext">Word
+</span><a href="#local-6989586621679231699"><span class="hs-identifier hs-var">off</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Text.Gigaparsec.Internal.Errors.DefuncTypes.html#DefuncError"><span class="hs-identifier hs-type">DefuncError</span></a></span><span> </span><span class="annot"><span class="annottext">ErrKindSingleton k
+</span><a href="Text.Gigaparsec.Internal.Errors.DefuncTypes.html#IsVanilla"><span class="hs-identifier hs-var">IsVanilla</span></a></span><span> </span><span id="local-6989586621679231703"><span class="annot"><span class="annottext">Word32
+</span><a href="#local-6989586621679231703"><span class="hs-identifier hs-var">flags</span></a></span></span><span> </span><span id="local-6989586621679231704"><span class="annot"><span class="annottext">Word
+</span><a href="#local-6989586621679231704"><span class="hs-identifier hs-var">pOff</span></a></span></span><span> </span><span id="local-6989586621679231705"><span class="annot"><span class="annottext">Word
+</span><a href="#local-6989586621679231705"><span class="hs-identifier hs-var">uOff</span></a></span></span><span> </span><span id="local-6989586621679231706"><span class="annot"><span class="annottext">DefuncError_ k
+</span><a href="#local-6989586621679231706"><span class="hs-identifier hs-var">errTy</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">|</span><span> </span><span class="annot"><span class="annottext">Word
+</span><a href="#local-6989586621679231704"><span class="hs-identifier hs-var">pOff</span></a></span><span> </span><span class="annot"><span class="annottext">Word -&gt; Word -&gt; Bool
 forall a. Eq a =&gt; a -&gt; a -&gt; Bool
 </span><span class="hs-operator hs-var">==</span></span><span> </span><span class="annot"><span class="annottext">Word
-</span><a href="#local-6989586621679231490"><span class="hs-identifier hs-var">off</span></a></span><span> </span><span class="hs-glyph">=</span><span>
+</span><a href="#local-6989586621679231699"><span class="hs-identifier hs-var">off</span></a></span><span> </span><span class="hs-glyph">=</span><span>
 </span><span id="line-115"></span><span>  </span><span class="annot"><span class="annottext">ErrKindSingleton 'Vanilla
 -&gt; Word32 -&gt; Word -&gt; Word -&gt; DefuncError_ 'Vanilla -&gt; DefuncError
 forall (k :: ErrKind).
@@ -518,46 +518,46 @@ ErrKindSingleton k
 -&gt; Word32 -&gt; Word -&gt; Word -&gt; DefuncError_ k -&gt; DefuncError
 </span><a href="Text.Gigaparsec.Internal.Errors.DefuncTypes.html#DefuncError"><span class="hs-identifier hs-var">DefuncError</span></a></span><span> </span><span class="annot"><span class="annottext">ErrKindSingleton 'Vanilla
 </span><a href="Text.Gigaparsec.Internal.Errors.DefuncTypes.html#IsVanilla"><span class="hs-identifier hs-var">IsVanilla</span></a></span><span> </span><span class="annot"><span class="annottext">Word32
-</span><a href="#local-6989586621679231494"><span class="hs-identifier hs-var">flags</span></a></span><span> </span><span class="annot"><span class="annottext">Word
-</span><a href="#local-6989586621679231495"><span class="hs-identifier hs-var">pOff</span></a></span><span> </span><span class="annot"><span class="annottext">Word
-</span><a href="#local-6989586621679231496"><span class="hs-identifier hs-var">uOff</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">ErrorOp 'Vanilla -&gt; DefuncError_ 'Vanilla
+</span><a href="#local-6989586621679231703"><span class="hs-identifier hs-var">flags</span></a></span><span> </span><span class="annot"><span class="annottext">Word
+</span><a href="#local-6989586621679231704"><span class="hs-identifier hs-var">pOff</span></a></span><span> </span><span class="annot"><span class="annottext">Word
+</span><a href="#local-6989586621679231705"><span class="hs-identifier hs-var">uOff</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">ErrorOp 'Vanilla -&gt; DefuncError_ 'Vanilla
 forall (k :: ErrKind). ErrorOp k -&gt; DefuncError_ k
 </span><a href="Text.Gigaparsec.Internal.Errors.DefuncTypes.html#Op"><span class="hs-identifier hs-var">Op</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">DefuncError_ 'Vanilla -&gt; String -&gt; ErrorOp 'Vanilla
 </span><a href="Text.Gigaparsec.Internal.Errors.DefuncTypes.html#WithReason"><span class="hs-identifier hs-var">WithReason</span></a></span><span> </span><span class="annot"><span class="annottext">DefuncError_ k
 DefuncError_ 'Vanilla
-</span><a href="#local-6989586621679231497"><span class="hs-identifier hs-var">errTy</span></a></span><span> </span><span class="annot"><span class="annottext">String
-</span><a href="#local-6989586621679231489"><span class="hs-identifier hs-var">reason</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><a href="#local-6989586621679231706"><span class="hs-identifier hs-var">errTy</span></a></span><span> </span><span class="annot"><span class="annottext">String
+</span><a href="#local-6989586621679231698"><span class="hs-identifier hs-var">reason</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
 </span><span id="line-116"></span><span class="annot"><a href="Text.Gigaparsec.Internal.Errors.DefuncError.html#withReasonAndOffset"><span class="hs-identifier hs-var">withReasonAndOffset</span></a></span><span> </span><span class="annot"><span class="annottext">String
 </span><span class="hs-identifier">_</span></span><span> </span><span class="annot"><span class="annottext">Word
-</span><span class="hs-identifier">_</span></span><span> </span><span id="local-6989586621679231499"><span class="annot"><span class="annottext">DefuncError
-</span><a href="#local-6989586621679231499"><span class="hs-identifier hs-var">err</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">DefuncError
-</span><a href="#local-6989586621679231499"><span class="hs-identifier hs-var">err</span></a></span><span>
+</span><span class="hs-identifier">_</span></span><span> </span><span id="local-6989586621679231708"><span class="annot"><span class="annottext">DefuncError
+</span><a href="#local-6989586621679231708"><span class="hs-identifier hs-var">err</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">DefuncError
+</span><a href="#local-6989586621679231708"><span class="hs-identifier hs-var">err</span></a></span><span>
 </span><span id="line-117"></span><span>
 </span><span id="line-118"></span><span class="annot"><a href="Text.Gigaparsec.Internal.Errors.DefuncError.html#withReason"><span class="hs-identifier hs-type">withReason</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.Errors.DefuncTypes.html#DefuncError"><span class="hs-identifier hs-type">DefuncError</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.Errors.DefuncTypes.html#DefuncError"><span class="hs-identifier hs-type">DefuncError</span></a></span><span>
 </span><span id="line-119"></span><span id="withReason"><span class="annot"><span class="annottext">withReason :: String -&gt; DefuncError -&gt; DefuncError
-</span><a href="Text.Gigaparsec.Internal.Errors.DefuncError.html#withReason"><span class="hs-identifier hs-var hs-var">withReason</span></a></span></span><span> </span><span class="hs-glyph">!</span><span id="local-6989586621679231500"><span class="annot"><span class="annottext">String
-</span><a href="#local-6989586621679231500"><span class="hs-identifier hs-var">reason</span></a></span></span><span> </span><span id="local-6989586621679231501"><span class="annot"><span class="annottext">DefuncError
-</span><a href="#local-6989586621679231501"><span class="hs-identifier hs-var">err</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">String -&gt; Word -&gt; DefuncError -&gt; DefuncError
+</span><a href="Text.Gigaparsec.Internal.Errors.DefuncError.html#withReason"><span class="hs-identifier hs-var hs-var">withReason</span></a></span></span><span> </span><span class="hs-glyph">!</span><span id="local-6989586621679231709"><span class="annot"><span class="annottext">String
+</span><a href="#local-6989586621679231709"><span class="hs-identifier hs-var">reason</span></a></span></span><span> </span><span id="local-6989586621679231710"><span class="annot"><span class="annottext">DefuncError
+</span><a href="#local-6989586621679231710"><span class="hs-identifier hs-var">err</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">String -&gt; Word -&gt; DefuncError -&gt; DefuncError
 </span><a href="Text.Gigaparsec.Internal.Errors.DefuncError.html#withReasonAndOffset"><span class="hs-identifier hs-var">withReasonAndOffset</span></a></span><span> </span><span class="annot"><span class="annottext">String
-</span><a href="#local-6989586621679231500"><span class="hs-identifier hs-var">reason</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">DefuncError -&gt; Word
+</span><a href="#local-6989586621679231709"><span class="hs-identifier hs-var">reason</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">DefuncError -&gt; Word
 </span><a href="Text.Gigaparsec.Internal.Errors.DefuncTypes.html#presentationOffset"><span class="hs-identifier hs-var">presentationOffset</span></a></span><span> </span><span class="annot"><span class="annottext">DefuncError
-</span><a href="#local-6989586621679231501"><span class="hs-identifier hs-var">err</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">DefuncError
-</span><a href="#local-6989586621679231501"><span class="hs-identifier hs-var">err</span></a></span><span>
+</span><a href="#local-6989586621679231710"><span class="hs-identifier hs-var">err</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">DefuncError
+</span><a href="#local-6989586621679231710"><span class="hs-identifier hs-var">err</span></a></span><span>
 </span><span id="line-120"></span><span>
 </span><span id="line-121"></span><span class="annot"><a href="Text.Gigaparsec.Internal.Errors.DefuncError.html#label"><span class="hs-keyword hs-type">label</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Word</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Set</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.Errors.DefuncTypes.html#DefuncError"><span class="hs-identifier hs-type">DefuncError</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.Errors.DefuncTypes.html#DefuncError"><span class="hs-identifier hs-type">DefuncError</span></a></span><span>
 </span><span id="line-122"></span><span id="label"><span class="annot"><span class="annottext">label :: Word -&gt; Set String -&gt; DefuncError -&gt; DefuncError
-</span><a href="Text.Gigaparsec.Internal.Errors.DefuncError.html#label"><span class="hs-keyword hs-var hs-var">label</span></a></span></span><span> </span><span class="hs-glyph">!</span><span id="local-6989586621679231502"><span class="annot"><span class="annottext">Word
-</span><a href="#local-6989586621679231502"><span class="hs-identifier hs-var">off</span></a></span></span><span> </span><span class="hs-glyph">!</span><span id="local-6989586621679231503"><span class="annot"><span class="annottext">Set String
-</span><a href="#local-6989586621679231503"><span class="hs-identifier hs-var">labels</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Text.Gigaparsec.Internal.Errors.DefuncTypes.html#DefuncError"><span class="hs-identifier hs-type">DefuncError</span></a></span><span> </span><span class="annot"><span class="annottext">ErrKindSingleton k
-</span><a href="Text.Gigaparsec.Internal.Errors.DefuncTypes.html#IsVanilla"><span class="hs-identifier hs-var">IsVanilla</span></a></span><span> </span><span id="local-6989586621679231508"><span class="annot"><span class="annottext">Word32
-</span><a href="#local-6989586621679231508"><span class="hs-identifier hs-var">flags</span></a></span></span><span> </span><span id="local-6989586621679231509"><span class="annot"><span class="annottext">Word
-</span><a href="#local-6989586621679231509"><span class="hs-identifier hs-var">pOff</span></a></span></span><span> </span><span id="local-6989586621679231510"><span class="annot"><span class="annottext">Word
-</span><a href="#local-6989586621679231510"><span class="hs-identifier hs-var">uOff</span></a></span></span><span> </span><span id="local-6989586621679231511"><span class="annot"><span class="annottext">DefuncError_ k
-</span><a href="#local-6989586621679231511"><span class="hs-identifier hs-var">errTy</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">|</span><span> </span><span class="annot"><span class="annottext">Word
-</span><a href="#local-6989586621679231509"><span class="hs-identifier hs-var">pOff</span></a></span><span> </span><span class="annot"><span class="annottext">Word -&gt; Word -&gt; Bool
+</span><a href="Text.Gigaparsec.Internal.Errors.DefuncError.html#label"><span class="hs-keyword hs-var hs-var">label</span></a></span></span><span> </span><span class="hs-glyph">!</span><span id="local-6989586621679231711"><span class="annot"><span class="annottext">Word
+</span><a href="#local-6989586621679231711"><span class="hs-identifier hs-var">off</span></a></span></span><span> </span><span class="hs-glyph">!</span><span id="local-6989586621679231712"><span class="annot"><span class="annottext">Set String
+</span><a href="#local-6989586621679231712"><span class="hs-identifier hs-var">labels</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Text.Gigaparsec.Internal.Errors.DefuncTypes.html#DefuncError"><span class="hs-identifier hs-type">DefuncError</span></a></span><span> </span><span class="annot"><span class="annottext">ErrKindSingleton k
+</span><a href="Text.Gigaparsec.Internal.Errors.DefuncTypes.html#IsVanilla"><span class="hs-identifier hs-var">IsVanilla</span></a></span><span> </span><span id="local-6989586621679231717"><span class="annot"><span class="annottext">Word32
+</span><a href="#local-6989586621679231717"><span class="hs-identifier hs-var">flags</span></a></span></span><span> </span><span id="local-6989586621679231718"><span class="annot"><span class="annottext">Word
+</span><a href="#local-6989586621679231718"><span class="hs-identifier hs-var">pOff</span></a></span></span><span> </span><span id="local-6989586621679231719"><span class="annot"><span class="annottext">Word
+</span><a href="#local-6989586621679231719"><span class="hs-identifier hs-var">uOff</span></a></span></span><span> </span><span id="local-6989586621679231720"><span class="annot"><span class="annottext">DefuncError_ k
+</span><a href="#local-6989586621679231720"><span class="hs-identifier hs-var">errTy</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">|</span><span> </span><span class="annot"><span class="annottext">Word
+</span><a href="#local-6989586621679231718"><span class="hs-identifier hs-var">pOff</span></a></span><span> </span><span class="annot"><span class="annottext">Word -&gt; Word -&gt; Bool
 forall a. Eq a =&gt; a -&gt; a -&gt; Bool
 </span><span class="hs-operator hs-var">==</span></span><span> </span><span class="annot"><span class="annottext">Word
-</span><a href="#local-6989586621679231502"><span class="hs-identifier hs-var">off</span></a></span><span> </span><span class="hs-glyph">=</span><span>
+</span><a href="#local-6989586621679231711"><span class="hs-identifier hs-var">off</span></a></span><span> </span><span class="hs-glyph">=</span><span>
 </span><span id="line-123"></span><span>  </span><span class="annot"><span class="annottext">ErrKindSingleton 'Vanilla
 -&gt; Word32 -&gt; Word -&gt; Word -&gt; DefuncError_ 'Vanilla -&gt; DefuncError
 forall (k :: ErrKind).
@@ -565,54 +565,54 @@ ErrKindSingleton k
 -&gt; Word32 -&gt; Word -&gt; Word -&gt; DefuncError_ k -&gt; DefuncError
 </span><a href="Text.Gigaparsec.Internal.Errors.DefuncTypes.html#DefuncError"><span class="hs-identifier hs-var">DefuncError</span></a></span><span> </span><span class="annot"><span class="annottext">ErrKindSingleton 'Vanilla
 </span><a href="Text.Gigaparsec.Internal.Errors.DefuncTypes.html#IsVanilla"><span class="hs-identifier hs-var">IsVanilla</span></a></span><span> </span><span class="annot"><span class="annottext">Word32
-</span><a href="#local-6989586621679231512"><span class="hs-identifier hs-var">flags'</span></a></span><span> </span><span class="annot"><span class="annottext">Word
-</span><a href="#local-6989586621679231509"><span class="hs-identifier hs-var">pOff</span></a></span><span> </span><span class="annot"><span class="annottext">Word
-</span><a href="#local-6989586621679231510"><span class="hs-identifier hs-var">uOff</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">ErrorOp 'Vanilla -&gt; DefuncError_ 'Vanilla
+</span><a href="#local-6989586621679231721"><span class="hs-identifier hs-var">flags'</span></a></span><span> </span><span class="annot"><span class="annottext">Word
+</span><a href="#local-6989586621679231718"><span class="hs-identifier hs-var">pOff</span></a></span><span> </span><span class="annot"><span class="annottext">Word
+</span><a href="#local-6989586621679231719"><span class="hs-identifier hs-var">uOff</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">ErrorOp 'Vanilla -&gt; DefuncError_ 'Vanilla
 forall (k :: ErrKind). ErrorOp k -&gt; DefuncError_ k
 </span><a href="Text.Gigaparsec.Internal.Errors.DefuncTypes.html#Op"><span class="hs-identifier hs-var">Op</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">DefuncError_ 'Vanilla -&gt; Set String -&gt; ErrorOp 'Vanilla
 </span><a href="Text.Gigaparsec.Internal.Errors.DefuncTypes.html#WithLabel"><span class="hs-identifier hs-var">WithLabel</span></a></span><span> </span><span class="annot"><span class="annottext">DefuncError_ k
 DefuncError_ 'Vanilla
-</span><a href="#local-6989586621679231511"><span class="hs-identifier hs-var">errTy</span></a></span><span> </span><span class="annot"><span class="annottext">Set String
-</span><a href="#local-6989586621679231503"><span class="hs-identifier hs-var">labels</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
-</span><span id="line-124"></span><span>  </span><span class="hs-keyword">where</span><span> </span><span class="hs-glyph">!</span><span id="local-6989586621679231512"><span class="annot"><span class="annottext">flags' :: Word32
-</span><a href="#local-6989586621679231512"><span class="hs-identifier hs-var hs-var">flags'</span></a></span></span><span>
+</span><a href="#local-6989586621679231720"><span class="hs-identifier hs-var">errTy</span></a></span><span> </span><span class="annot"><span class="annottext">Set String
+</span><a href="#local-6989586621679231712"><span class="hs-identifier hs-var">labels</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-124"></span><span>  </span><span class="hs-keyword">where</span><span> </span><span class="hs-glyph">!</span><span id="local-6989586621679231721"><span class="annot"><span class="annottext">flags' :: Word32
+</span><a href="#local-6989586621679231721"><span class="hs-identifier hs-var hs-var">flags'</span></a></span></span><span>
 </span><span id="line-125"></span><span>          </span><span class="hs-glyph">|</span><span> </span><span class="annot"><span class="annottext">Set String -&gt; Bool
 forall a. Set a -&gt; Bool
 </span><span class="hs-identifier hs-var">Set.null</span></span><span> </span><span class="annot"><span class="annottext">Set String
-</span><a href="#local-6989586621679231503"><span class="hs-identifier hs-var">labels</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Word32 -&gt; Int -&gt; Word32
+</span><a href="#local-6989586621679231712"><span class="hs-identifier hs-var">labels</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Word32 -&gt; Int -&gt; Word32
 forall a. Bits a =&gt; a -&gt; Int -&gt; a
 </span><span class="hs-identifier hs-var">setBit</span></span><span> </span><span class="annot"><span class="annottext">Word32
-</span><a href="#local-6989586621679231508"><span class="hs-identifier hs-var">flags</span></a></span><span> </span><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679231717"><span class="hs-identifier hs-var">flags</span></a></span><span> </span><span class="annot"><span class="annottext">Int
 </span><a href="Text.Gigaparsec.Internal.Errors.DefuncError.html#expectedEmptyBit"><span class="hs-identifier hs-var">expectedEmptyBit</span></a></span><span>
 </span><span id="line-126"></span><span>          </span><span class="hs-glyph">|</span><span> </span><span class="annot"><span class="annottext">Bool
 </span><span class="hs-identifier hs-var">otherwise</span></span><span>       </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Word32 -&gt; Int -&gt; Word32
 forall a. Bits a =&gt; a -&gt; Int -&gt; a
 </span><span class="hs-identifier hs-var">clearBit</span></span><span> </span><span class="annot"><span class="annottext">Word32
-</span><a href="#local-6989586621679231508"><span class="hs-identifier hs-var">flags</span></a></span><span> </span><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679231717"><span class="hs-identifier hs-var">flags</span></a></span><span> </span><span class="annot"><span class="annottext">Int
 </span><a href="Text.Gigaparsec.Internal.Errors.DefuncError.html#expectedEmptyBit"><span class="hs-identifier hs-var">expectedEmptyBit</span></a></span><span>
 </span><span id="line-127"></span><span class="annot"><a href="Text.Gigaparsec.Internal.Errors.DefuncError.html#label"><span class="hs-keyword hs-var">label</span></a></span><span> </span><span class="annot"><span class="annottext">Word
 </span><span class="hs-identifier">_</span></span><span> </span><span class="annot"><span class="annottext">Set String
-</span><span class="hs-identifier">_</span></span><span> </span><span id="local-6989586621679231514"><span class="annot"><span class="annottext">DefuncError
-</span><a href="#local-6989586621679231514"><span class="hs-identifier hs-var">err</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">DefuncError
-</span><a href="#local-6989586621679231514"><span class="hs-identifier hs-var">err</span></a></span><span>
+</span><span class="hs-identifier">_</span></span><span> </span><span id="local-6989586621679231723"><span class="annot"><span class="annottext">DefuncError
+</span><a href="#local-6989586621679231723"><span class="hs-identifier hs-var">err</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">DefuncError
+</span><a href="#local-6989586621679231723"><span class="hs-identifier hs-var">err</span></a></span><span>
 </span><span id="line-128"></span><span>
 </span><span id="line-129"></span><span class="annot"><a href="Text.Gigaparsec.Internal.Errors.DefuncError.html#amend"><span class="hs-identifier hs-type">amend</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Bool</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Word</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Word</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Word</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.Errors.DefuncTypes.html#DefuncError"><span class="hs-identifier hs-type">DefuncError</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.Errors.DefuncTypes.html#DefuncError"><span class="hs-identifier hs-type">DefuncError</span></a></span><span>
 </span><span id="line-130"></span><span id="amend"><span class="annot"><span class="annottext">amend :: Bool -&gt; Word -&gt; Word -&gt; Word -&gt; DefuncError -&gt; DefuncError
-</span><a href="Text.Gigaparsec.Internal.Errors.DefuncError.html#amend"><span class="hs-identifier hs-var hs-var">amend</span></a></span></span><span> </span><span class="hs-glyph">!</span><span id="local-6989586621679231515"><span class="annot"><span class="annottext">Bool
-</span><a href="#local-6989586621679231515"><span class="hs-identifier hs-var">partial</span></a></span></span><span> </span><span class="hs-glyph">!</span><span id="local-6989586621679231516"><span class="annot"><span class="annottext">Word
-</span><a href="#local-6989586621679231516"><span class="hs-identifier hs-var">pOff</span></a></span></span><span> </span><span class="hs-glyph">!</span><span id="local-6989586621679231517"><span class="annot"><span class="annottext">Word
-</span><a href="#local-6989586621679231517"><span class="hs-identifier hs-var">line</span></a></span></span><span> </span><span class="hs-glyph">!</span><span id="local-6989586621679231518"><span class="annot"><span class="annottext">Word
-</span><a href="#local-6989586621679231518"><span class="hs-identifier hs-var">col</span></a></span></span><span> </span><span id="local-6989586621679231519"><span class="annot"><span class="annottext">err :: DefuncError
-</span><a href="#local-6989586621679231519"><span class="hs-identifier hs-var">err</span></a></span></span><span class="hs-glyph">@</span><span class="hs-special">(</span><span class="annot"><a href="Text.Gigaparsec.Internal.Errors.DefuncTypes.html#DefuncError"><span class="hs-identifier hs-type">DefuncError</span></a></span><span> </span><span id="local-6989586621679231520"><span class="annot"><span class="annottext">ErrKindSingleton k
-</span><a href="#local-6989586621679231520"><span class="hs-identifier hs-var">k</span></a></span></span><span> </span><span id="local-6989586621679231521"><span class="annot"><span class="annottext">Word32
-</span><a href="#local-6989586621679231521"><span class="hs-identifier hs-var">flags</span></a></span></span><span> </span><span class="annot"><span class="annottext">Word
-</span><span class="hs-identifier">_</span></span><span> </span><span id="local-6989586621679231522"><span class="annot"><span class="annottext">Word
-</span><a href="#local-6989586621679231522"><span class="hs-identifier hs-var">uOff</span></a></span></span><span> </span><span id="local-6989586621679231523"><span class="annot"><span class="annottext">DefuncError_ k
-</span><a href="#local-6989586621679231523"><span class="hs-identifier hs-var">errTy</span></a></span></span><span class="hs-special">)</span><span>
+</span><a href="Text.Gigaparsec.Internal.Errors.DefuncError.html#amend"><span class="hs-identifier hs-var hs-var">amend</span></a></span></span><span> </span><span class="hs-glyph">!</span><span id="local-6989586621679231724"><span class="annot"><span class="annottext">Bool
+</span><a href="#local-6989586621679231724"><span class="hs-identifier hs-var">partial</span></a></span></span><span> </span><span class="hs-glyph">!</span><span id="local-6989586621679231725"><span class="annot"><span class="annottext">Word
+</span><a href="#local-6989586621679231725"><span class="hs-identifier hs-var">pOff</span></a></span></span><span> </span><span class="hs-glyph">!</span><span id="local-6989586621679231726"><span class="annot"><span class="annottext">Word
+</span><a href="#local-6989586621679231726"><span class="hs-identifier hs-var">line</span></a></span></span><span> </span><span class="hs-glyph">!</span><span id="local-6989586621679231727"><span class="annot"><span class="annottext">Word
+</span><a href="#local-6989586621679231727"><span class="hs-identifier hs-var">col</span></a></span></span><span> </span><span id="local-6989586621679231728"><span class="annot"><span class="annottext">err :: DefuncError
+</span><a href="#local-6989586621679231728"><span class="hs-identifier hs-var">err</span></a></span></span><span class="hs-glyph">@</span><span class="hs-special">(</span><span class="annot"><a href="Text.Gigaparsec.Internal.Errors.DefuncTypes.html#DefuncError"><span class="hs-identifier hs-type">DefuncError</span></a></span><span> </span><span id="local-6989586621679231729"><span class="annot"><span class="annottext">ErrKindSingleton k
+</span><a href="#local-6989586621679231729"><span class="hs-identifier hs-var">k</span></a></span></span><span> </span><span id="local-6989586621679231730"><span class="annot"><span class="annottext">Word32
+</span><a href="#local-6989586621679231730"><span class="hs-identifier hs-var">flags</span></a></span></span><span> </span><span class="annot"><span class="annottext">Word
+</span><span class="hs-identifier">_</span></span><span> </span><span id="local-6989586621679231731"><span class="annot"><span class="annottext">Word
+</span><a href="#local-6989586621679231731"><span class="hs-identifier hs-var">uOff</span></a></span></span><span> </span><span id="local-6989586621679231732"><span class="annot"><span class="annottext">DefuncError_ k
+</span><a href="#local-6989586621679231732"><span class="hs-identifier hs-var">errTy</span></a></span></span><span class="hs-special">)</span><span>
 </span><span id="line-131"></span><span>  </span><span class="hs-glyph">|</span><span> </span><span class="annot"><span class="annottext">DefuncError -&gt; Bool
 </span><a href="Text.Gigaparsec.Internal.Errors.DefuncError.html#entrenched"><span class="hs-identifier hs-var">entrenched</span></a></span><span> </span><span class="annot"><span class="annottext">DefuncError
-</span><a href="#local-6989586621679231519"><span class="hs-identifier hs-var">err</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">DefuncError
-</span><a href="#local-6989586621679231519"><span class="hs-identifier hs-var">err</span></a></span><span>
+</span><a href="#local-6989586621679231728"><span class="hs-identifier hs-var">err</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">DefuncError
+</span><a href="#local-6989586621679231728"><span class="hs-identifier hs-var">err</span></a></span><span>
 </span><span id="line-132"></span><span>  </span><span class="hs-glyph">|</span><span> </span><span class="annot"><span class="annottext">Bool
 </span><span class="hs-identifier hs-var">otherwise</span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">ErrKindSingleton k
 -&gt; Word32 -&gt; Word -&gt; Word -&gt; DefuncError_ k -&gt; DefuncError
@@ -620,80 +620,80 @@ forall (k :: ErrKind).
 ErrKindSingleton k
 -&gt; Word32 -&gt; Word -&gt; Word -&gt; DefuncError_ k -&gt; DefuncError
 </span><a href="Text.Gigaparsec.Internal.Errors.DefuncTypes.html#DefuncError"><span class="hs-identifier hs-var">DefuncError</span></a></span><span> </span><span class="annot"><span class="annottext">ErrKindSingleton k
-</span><a href="#local-6989586621679231520"><span class="hs-identifier hs-var">k</span></a></span><span> </span><span class="annot"><span class="annottext">Word32
-</span><a href="#local-6989586621679231521"><span class="hs-identifier hs-var">flags</span></a></span><span> </span><span class="annot"><span class="annottext">Word
-</span><a href="#local-6989586621679231516"><span class="hs-identifier hs-var">pOff</span></a></span><span> </span><span class="annot"><span class="annottext">Word
-</span><a href="#local-6989586621679231524"><span class="hs-identifier hs-var">uOff'</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">ErrorOp k -&gt; DefuncError_ k
+</span><a href="#local-6989586621679231729"><span class="hs-identifier hs-var">k</span></a></span><span> </span><span class="annot"><span class="annottext">Word32
+</span><a href="#local-6989586621679231730"><span class="hs-identifier hs-var">flags</span></a></span><span> </span><span class="annot"><span class="annottext">Word
+</span><a href="#local-6989586621679231725"><span class="hs-identifier hs-var">pOff</span></a></span><span> </span><span class="annot"><span class="annottext">Word
+</span><a href="#local-6989586621679231733"><span class="hs-identifier hs-var">uOff'</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">ErrorOp k -&gt; DefuncError_ k
 forall (k :: ErrKind). ErrorOp k -&gt; DefuncError_ k
 </span><a href="Text.Gigaparsec.Internal.Errors.DefuncTypes.html#Op"><span class="hs-identifier hs-var">Op</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Word -&gt; Word -&gt; DefuncError_ k -&gt; ErrorOp k
 forall (k :: ErrKind). Word -&gt; Word -&gt; DefuncError_ k -&gt; ErrorOp k
 </span><a href="Text.Gigaparsec.Internal.Errors.DefuncTypes.html#Amended"><span class="hs-identifier hs-var">Amended</span></a></span><span> </span><span class="annot"><span class="annottext">Word
-</span><a href="#local-6989586621679231517"><span class="hs-identifier hs-var">line</span></a></span><span> </span><span class="annot"><span class="annottext">Word
-</span><a href="#local-6989586621679231518"><span class="hs-identifier hs-var">col</span></a></span><span> </span><span class="annot"><span class="annottext">DefuncError_ k
-</span><a href="#local-6989586621679231523"><span class="hs-identifier hs-var">errTy</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><a href="#local-6989586621679231726"><span class="hs-identifier hs-var">line</span></a></span><span> </span><span class="annot"><span class="annottext">Word
+</span><a href="#local-6989586621679231727"><span class="hs-identifier hs-var">col</span></a></span><span> </span><span class="annot"><span class="annottext">DefuncError_ k
+</span><a href="#local-6989586621679231732"><span class="hs-identifier hs-var">errTy</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
 </span><span id="line-133"></span><span>  </span><span class="hs-keyword">where</span><span>
-</span><span id="line-134"></span><span>    </span><span class="hs-glyph">!</span><span id="local-6989586621679231524"><span class="annot"><span class="annottext">uOff' :: Word
-</span><a href="#local-6989586621679231524"><span class="hs-identifier hs-var hs-var">uOff'</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">if</span><span> </span><span class="annot"><span class="annottext">Bool
-</span><a href="#local-6989586621679231515"><span class="hs-identifier hs-var">partial</span></a></span><span> </span><span class="hs-keyword">then</span><span> </span><span class="annot"><span class="annottext">Word
-</span><a href="#local-6989586621679231522"><span class="hs-identifier hs-var">uOff</span></a></span><span> </span><span class="hs-keyword">else</span><span> </span><span class="annot"><span class="annottext">Word
-</span><a href="#local-6989586621679231516"><span class="hs-identifier hs-var">pOff</span></a></span><span>
+</span><span id="line-134"></span><span>    </span><span class="hs-glyph">!</span><span id="local-6989586621679231733"><span class="annot"><span class="annottext">uOff' :: Word
+</span><a href="#local-6989586621679231733"><span class="hs-identifier hs-var hs-var">uOff'</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">if</span><span> </span><span class="annot"><span class="annottext">Bool
+</span><a href="#local-6989586621679231724"><span class="hs-identifier hs-var">partial</span></a></span><span> </span><span class="hs-keyword">then</span><span> </span><span class="annot"><span class="annottext">Word
+</span><a href="#local-6989586621679231731"><span class="hs-identifier hs-var">uOff</span></a></span><span> </span><span class="hs-keyword">else</span><span> </span><span class="annot"><span class="annottext">Word
+</span><a href="#local-6989586621679231725"><span class="hs-identifier hs-var">pOff</span></a></span><span>
 </span><span id="line-135"></span><span>
 </span><span id="line-136"></span><span class="annot"><a href="Text.Gigaparsec.Internal.Errors.DefuncError.html#entrench"><span class="hs-identifier hs-type">entrench</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.Errors.DefuncTypes.html#DefuncError"><span class="hs-identifier hs-type">DefuncError</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.Errors.DefuncTypes.html#DefuncError"><span class="hs-identifier hs-type">DefuncError</span></a></span><span>
 </span><span id="line-137"></span><span id="entrench"><span class="annot"><span class="annottext">entrench :: DefuncError -&gt; DefuncError
-</span><a href="Text.Gigaparsec.Internal.Errors.DefuncError.html#entrench"><span class="hs-identifier hs-var hs-var">entrench</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Text.Gigaparsec.Internal.Errors.DefuncTypes.html#DefuncError"><span class="hs-identifier hs-type">DefuncError</span></a></span><span> </span><span id="local-6989586621679231528"><span class="annot"><span class="annottext">ErrKindSingleton k
-</span><a href="#local-6989586621679231528"><span class="hs-identifier hs-var">k</span></a></span></span><span> </span><span id="local-6989586621679231529"><span class="annot"><span class="annottext">Word32
-</span><a href="#local-6989586621679231529"><span class="hs-identifier hs-var">flags</span></a></span></span><span> </span><span id="local-6989586621679231530"><span class="annot"><span class="annottext">Word
-</span><a href="#local-6989586621679231530"><span class="hs-identifier hs-var">pOff</span></a></span></span><span> </span><span id="local-6989586621679231531"><span class="annot"><span class="annottext">Word
-</span><a href="#local-6989586621679231531"><span class="hs-identifier hs-var">uOff</span></a></span></span><span> </span><span id="local-6989586621679231532"><span class="annot"><span class="annottext">DefuncError_ k
-</span><a href="#local-6989586621679231532"><span class="hs-identifier hs-var">errTy</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">ErrKindSingleton k
+</span><a href="Text.Gigaparsec.Internal.Errors.DefuncError.html#entrench"><span class="hs-identifier hs-var hs-var">entrench</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Text.Gigaparsec.Internal.Errors.DefuncTypes.html#DefuncError"><span class="hs-identifier hs-type">DefuncError</span></a></span><span> </span><span id="local-6989586621679231737"><span class="annot"><span class="annottext">ErrKindSingleton k
+</span><a href="#local-6989586621679231737"><span class="hs-identifier hs-var">k</span></a></span></span><span> </span><span id="local-6989586621679231738"><span class="annot"><span class="annottext">Word32
+</span><a href="#local-6989586621679231738"><span class="hs-identifier hs-var">flags</span></a></span></span><span> </span><span id="local-6989586621679231739"><span class="annot"><span class="annottext">Word
+</span><a href="#local-6989586621679231739"><span class="hs-identifier hs-var">pOff</span></a></span></span><span> </span><span id="local-6989586621679231740"><span class="annot"><span class="annottext">Word
+</span><a href="#local-6989586621679231740"><span class="hs-identifier hs-var">uOff</span></a></span></span><span> </span><span id="local-6989586621679231741"><span class="annot"><span class="annottext">DefuncError_ k
+</span><a href="#local-6989586621679231741"><span class="hs-identifier hs-var">errTy</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">ErrKindSingleton k
 -&gt; Word32 -&gt; Word -&gt; Word -&gt; DefuncError_ k -&gt; DefuncError
 forall (k :: ErrKind).
 ErrKindSingleton k
 -&gt; Word32 -&gt; Word -&gt; Word -&gt; DefuncError_ k -&gt; DefuncError
 </span><a href="Text.Gigaparsec.Internal.Errors.DefuncTypes.html#DefuncError"><span class="hs-identifier hs-var">DefuncError</span></a></span><span> </span><span class="annot"><span class="annottext">ErrKindSingleton k
-</span><a href="#local-6989586621679231528"><span class="hs-identifier hs-var">k</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Word32
-</span><a href="#local-6989586621679231529"><span class="hs-identifier hs-var">flags</span></a></span><span> </span><span class="annot"><span class="annottext">Word32 -&gt; Word32 -&gt; Word32
+</span><a href="#local-6989586621679231737"><span class="hs-identifier hs-var">k</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Word32
+</span><a href="#local-6989586621679231738"><span class="hs-identifier hs-var">flags</span></a></span><span> </span><span class="annot"><span class="annottext">Word32 -&gt; Word32 -&gt; Word32
 forall a. Num a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">+</span></span><span> </span><span class="annot"><span class="annottext">Word32
 </span><span class="hs-number">1</span></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">Word
-</span><a href="#local-6989586621679231530"><span class="hs-identifier hs-var">pOff</span></a></span><span> </span><span class="annot"><span class="annottext">Word
-</span><a href="#local-6989586621679231531"><span class="hs-identifier hs-var">uOff</span></a></span><span> </span><span class="annot"><span class="annottext">DefuncError_ k
-</span><a href="#local-6989586621679231532"><span class="hs-identifier hs-var">errTy</span></a></span><span>
+</span><a href="#local-6989586621679231739"><span class="hs-identifier hs-var">pOff</span></a></span><span> </span><span class="annot"><span class="annottext">Word
+</span><a href="#local-6989586621679231740"><span class="hs-identifier hs-var">uOff</span></a></span><span> </span><span class="annot"><span class="annottext">DefuncError_ k
+</span><a href="#local-6989586621679231741"><span class="hs-identifier hs-var">errTy</span></a></span><span>
 </span><span id="line-138"></span><span>
 </span><span id="line-139"></span><span class="annot"><a href="Text.Gigaparsec.Internal.Errors.DefuncError.html#dislodge"><span class="hs-identifier hs-type">dislodge</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Word32</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.Errors.DefuncTypes.html#DefuncError"><span class="hs-identifier hs-type">DefuncError</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.Errors.DefuncTypes.html#DefuncError"><span class="hs-identifier hs-type">DefuncError</span></a></span><span>
 </span><span id="line-140"></span><span id="dislodge"><span class="annot"><span class="annottext">dislodge :: Word32 -&gt; DefuncError -&gt; DefuncError
-</span><a href="Text.Gigaparsec.Internal.Errors.DefuncError.html#dislodge"><span class="hs-identifier hs-var hs-var">dislodge</span></a></span></span><span> </span><span id="local-6989586621679231534"><span class="annot"><span class="annottext">Word32
-</span><a href="#local-6989586621679231534"><span class="hs-identifier hs-var">by</span></a></span></span><span> </span><span id="local-6989586621679231535"><span class="annot"><span class="annottext">err :: DefuncError
-</span><a href="#local-6989586621679231535"><span class="hs-identifier hs-var">err</span></a></span></span><span class="hs-glyph">@</span><span class="hs-special">(</span><span class="annot"><a href="Text.Gigaparsec.Internal.Errors.DefuncTypes.html#DefuncError"><span class="hs-identifier hs-type">DefuncError</span></a></span><span> </span><span id="local-6989586621679231543"><span class="annot"><span class="annottext">ErrKindSingleton k
-</span><a href="#local-6989586621679231543"><span class="hs-identifier hs-var">k</span></a></span></span><span> </span><span id="local-6989586621679231544"><span class="annot"><span class="annottext">Word32
-</span><a href="#local-6989586621679231544"><span class="hs-identifier hs-var">flags</span></a></span></span><span> </span><span id="local-6989586621679231545"><span class="annot"><span class="annottext">Word
-</span><a href="#local-6989586621679231545"><span class="hs-identifier hs-var">pOff</span></a></span></span><span> </span><span id="local-6989586621679231546"><span class="annot"><span class="annottext">Word
-</span><a href="#local-6989586621679231546"><span class="hs-identifier hs-var">uOff</span></a></span></span><span> </span><span id="local-6989586621679231547"><span class="annot"><span class="annottext">DefuncError_ k
-</span><a href="#local-6989586621679231547"><span class="hs-identifier hs-var">errTy</span></a></span></span><span class="hs-special">)</span><span>
+</span><a href="Text.Gigaparsec.Internal.Errors.DefuncError.html#dislodge"><span class="hs-identifier hs-var hs-var">dislodge</span></a></span></span><span> </span><span id="local-6989586621679231743"><span class="annot"><span class="annottext">Word32
+</span><a href="#local-6989586621679231743"><span class="hs-identifier hs-var">by</span></a></span></span><span> </span><span id="local-6989586621679231744"><span class="annot"><span class="annottext">err :: DefuncError
+</span><a href="#local-6989586621679231744"><span class="hs-identifier hs-var">err</span></a></span></span><span class="hs-glyph">@</span><span class="hs-special">(</span><span class="annot"><a href="Text.Gigaparsec.Internal.Errors.DefuncTypes.html#DefuncError"><span class="hs-identifier hs-type">DefuncError</span></a></span><span> </span><span id="local-6989586621679231752"><span class="annot"><span class="annottext">ErrKindSingleton k
+</span><a href="#local-6989586621679231752"><span class="hs-identifier hs-var">k</span></a></span></span><span> </span><span id="local-6989586621679231753"><span class="annot"><span class="annottext">Word32
+</span><a href="#local-6989586621679231753"><span class="hs-identifier hs-var">flags</span></a></span></span><span> </span><span id="local-6989586621679231754"><span class="annot"><span class="annottext">Word
+</span><a href="#local-6989586621679231754"><span class="hs-identifier hs-var">pOff</span></a></span></span><span> </span><span id="local-6989586621679231755"><span class="annot"><span class="annottext">Word
+</span><a href="#local-6989586621679231755"><span class="hs-identifier hs-var">uOff</span></a></span></span><span> </span><span id="local-6989586621679231756"><span class="annot"><span class="annottext">DefuncError_ k
+</span><a href="#local-6989586621679231756"><span class="hs-identifier hs-var">errTy</span></a></span></span><span class="hs-special">)</span><span>
 </span><span id="line-141"></span><span>  </span><span class="hs-glyph">|</span><span> </span><span class="annot"><span class="annottext">Word32
-</span><a href="#local-6989586621679231548"><span class="hs-identifier hs-var">eBy</span></a></span><span> </span><span class="annot"><span class="annottext">Word32 -&gt; Word32 -&gt; Bool
+</span><a href="#local-6989586621679231757"><span class="hs-identifier hs-var">eBy</span></a></span><span> </span><span class="annot"><span class="annottext">Word32 -&gt; Word32 -&gt; Bool
 forall a. Eq a =&gt; a -&gt; a -&gt; Bool
 </span><span class="hs-operator hs-var">==</span></span><span> </span><span class="annot"><span class="annottext">Word32
 </span><span class="hs-number">0</span></span><span>  </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">DefuncError
-</span><a href="#local-6989586621679231535"><span class="hs-identifier hs-var">err</span></a></span><span>
+</span><a href="#local-6989586621679231744"><span class="hs-identifier hs-var">err</span></a></span><span>
 </span><span id="line-142"></span><span>  </span><span class="hs-glyph">|</span><span> </span><span class="annot"><span class="annottext">Word32
-</span><a href="#local-6989586621679231548"><span class="hs-identifier hs-var">eBy</span></a></span><span> </span><span class="annot"><span class="annottext">Word32 -&gt; Word32 -&gt; Bool
+</span><a href="#local-6989586621679231757"><span class="hs-identifier hs-var">eBy</span></a></span><span> </span><span class="annot"><span class="annottext">Word32 -&gt; Word32 -&gt; Bool
 forall a. Ord a =&gt; a -&gt; a -&gt; Bool
 </span><span class="hs-operator hs-var">&gt;</span></span><span> </span><span class="annot"><span class="annottext">Word32
-</span><a href="#local-6989586621679231534"><span class="hs-identifier hs-var">by</span></a></span><span>  </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">ErrKindSingleton k
+</span><a href="#local-6989586621679231743"><span class="hs-identifier hs-var">by</span></a></span><span>  </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">ErrKindSingleton k
 -&gt; Word32 -&gt; Word -&gt; Word -&gt; DefuncError_ k -&gt; DefuncError
 forall (k :: ErrKind).
 ErrKindSingleton k
 -&gt; Word32 -&gt; Word -&gt; Word -&gt; DefuncError_ k -&gt; DefuncError
 </span><a href="Text.Gigaparsec.Internal.Errors.DefuncTypes.html#DefuncError"><span class="hs-identifier hs-var">DefuncError</span></a></span><span> </span><span class="annot"><span class="annottext">ErrKindSingleton k
-</span><a href="#local-6989586621679231543"><span class="hs-identifier hs-var">k</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Word32
-</span><a href="#local-6989586621679231544"><span class="hs-identifier hs-var">flags</span></a></span><span> </span><span class="annot"><span class="annottext">Word32 -&gt; Word32 -&gt; Word32
+</span><a href="#local-6989586621679231752"><span class="hs-identifier hs-var">k</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Word32
+</span><a href="#local-6989586621679231753"><span class="hs-identifier hs-var">flags</span></a></span><span> </span><span class="annot"><span class="annottext">Word32 -&gt; Word32 -&gt; Word32
 forall a. Num a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-glyph hs-var">-</span></span><span> </span><span class="annot"><span class="annottext">Word32
-</span><a href="#local-6989586621679231534"><span class="hs-identifier hs-var">by</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">Word
-</span><a href="#local-6989586621679231545"><span class="hs-identifier hs-var">pOff</span></a></span><span> </span><span class="annot"><span class="annottext">Word
-</span><a href="#local-6989586621679231546"><span class="hs-identifier hs-var">uOff</span></a></span><span> </span><span class="annot"><span class="annottext">DefuncError_ k
-</span><a href="#local-6989586621679231547"><span class="hs-identifier hs-var">errTy</span></a></span><span>
+</span><a href="#local-6989586621679231743"><span class="hs-identifier hs-var">by</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">Word
+</span><a href="#local-6989586621679231754"><span class="hs-identifier hs-var">pOff</span></a></span><span> </span><span class="annot"><span class="annottext">Word
+</span><a href="#local-6989586621679231755"><span class="hs-identifier hs-var">uOff</span></a></span><span> </span><span class="annot"><span class="annottext">DefuncError_ k
+</span><a href="#local-6989586621679231756"><span class="hs-identifier hs-var">errTy</span></a></span><span>
 </span><span id="line-143"></span><span>  </span><span class="hs-glyph">|</span><span> </span><span class="annot"><span class="annottext">Bool
 </span><span class="hs-identifier hs-var">otherwise</span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">ErrKindSingleton k
 -&gt; Word32 -&gt; Word -&gt; Word -&gt; DefuncError_ k -&gt; DefuncError
@@ -701,34 +701,34 @@ forall (k :: ErrKind).
 ErrKindSingleton k
 -&gt; Word32 -&gt; Word -&gt; Word -&gt; DefuncError_ k -&gt; DefuncError
 </span><a href="Text.Gigaparsec.Internal.Errors.DefuncTypes.html#DefuncError"><span class="hs-identifier hs-var">DefuncError</span></a></span><span> </span><span class="annot"><span class="annottext">ErrKindSingleton k
-</span><a href="#local-6989586621679231543"><span class="hs-identifier hs-var">k</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Word32
-</span><a href="#local-6989586621679231544"><span class="hs-identifier hs-var">flags</span></a></span><span> </span><span class="annot"><span class="annottext">Word32 -&gt; Word32 -&gt; Word32
+</span><a href="#local-6989586621679231752"><span class="hs-identifier hs-var">k</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Word32
+</span><a href="#local-6989586621679231753"><span class="hs-identifier hs-var">flags</span></a></span><span> </span><span class="annot"><span class="annottext">Word32 -&gt; Word32 -&gt; Word32
 forall a. Bits a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">.&amp;.</span></span><span> </span><span class="annot"><span class="annottext">Word32 -&gt; Word32
 forall a. Bits a =&gt; a -&gt; a
 </span><span class="hs-identifier hs-var">complement</span></span><span> </span><span class="annot"><span class="annottext">Word32
 </span><a href="Text.Gigaparsec.Internal.Errors.DefuncError.html#entrenchedMask"><span class="hs-identifier hs-var">entrenchedMask</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">Word
-</span><a href="#local-6989586621679231545"><span class="hs-identifier hs-var">pOff</span></a></span><span> </span><span class="annot"><span class="annottext">Word
-</span><a href="#local-6989586621679231546"><span class="hs-identifier hs-var">uOff</span></a></span><span> </span><span class="annot"><span class="annottext">DefuncError_ k
-</span><a href="#local-6989586621679231547"><span class="hs-identifier hs-var">errTy</span></a></span><span>
-</span><span id="line-144"></span><span>  </span><span class="hs-keyword">where</span><span> </span><span class="hs-glyph">!</span><span id="local-6989586621679231548"><span class="annot"><span class="annottext">eBy :: Word32
-</span><a href="#local-6989586621679231548"><span class="hs-identifier hs-var hs-var">eBy</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">DefuncError -&gt; Word32
+</span><a href="#local-6989586621679231754"><span class="hs-identifier hs-var">pOff</span></a></span><span> </span><span class="annot"><span class="annottext">Word
+</span><a href="#local-6989586621679231755"><span class="hs-identifier hs-var">uOff</span></a></span><span> </span><span class="annot"><span class="annottext">DefuncError_ k
+</span><a href="#local-6989586621679231756"><span class="hs-identifier hs-var">errTy</span></a></span><span>
+</span><span id="line-144"></span><span>  </span><span class="hs-keyword">where</span><span> </span><span class="hs-glyph">!</span><span id="local-6989586621679231757"><span class="annot"><span class="annottext">eBy :: Word32
+</span><a href="#local-6989586621679231757"><span class="hs-identifier hs-var hs-var">eBy</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">DefuncError -&gt; Word32
 </span><a href="Text.Gigaparsec.Internal.Errors.DefuncError.html#entrenchedBy"><span class="hs-identifier hs-var">entrenchedBy</span></a></span><span> </span><span class="annot"><span class="annottext">DefuncError
-</span><a href="#local-6989586621679231535"><span class="hs-identifier hs-var">err</span></a></span><span>
+</span><a href="#local-6989586621679231744"><span class="hs-identifier hs-var">err</span></a></span><span>
 </span><span id="line-145"></span><span>
 </span><span id="line-146"></span><span class="annot"><a href="Text.Gigaparsec.Internal.Errors.DefuncError.html#markAsLexical"><span class="hs-identifier hs-type">markAsLexical</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Word</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.Errors.DefuncTypes.html#DefuncError"><span class="hs-identifier hs-type">DefuncError</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.Errors.DefuncTypes.html#DefuncError"><span class="hs-identifier hs-type">DefuncError</span></a></span><span>
 </span><span id="line-147"></span><span id="markAsLexical"><span class="annot"><span class="annottext">markAsLexical :: Word -&gt; DefuncError -&gt; DefuncError
-</span><a href="Text.Gigaparsec.Internal.Errors.DefuncError.html#markAsLexical"><span class="hs-identifier hs-var hs-var">markAsLexical</span></a></span></span><span> </span><span class="hs-glyph">!</span><span id="local-6989586621679231549"><span class="annot"><span class="annottext">Word
-</span><a href="#local-6989586621679231549"><span class="hs-identifier hs-var">off</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Text.Gigaparsec.Internal.Errors.DefuncTypes.html#DefuncError"><span class="hs-identifier hs-type">DefuncError</span></a></span><span> </span><span class="annot"><span class="annottext">ErrKindSingleton k
-</span><a href="Text.Gigaparsec.Internal.Errors.DefuncTypes.html#IsVanilla"><span class="hs-identifier hs-var">IsVanilla</span></a></span><span> </span><span id="local-6989586621679231553"><span class="annot"><span class="annottext">Word32
-</span><a href="#local-6989586621679231553"><span class="hs-identifier hs-var">flags</span></a></span></span><span> </span><span id="local-6989586621679231554"><span class="annot"><span class="annottext">Word
-</span><a href="#local-6989586621679231554"><span class="hs-identifier hs-var">pOff</span></a></span></span><span> </span><span id="local-6989586621679231555"><span class="annot"><span class="annottext">Word
-</span><a href="#local-6989586621679231555"><span class="hs-identifier hs-var">uOff</span></a></span></span><span> </span><span id="local-6989586621679231556"><span class="annot"><span class="annottext">DefuncError_ k
-</span><a href="#local-6989586621679231556"><span class="hs-identifier hs-var">errTy</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">|</span><span> </span><span class="annot"><span class="annottext">Word
-</span><a href="#local-6989586621679231549"><span class="hs-identifier hs-var">off</span></a></span><span> </span><span class="annot"><span class="annottext">Word -&gt; Word -&gt; Bool
+</span><a href="Text.Gigaparsec.Internal.Errors.DefuncError.html#markAsLexical"><span class="hs-identifier hs-var hs-var">markAsLexical</span></a></span></span><span> </span><span class="hs-glyph">!</span><span id="local-6989586621679231758"><span class="annot"><span class="annottext">Word
+</span><a href="#local-6989586621679231758"><span class="hs-identifier hs-var">off</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Text.Gigaparsec.Internal.Errors.DefuncTypes.html#DefuncError"><span class="hs-identifier hs-type">DefuncError</span></a></span><span> </span><span class="annot"><span class="annottext">ErrKindSingleton k
+</span><a href="Text.Gigaparsec.Internal.Errors.DefuncTypes.html#IsVanilla"><span class="hs-identifier hs-var">IsVanilla</span></a></span><span> </span><span id="local-6989586621679231762"><span class="annot"><span class="annottext">Word32
+</span><a href="#local-6989586621679231762"><span class="hs-identifier hs-var">flags</span></a></span></span><span> </span><span id="local-6989586621679231763"><span class="annot"><span class="annottext">Word
+</span><a href="#local-6989586621679231763"><span class="hs-identifier hs-var">pOff</span></a></span></span><span> </span><span id="local-6989586621679231764"><span class="annot"><span class="annottext">Word
+</span><a href="#local-6989586621679231764"><span class="hs-identifier hs-var">uOff</span></a></span></span><span> </span><span id="local-6989586621679231765"><span class="annot"><span class="annottext">DefuncError_ k
+</span><a href="#local-6989586621679231765"><span class="hs-identifier hs-var">errTy</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">|</span><span> </span><span class="annot"><span class="annottext">Word
+</span><a href="#local-6989586621679231758"><span class="hs-identifier hs-var">off</span></a></span><span> </span><span class="annot"><span class="annottext">Word -&gt; Word -&gt; Bool
 forall a. Ord a =&gt; a -&gt; a -&gt; Bool
 </span><span class="hs-operator hs-var">&lt;</span></span><span> </span><span class="annot"><span class="annottext">Word
-</span><a href="#local-6989586621679231554"><span class="hs-identifier hs-var">pOff</span></a></span><span> </span><span class="hs-glyph">=</span><span>
+</span><a href="#local-6989586621679231763"><span class="hs-identifier hs-var">pOff</span></a></span><span> </span><span class="hs-glyph">=</span><span>
 </span><span id="line-148"></span><span>  </span><span class="annot"><span class="annottext">ErrKindSingleton 'Vanilla
 -&gt; Word32 -&gt; Word -&gt; Word -&gt; DefuncError_ 'Vanilla -&gt; DefuncError
 forall (k :: ErrKind).
@@ -738,16 +738,16 @@ ErrKindSingleton k
 </span><a href="Text.Gigaparsec.Internal.Errors.DefuncTypes.html#IsVanilla"><span class="hs-identifier hs-var">IsVanilla</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Word32 -&gt; Int -&gt; Word32
 forall a. Bits a =&gt; a -&gt; Int -&gt; a
 </span><span class="hs-identifier hs-var">setBit</span></span><span> </span><span class="annot"><span class="annottext">Word32
-</span><a href="#local-6989586621679231553"><span class="hs-identifier hs-var">flags</span></a></span><span> </span><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679231762"><span class="hs-identifier hs-var">flags</span></a></span><span> </span><span class="annot"><span class="annottext">Int
 </span><a href="Text.Gigaparsec.Internal.Errors.DefuncError.html#lexicalBit"><span class="hs-identifier hs-var">lexicalBit</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">Word
-</span><a href="#local-6989586621679231554"><span class="hs-identifier hs-var">pOff</span></a></span><span> </span><span class="annot"><span class="annottext">Word
-</span><a href="#local-6989586621679231555"><span class="hs-identifier hs-var">uOff</span></a></span><span> </span><span class="annot"><span class="annottext">DefuncError_ k
+</span><a href="#local-6989586621679231763"><span class="hs-identifier hs-var">pOff</span></a></span><span> </span><span class="annot"><span class="annottext">Word
+</span><a href="#local-6989586621679231764"><span class="hs-identifier hs-var">uOff</span></a></span><span> </span><span class="annot"><span class="annottext">DefuncError_ k
 DefuncError_ 'Vanilla
-</span><a href="#local-6989586621679231556"><span class="hs-identifier hs-var">errTy</span></a></span><span>
+</span><a href="#local-6989586621679231765"><span class="hs-identifier hs-var">errTy</span></a></span><span>
 </span><span id="line-149"></span><span class="annot"><a href="Text.Gigaparsec.Internal.Errors.DefuncError.html#markAsLexical"><span class="hs-identifier hs-var">markAsLexical</span></a></span><span> </span><span class="annot"><span class="annottext">Word
-</span><span class="hs-identifier">_</span></span><span> </span><span id="local-6989586621679231558"><span class="annot"><span class="annottext">DefuncError
-</span><a href="#local-6989586621679231558"><span class="hs-identifier hs-var">err</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">DefuncError
-</span><a href="#local-6989586621679231558"><span class="hs-identifier hs-var">err</span></a></span><span>
+</span><span class="hs-identifier">_</span></span><span> </span><span id="local-6989586621679231767"><span class="annot"><span class="annottext">DefuncError
+</span><a href="#local-6989586621679231767"><span class="hs-identifier hs-var">err</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">DefuncError
+</span><a href="#local-6989586621679231767"><span class="hs-identifier hs-var">err</span></a></span><span>
 </span><span id="line-150"></span><span>
 </span><span id="line-151"></span><span class="hs-comment">-- FLAG MASKS</span><span>
 </span><span id="line-152"></span><span class="hs-pragma">{-# INLINE</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.Errors.DefuncError.html#vanillaBit"><span class="hs-pragma hs-type">vanillaBit</span></a></span><span> </span><span class="hs-pragma">#-}</span><span>

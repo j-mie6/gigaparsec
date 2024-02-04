@@ -20,7 +20,7 @@
 </span><span id="line-20"></span><span class="hs-keyword">data</span><span> </span><span id="ExpectItem"><span class="annot"><a href="Text.Gigaparsec.Internal.Errors.ErrorItem.html#ExpectItem"><span class="hs-identifier hs-var">ExpectItem</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="ExpectRaw"><span class="annot"><a href="Text.Gigaparsec.Internal.Errors.ErrorItem.html#ExpectRaw"><span class="hs-identifier hs-var">ExpectRaw</span></a></span></span><span> </span><span class="hs-glyph">!</span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span>
 </span><span id="line-21"></span><span>                </span><span class="hs-glyph">|</span><span> </span><span id="ExpectNamed"><span class="annot"><a href="Text.Gigaparsec.Internal.Errors.ErrorItem.html#ExpectNamed"><span class="hs-identifier hs-var">ExpectNamed</span></a></span></span><span> </span><span class="hs-glyph">!</span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span>
 </span><span id="line-22"></span><span>                </span><span class="hs-glyph">|</span><span> </span><span id="ExpectEndOfInput"><span class="annot"><a href="Text.Gigaparsec.Internal.Errors.ErrorItem.html#ExpectEndOfInput"><span class="hs-identifier hs-var">ExpectEndOfInput</span></a></span></span><span>
-</span><span id="line-23"></span><span>                </span><span class="hs-keyword">deriving</span><span> </span><span class="annot"><span class="hs-keyword">stock</span></span><span> </span><span class="hs-special">(</span><span id="local-6989586621679231169"><span id="local-6989586621679231175"><span class="annot"><span class="annottext">ExpectItem -&gt; ExpectItem -&gt; Bool
+</span><span id="line-23"></span><span>                </span><span class="hs-keyword">deriving</span><span> </span><span class="annot"><span class="hs-keyword">stock</span></span><span> </span><span class="hs-special">(</span><span id="local-6989586621679231378"><span id="local-6989586621679231384"><span class="annot"><span class="annottext">ExpectItem -&gt; ExpectItem -&gt; Bool
 (ExpectItem -&gt; ExpectItem -&gt; Bool)
 -&gt; (ExpectItem -&gt; ExpectItem -&gt; Bool) -&gt; Eq ExpectItem
 forall a. (a -&gt; a -&gt; Bool) -&gt; (a -&gt; a -&gt; Bool) -&gt; Eq a
@@ -28,7 +28,7 @@ $c== :: ExpectItem -&gt; ExpectItem -&gt; Bool
 == :: ExpectItem -&gt; ExpectItem -&gt; Bool
 $c/= :: ExpectItem -&gt; ExpectItem -&gt; Bool
 /= :: ExpectItem -&gt; ExpectItem -&gt; Bool
-</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Eq</span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679231183"><span id="local-6989586621679231189"><span id="local-6989586621679231194"><span id="local-6989586621679231198"><span id="local-6989586621679231201"><span id="local-6989586621679231204"><span id="local-6989586621679231207"><span class="annot"><span class="annottext">Eq ExpectItem
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Eq</span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679231392"><span id="local-6989586621679231398"><span id="local-6989586621679231403"><span id="local-6989586621679231407"><span id="local-6989586621679231410"><span id="local-6989586621679231413"><span id="local-6989586621679231416"><span class="annot"><span class="annottext">Eq ExpectItem
 Eq ExpectItem =&gt;
 (ExpectItem -&gt; ExpectItem -&gt; Ordering)
 -&gt; (ExpectItem -&gt; ExpectItem -&gt; Bool)
@@ -65,7 +65,7 @@ $cmax :: ExpectItem -&gt; ExpectItem -&gt; ExpectItem
 max :: ExpectItem -&gt; ExpectItem -&gt; ExpectItem
 $cmin :: ExpectItem -&gt; ExpectItem -&gt; ExpectItem
 min :: ExpectItem -&gt; ExpectItem -&gt; ExpectItem
-</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Ord</span></span></span></span></span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679231212"><span id="local-6989586621679231221"><span id="local-6989586621679231225"><span class="annot"><span class="annottext">Int -&gt; ExpectItem -&gt; ShowS
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Ord</span></span></span></span></span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679231421"><span id="local-6989586621679231430"><span id="local-6989586621679231434"><span class="annot"><span class="annottext">Int -&gt; ExpectItem -&gt; ShowS
 [ExpectItem] -&gt; ShowS
 ExpectItem -&gt; String
 (Int -&gt; ExpectItem -&gt; ShowS)
