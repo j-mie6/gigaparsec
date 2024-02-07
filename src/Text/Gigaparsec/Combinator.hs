@@ -48,7 +48,7 @@ module Text.Gigaparsec.Combinator (
 
   -- * Selective Combinators
   -- | These combinators allow for the conditional extraction of a result, or the execution of a parser
-  -- based on another. They are derived from "branch".
+  -- based on another. They are derived from 'Text.Gigaparsec.branch'.
     ifS, whenS, guardS, whileS,
   ) where
 
