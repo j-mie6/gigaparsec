@@ -1,5 +1,8 @@
 # Revision history for gigaparsec
 
+## 0.2.5.1 -- 2024-02-07
+* Fixed bug where hints can be revived by the `hide` combinator.
+
 ## 0.2.5.0 -- 2024-02-04
 * Supported `Text.Gigaparsec.Errors.TokenExtractors`, which allows for recipes for token extraction
   during error message creation.
