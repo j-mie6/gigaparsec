@@ -66,8 +66,8 @@ of the generated constructor.
 </span><span id="line-66"></span><span>                         </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-special">[</span><span class="annot"><span class="hs-identifier hs-type">Name</span></span><span class="hs-special">]</span><span> </span><span class="annot"><span class="hs-comment">-- ^ The list of &quot;ticked&quot; constructors to generate for</span></span><span>
 </span><span id="line-67"></span><span>                         </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Q</span></span><span> </span><span class="hs-special">[</span><span class="annot"><span class="hs-identifier hs-type">Dec</span></span><span class="hs-special">]</span><span>
 </span><span id="line-68"></span><span id="deriveLiftedConstructors"><span class="annot"><span class="annottext">deriveLiftedConstructors :: String -&gt; [Name] -&gt; Q [Dec]
-</span><a href="Text.Gigaparsec.Patterns.html#deriveLiftedConstructors"><span class="hs-identifier hs-var hs-var">deriveLiftedConstructors</span></a></span></span><span> </span><span id="local-6989586621679239636"><span class="annot"><span class="annottext">String
-</span><a href="#local-6989586621679239636"><span class="hs-identifier hs-var">prefix</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">([[Dec]] -&gt; [Dec]) -&gt; Q [[Dec]] -&gt; Q [Dec]
+</span><a href="Text.Gigaparsec.Patterns.html#deriveLiftedConstructors"><span class="hs-identifier hs-var hs-var">deriveLiftedConstructors</span></a></span></span><span> </span><span id="local-6989586621679239663"><span class="annot"><span class="annottext">String
+</span><a href="#local-6989586621679239663"><span class="hs-identifier hs-var">prefix</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">([[Dec]] -&gt; [Dec]) -&gt; Q [[Dec]] -&gt; Q [Dec]
 forall a b. (a -&gt; b) -&gt; Q a -&gt; Q b
 forall (f :: * -&gt; *) a b. Functor f =&gt; (a -&gt; b) -&gt; f a -&gt; f b
 </span><span class="hs-identifier hs-var">fmap</span></span><span> </span><span class="annot"><span class="annottext">[[Dec]] -&gt; [Dec]
@@ -83,25 +83,25 @@ forall (f :: * -&gt; *) a b.
 Applicative f =&gt;
 (a -&gt; f b) -&gt; [a] -&gt; f [b]
 </span><span class="hs-identifier hs-var">traverse</span></span><span> </span><span class="annot"><span class="annottext">Name -&gt; Q [Dec]
-</span><a href="#local-6989586621679239637"><span class="hs-identifier hs-var">deriveCon</span></a></span><span>
+</span><a href="#local-6989586621679239664"><span class="hs-identifier hs-var">deriveCon</span></a></span><span>
 </span><span id="line-69"></span><span>  </span><span class="hs-keyword">where</span><span>
-</span><span id="line-70"></span><span>    </span><span class="annot"><a href="#local-6989586621679239637"><span class="hs-identifier hs-type">deriveCon</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Name</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Q</span></span><span> </span><span class="hs-special">[</span><span class="annot"><span class="hs-identifier hs-type">Dec</span></span><span class="hs-special">]</span><span>
-</span><span id="line-71"></span><span>    </span><span id="local-6989586621679239637"><span class="annot"><span class="annottext">deriveCon :: Name -&gt; Q [Dec]
-</span><a href="#local-6989586621679239637"><span class="hs-identifier hs-var hs-var">deriveCon</span></a></span></span><span> </span><span id="local-6989586621679239638"><span class="annot"><span class="annottext">Name
-</span><a href="#local-6989586621679239638"><span class="hs-identifier hs-var">con</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
-</span><span id="line-72"></span><span>      </span><span class="hs-special">(</span><span id="local-6989586621679239639"><span class="annot"><span class="annottext">Name
-</span><a href="#local-6989586621679239639"><span class="hs-identifier hs-var">con'</span></a></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679239640"><span class="annot"><span class="annottext">Q Type
-</span><a href="#local-6989586621679239640"><span class="hs-identifier hs-var">ty</span></a></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679239641"><span class="annot"><span class="annottext">Q Exp
-</span><a href="#local-6989586621679239641"><span class="hs-identifier hs-var">func</span></a></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679239642"><span class="annot"><span class="annottext">Bool
-</span><a href="#local-6989586621679239642"><span class="hs-identifier hs-var">posFound</span></a></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679239643"><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679239643"><span class="hs-identifier hs-var">n</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Bool
+</span><span id="line-70"></span><span>    </span><span class="annot"><a href="#local-6989586621679239664"><span class="hs-identifier hs-type">deriveCon</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Name</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Q</span></span><span> </span><span class="hs-special">[</span><span class="annot"><span class="hs-identifier hs-type">Dec</span></span><span class="hs-special">]</span><span>
+</span><span id="line-71"></span><span>    </span><span id="local-6989586621679239664"><span class="annot"><span class="annottext">deriveCon :: Name -&gt; Q [Dec]
+</span><a href="#local-6989586621679239664"><span class="hs-identifier hs-var hs-var">deriveCon</span></a></span></span><span> </span><span id="local-6989586621679239665"><span class="annot"><span class="annottext">Name
+</span><a href="#local-6989586621679239665"><span class="hs-identifier hs-var">con</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-72"></span><span>      </span><span class="hs-special">(</span><span id="local-6989586621679239666"><span class="annot"><span class="annottext">Name
+</span><a href="#local-6989586621679239666"><span class="hs-identifier hs-var">con'</span></a></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679239667"><span class="annot"><span class="annottext">Q Type
+</span><a href="#local-6989586621679239667"><span class="hs-identifier hs-var">ty</span></a></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679239668"><span class="annot"><span class="annottext">Q Exp
+</span><a href="#local-6989586621679239668"><span class="hs-identifier hs-var">func</span></a></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679239669"><span class="annot"><span class="annottext">Bool
+</span><a href="#local-6989586621679239669"><span class="hs-identifier hs-var">posFound</span></a></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679239670"><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679239670"><span class="hs-identifier hs-var">n</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Bool
 -&gt; String
 -&gt; ([Q Type] -&gt; Q Type)
 -&gt; Name
 -&gt; Q (Name, Q Type, Q Exp, Bool, Int)
 </span><a href="Text.Gigaparsec.Patterns.html#extractMeta"><span class="hs-identifier hs-var">extractMeta</span></a></span><span> </span><span class="annot"><span class="annottext">Bool
 </span><span class="hs-identifier hs-var">True</span></span><span> </span><span class="annot"><span class="annottext">String
-</span><a href="#local-6989586621679239636"><span class="hs-identifier hs-var">prefix</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">[Q Type] -&gt; Q Type
+</span><a href="#local-6989586621679239663"><span class="hs-identifier hs-var">prefix</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">[Q Type] -&gt; Q Type
 </span><a href="Text.Gigaparsec.Patterns.html#funcType"><span class="hs-identifier hs-var">funcType</span></a></span><span> </span><span class="annot"><span class="annottext">([Q Type] -&gt; Q Type)
 -&gt; ([Q Type] -&gt; [Q Type]) -&gt; [Q Type] -&gt; Q Type
 forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
@@ -109,12 +109,12 @@ forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
 forall a b. (a -&gt; b) -&gt; [a] -&gt; [b]
 </span><span class="hs-identifier hs-var">map</span></span><span> </span><span class="annot"><span class="annottext">Q Type -&gt; Q Type
 </span><a href="Text.Gigaparsec.Patterns.html#parserOf"><span class="hs-identifier hs-var">parserOf</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">Name
-</span><a href="#local-6989586621679239638"><span class="hs-identifier hs-var">con</span></a></span><span>
-</span><span id="line-73"></span><span>      </span><span id="local-6989586621679239647"><span class="annot"><span class="annottext">[Name]
-</span><a href="#local-6989586621679239647"><span class="hs-identifier hs-var">args</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Int -&gt; Q Name -&gt; Q [Name]
+</span><a href="#local-6989586621679239665"><span class="hs-identifier hs-var">con</span></a></span><span>
+</span><span id="line-73"></span><span>      </span><span id="local-6989586621679239674"><span class="annot"><span class="annottext">[Name]
+</span><a href="#local-6989586621679239674"><span class="hs-identifier hs-var">args</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Int -&gt; Q Name -&gt; Q [Name]
 forall (m :: * -&gt; *) a. Applicative m =&gt; Int -&gt; m a -&gt; m [a]
 </span><span class="hs-identifier hs-var">replicateM</span></span><span> </span><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679239643"><span class="hs-identifier hs-var">n</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">String -&gt; Q Name
+</span><a href="#local-6989586621679239670"><span class="hs-identifier hs-var">n</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">String -&gt; Q Name
 forall (m :: * -&gt; *). Quote m =&gt; String -&gt; m Name
 </span><span class="hs-identifier hs-var">newName</span></span><span> </span><span class="annot"><span class="annottext">String
 </span><span class="hs-string">&quot;x&quot;</span></span><span class="hs-special">)</span><span>
@@ -126,12 +126,12 @@ forall (m :: * -&gt; *) a. Monad m =&gt; [m a] -&gt; m [a]
 </span><span class="hs-identifier hs-var">sequence</span></span><span> </span><span class="hs-special">[</span><span> </span><span class="annot"><span class="annottext">Name -&gt; Q Type -&gt; Q Dec
 forall (m :: * -&gt; *). Quote m =&gt; Name -&gt; m Type -&gt; m Dec
 </span><span class="hs-identifier hs-var">sigD</span></span><span> </span><span class="annot"><span class="annottext">Name
-</span><a href="#local-6989586621679239639"><span class="hs-identifier hs-var">con'</span></a></span><span> </span><span class="annot"><span class="annottext">Q Type
-</span><a href="#local-6989586621679239640"><span class="hs-identifier hs-var">ty</span></a></span><span>
+</span><a href="#local-6989586621679239666"><span class="hs-identifier hs-var">con'</span></a></span><span> </span><span class="annot"><span class="annottext">Q Type
+</span><a href="#local-6989586621679239667"><span class="hs-identifier hs-var">ty</span></a></span><span>
 </span><span id="line-75"></span><span>               </span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">Name -&gt; [Q Clause] -&gt; Q Dec
 forall (m :: * -&gt; *). Quote m =&gt; Name -&gt; [m Clause] -&gt; m Dec
 </span><span class="hs-identifier hs-var">funD</span></span><span> </span><span class="annot"><span class="annottext">Name
-</span><a href="#local-6989586621679239639"><span class="hs-identifier hs-var">con'</span></a></span><span> </span><span class="hs-special">[</span><span class="annot"><span class="annottext">[Q Pat] -&gt; Q Body -&gt; [Q Dec] -&gt; Q Clause
+</span><a href="#local-6989586621679239666"><span class="hs-identifier hs-var">con'</span></a></span><span> </span><span class="hs-special">[</span><span class="annot"><span class="annottext">[Q Pat] -&gt; Q Body -&gt; [Q Dec] -&gt; Q Clause
 forall (m :: * -&gt; *).
 Quote m =&gt;
 [m Pat] -&gt; m Body -&gt; [m Dec] -&gt; m Clause
@@ -140,31 +140,31 @@ forall a b. (a -&gt; b) -&gt; [a] -&gt; [b]
 </span><span class="hs-identifier hs-var">map</span></span><span> </span><span class="annot"><span class="annottext">Name -&gt; Q Pat
 forall (m :: * -&gt; *). Quote m =&gt; Name -&gt; m Pat
 </span><span class="hs-identifier hs-var">varP</span></span><span> </span><span class="annot"><span class="annottext">[Name]
-</span><a href="#local-6989586621679239647"><span class="hs-identifier hs-var">args</span></a></span><span class="hs-special">)</span><span>
+</span><a href="#local-6989586621679239674"><span class="hs-identifier hs-var">args</span></a></span><span class="hs-special">)</span><span>
 </span><span id="line-76"></span><span>                   </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Q Exp -&gt; Q Body
 forall (m :: * -&gt; *). Quote m =&gt; m Exp -&gt; m Body
 </span><span class="hs-identifier hs-var">normalB</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Bool -&gt; Q Exp -&gt; Q Exp
 </span><a href="Text.Gigaparsec.Patterns.html#posAp"><span class="hs-identifier hs-var">posAp</span></a></span><span> </span><span class="annot"><span class="annottext">Bool
-</span><a href="#local-6989586621679239642"><span class="hs-identifier hs-var">posFound</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Q Exp -&gt; [Name] -&gt; Q Exp
-</span><a href="#local-6989586621679239649"><span class="hs-identifier hs-var">applyArgs</span></a></span><span> </span><span class="hs-special">[e|</span><span class="annot"><span class="hs-identifier hs-type">pure</span></span><span> </span><span class="hs-special">$</span><span class="annot"><span class="annottext">Q Exp
-</span><a href="#local-6989586621679239641"><span class="hs-identifier hs-var">func</span></a></span><span class="hs-special">|]</span><span> </span><span class="annot"><span class="annottext">[Name]
-</span><a href="#local-6989586621679239647"><span class="hs-identifier hs-var">args</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">[</span><span class="hs-special">]</span><span class="hs-special">]</span><span>
+</span><a href="#local-6989586621679239669"><span class="hs-identifier hs-var">posFound</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Q Exp -&gt; [Name] -&gt; Q Exp
+</span><a href="#local-6989586621679239676"><span class="hs-identifier hs-var">applyArgs</span></a></span><span> </span><span class="hs-special">[e|</span><span class="annot"><span class="hs-identifier hs-type">pure</span></span><span> </span><span class="hs-special">$</span><span class="annot"><span class="annottext">Q Exp
+</span><a href="#local-6989586621679239668"><span class="hs-identifier hs-var">func</span></a></span><span class="hs-special">|]</span><span> </span><span class="annot"><span class="annottext">[Name]
+</span><a href="#local-6989586621679239674"><span class="hs-identifier hs-var">args</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">[</span><span class="hs-special">]</span><span class="hs-special">]</span><span>
 </span><span id="line-77"></span><span>               </span><span class="hs-special">]</span><span>
 </span><span id="line-78"></span><span>
-</span><span id="line-79"></span><span>    </span><span class="annot"><a href="#local-6989586621679239649"><span class="hs-identifier hs-type">applyArgs</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Q</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Exp</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-special">[</span><span class="annot"><span class="hs-identifier hs-type">Name</span></span><span class="hs-special">]</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Q</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Exp</span></span><span>
-</span><span id="line-80"></span><span>    </span><span id="local-6989586621679239649"><span class="annot"><span class="annottext">applyArgs :: Q Exp -&gt; [Name] -&gt; Q Exp
-</span><a href="#local-6989586621679239649"><span class="hs-identifier hs-var hs-var">applyArgs</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">(Q Exp -&gt; Name -&gt; Q Exp) -&gt; Q Exp -&gt; [Name] -&gt; Q Exp
+</span><span id="line-79"></span><span>    </span><span class="annot"><a href="#local-6989586621679239676"><span class="hs-identifier hs-type">applyArgs</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Q</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Exp</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-special">[</span><span class="annot"><span class="hs-identifier hs-type">Name</span></span><span class="hs-special">]</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Q</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Exp</span></span><span>
+</span><span id="line-80"></span><span>    </span><span id="local-6989586621679239676"><span class="annot"><span class="annottext">applyArgs :: Q Exp -&gt; [Name] -&gt; Q Exp
+</span><a href="#local-6989586621679239676"><span class="hs-identifier hs-var hs-var">applyArgs</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">(Q Exp -&gt; Name -&gt; Q Exp) -&gt; Q Exp -&gt; [Name] -&gt; Q Exp
 forall b a. (b -&gt; a -&gt; b) -&gt; b -&gt; [a] -&gt; b
 forall (t :: * -&gt; *) b a.
 Foldable t =&gt;
 (b -&gt; a -&gt; b) -&gt; b -&gt; t a -&gt; b
-</span><span class="hs-identifier hs-var">foldl'</span></span><span> </span><span class="hs-special">(</span><span class="hs-glyph">\</span><span id="local-6989586621679239650"><span class="annot"><span class="annottext">Q Exp
-</span><a href="#local-6989586621679239650"><span class="hs-identifier hs-var">rest</span></a></span></span><span> </span><span id="local-6989586621679239651"><span class="annot"><span class="annottext">Name
-</span><a href="#local-6989586621679239651"><span class="hs-identifier hs-var">arg</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-special">[e|</span><span class="hs-special">$</span><span class="annot"><span class="annottext">Q Exp
-</span><a href="#local-6989586621679239650"><span class="hs-identifier hs-var">rest</span></a></span><span> </span><span class="annot"><span class="hs-operator hs-type">&lt;*&gt;</span></span><span> </span><span class="hs-special">$</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Name -&gt; Q Exp
+</span><span class="hs-identifier hs-var">foldl'</span></span><span> </span><span class="hs-special">(</span><span class="hs-glyph">\</span><span id="local-6989586621679239677"><span class="annot"><span class="annottext">Q Exp
+</span><a href="#local-6989586621679239677"><span class="hs-identifier hs-var">rest</span></a></span></span><span> </span><span id="local-6989586621679239678"><span class="annot"><span class="annottext">Name
+</span><a href="#local-6989586621679239678"><span class="hs-identifier hs-var">arg</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-special">[e|</span><span class="hs-special">$</span><span class="annot"><span class="annottext">Q Exp
+</span><a href="#local-6989586621679239677"><span class="hs-identifier hs-var">rest</span></a></span><span> </span><span class="annot"><span class="hs-operator hs-type">&lt;*&gt;</span></span><span> </span><span class="hs-special">$</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Name -&gt; Q Exp
 forall (m :: * -&gt; *). Quote m =&gt; Name -&gt; m Exp
 </span><span class="hs-identifier hs-var">varE</span></span><span> </span><span class="annot"><span class="annottext">Name
-</span><a href="#local-6989586621679239651"><span class="hs-identifier hs-var">arg</span></a></span><span class="hs-special">)</span><span class="hs-special">|]</span><span class="hs-special">)</span><span>
+</span><a href="#local-6989586621679239678"><span class="hs-identifier hs-var">arg</span></a></span><span class="hs-special">)</span><span class="hs-special">|]</span><span class="hs-special">)</span><span>
 </span><span id="line-81"></span><span>
 </span><span id="line-82"></span><span>
 </span><span id="line-83"></span><span class="annot"><span class="hs-comment">{-|
@@ -193,8 +193,8 @@ of the generated constructor.
 </span><span id="line-106"></span><span>                           </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-special">[</span><span class="annot"><span class="hs-identifier hs-type">Name</span></span><span class="hs-special">]</span><span> </span><span class="annot"><span class="hs-comment">-- ^ The list of &quot;ticked&quot; constructors to generate for</span></span><span>
 </span><span id="line-107"></span><span>                           </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Q</span></span><span> </span><span class="hs-special">[</span><span class="annot"><span class="hs-identifier hs-type">Dec</span></span><span class="hs-special">]</span><span>
 </span><span id="line-108"></span><span id="deriveDeferredConstructors"><span class="annot"><span class="annottext">deriveDeferredConstructors :: String -&gt; [Name] -&gt; Q [Dec]
-</span><a href="Text.Gigaparsec.Patterns.html#deriveDeferredConstructors"><span class="hs-identifier hs-var hs-var">deriveDeferredConstructors</span></a></span></span><span> </span><span id="local-6989586621679239652"><span class="annot"><span class="annottext">String
-</span><a href="#local-6989586621679239652"><span class="hs-identifier hs-var">prefix</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">([[Dec]] -&gt; [Dec]) -&gt; Q [[Dec]] -&gt; Q [Dec]
+</span><a href="Text.Gigaparsec.Patterns.html#deriveDeferredConstructors"><span class="hs-identifier hs-var hs-var">deriveDeferredConstructors</span></a></span></span><span> </span><span id="local-6989586621679239679"><span class="annot"><span class="annottext">String
+</span><a href="#local-6989586621679239679"><span class="hs-identifier hs-var">prefix</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">([[Dec]] -&gt; [Dec]) -&gt; Q [[Dec]] -&gt; Q [Dec]
 forall a b. (a -&gt; b) -&gt; Q a -&gt; Q b
 forall (f :: * -&gt; *) a b. Functor f =&gt; (a -&gt; b) -&gt; f a -&gt; f b
 </span><span class="hs-identifier hs-var">fmap</span></span><span> </span><span class="annot"><span class="annottext">[[Dec]] -&gt; [Dec]
@@ -210,17 +210,17 @@ forall (f :: * -&gt; *) a b.
 Applicative f =&gt;
 (a -&gt; f b) -&gt; [a] -&gt; f [b]
 </span><span class="hs-identifier hs-var">traverse</span></span><span> </span><span class="annot"><span class="annottext">Name -&gt; Q [Dec]
-</span><a href="#local-6989586621679239653"><span class="hs-identifier hs-var">deriveCon</span></a></span><span>
+</span><a href="#local-6989586621679239680"><span class="hs-identifier hs-var">deriveCon</span></a></span><span>
 </span><span id="line-109"></span><span>  </span><span class="hs-keyword">where</span><span>
-</span><span id="line-110"></span><span>    </span><span class="annot"><a href="#local-6989586621679239653"><span class="hs-identifier hs-type">deriveCon</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Name</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Q</span></span><span> </span><span class="hs-special">[</span><span class="annot"><span class="hs-identifier hs-type">Dec</span></span><span class="hs-special">]</span><span>
-</span><span id="line-111"></span><span>    </span><span id="local-6989586621679239653"><span class="annot"><span class="annottext">deriveCon :: Name -&gt; Q [Dec]
-</span><a href="#local-6989586621679239653"><span class="hs-identifier hs-var hs-var">deriveCon</span></a></span></span><span> </span><span id="local-6989586621679239654"><span class="annot"><span class="annottext">Name
-</span><a href="#local-6989586621679239654"><span class="hs-identifier hs-var">con</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
-</span><span id="line-112"></span><span>      </span><span class="hs-special">(</span><span id="local-6989586621679239655"><span class="annot"><span class="annottext">Name
-</span><a href="#local-6989586621679239655"><span class="hs-identifier hs-var">con'</span></a></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679239656"><span class="annot"><span class="annottext">Q Type
-</span><a href="#local-6989586621679239656"><span class="hs-identifier hs-var">ty</span></a></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679239657"><span class="annot"><span class="annottext">Q Exp
-</span><a href="#local-6989586621679239657"><span class="hs-identifier hs-var">func</span></a></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679239658"><span class="annot"><span class="annottext">Bool
-</span><a href="#local-6989586621679239658"><span class="hs-identifier hs-var">posFound</span></a></span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">Int
+</span><span id="line-110"></span><span>    </span><span class="annot"><a href="#local-6989586621679239680"><span class="hs-identifier hs-type">deriveCon</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Name</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Q</span></span><span> </span><span class="hs-special">[</span><span class="annot"><span class="hs-identifier hs-type">Dec</span></span><span class="hs-special">]</span><span>
+</span><span id="line-111"></span><span>    </span><span id="local-6989586621679239680"><span class="annot"><span class="annottext">deriveCon :: Name -&gt; Q [Dec]
+</span><a href="#local-6989586621679239680"><span class="hs-identifier hs-var hs-var">deriveCon</span></a></span></span><span> </span><span id="local-6989586621679239681"><span class="annot"><span class="annottext">Name
+</span><a href="#local-6989586621679239681"><span class="hs-identifier hs-var">con</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-112"></span><span>      </span><span class="hs-special">(</span><span id="local-6989586621679239682"><span class="annot"><span class="annottext">Name
+</span><a href="#local-6989586621679239682"><span class="hs-identifier hs-var">con'</span></a></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679239683"><span class="annot"><span class="annottext">Q Type
+</span><a href="#local-6989586621679239683"><span class="hs-identifier hs-var">ty</span></a></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679239684"><span class="annot"><span class="annottext">Q Exp
+</span><a href="#local-6989586621679239684"><span class="hs-identifier hs-var">func</span></a></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679239685"><span class="annot"><span class="annottext">Bool
+</span><a href="#local-6989586621679239685"><span class="hs-identifier hs-var">posFound</span></a></span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">Int
 </span><span class="hs-identifier">_</span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Bool
 -&gt; String
 -&gt; ([Q Type] -&gt; Q Type)
@@ -228,12 +228,12 @@ Applicative f =&gt;
 -&gt; Q (Name, Q Type, Q Exp, Bool, Int)
 </span><a href="Text.Gigaparsec.Patterns.html#extractMeta"><span class="hs-identifier hs-var">extractMeta</span></a></span><span> </span><span class="annot"><span class="annottext">Bool
 </span><span class="hs-identifier hs-var">False</span></span><span> </span><span class="annot"><span class="annottext">String
-</span><a href="#local-6989586621679239652"><span class="hs-identifier hs-var">prefix</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Q Type -&gt; Q Type
+</span><a href="#local-6989586621679239679"><span class="hs-identifier hs-var">prefix</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Q Type -&gt; Q Type
 </span><a href="Text.Gigaparsec.Patterns.html#parserOf"><span class="hs-identifier hs-var">parserOf</span></a></span><span> </span><span class="annot"><span class="annottext">(Q Type -&gt; Q Type) -&gt; ([Q Type] -&gt; Q Type) -&gt; [Q Type] -&gt; Q Type
 forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
 </span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">[Q Type] -&gt; Q Type
 </span><a href="Text.Gigaparsec.Patterns.html#funcType"><span class="hs-identifier hs-var">funcType</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">Name
-</span><a href="#local-6989586621679239654"><span class="hs-identifier hs-var">con</span></a></span><span>
+</span><a href="#local-6989586621679239681"><span class="hs-identifier hs-var">con</span></a></span><span>
 </span><span id="line-113"></span><span>      </span><span class="annot"><span class="annottext">[Q Dec] -&gt; Q [Dec]
 forall (t :: * -&gt; *) (m :: * -&gt; *) a.
 (Traversable t, Monad m) =&gt;
@@ -242,12 +242,12 @@ forall (m :: * -&gt; *) a. Monad m =&gt; [m a] -&gt; m [a]
 </span><span class="hs-identifier hs-var">sequence</span></span><span> </span><span class="hs-special">[</span><span> </span><span class="annot"><span class="annottext">Name -&gt; Q Type -&gt; Q Dec
 forall (m :: * -&gt; *). Quote m =&gt; Name -&gt; m Type -&gt; m Dec
 </span><span class="hs-identifier hs-var">sigD</span></span><span> </span><span class="annot"><span class="annottext">Name
-</span><a href="#local-6989586621679239655"><span class="hs-identifier hs-var">con'</span></a></span><span> </span><span class="annot"><span class="annottext">Q Type
-</span><a href="#local-6989586621679239656"><span class="hs-identifier hs-var">ty</span></a></span><span>
+</span><a href="#local-6989586621679239682"><span class="hs-identifier hs-var">con'</span></a></span><span> </span><span class="annot"><span class="annottext">Q Type
+</span><a href="#local-6989586621679239683"><span class="hs-identifier hs-var">ty</span></a></span><span>
 </span><span id="line-114"></span><span>               </span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">Name -&gt; [Q Clause] -&gt; Q Dec
 forall (m :: * -&gt; *). Quote m =&gt; Name -&gt; [m Clause] -&gt; m Dec
 </span><span class="hs-identifier hs-var">funD</span></span><span> </span><span class="annot"><span class="annottext">Name
-</span><a href="#local-6989586621679239655"><span class="hs-identifier hs-var">con'</span></a></span><span> </span><span class="hs-special">[</span><span class="annot"><span class="annottext">[Q Pat] -&gt; Q Body -&gt; [Q Dec] -&gt; Q Clause
+</span><a href="#local-6989586621679239682"><span class="hs-identifier hs-var">con'</span></a></span><span> </span><span class="hs-special">[</span><span class="annot"><span class="annottext">[Q Pat] -&gt; Q Body -&gt; [Q Dec] -&gt; Q Clause
 forall (m :: * -&gt; *).
 Quote m =&gt;
 [m Pat] -&gt; m Body -&gt; [m Dec] -&gt; m Clause
@@ -255,37 +255,37 @@ Quote m =&gt;
 forall (m :: * -&gt; *). Quote m =&gt; m Exp -&gt; m Body
 </span><span class="hs-identifier hs-var">normalB</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Bool -&gt; Q Exp -&gt; Q Exp
 </span><a href="Text.Gigaparsec.Patterns.html#posAp"><span class="hs-identifier hs-var">posAp</span></a></span><span> </span><span class="annot"><span class="annottext">Bool
-</span><a href="#local-6989586621679239658"><span class="hs-identifier hs-var">posFound</span></a></span><span> </span><span class="hs-special">[e|</span><span class="annot"><span class="hs-identifier hs-type">pure</span></span><span> </span><span class="hs-special">$</span><span class="annot"><span class="annottext">Q Exp
-</span><a href="#local-6989586621679239657"><span class="hs-identifier hs-var">func</span></a></span><span class="hs-special">|]</span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">[</span><span class="hs-special">]</span><span class="hs-special">]</span><span>
+</span><a href="#local-6989586621679239685"><span class="hs-identifier hs-var">posFound</span></a></span><span> </span><span class="hs-special">[e|</span><span class="annot"><span class="hs-identifier hs-type">pure</span></span><span> </span><span class="hs-special">$</span><span class="annot"><span class="annottext">Q Exp
+</span><a href="#local-6989586621679239684"><span class="hs-identifier hs-var">func</span></a></span><span class="hs-special">|]</span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">[</span><span class="hs-special">]</span><span class="hs-special">]</span><span>
 </span><span id="line-115"></span><span>               </span><span class="hs-special">]</span><span>
 </span><span id="line-116"></span><span>
 </span><span id="line-117"></span><span class="annot"><a href="Text.Gigaparsec.Patterns.html#posAp"><span class="hs-identifier hs-type">posAp</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Bool</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Q</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Exp</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Q</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Exp</span></span><span>
 </span><span id="line-118"></span><span id="posAp"><span class="annot"><span class="annottext">posAp :: Bool -&gt; Q Exp -&gt; Q Exp
 </span><a href="Text.Gigaparsec.Patterns.html#posAp"><span class="hs-identifier hs-var hs-var">posAp</span></a></span></span><span> </span><span class="annot"><span class="annottext">Bool
-</span><span class="hs-identifier hs-var">True</span></span><span>  </span><span id="local-6989586621679239659"><span class="annot"><span class="annottext">Q Exp
-</span><a href="#local-6989586621679239659"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-special">[e|</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Position.html#pos"><span class="hs-identifier hs-type">pos</span></a></span><span> </span><span class="annot"><span class="hs-operator hs-type">&lt;**&gt;</span></span><span> </span><span class="hs-special">$</span><span class="annot"><span class="annottext">Q Exp
-</span><a href="#local-6989586621679239659"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="hs-special">|]</span><span>
+</span><span class="hs-identifier hs-var">True</span></span><span>  </span><span id="local-6989586621679239686"><span class="annot"><span class="annottext">Q Exp
+</span><a href="#local-6989586621679239686"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-special">[e|</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Position.html#pos"><span class="hs-identifier hs-type">pos</span></a></span><span> </span><span class="annot"><span class="hs-operator hs-type">&lt;**&gt;</span></span><span> </span><span class="hs-special">$</span><span class="annot"><span class="annottext">Q Exp
+</span><a href="#local-6989586621679239686"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="hs-special">|]</span><span>
 </span><span id="line-119"></span><span class="annot"><a href="Text.Gigaparsec.Patterns.html#posAp"><span class="hs-identifier hs-var">posAp</span></a></span><span> </span><span class="annot"><span class="annottext">Bool
-</span><span class="hs-identifier hs-var">False</span></span><span> </span><span id="local-6989586621679239660"><span class="annot"><span class="annottext">Q Exp
-</span><a href="#local-6989586621679239660"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Q Exp
-</span><a href="#local-6989586621679239660"><span class="hs-identifier hs-var">p</span></a></span><span>
+</span><span class="hs-identifier hs-var">False</span></span><span> </span><span id="local-6989586621679239687"><span class="annot"><span class="annottext">Q Exp
+</span><a href="#local-6989586621679239687"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Q Exp
+</span><a href="#local-6989586621679239687"><span class="hs-identifier hs-var">p</span></a></span><span>
 </span><span id="line-120"></span><span>
 </span><span id="line-121"></span><span class="annot"><a href="Text.Gigaparsec.Patterns.html#funcType"><span class="hs-identifier hs-type">funcType</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-special">[</span><span class="annot"><span class="hs-identifier hs-type">Q</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Type</span></span><span class="hs-special">]</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Q</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Type</span></span><span>
 </span><span id="line-122"></span><span id="funcType"><span class="annot"><span class="annottext">funcType :: [Q Type] -&gt; Q Type
 </span><a href="Text.Gigaparsec.Patterns.html#funcType"><span class="hs-identifier hs-var hs-var">funcType</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">(Q Type -&gt; Q Type -&gt; Q Type) -&gt; [Q Type] -&gt; Q Type
 forall a. (a -&gt; a -&gt; a) -&gt; [a] -&gt; a
 forall (t :: * -&gt; *) a. Foldable t =&gt; (a -&gt; a -&gt; a) -&gt; t a -&gt; a
-</span><span class="hs-identifier hs-var">foldr1</span></span><span> </span><span class="hs-special">(</span><span class="hs-glyph">\</span><span id="local-6989586621679239661"><span class="annot"><span class="annottext">Q Type
-</span><a href="#local-6989586621679239661"><span class="hs-identifier hs-var">ty</span></a></span></span><span> </span><span id="local-6989586621679239662"><span class="annot"><span class="annottext">Q Type
-</span><a href="#local-6989586621679239662"><span class="hs-identifier hs-var">rest</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-special">[t|</span><span> </span><span class="hs-special">$</span><span class="annot"><span class="annottext">Q Type
-</span><a href="#local-6989586621679239661"><span class="hs-identifier hs-var">ty</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-special">$</span><span class="annot"><span class="annottext">Q Type
-</span><a href="#local-6989586621679239662"><span class="hs-identifier hs-var">rest</span></a></span><span> </span><span class="hs-special">|]</span><span class="hs-special">)</span><span>
+</span><span class="hs-identifier hs-var">foldr1</span></span><span> </span><span class="hs-special">(</span><span class="hs-glyph">\</span><span id="local-6989586621679239688"><span class="annot"><span class="annottext">Q Type
+</span><a href="#local-6989586621679239688"><span class="hs-identifier hs-var">ty</span></a></span></span><span> </span><span id="local-6989586621679239689"><span class="annot"><span class="annottext">Q Type
+</span><a href="#local-6989586621679239689"><span class="hs-identifier hs-var">rest</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-special">[t|</span><span> </span><span class="hs-special">$</span><span class="annot"><span class="annottext">Q Type
+</span><a href="#local-6989586621679239688"><span class="hs-identifier hs-var">ty</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-special">$</span><span class="annot"><span class="annottext">Q Type
+</span><a href="#local-6989586621679239689"><span class="hs-identifier hs-var">rest</span></a></span><span> </span><span class="hs-special">|]</span><span class="hs-special">)</span><span>
 </span><span id="line-123"></span><span>
 </span><span id="line-124"></span><span class="annot"><a href="Text.Gigaparsec.Patterns.html#parserOf"><span class="hs-identifier hs-type">parserOf</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Q</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Type</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Q</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Type</span></span><span>
 </span><span id="line-125"></span><span id="parserOf"><span class="annot"><span class="annottext">parserOf :: Q Type -&gt; Q Type
-</span><a href="Text.Gigaparsec.Patterns.html#parserOf"><span class="hs-identifier hs-var hs-var">parserOf</span></a></span></span><span> </span><span id="local-6989586621679239663"><span class="annot"><span class="annottext">Q Type
-</span><a href="#local-6989586621679239663"><span class="hs-identifier hs-var">ty</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-special">[t|</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="hs-special">$</span><span class="annot"><span class="annottext">Q Type
-</span><a href="#local-6989586621679239663"><span class="hs-identifier hs-var">ty</span></a></span><span> </span><span class="hs-special">|]</span><span>
+</span><a href="Text.Gigaparsec.Patterns.html#parserOf"><span class="hs-identifier hs-var hs-var">parserOf</span></a></span></span><span> </span><span id="local-6989586621679239690"><span class="annot"><span class="annottext">Q Type
+</span><a href="#local-6989586621679239690"><span class="hs-identifier hs-var">ty</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-special">[t|</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="hs-special">$</span><span class="annot"><span class="annottext">Q Type
+</span><a href="#local-6989586621679239690"><span class="hs-identifier hs-var">ty</span></a></span><span> </span><span class="hs-special">|]</span><span>
 </span><span id="line-126"></span><span>
 </span><span id="line-127"></span><span class="annot"><a href="Text.Gigaparsec.Patterns.html#extractMeta"><span class="hs-identifier hs-type">extractMeta</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Bool</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-special">(</span><span class="hs-special">[</span><span class="annot"><span class="hs-identifier hs-type">Q</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Type</span></span><span class="hs-special">]</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Q</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Type</span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Name</span></span><span>
 </span><span id="line-128"></span><span>          </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Q</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Name</span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Q</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Type</span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Q</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Exp</span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Bool</span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Int</span></span><span class="hs-special">)</span><span>
@@ -294,99 +294,99 @@ forall (t :: * -&gt; *) a. Foldable t =&gt; (a -&gt; a -&gt; a) -&gt; t a -&gt; 
 -&gt; ([Q Type] -&gt; Q Type)
 -&gt; Name
 -&gt; Q (Name, Q Type, Q Exp, Bool, Int)
-</span><a href="Text.Gigaparsec.Patterns.html#extractMeta"><span class="hs-identifier hs-var hs-var">extractMeta</span></a></span></span><span> </span><span id="local-6989586621679239664"><span class="annot"><span class="annottext">Bool
-</span><a href="#local-6989586621679239664"><span class="hs-identifier hs-var">posLast</span></a></span></span><span> </span><span id="local-6989586621679239665"><span class="annot"><span class="annottext">String
-</span><a href="#local-6989586621679239665"><span class="hs-identifier hs-var">prefix</span></a></span></span><span> </span><span id="local-6989586621679239666"><span class="annot"><span class="annottext">[Q Type] -&gt; Q Type
-</span><a href="#local-6989586621679239666"><span class="hs-identifier hs-var">buildType</span></a></span></span><span> </span><span id="local-6989586621679239667"><span class="annot"><span class="annottext">Name
-</span><a href="#local-6989586621679239667"><span class="hs-identifier hs-var">con</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><a href="Text.Gigaparsec.Patterns.html#extractMeta"><span class="hs-identifier hs-var hs-var">extractMeta</span></a></span></span><span> </span><span id="local-6989586621679239691"><span class="annot"><span class="annottext">Bool
+</span><a href="#local-6989586621679239691"><span class="hs-identifier hs-var">posLast</span></a></span></span><span> </span><span id="local-6989586621679239692"><span class="annot"><span class="annottext">String
+</span><a href="#local-6989586621679239692"><span class="hs-identifier hs-var">prefix</span></a></span></span><span> </span><span id="local-6989586621679239693"><span class="annot"><span class="annottext">[Q Type] -&gt; Q Type
+</span><a href="#local-6989586621679239693"><span class="hs-identifier hs-var">buildType</span></a></span></span><span> </span><span id="local-6989586621679239694"><span class="annot"><span class="annottext">Name
+</span><a href="#local-6989586621679239694"><span class="hs-identifier hs-var">con</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
 </span><span id="line-130"></span><span>  </span><span class="annot"><span class="hs-identifier hs-type">DataConI</span></span><span> </span><span class="annot"><span class="annottext">Name
-</span><span class="hs-identifier">_</span></span><span> </span><span id="local-6989586621679239668"><span class="annot"><span class="annottext">Type
-</span><a href="#local-6989586621679239668"><span class="hs-identifier hs-var">ty</span></a></span></span><span> </span><span class="annot"><span class="annottext">Name
+</span><span class="hs-identifier">_</span></span><span> </span><span id="local-6989586621679239695"><span class="annot"><span class="annottext">Type
+</span><a href="#local-6989586621679239695"><span class="hs-identifier hs-var">ty</span></a></span></span><span> </span><span class="annot"><span class="annottext">Name
 </span><span class="hs-identifier">_</span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Name -&gt; Q Info
 </span><span class="hs-identifier hs-var">reify</span></span><span> </span><span class="annot"><span class="annottext">Name
-</span><a href="#local-6989586621679239667"><span class="hs-identifier hs-var">con</span></a></span><span>
-</span><span id="line-131"></span><span>  </span><span class="hs-special">(</span><span id="local-6989586621679239669"><span class="annot"><span class="annottext">Q Type -&gt; Q Type
-</span><a href="#local-6989586621679239669"><span class="hs-identifier hs-var">forAll</span></a></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679239670"><span class="annot"><span class="annottext">[Type]
-</span><a href="#local-6989586621679239670"><span class="hs-identifier hs-var">tys</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Type -&gt; Q (Q Type -&gt; Q Type, [Type])
+</span><a href="#local-6989586621679239694"><span class="hs-identifier hs-var">con</span></a></span><span>
+</span><span id="line-131"></span><span>  </span><span class="hs-special">(</span><span id="local-6989586621679239696"><span class="annot"><span class="annottext">Q Type -&gt; Q Type
+</span><a href="#local-6989586621679239696"><span class="hs-identifier hs-var">forAll</span></a></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679239697"><span class="annot"><span class="annottext">[Type]
+</span><a href="#local-6989586621679239697"><span class="hs-identifier hs-var">tys</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Type -&gt; Q (Q Type -&gt; Q Type, [Type])
 </span><a href="Text.Gigaparsec.Patterns.html#splitFun"><span class="hs-identifier hs-var">splitFun</span></a></span><span> </span><span class="annot"><span class="annottext">Type
-</span><a href="#local-6989586621679239668"><span class="hs-identifier hs-var">ty</span></a></span><span>
-</span><span id="line-132"></span><span>  </span><span id="local-6989586621679239672"><span class="annot"><span class="annottext">Maybe Int
-</span><a href="#local-6989586621679239672"><span class="hs-identifier hs-var">posIdx</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Name -&gt; [Type] -&gt; Q (Maybe Int)
+</span><a href="#local-6989586621679239695"><span class="hs-identifier hs-var">ty</span></a></span><span>
+</span><span id="line-132"></span><span>  </span><span id="local-6989586621679239699"><span class="annot"><span class="annottext">Maybe Int
+</span><a href="#local-6989586621679239699"><span class="hs-identifier hs-var">posIdx</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Name -&gt; [Type] -&gt; Q (Maybe Int)
 </span><a href="Text.Gigaparsec.Patterns.html#findPosIdx"><span class="hs-identifier hs-var">findPosIdx</span></a></span><span> </span><span class="annot"><span class="annottext">Name
-</span><a href="#local-6989586621679239667"><span class="hs-identifier hs-var">con</span></a></span><span> </span><span class="annot"><span class="annottext">[Type]
-</span><a href="#local-6989586621679239670"><span class="hs-identifier hs-var">tys</span></a></span><span>
-</span><span id="line-133"></span><span>  </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621679239674"><span class="annot"><span class="annottext">tys' :: [Type]
-</span><a href="#local-6989586621679239674"><span class="hs-identifier hs-var hs-var">tys'</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">(Int -&gt; [Type] -&gt; [Type]) -&gt; Maybe Int -&gt; [Type] -&gt; [Type]
+</span><a href="#local-6989586621679239694"><span class="hs-identifier hs-var">con</span></a></span><span> </span><span class="annot"><span class="annottext">[Type]
+</span><a href="#local-6989586621679239697"><span class="hs-identifier hs-var">tys</span></a></span><span>
+</span><span id="line-133"></span><span>  </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621679239701"><span class="annot"><span class="annottext">tys' :: [Type]
+</span><a href="#local-6989586621679239701"><span class="hs-identifier hs-var hs-var">tys'</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">(Int -&gt; [Type] -&gt; [Type]) -&gt; Maybe Int -&gt; [Type] -&gt; [Type]
 forall a b. (a -&gt; b -&gt; b) -&gt; Maybe a -&gt; b -&gt; b
 </span><a href="Text.Gigaparsec.Patterns.html#maybeApply"><span class="hs-identifier hs-var">maybeApply</span></a></span><span> </span><span class="annot"><span class="annottext">Int -&gt; [Type] -&gt; [Type]
 forall a. Int -&gt; [a] -&gt; [a]
 </span><a href="Text.Gigaparsec.Patterns.html#deleteAt"><span class="hs-identifier hs-var">deleteAt</span></a></span><span> </span><span class="annot"><span class="annottext">Maybe Int
-</span><a href="#local-6989586621679239672"><span class="hs-identifier hs-var">posIdx</span></a></span><span> </span><span class="annot"><span class="annottext">[Type]
-</span><a href="#local-6989586621679239670"><span class="hs-identifier hs-var">tys</span></a></span><span>
-</span><span id="line-134"></span><span>  </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621679239681"><span class="annot"><span class="annottext">nargs :: Int
-</span><a href="#local-6989586621679239681"><span class="hs-identifier hs-var hs-var">nargs</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">[Type] -&gt; Int
+</span><a href="#local-6989586621679239699"><span class="hs-identifier hs-var">posIdx</span></a></span><span> </span><span class="annot"><span class="annottext">[Type]
+</span><a href="#local-6989586621679239697"><span class="hs-identifier hs-var">tys</span></a></span><span>
+</span><span id="line-134"></span><span>  </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621679239708"><span class="annot"><span class="annottext">nargs :: Int
+</span><a href="#local-6989586621679239708"><span class="hs-identifier hs-var hs-var">nargs</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">[Type] -&gt; Int
 forall a. [a] -&gt; Int
 forall (t :: * -&gt; *) a. Foldable t =&gt; t a -&gt; Int
 </span><span class="hs-identifier hs-var">length</span></span><span> </span><span class="annot"><span class="annottext">[Type]
-</span><a href="#local-6989586621679239674"><span class="hs-identifier hs-var">tys'</span></a></span><span> </span><span class="annot"><span class="annottext">Int -&gt; Int -&gt; Int
+</span><a href="#local-6989586621679239701"><span class="hs-identifier hs-var">tys'</span></a></span><span> </span><span class="annot"><span class="annottext">Int -&gt; Int -&gt; Int
 forall a. Num a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-glyph hs-var">-</span></span><span> </span><span class="annot"><span class="annottext">Int
 </span><span class="hs-number">1</span></span><span>
-</span><span id="line-135"></span><span>  </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621679239682"><span class="annot"><span class="annottext">con' :: Name
-</span><a href="#local-6989586621679239682"><span class="hs-identifier hs-var hs-var">con'</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">String -&gt; Name
+</span><span id="line-135"></span><span>  </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621679239709"><span class="annot"><span class="annottext">con' :: Name
+</span><a href="#local-6989586621679239709"><span class="hs-identifier hs-var hs-var">con'</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">String -&gt; Name
 </span><span class="hs-identifier hs-var">mkName</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">String
-</span><a href="#local-6989586621679239665"><span class="hs-identifier hs-var">prefix</span></a></span><span> </span><span class="annot"><span class="annottext">String -&gt; String -&gt; String
+</span><a href="#local-6989586621679239692"><span class="hs-identifier hs-var">prefix</span></a></span><span> </span><span class="annot"><span class="annottext">String -&gt; String -&gt; String
 forall a. [a] -&gt; [a] -&gt; [a]
 </span><span class="hs-operator hs-var">++</span></span><span> </span><span class="annot"><span class="annottext">Name -&gt; String
 </span><a href="Text.Gigaparsec.Patterns.html#pretty"><span class="hs-identifier hs-var">pretty</span></a></span><span> </span><span class="annot"><span class="annottext">Name
-</span><a href="#local-6989586621679239667"><span class="hs-identifier hs-var">con</span></a></span><span class="hs-special">)</span><span>
-</span><span id="line-136"></span><span>  </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621679239684"><span class="annot"><span class="annottext">func :: Q Exp
-</span><a href="#local-6989586621679239684"><span class="hs-identifier hs-var hs-var">func</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Bool -&gt; Name -&gt; Int -&gt; Maybe Int -&gt; Q Exp
+</span><a href="#local-6989586621679239694"><span class="hs-identifier hs-var">con</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-136"></span><span>  </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621679239711"><span class="annot"><span class="annottext">func :: Q Exp
+</span><a href="#local-6989586621679239711"><span class="hs-identifier hs-var hs-var">func</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Bool -&gt; Name -&gt; Int -&gt; Maybe Int -&gt; Q Exp
 </span><a href="Text.Gigaparsec.Patterns.html#buildLiftedLambda"><span class="hs-identifier hs-var">buildLiftedLambda</span></a></span><span> </span><span class="annot"><span class="annottext">Bool
-</span><a href="#local-6989586621679239664"><span class="hs-identifier hs-var">posLast</span></a></span><span> </span><span class="annot"><span class="annottext">Name
-</span><a href="#local-6989586621679239667"><span class="hs-identifier hs-var">con</span></a></span><span> </span><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679239681"><span class="hs-identifier hs-var">nargs</span></a></span><span> </span><span class="annot"><span class="annottext">Maybe Int
-</span><a href="#local-6989586621679239672"><span class="hs-identifier hs-var">posIdx</span></a></span><span>
+</span><a href="#local-6989586621679239691"><span class="hs-identifier hs-var">posLast</span></a></span><span> </span><span class="annot"><span class="annottext">Name
+</span><a href="#local-6989586621679239694"><span class="hs-identifier hs-var">con</span></a></span><span> </span><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679239708"><span class="hs-identifier hs-var">nargs</span></a></span><span> </span><span class="annot"><span class="annottext">Maybe Int
+</span><a href="#local-6989586621679239699"><span class="hs-identifier hs-var">posIdx</span></a></span><span>
 </span><span id="line-137"></span><span>  </span><span class="annot"><span class="annottext">(Name, Q Type, Q Exp, Bool, Int)
 -&gt; Q (Name, Q Type, Q Exp, Bool, Int)
 forall a. a -&gt; Q a
 forall (m :: * -&gt; *) a. Monad m =&gt; a -&gt; m a
 </span><span class="hs-identifier hs-var">return</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Name
-</span><a href="#local-6989586621679239682"><span class="hs-identifier hs-var">con'</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">Q Type -&gt; Q Type
-</span><a href="#local-6989586621679239669"><span class="hs-identifier hs-var">forAll</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">[Q Type] -&gt; Q Type
-</span><a href="#local-6989586621679239666"><span class="hs-identifier hs-var">buildType</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">(Type -&gt; Q Type) -&gt; [Type] -&gt; [Q Type]
+</span><a href="#local-6989586621679239709"><span class="hs-identifier hs-var">con'</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">Q Type -&gt; Q Type
+</span><a href="#local-6989586621679239696"><span class="hs-identifier hs-var">forAll</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">[Q Type] -&gt; Q Type
+</span><a href="#local-6989586621679239693"><span class="hs-identifier hs-var">buildType</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">(Type -&gt; Q Type) -&gt; [Type] -&gt; [Q Type]
 forall a b. (a -&gt; b) -&gt; [a] -&gt; [b]
 </span><span class="hs-identifier hs-var">map</span></span><span> </span><span class="annot"><span class="annottext">Type -&gt; Q Type
 forall a. a -&gt; Q a
 forall (m :: * -&gt; *) a. Monad m =&gt; a -&gt; m a
 </span><span class="hs-identifier hs-var">return</span></span><span> </span><span class="annot"><span class="annottext">[Type]
-</span><a href="#local-6989586621679239674"><span class="hs-identifier hs-var">tys'</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">Q Exp
-</span><a href="#local-6989586621679239684"><span class="hs-identifier hs-var">func</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">Maybe Int -&gt; Bool
+</span><a href="#local-6989586621679239701"><span class="hs-identifier hs-var">tys'</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">Q Exp
+</span><a href="#local-6989586621679239711"><span class="hs-identifier hs-var">func</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">Maybe Int -&gt; Bool
 forall a. Maybe a -&gt; Bool
 </span><span class="hs-identifier hs-var">isJust</span></span><span> </span><span class="annot"><span class="annottext">Maybe Int
-</span><a href="#local-6989586621679239672"><span class="hs-identifier hs-var">posIdx</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679239681"><span class="hs-identifier hs-var">nargs</span></a></span><span class="hs-special">)</span><span>
+</span><a href="#local-6989586621679239699"><span class="hs-identifier hs-var">posIdx</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679239708"><span class="hs-identifier hs-var">nargs</span></a></span><span class="hs-special">)</span><span>
 </span><span id="line-138"></span><span>
 </span><span id="line-139"></span><span class="annot"><a href="Text.Gigaparsec.Patterns.html#splitFun"><span class="hs-identifier hs-type">splitFun</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Type</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Q</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Q</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Type</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Q</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Type</span></span><span class="hs-special">,</span><span> </span><span class="hs-special">[</span><span class="annot"><span class="hs-identifier hs-type">Type</span></span><span class="hs-special">]</span><span class="hs-special">)</span><span>
 </span><span id="line-140"></span><span id="splitFun"><span class="annot"><span class="annottext">splitFun :: Type -&gt; Q (Q Type -&gt; Q Type, [Type])
-</span><a href="Text.Gigaparsec.Patterns.html#splitFun"><span class="hs-identifier hs-var hs-var">splitFun</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">ForallT</span></span><span> </span><span id="local-6989586621679239686"><span class="annot"><span class="annottext">[TyVarBndr Specificity]
-</span><a href="#local-6989586621679239686"><span class="hs-identifier hs-var">bndrs</span></a></span></span><span> </span><span id="local-6989586621679239687"><span class="annot"><span class="annottext">[Type]
-</span><a href="#local-6989586621679239687"><span class="hs-identifier hs-var">ctx</span></a></span></span><span> </span><span id="local-6989586621679239688"><span class="annot"><span class="annottext">Type
-</span><a href="#local-6989586621679239688"><span class="hs-identifier hs-var">ty</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
-</span><span id="line-141"></span><span>  </span><span id="local-6989586621679239689"><span class="annot"><span class="annottext">Bool
-</span><a href="#local-6989586621679239689"><span class="hs-identifier hs-var">kindSigs</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Extension -&gt; Q Bool
+</span><a href="Text.Gigaparsec.Patterns.html#splitFun"><span class="hs-identifier hs-var hs-var">splitFun</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">ForallT</span></span><span> </span><span id="local-6989586621679239713"><span class="annot"><span class="annottext">[TyVarBndr Specificity]
+</span><a href="#local-6989586621679239713"><span class="hs-identifier hs-var">bndrs</span></a></span></span><span> </span><span id="local-6989586621679239714"><span class="annot"><span class="annottext">[Type]
+</span><a href="#local-6989586621679239714"><span class="hs-identifier hs-var">ctx</span></a></span></span><span> </span><span id="local-6989586621679239715"><span class="annot"><span class="annottext">Type
+</span><a href="#local-6989586621679239715"><span class="hs-identifier hs-var">ty</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-141"></span><span>  </span><span id="local-6989586621679239716"><span class="annot"><span class="annottext">Bool
+</span><a href="#local-6989586621679239716"><span class="hs-identifier hs-var">kindSigs</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Extension -&gt; Q Bool
 </span><span class="hs-identifier hs-var">isExtEnabled</span></span><span> </span><span class="annot"><span class="annottext">Extension
 </span><span class="hs-identifier hs-var">KindSignatures</span></span><span>
-</span><span id="line-142"></span><span>  </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621679239690"><span class="annot"><span class="annottext">bndrs' :: [TyVarBndr Specificity]
-</span><a href="#local-6989586621679239690"><span class="hs-identifier hs-var hs-var">bndrs'</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">if</span><span> </span><span class="annot"><span class="annottext">Bool
-</span><a href="#local-6989586621679239689"><span class="hs-identifier hs-var">kindSigs</span></a></span><span> </span><span class="hs-keyword">then</span><span> </span><span class="annot"><span class="annottext">[TyVarBndr Specificity]
-</span><a href="#local-6989586621679239686"><span class="hs-identifier hs-var">bndrs</span></a></span><span> </span><span class="hs-keyword">else</span><span> </span><span class="annot"><span class="annottext">(TyVarBndr Specificity -&gt; TyVarBndr Specificity)
+</span><span id="line-142"></span><span>  </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621679239717"><span class="annot"><span class="annottext">bndrs' :: [TyVarBndr Specificity]
+</span><a href="#local-6989586621679239717"><span class="hs-identifier hs-var hs-var">bndrs'</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">if</span><span> </span><span class="annot"><span class="annottext">Bool
+</span><a href="#local-6989586621679239716"><span class="hs-identifier hs-var">kindSigs</span></a></span><span> </span><span class="hs-keyword">then</span><span> </span><span class="annot"><span class="annottext">[TyVarBndr Specificity]
+</span><a href="#local-6989586621679239713"><span class="hs-identifier hs-var">bndrs</span></a></span><span> </span><span class="hs-keyword">else</span><span> </span><span class="annot"><span class="annottext">(TyVarBndr Specificity -&gt; TyVarBndr Specificity)
 -&gt; [TyVarBndr Specificity] -&gt; [TyVarBndr Specificity]
 forall a b. (a -&gt; b) -&gt; [a] -&gt; [b]
 </span><span class="hs-identifier hs-var">map</span></span><span> </span><span class="annot"><span class="annottext">TyVarBndr Specificity -&gt; TyVarBndr Specificity
 forall flag. TyVarBndr flag -&gt; TyVarBndr flag
 </span><a href="Text.Gigaparsec.Patterns.html#sanitiseStarT"><span class="hs-identifier hs-var">sanitiseStarT</span></a></span><span> </span><span class="annot"><span class="annottext">[TyVarBndr Specificity]
-</span><a href="#local-6989586621679239686"><span class="hs-identifier hs-var">bndrs</span></a></span><span>
+</span><a href="#local-6989586621679239713"><span class="hs-identifier hs-var">bndrs</span></a></span><span>
 </span><span id="line-143"></span><span>  </span><span class="annot"><span class="annottext">(Q Type -&gt; Q Type, [Type]) -&gt; Q (Q Type -&gt; Q Type, [Type])
 forall a. a -&gt; Q a
 forall (m :: * -&gt; *) a. Monad m =&gt; a -&gt; m a
@@ -395,65 +395,65 @@ forall (m :: * -&gt; *).
 Quote m =&gt;
 [TyVarBndr Specificity] -&gt; m [Type] -&gt; m Type -&gt; m Type
 </span><span class="hs-identifier hs-var">forallT</span></span><span> </span><span class="annot"><span class="annottext">[TyVarBndr Specificity]
-</span><a href="#local-6989586621679239690"><span class="hs-identifier hs-var">bndrs'</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">[Type] -&gt; Q [Type]
+</span><a href="#local-6989586621679239717"><span class="hs-identifier hs-var">bndrs'</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">[Type] -&gt; Q [Type]
 forall a. a -&gt; Q a
 forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
 </span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">[Type]
-</span><a href="#local-6989586621679239687"><span class="hs-identifier hs-var">ctx</span></a></span><span class="hs-special">)</span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">Type -&gt; [Type]
+</span><a href="#local-6989586621679239714"><span class="hs-identifier hs-var">ctx</span></a></span><span class="hs-special">)</span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">Type -&gt; [Type]
 </span><a href="Text.Gigaparsec.Patterns.html#splitFun%27"><span class="hs-identifier hs-var">splitFun'</span></a></span><span> </span><span class="annot"><span class="annottext">Type
-</span><a href="#local-6989586621679239688"><span class="hs-identifier hs-var">ty</span></a></span><span class="hs-special">)</span><span>
-</span><span id="line-144"></span><span class="annot"><a href="Text.Gigaparsec.Patterns.html#splitFun"><span class="hs-identifier hs-var">splitFun</span></a></span><span> </span><span id="local-6989586621679239693"><span class="annot"><span class="annottext">Type
-</span><a href="#local-6989586621679239693"><span class="hs-identifier hs-var">ty</span></a></span></span><span>                     </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">(Q Type -&gt; Q Type, [Type]) -&gt; Q (Q Type -&gt; Q Type, [Type])
+</span><a href="#local-6989586621679239715"><span class="hs-identifier hs-var">ty</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-144"></span><span class="annot"><a href="Text.Gigaparsec.Patterns.html#splitFun"><span class="hs-identifier hs-var">splitFun</span></a></span><span> </span><span id="local-6989586621679239720"><span class="annot"><span class="annottext">Type
+</span><a href="#local-6989586621679239720"><span class="hs-identifier hs-var">ty</span></a></span></span><span>                     </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">(Q Type -&gt; Q Type, [Type]) -&gt; Q (Q Type -&gt; Q Type, [Type])
 forall a. a -&gt; Q a
 forall (m :: * -&gt; *) a. Monad m =&gt; a -&gt; m a
 </span><span class="hs-identifier hs-var">return</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Q Type -&gt; Q Type
 forall a. a -&gt; a
 </span><span class="hs-identifier hs-var">id</span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">Type -&gt; [Type]
 </span><a href="Text.Gigaparsec.Patterns.html#splitFun%27"><span class="hs-identifier hs-var">splitFun'</span></a></span><span> </span><span class="annot"><span class="annottext">Type
-</span><a href="#local-6989586621679239693"><span class="hs-identifier hs-var">ty</span></a></span><span class="hs-special">)</span><span>
+</span><a href="#local-6989586621679239720"><span class="hs-identifier hs-var">ty</span></a></span><span class="hs-special">)</span><span>
 </span><span id="line-145"></span><span>
 </span><span id="line-146"></span><span class="annot"><a href="Text.Gigaparsec.Patterns.html#splitFun%27"><span class="hs-identifier hs-type">splitFun'</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Type</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-special">[</span><span class="annot"><span class="hs-identifier hs-type">Type</span></span><span class="hs-special">]</span><span>
 </span><span id="line-147"></span><span id="splitFun%27"><span class="annot"><span class="annottext">splitFun' :: Type -&gt; [Type]
 </span><a href="Text.Gigaparsec.Patterns.html#splitFun%27"><span class="hs-identifier hs-var hs-var">splitFun'</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">AppT</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">AppT</span></span><span> </span><span class="annot"><span class="annottext">Type
-</span><span class="hs-identifier hs-var">ArrowT</span></span><span> </span><span id="local-6989586621679239694"><span class="annot"><span class="annottext">Type
-</span><a href="#local-6989586621679239694"><span class="hs-identifier hs-var">a</span></a></span></span><span class="hs-special">)</span><span> </span><span id="local-6989586621679239695"><span class="annot"><span class="annottext">Type
-</span><a href="#local-6989586621679239695"><span class="hs-identifier hs-var">b</span></a></span></span><span class="hs-special">)</span><span>             </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Type
-</span><a href="#local-6989586621679239694"><span class="hs-identifier hs-var">a</span></a></span><span> </span><span class="annot"><span class="annottext">Type -&gt; [Type] -&gt; [Type]
+</span><span class="hs-identifier hs-var">ArrowT</span></span><span> </span><span id="local-6989586621679239721"><span class="annot"><span class="annottext">Type
+</span><a href="#local-6989586621679239721"><span class="hs-identifier hs-var">a</span></a></span></span><span class="hs-special">)</span><span> </span><span id="local-6989586621679239722"><span class="annot"><span class="annottext">Type
+</span><a href="#local-6989586621679239722"><span class="hs-identifier hs-var">b</span></a></span></span><span class="hs-special">)</span><span>             </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Type
+</span><a href="#local-6989586621679239721"><span class="hs-identifier hs-var">a</span></a></span><span> </span><span class="annot"><span class="annottext">Type -&gt; [Type] -&gt; [Type]
 forall a. a -&gt; [a] -&gt; [a]
 </span><span class="hs-glyph hs-var">:</span></span><span> </span><span class="annot"><span class="annottext">Type -&gt; [Type]
 </span><a href="Text.Gigaparsec.Patterns.html#splitFun%27"><span class="hs-identifier hs-var">splitFun'</span></a></span><span> </span><span class="annot"><span class="annottext">Type
-</span><a href="#local-6989586621679239695"><span class="hs-identifier hs-var">b</span></a></span><span> </span><span class="hs-comment">-- regular function type</span><span class="hs-cpp">
+</span><a href="#local-6989586621679239722"><span class="hs-identifier hs-var">b</span></a></span><span> </span><span class="hs-comment">-- regular function type</span><span class="hs-cpp">
 #if __GLASGOW_HASKELL__ &gt;= 902
 </span><span class="annot"><a href="Text.Gigaparsec.Patterns.html#splitFun%27"><span class="hs-identifier hs-var">splitFun'</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">AppT</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">AppT</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">AppT</span></span><span> </span><span class="annot"><span class="annottext">Type
 </span><span class="hs-identifier hs-var">MulArrowT</span></span><span> </span><span class="annot"><span class="annottext">Type
-</span><span class="hs-identifier">_</span></span><span class="hs-special">)</span><span> </span><span id="local-6989586621679239696"><span class="annot"><span class="annottext">Type
-</span><a href="#local-6989586621679239696"><span class="hs-identifier hs-var">a</span></a></span></span><span class="hs-special">)</span><span> </span><span id="local-6989586621679239697"><span class="annot"><span class="annottext">Type
-</span><a href="#local-6989586621679239697"><span class="hs-identifier hs-var">b</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Type
-</span><a href="#local-6989586621679239696"><span class="hs-identifier hs-var">a</span></a></span><span> </span><span class="annot"><span class="annottext">Type -&gt; [Type] -&gt; [Type]
+</span><span class="hs-identifier">_</span></span><span class="hs-special">)</span><span> </span><span id="local-6989586621679239723"><span class="annot"><span class="annottext">Type
+</span><a href="#local-6989586621679239723"><span class="hs-identifier hs-var">a</span></a></span></span><span class="hs-special">)</span><span> </span><span id="local-6989586621679239724"><span class="annot"><span class="annottext">Type
+</span><a href="#local-6989586621679239724"><span class="hs-identifier hs-var">b</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Type
+</span><a href="#local-6989586621679239723"><span class="hs-identifier hs-var">a</span></a></span><span> </span><span class="annot"><span class="annottext">Type -&gt; [Type] -&gt; [Type]
 forall a. a -&gt; [a] -&gt; [a]
 </span><span class="hs-glyph hs-var">:</span></span><span> </span><span class="annot"><span class="annottext">Type -&gt; [Type]
 </span><a href="Text.Gigaparsec.Patterns.html#splitFun%27"><span class="hs-identifier hs-var">splitFun'</span></a></span><span> </span><span class="annot"><span class="annottext">Type
-</span><a href="#local-6989586621679239697"><span class="hs-identifier hs-var">b</span></a></span><span> </span><span class="hs-comment">-- linear function type</span><span class="hs-cpp">
+</span><a href="#local-6989586621679239724"><span class="hs-identifier hs-var">b</span></a></span><span> </span><span class="hs-comment">-- linear function type</span><span class="hs-cpp">
 #endif
-</span><span class="annot"><a href="Text.Gigaparsec.Patterns.html#splitFun%27"><span class="hs-identifier hs-var">splitFun'</span></a></span><span> </span><span id="local-6989586621679239698"><span class="annot"><span class="annottext">Type
-</span><a href="#local-6989586621679239698"><span class="hs-identifier hs-var">ty</span></a></span></span><span>                                   </span><span class="hs-glyph">=</span><span> </span><span class="hs-special">[</span><span class="annot"><span class="annottext">Type
-</span><a href="#local-6989586621679239698"><span class="hs-identifier hs-var">ty</span></a></span><span class="hs-special">]</span><span>
+</span><span class="annot"><a href="Text.Gigaparsec.Patterns.html#splitFun%27"><span class="hs-identifier hs-var">splitFun'</span></a></span><span> </span><span id="local-6989586621679239725"><span class="annot"><span class="annottext">Type
+</span><a href="#local-6989586621679239725"><span class="hs-identifier hs-var">ty</span></a></span></span><span>                                   </span><span class="hs-glyph">=</span><span> </span><span class="hs-special">[</span><span class="annot"><span class="annottext">Type
+</span><a href="#local-6989586621679239725"><span class="hs-identifier hs-var">ty</span></a></span><span class="hs-special">]</span><span>
 </span><span id="line-152"></span><span>
 </span><span id="line-153"></span><span class="hs-comment">-- When KindSignatures is off, the default (a :: *) that TH generates is broken!</span><span class="hs-cpp">
 #if __GLASGOW_HASKELL__ &gt;= 900
-</span><span id="local-6989586621679239497"><span class="annot"><a href="Text.Gigaparsec.Patterns.html#sanitiseStarT"><span class="hs-identifier hs-type">sanitiseStarT</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">TyVarBndr</span></span><span> </span><span class="annot"><a href="#local-6989586621679239497"><span class="hs-identifier hs-type">flag</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">TyVarBndr</span></span><span> </span><span class="annot"><a href="#local-6989586621679239497"><span class="hs-identifier hs-type">flag</span></a></span></span><span>
+</span><span id="local-6989586621679239524"><span class="annot"><a href="Text.Gigaparsec.Patterns.html#sanitiseStarT"><span class="hs-identifier hs-type">sanitiseStarT</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">TyVarBndr</span></span><span> </span><span class="annot"><a href="#local-6989586621679239524"><span class="hs-identifier hs-type">flag</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">TyVarBndr</span></span><span> </span><span class="annot"><a href="#local-6989586621679239524"><span class="hs-identifier hs-type">flag</span></a></span></span><span>
 </span><span id="line-156"></span><span id="sanitiseStarT"><span class="annot"><span class="annottext">sanitiseStarT :: forall flag. TyVarBndr flag -&gt; TyVarBndr flag
-</span><a href="Text.Gigaparsec.Patterns.html#sanitiseStarT"><span class="hs-identifier hs-var hs-var">sanitiseStarT</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">KindedTV</span></span><span> </span><span id="local-6989586621679239699"><span class="annot"><span class="annottext">Name
-</span><a href="#local-6989586621679239699"><span class="hs-identifier hs-var">ty</span></a></span></span><span> </span><span id="local-6989586621679239700"><span class="annot"><span class="annottext">flag
-</span><a href="#local-6989586621679239700"><span class="hs-identifier hs-var">flag</span></a></span></span><span> </span><span class="annot"><span class="annottext">Type
+</span><a href="Text.Gigaparsec.Patterns.html#sanitiseStarT"><span class="hs-identifier hs-var hs-var">sanitiseStarT</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">KindedTV</span></span><span> </span><span id="local-6989586621679239726"><span class="annot"><span class="annottext">Name
+</span><a href="#local-6989586621679239726"><span class="hs-identifier hs-var">ty</span></a></span></span><span> </span><span id="local-6989586621679239727"><span class="annot"><span class="annottext">flag
+</span><a href="#local-6989586621679239727"><span class="hs-identifier hs-var">flag</span></a></span></span><span> </span><span class="annot"><span class="annottext">Type
 </span><span class="hs-identifier hs-var">StarT</span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Name -&gt; flag -&gt; TyVarBndr flag
 forall flag. Name -&gt; flag -&gt; TyVarBndr flag
 </span><span class="hs-identifier hs-var">PlainTV</span></span><span> </span><span class="annot"><span class="annottext">Name
-</span><a href="#local-6989586621679239699"><span class="hs-identifier hs-var">ty</span></a></span><span> </span><span class="annot"><span class="annottext">flag
-</span><a href="#local-6989586621679239700"><span class="hs-identifier hs-var">flag</span></a></span><span>
-</span><span id="line-157"></span><span class="annot"><a href="Text.Gigaparsec.Patterns.html#sanitiseStarT"><span class="hs-identifier hs-var">sanitiseStarT</span></a></span><span> </span><span id="local-6989586621679239701"><span class="annot"><span class="annottext">TyVarBndr flag
-</span><a href="#local-6989586621679239701"><span class="hs-identifier hs-var">ty</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">TyVarBndr flag
-</span><a href="#local-6989586621679239701"><span class="hs-identifier hs-var">ty</span></a></span><span class="hs-cpp">
+</span><a href="#local-6989586621679239726"><span class="hs-identifier hs-var">ty</span></a></span><span> </span><span class="annot"><span class="annottext">flag
+</span><a href="#local-6989586621679239727"><span class="hs-identifier hs-var">flag</span></a></span><span>
+</span><span id="line-157"></span><span class="annot"><a href="Text.Gigaparsec.Patterns.html#sanitiseStarT"><span class="hs-identifier hs-var">sanitiseStarT</span></a></span><span> </span><span id="local-6989586621679239728"><span class="annot"><span class="annottext">TyVarBndr flag
+</span><a href="#local-6989586621679239728"><span class="hs-identifier hs-var">ty</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">TyVarBndr flag
+</span><a href="#local-6989586621679239728"><span class="hs-identifier hs-var">ty</span></a></span><span class="hs-cpp">
 #else
 </span><span class="hs-identifier">sanitiseStarT</span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-identifier">TyVarBndr</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-identifier">TyVarBndr</span><span>
 </span><span id="line-160"></span><span class="hs-identifier">sanitiseStarT</span><span> </span><span class="hs-special">(</span><span class="hs-identifier">KindedTV</span><span> </span><span class="hs-identifier">ty</span><span> </span><span class="hs-identifier">StarT</span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-identifier">PlainTV</span><span> </span><span class="hs-identifier">ty</span><span>
@@ -462,27 +462,27 @@ forall flag. Name -&gt; flag -&gt; TyVarBndr flag
 </span><span>
 </span><span id="line-164"></span><span class="annot"><a href="Text.Gigaparsec.Patterns.html#findPosIdx"><span class="hs-identifier hs-type">findPosIdx</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Name</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-special">[</span><span class="annot"><span class="hs-identifier hs-type">Type</span></span><span class="hs-special">]</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Q</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Maybe</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Int</span></span><span class="hs-special">)</span><span>
 </span><span id="line-165"></span><span id="findPosIdx"><span class="annot"><span class="annottext">findPosIdx :: Name -&gt; [Type] -&gt; Q (Maybe Int)
-</span><a href="Text.Gigaparsec.Patterns.html#findPosIdx"><span class="hs-identifier hs-var hs-var">findPosIdx</span></a></span></span><span> </span><span id="local-6989586621679239702"><span class="annot"><span class="annottext">Name
-</span><a href="#local-6989586621679239702"><span class="hs-identifier hs-var">con</span></a></span></span><span> </span><span id="local-6989586621679239703"><span class="annot"><span class="annottext">[Type]
-</span><a href="#local-6989586621679239703"><span class="hs-identifier hs-var">tys</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">case</span><span> </span><span class="annot"><span class="annottext">Type -&gt; [Type] -&gt; [Int]
+</span><a href="Text.Gigaparsec.Patterns.html#findPosIdx"><span class="hs-identifier hs-var hs-var">findPosIdx</span></a></span></span><span> </span><span id="local-6989586621679239729"><span class="annot"><span class="annottext">Name
+</span><a href="#local-6989586621679239729"><span class="hs-identifier hs-var">con</span></a></span></span><span> </span><span id="local-6989586621679239730"><span class="annot"><span class="annottext">[Type]
+</span><a href="#local-6989586621679239730"><span class="hs-identifier hs-var">tys</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">case</span><span> </span><span class="annot"><span class="annottext">Type -&gt; [Type] -&gt; [Int]
 forall a. Eq a =&gt; a -&gt; [a] -&gt; [Int]
 </span><a href="Text.Gigaparsec.Patterns.html#elemIndices"><span class="hs-identifier hs-var">elemIndices</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Name -&gt; Type
 </span><span class="hs-identifier hs-var">ConT</span></span><span> </span><span class="hs-special">''</span><span class="hs-identifier">Pos</span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">[Type]
-</span><a href="#local-6989586621679239703"><span class="hs-identifier hs-var">tys</span></a></span><span> </span><span class="hs-keyword">of</span><span>
+</span><a href="#local-6989586621679239730"><span class="hs-identifier hs-var">tys</span></a></span><span> </span><span class="hs-keyword">of</span><span>
 </span><span id="line-166"></span><span>     </span><span class="hs-special">[</span><span class="hs-special">]</span><span>    </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Maybe Int -&gt; Q (Maybe Int)
 forall a. a -&gt; Q a
 forall (m :: * -&gt; *) a. Monad m =&gt; a -&gt; m a
 </span><span class="hs-identifier hs-var">return</span></span><span> </span><span class="annot"><span class="annottext">Maybe Int
 forall a. Maybe a
 </span><span class="hs-identifier hs-var">Nothing</span></span><span>
-</span><span id="line-167"></span><span>     </span><span class="hs-special">[</span><span id="local-6989586621679239705"><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679239705"><span class="hs-identifier hs-var">idx</span></a></span></span><span class="hs-special">]</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Maybe Int -&gt; Q (Maybe Int)
+</span><span id="line-167"></span><span>     </span><span class="hs-special">[</span><span id="local-6989586621679239732"><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679239732"><span class="hs-identifier hs-var">idx</span></a></span></span><span class="hs-special">]</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Maybe Int -&gt; Q (Maybe Int)
 forall a. a -&gt; Q a
 forall (m :: * -&gt; *) a. Monad m =&gt; a -&gt; m a
 </span><span class="hs-identifier hs-var">return</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Int -&gt; Maybe Int
 forall a. a -&gt; Maybe a
 </span><span class="hs-identifier hs-var">Just</span></span><span> </span><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679239705"><span class="hs-identifier hs-var">idx</span></a></span><span class="hs-special">)</span><span>
+</span><a href="#local-6989586621679239732"><span class="hs-identifier hs-var">idx</span></a></span><span class="hs-special">)</span><span>
 </span><span id="line-168"></span><span>     </span><span class="annot"><span class="annottext">[Int]
 </span><span class="hs-identifier">_</span></span><span>     </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">String -&gt; Q (Maybe Int)
 forall a. String -&gt; Q a
@@ -494,65 +494,65 @@ forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span id="line-169"></span><span>        </span><span class="hs-special">[</span><span class="annot"><span class="annottext">String
 </span><span class="hs-string">&quot;constructor&quot;</span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">Name -&gt; String
 </span><a href="Text.Gigaparsec.Patterns.html#pretty"><span class="hs-identifier hs-var">pretty</span></a></span><span> </span><span class="annot"><span class="annottext">Name
-</span><a href="#local-6989586621679239702"><span class="hs-identifier hs-var">con</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">String
+</span><a href="#local-6989586621679239729"><span class="hs-identifier hs-var">con</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">String
 </span><span class="hs-string">&quot;has multiple occurrences of Text.Gigaparsec.Position.Pos&quot;</span></span><span class="hs-special">]</span><span>
 </span><span id="line-170"></span><span>
 </span><span id="line-171"></span><span class="annot"><a href="Text.Gigaparsec.Patterns.html#buildLiftedLambda"><span class="hs-identifier hs-type">buildLiftedLambda</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Bool</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Name</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Int</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Maybe</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Int</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Q</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Exp</span></span><span>
 </span><span id="line-172"></span><span id="buildLiftedLambda"><span class="annot"><span class="annottext">buildLiftedLambda :: Bool -&gt; Name -&gt; Int -&gt; Maybe Int -&gt; Q Exp
-</span><a href="Text.Gigaparsec.Patterns.html#buildLiftedLambda"><span class="hs-identifier hs-var hs-var">buildLiftedLambda</span></a></span></span><span> </span><span id="local-6989586621679239706"><span class="annot"><span class="annottext">Bool
-</span><a href="#local-6989586621679239706"><span class="hs-identifier hs-var">posLast</span></a></span></span><span> </span><span id="local-6989586621679239707"><span class="annot"><span class="annottext">Name
-</span><a href="#local-6989586621679239707"><span class="hs-identifier hs-var">con</span></a></span></span><span> </span><span id="local-6989586621679239708"><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679239708"><span class="hs-identifier hs-var">nargs</span></a></span></span><span> </span><span id="local-6989586621679239709"><span class="annot"><span class="annottext">Maybe Int
-</span><a href="#local-6989586621679239709"><span class="hs-identifier hs-var">posIdx</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
-</span><span id="line-173"></span><span>  </span><span id="local-6989586621679239710"><span class="annot"><span class="annottext">[Name]
-</span><a href="#local-6989586621679239710"><span class="hs-identifier hs-var">args</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Int -&gt; Q Name -&gt; Q [Name]
+</span><a href="Text.Gigaparsec.Patterns.html#buildLiftedLambda"><span class="hs-identifier hs-var hs-var">buildLiftedLambda</span></a></span></span><span> </span><span id="local-6989586621679239733"><span class="annot"><span class="annottext">Bool
+</span><a href="#local-6989586621679239733"><span class="hs-identifier hs-var">posLast</span></a></span></span><span> </span><span id="local-6989586621679239734"><span class="annot"><span class="annottext">Name
+</span><a href="#local-6989586621679239734"><span class="hs-identifier hs-var">con</span></a></span></span><span> </span><span id="local-6989586621679239735"><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679239735"><span class="hs-identifier hs-var">nargs</span></a></span></span><span> </span><span id="local-6989586621679239736"><span class="annot"><span class="annottext">Maybe Int
+</span><a href="#local-6989586621679239736"><span class="hs-identifier hs-var">posIdx</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-173"></span><span>  </span><span id="local-6989586621679239737"><span class="annot"><span class="annottext">[Name]
+</span><a href="#local-6989586621679239737"><span class="hs-identifier hs-var">args</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Int -&gt; Q Name -&gt; Q [Name]
 forall (m :: * -&gt; *) a. Applicative m =&gt; Int -&gt; m a -&gt; m [a]
 </span><span class="hs-identifier hs-var">replicateM</span></span><span> </span><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679239708"><span class="hs-identifier hs-var">nargs</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">String -&gt; Q Name
+</span><a href="#local-6989586621679239735"><span class="hs-identifier hs-var">nargs</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">String -&gt; Q Name
 forall (m :: * -&gt; *). Quote m =&gt; String -&gt; m Name
 </span><span class="hs-identifier hs-var">newName</span></span><span> </span><span class="annot"><span class="annottext">String
 </span><span class="hs-string">&quot;x&quot;</span></span><span class="hs-special">)</span><span>
-</span><span id="line-174"></span><span>  </span><span id="local-6989586621679239711"><span class="annot"><span class="annottext">Name
-</span><a href="#local-6989586621679239711"><span class="hs-identifier hs-var">posArg</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">String -&gt; Q Name
+</span><span id="line-174"></span><span>  </span><span id="local-6989586621679239738"><span class="annot"><span class="annottext">Name
+</span><a href="#local-6989586621679239738"><span class="hs-identifier hs-var">posArg</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">String -&gt; Q Name
 forall (m :: * -&gt; *). Quote m =&gt; String -&gt; m Name
 </span><span class="hs-identifier hs-var">newName</span></span><span> </span><span class="annot"><span class="annottext">String
 </span><span class="hs-string">&quot;pos&quot;</span></span><span>
-</span><span id="line-175"></span><span>  </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621679239720"><span class="annot"><span class="annottext">pargs :: [Q Pat]
-</span><a href="#local-6989586621679239720"><span class="hs-identifier hs-var hs-var">pargs</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">if</span><span> </span><span class="hs-glyph">|</span><span> </span><span class="annot"><span class="annottext">Maybe Int -&gt; Bool
+</span><span id="line-175"></span><span>  </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621679239747"><span class="annot"><span class="annottext">pargs :: [Q Pat]
+</span><a href="#local-6989586621679239747"><span class="hs-identifier hs-var hs-var">pargs</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">if</span><span> </span><span class="hs-glyph">|</span><span> </span><span class="annot"><span class="annottext">Maybe Int -&gt; Bool
 forall a. Maybe a -&gt; Bool
 </span><span class="hs-identifier hs-var">isNothing</span></span><span> </span><span class="annot"><span class="annottext">Maybe Int
-</span><a href="#local-6989586621679239709"><span class="hs-identifier hs-var">posIdx</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">(Name -&gt; Q Pat) -&gt; [Name] -&gt; [Q Pat]
+</span><a href="#local-6989586621679239736"><span class="hs-identifier hs-var">posIdx</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">(Name -&gt; Q Pat) -&gt; [Name] -&gt; [Q Pat]
 forall a b. (a -&gt; b) -&gt; [a] -&gt; [b]
 </span><span class="hs-identifier hs-var">map</span></span><span> </span><span class="annot"><span class="annottext">Name -&gt; Q Pat
 forall (m :: * -&gt; *). Quote m =&gt; Name -&gt; m Pat
 </span><span class="hs-identifier hs-var">varP</span></span><span> </span><span class="annot"><span class="annottext">[Name]
-</span><a href="#local-6989586621679239710"><span class="hs-identifier hs-var">args</span></a></span><span>
+</span><a href="#local-6989586621679239737"><span class="hs-identifier hs-var">args</span></a></span><span>
 </span><span id="line-176"></span><span>                 </span><span class="hs-glyph">|</span><span> </span><span class="annot"><span class="annottext">Bool
-</span><a href="#local-6989586621679239706"><span class="hs-identifier hs-var">posLast</span></a></span><span>          </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">(Name -&gt; Q Pat) -&gt; [Name] -&gt; [Q Pat]
+</span><a href="#local-6989586621679239733"><span class="hs-identifier hs-var">posLast</span></a></span><span>          </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">(Name -&gt; Q Pat) -&gt; [Name] -&gt; [Q Pat]
 forall a b. (a -&gt; b) -&gt; [a] -&gt; [b]
 </span><span class="hs-identifier hs-var">map</span></span><span> </span><span class="annot"><span class="annottext">Name -&gt; Q Pat
 forall (m :: * -&gt; *). Quote m =&gt; Name -&gt; m Pat
 </span><span class="hs-identifier hs-var">varP</span></span><span> </span><span class="annot"><span class="annottext">[Name]
-</span><a href="#local-6989586621679239710"><span class="hs-identifier hs-var">args</span></a></span><span> </span><span class="annot"><span class="annottext">[Q Pat] -&gt; [Q Pat] -&gt; [Q Pat]
+</span><a href="#local-6989586621679239737"><span class="hs-identifier hs-var">args</span></a></span><span> </span><span class="annot"><span class="annottext">[Q Pat] -&gt; [Q Pat] -&gt; [Q Pat]
 forall a. [a] -&gt; [a] -&gt; [a]
 </span><span class="hs-operator hs-var">++</span></span><span> </span><span class="hs-special">[</span><span class="annot"><span class="annottext">Name -&gt; Q Pat
 forall (m :: * -&gt; *). Quote m =&gt; Name -&gt; m Pat
 </span><span class="hs-identifier hs-var">varP</span></span><span> </span><span class="annot"><span class="annottext">Name
-</span><a href="#local-6989586621679239711"><span class="hs-identifier hs-var">posArg</span></a></span><span class="hs-special">]</span><span>
+</span><a href="#local-6989586621679239738"><span class="hs-identifier hs-var">posArg</span></a></span><span class="hs-special">]</span><span>
 </span><span id="line-177"></span><span>                 </span><span class="hs-glyph">|</span><span> </span><span class="annot"><span class="annottext">Bool
 </span><span class="hs-identifier hs-var">otherwise</span></span><span>        </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Name -&gt; Q Pat
 forall (m :: * -&gt; *). Quote m =&gt; Name -&gt; m Pat
 </span><span class="hs-identifier hs-var">varP</span></span><span> </span><span class="annot"><span class="annottext">Name
-</span><a href="#local-6989586621679239711"><span class="hs-identifier hs-var">posArg</span></a></span><span> </span><span class="annot"><span class="annottext">Q Pat -&gt; [Q Pat] -&gt; [Q Pat]
+</span><a href="#local-6989586621679239738"><span class="hs-identifier hs-var">posArg</span></a></span><span> </span><span class="annot"><span class="annottext">Q Pat -&gt; [Q Pat] -&gt; [Q Pat]
 forall a. a -&gt; [a] -&gt; [a]
 </span><span class="hs-glyph hs-var">:</span></span><span> </span><span class="annot"><span class="annottext">(Name -&gt; Q Pat) -&gt; [Name] -&gt; [Q Pat]
 forall a b. (a -&gt; b) -&gt; [a] -&gt; [b]
 </span><span class="hs-identifier hs-var">map</span></span><span> </span><span class="annot"><span class="annottext">Name -&gt; Q Pat
 forall (m :: * -&gt; *). Quote m =&gt; Name -&gt; m Pat
 </span><span class="hs-identifier hs-var">varP</span></span><span> </span><span class="annot"><span class="annottext">[Name]
-</span><a href="#local-6989586621679239710"><span class="hs-identifier hs-var">args</span></a></span><span>
-</span><span id="line-178"></span><span>  </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621679239726"><span class="annot"><span class="annottext">eargs :: [Q Exp]
-</span><a href="#local-6989586621679239726"><span class="hs-identifier hs-var hs-var">eargs</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">(Int -&gt; [Q Exp] -&gt; [Q Exp]) -&gt; Maybe Int -&gt; [Q Exp] -&gt; [Q Exp]
+</span><a href="#local-6989586621679239737"><span class="hs-identifier hs-var">args</span></a></span><span>
+</span><span id="line-178"></span><span>  </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621679239753"><span class="annot"><span class="annottext">eargs :: [Q Exp]
+</span><a href="#local-6989586621679239753"><span class="hs-identifier hs-var hs-var">eargs</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">(Int -&gt; [Q Exp] -&gt; [Q Exp]) -&gt; Maybe Int -&gt; [Q Exp] -&gt; [Q Exp]
 forall a b. (a -&gt; b -&gt; b) -&gt; Maybe a -&gt; b -&gt; b
 </span><a href="Text.Gigaparsec.Patterns.html#maybeApply"><span class="hs-identifier hs-var">maybeApply</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">(Int -&gt; Q Exp -&gt; [Q Exp] -&gt; [Q Exp])
 -&gt; Q Exp -&gt; Int -&gt; [Q Exp] -&gt; [Q Exp]
@@ -562,62 +562,62 @@ forall a. Int -&gt; a -&gt; [a] -&gt; [a]
 </span><a href="Text.Gigaparsec.Patterns.html#insertAt"><span class="hs-identifier hs-var">insertAt</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Name -&gt; Q Exp
 forall (m :: * -&gt; *). Quote m =&gt; Name -&gt; m Exp
 </span><span class="hs-identifier hs-var">varE</span></span><span> </span><span class="annot"><span class="annottext">Name
-</span><a href="#local-6989586621679239711"><span class="hs-identifier hs-var">posArg</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">Maybe Int
-</span><a href="#local-6989586621679239709"><span class="hs-identifier hs-var">posIdx</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">(Name -&gt; Q Exp) -&gt; [Name] -&gt; [Q Exp]
+</span><a href="#local-6989586621679239738"><span class="hs-identifier hs-var">posArg</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">Maybe Int
+</span><a href="#local-6989586621679239736"><span class="hs-identifier hs-var">posIdx</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">(Name -&gt; Q Exp) -&gt; [Name] -&gt; [Q Exp]
 forall a b. (a -&gt; b) -&gt; [a] -&gt; [b]
 </span><span class="hs-identifier hs-var">map</span></span><span> </span><span class="annot"><span class="annottext">Name -&gt; Q Exp
 forall (m :: * -&gt; *). Quote m =&gt; Name -&gt; m Exp
 </span><span class="hs-identifier hs-var">varE</span></span><span> </span><span class="annot"><span class="annottext">[Name]
-</span><a href="#local-6989586621679239710"><span class="hs-identifier hs-var">args</span></a></span><span class="hs-special">)</span><span>
+</span><a href="#local-6989586621679239737"><span class="hs-identifier hs-var">args</span></a></span><span class="hs-special">)</span><span>
 </span><span id="line-179"></span><span>  </span><span class="annot"><span class="annottext">[Q Pat] -&gt; Q Exp -&gt; Q Exp
 forall (m :: * -&gt; *). Quote m =&gt; [m Pat] -&gt; m Exp -&gt; m Exp
 </span><span class="hs-identifier hs-var">lamE</span></span><span> </span><span class="annot"><span class="annottext">[Q Pat]
-</span><a href="#local-6989586621679239720"><span class="hs-identifier hs-var">pargs</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">(Q Exp -&gt; Q Exp -&gt; Q Exp) -&gt; Q Exp -&gt; [Q Exp] -&gt; Q Exp
+</span><a href="#local-6989586621679239747"><span class="hs-identifier hs-var">pargs</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">(Q Exp -&gt; Q Exp -&gt; Q Exp) -&gt; Q Exp -&gt; [Q Exp] -&gt; Q Exp
 forall b a. (b -&gt; a -&gt; b) -&gt; b -&gt; [a] -&gt; b
 forall (t :: * -&gt; *) b a.
 Foldable t =&gt;
 (b -&gt; a -&gt; b) -&gt; b -&gt; t a -&gt; b
-</span><span class="hs-identifier hs-var">foldl'</span></span><span> </span><span class="hs-special">(</span><span class="hs-glyph">\</span><span id="local-6989586621679239728"><span class="annot"><span class="annottext">Q Exp
-</span><a href="#local-6989586621679239728"><span class="hs-identifier hs-var">acc</span></a></span></span><span> </span><span id="local-6989586621679239729"><span class="annot"><span class="annottext">Q Exp
-</span><a href="#local-6989586621679239729"><span class="hs-identifier hs-var">arg</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-special">[e|</span><span class="hs-special">$</span><span class="annot"><span class="annottext">Q Exp
-</span><a href="#local-6989586621679239728"><span class="hs-identifier hs-var">acc</span></a></span><span> </span><span class="hs-special">$</span><span class="annot"><span class="annottext">Q Exp
-</span><a href="#local-6989586621679239729"><span class="hs-identifier hs-var">arg</span></a></span><span class="hs-special">|]</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Name -&gt; Q Exp
+</span><span class="hs-identifier hs-var">foldl'</span></span><span> </span><span class="hs-special">(</span><span class="hs-glyph">\</span><span id="local-6989586621679239755"><span class="annot"><span class="annottext">Q Exp
+</span><a href="#local-6989586621679239755"><span class="hs-identifier hs-var">acc</span></a></span></span><span> </span><span id="local-6989586621679239756"><span class="annot"><span class="annottext">Q Exp
+</span><a href="#local-6989586621679239756"><span class="hs-identifier hs-var">arg</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-special">[e|</span><span class="hs-special">$</span><span class="annot"><span class="annottext">Q Exp
+</span><a href="#local-6989586621679239755"><span class="hs-identifier hs-var">acc</span></a></span><span> </span><span class="hs-special">$</span><span class="annot"><span class="annottext">Q Exp
+</span><a href="#local-6989586621679239756"><span class="hs-identifier hs-var">arg</span></a></span><span class="hs-special">|]</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Name -&gt; Q Exp
 forall (m :: * -&gt; *). Quote m =&gt; Name -&gt; m Exp
 </span><span class="hs-identifier hs-var">conE</span></span><span> </span><span class="annot"><span class="annottext">Name
-</span><a href="#local-6989586621679239707"><span class="hs-identifier hs-var">con</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">[Q Exp]
-</span><a href="#local-6989586621679239726"><span class="hs-identifier hs-var">eargs</span></a></span><span class="hs-special">)</span><span>
+</span><a href="#local-6989586621679239734"><span class="hs-identifier hs-var">con</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">[Q Exp]
+</span><a href="#local-6989586621679239753"><span class="hs-identifier hs-var">eargs</span></a></span><span class="hs-special">)</span><span>
 </span><span id="line-180"></span><span>
-</span><span id="line-181"></span><span id="local-6989586621679239514"><span class="annot"><a href="Text.Gigaparsec.Patterns.html#insertAt"><span class="hs-identifier hs-type">insertAt</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Int</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="#local-6989586621679239514"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-special">[</span><span class="annot"><a href="#local-6989586621679239514"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">]</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-special">[</span><span class="annot"><a href="#local-6989586621679239514"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">]</span></span><span>
+</span><span id="line-181"></span><span id="local-6989586621679239541"><span class="annot"><a href="Text.Gigaparsec.Patterns.html#insertAt"><span class="hs-identifier hs-type">insertAt</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Int</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="#local-6989586621679239541"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-special">[</span><span class="annot"><a href="#local-6989586621679239541"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">]</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-special">[</span><span class="annot"><a href="#local-6989586621679239541"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">]</span></span><span>
 </span><span id="line-182"></span><span id="insertAt"><span class="annot"><span class="annottext">insertAt :: forall a. Int -&gt; a -&gt; [a] -&gt; [a]
 </span><a href="Text.Gigaparsec.Patterns.html#insertAt"><span class="hs-identifier hs-var hs-var">insertAt</span></a></span></span><span> </span><span class="annot"><span class="annottext">Int
-</span><span class="hs-number">0</span></span><span> </span><span id="local-6989586621679239735"><span class="annot"><span class="annottext">a
-</span><a href="#local-6989586621679239735"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span id="local-6989586621679239736"><span class="annot"><span class="annottext">[a]
-</span><a href="#local-6989586621679239736"><span class="hs-identifier hs-var">xs</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">a
-</span><a href="#local-6989586621679239735"><span class="hs-identifier hs-var">x</span></a></span><span> </span><span class="annot"><span class="annottext">a -&gt; [a] -&gt; [a]
+</span><span class="hs-number">0</span></span><span> </span><span id="local-6989586621679239762"><span class="annot"><span class="annottext">a
+</span><a href="#local-6989586621679239762"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span id="local-6989586621679239763"><span class="annot"><span class="annottext">[a]
+</span><a href="#local-6989586621679239763"><span class="hs-identifier hs-var">xs</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">a
+</span><a href="#local-6989586621679239762"><span class="hs-identifier hs-var">x</span></a></span><span> </span><span class="annot"><span class="annottext">a -&gt; [a] -&gt; [a]
 forall a. a -&gt; [a] -&gt; [a]
 </span><span class="hs-glyph hs-var">:</span></span><span> </span><span class="annot"><span class="annottext">[a]
-</span><a href="#local-6989586621679239736"><span class="hs-identifier hs-var">xs</span></a></span><span>
-</span><span id="line-183"></span><span class="annot"><a href="Text.Gigaparsec.Patterns.html#insertAt"><span class="hs-identifier hs-var">insertAt</span></a></span><span> </span><span id="local-6989586621679239737"><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679239737"><span class="hs-identifier hs-var">n</span></a></span></span><span> </span><span id="local-6989586621679239738"><span class="annot"><span class="annottext">a
-</span><a href="#local-6989586621679239738"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span class="hs-special">(</span><span id="local-6989586621679239739"><span class="annot"><span class="annottext">a
-</span><a href="#local-6989586621679239739"><span class="hs-identifier hs-var">x'</span></a></span></span><span> </span><span class="annot"><span class="hs-glyph hs-type">:</span></span><span> </span><span id="local-6989586621679239740"><span class="annot"><span class="annottext">[a]
-</span><a href="#local-6989586621679239740"><span class="hs-identifier hs-var">xs</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">a
-</span><a href="#local-6989586621679239739"><span class="hs-identifier hs-var">x'</span></a></span><span> </span><span class="annot"><span class="annottext">a -&gt; [a] -&gt; [a]
+</span><a href="#local-6989586621679239763"><span class="hs-identifier hs-var">xs</span></a></span><span>
+</span><span id="line-183"></span><span class="annot"><a href="Text.Gigaparsec.Patterns.html#insertAt"><span class="hs-identifier hs-var">insertAt</span></a></span><span> </span><span id="local-6989586621679239764"><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679239764"><span class="hs-identifier hs-var">n</span></a></span></span><span> </span><span id="local-6989586621679239765"><span class="annot"><span class="annottext">a
+</span><a href="#local-6989586621679239765"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span class="hs-special">(</span><span id="local-6989586621679239766"><span class="annot"><span class="annottext">a
+</span><a href="#local-6989586621679239766"><span class="hs-identifier hs-var">x'</span></a></span></span><span> </span><span class="annot"><span class="hs-glyph hs-type">:</span></span><span> </span><span id="local-6989586621679239767"><span class="annot"><span class="annottext">[a]
+</span><a href="#local-6989586621679239767"><span class="hs-identifier hs-var">xs</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">a
+</span><a href="#local-6989586621679239766"><span class="hs-identifier hs-var">x'</span></a></span><span> </span><span class="annot"><span class="annottext">a -&gt; [a] -&gt; [a]
 forall a. a -&gt; [a] -&gt; [a]
 </span><span class="hs-glyph hs-var">:</span></span><span> </span><span class="annot"><span class="annottext">Int -&gt; a -&gt; [a] -&gt; [a]
 forall a. Int -&gt; a -&gt; [a] -&gt; [a]
 </span><a href="Text.Gigaparsec.Patterns.html#insertAt"><span class="hs-identifier hs-var">insertAt</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679239737"><span class="hs-identifier hs-var">n</span></a></span><span> </span><span class="annot"><span class="annottext">Int -&gt; Int -&gt; Int
+</span><a href="#local-6989586621679239764"><span class="hs-identifier hs-var">n</span></a></span><span> </span><span class="annot"><span class="annottext">Int -&gt; Int -&gt; Int
 forall a. Num a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-glyph hs-var">-</span></span><span> </span><span class="annot"><span class="annottext">Int
 </span><span class="hs-number">1</span></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">a
-</span><a href="#local-6989586621679239738"><span class="hs-identifier hs-var">x</span></a></span><span> </span><span class="annot"><span class="annottext">[a]
-</span><a href="#local-6989586621679239740"><span class="hs-identifier hs-var">xs</span></a></span><span>
+</span><a href="#local-6989586621679239765"><span class="hs-identifier hs-var">x</span></a></span><span> </span><span class="annot"><span class="annottext">[a]
+</span><a href="#local-6989586621679239767"><span class="hs-identifier hs-var">xs</span></a></span><span>
 </span><span id="line-184"></span><span class="annot"><a href="Text.Gigaparsec.Patterns.html#insertAt"><span class="hs-identifier hs-var">insertAt</span></a></span><span> </span><span class="annot"><span class="annottext">Int
 </span><span class="hs-identifier">_</span></span><span> </span><span class="annot"><span class="annottext">a
 </span><span class="hs-identifier">_</span></span><span> </span><span class="hs-special">[</span><span class="hs-special">]</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-special">[</span><span class="hs-special">]</span><span>
 </span><span id="line-185"></span><span>
-</span><span id="line-186"></span><span id="local-6989586621679239485"><span id="local-6989586621679239486"><span class="annot"><a href="Text.Gigaparsec.Patterns.html#maybeApply"><span class="hs-identifier hs-type">maybeApply</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-special">(</span><span class="annot"><a href="#local-6989586621679239485"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="#local-6989586621679239486"><span class="hs-identifier hs-type">b</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="#local-6989586621679239486"><span class="hs-identifier hs-type">b</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Maybe</span></span><span> </span><span class="annot"><a href="#local-6989586621679239485"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="#local-6989586621679239486"><span class="hs-identifier hs-type">b</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="#local-6989586621679239486"><span class="hs-identifier hs-type">b</span></a></span></span></span><span>
+</span><span id="line-186"></span><span id="local-6989586621679239512"><span id="local-6989586621679239513"><span class="annot"><a href="Text.Gigaparsec.Patterns.html#maybeApply"><span class="hs-identifier hs-type">maybeApply</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-special">(</span><span class="annot"><a href="#local-6989586621679239512"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="#local-6989586621679239513"><span class="hs-identifier hs-type">b</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="#local-6989586621679239513"><span class="hs-identifier hs-type">b</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Maybe</span></span><span> </span><span class="annot"><a href="#local-6989586621679239512"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="#local-6989586621679239513"><span class="hs-identifier hs-type">b</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="#local-6989586621679239513"><span class="hs-identifier hs-type">b</span></a></span></span></span><span>
 </span><span id="line-187"></span><span id="maybeApply"><span class="annot"><span class="annottext">maybeApply :: forall a b. (a -&gt; b -&gt; b) -&gt; Maybe a -&gt; b -&gt; b
 </span><a href="Text.Gigaparsec.Patterns.html#maybeApply"><span class="hs-identifier hs-var hs-var">maybeApply</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">(b -&gt; b) -&gt; (a -&gt; b -&gt; b) -&gt; Maybe a -&gt; b -&gt; b
 forall b a. b -&gt; (a -&gt; b) -&gt; Maybe a -&gt; b
@@ -625,69 +625,69 @@ forall b a. b -&gt; (a -&gt; b) -&gt; Maybe a -&gt; b
 forall a. a -&gt; a
 </span><span class="hs-identifier hs-var">id</span></span><span>
 </span><span id="line-188"></span><span>
-</span><span id="line-189"></span><span id="local-6989586621679239487"><span class="annot"><a href="Text.Gigaparsec.Patterns.html#deleteAt"><span class="hs-identifier hs-type">deleteAt</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Int</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-special">[</span><span class="annot"><a href="#local-6989586621679239487"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">]</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-special">[</span><span class="annot"><a href="#local-6989586621679239487"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">]</span></span><span>
+</span><span id="line-189"></span><span id="local-6989586621679239514"><span class="annot"><a href="Text.Gigaparsec.Patterns.html#deleteAt"><span class="hs-identifier hs-type">deleteAt</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Int</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-special">[</span><span class="annot"><a href="#local-6989586621679239514"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">]</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-special">[</span><span class="annot"><a href="#local-6989586621679239514"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">]</span></span><span>
 </span><span id="line-190"></span><span id="deleteAt"><span class="annot"><span class="annottext">deleteAt :: forall a. Int -&gt; [a] -&gt; [a]
 </span><a href="Text.Gigaparsec.Patterns.html#deleteAt"><span class="hs-identifier hs-var hs-var">deleteAt</span></a></span></span><span> </span><span class="annot"><span class="annottext">Int
 </span><span class="hs-number">0</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">a
-</span><span class="hs-identifier">_</span></span><span class="annot"><span class="hs-glyph hs-type">:</span></span><span id="local-6989586621679239745"><span class="annot"><span class="annottext">[a]
-</span><a href="#local-6989586621679239745"><span class="hs-identifier hs-var">xs</span></a></span></span><span class="hs-special">)</span><span>  </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">[a]
-</span><a href="#local-6989586621679239745"><span class="hs-identifier hs-var">xs</span></a></span><span>
-</span><span id="line-191"></span><span class="annot"><a href="Text.Gigaparsec.Patterns.html#deleteAt"><span class="hs-identifier hs-var">deleteAt</span></a></span><span> </span><span id="local-6989586621679239746"><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679239746"><span class="hs-identifier hs-var">n</span></a></span></span><span> </span><span class="hs-special">(</span><span id="local-6989586621679239747"><span class="annot"><span class="annottext">a
-</span><a href="#local-6989586621679239747"><span class="hs-identifier hs-var">x</span></a></span></span><span class="annot"><span class="hs-glyph hs-type">:</span></span><span id="local-6989586621679239748"><span class="annot"><span class="annottext">[a]
-</span><a href="#local-6989586621679239748"><span class="hs-identifier hs-var">xs</span></a></span></span><span class="hs-special">)</span><span>  </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">a
-</span><a href="#local-6989586621679239747"><span class="hs-identifier hs-var">x</span></a></span><span> </span><span class="annot"><span class="annottext">a -&gt; [a] -&gt; [a]
+</span><span class="hs-identifier">_</span></span><span class="annot"><span class="hs-glyph hs-type">:</span></span><span id="local-6989586621679239772"><span class="annot"><span class="annottext">[a]
+</span><a href="#local-6989586621679239772"><span class="hs-identifier hs-var">xs</span></a></span></span><span class="hs-special">)</span><span>  </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">[a]
+</span><a href="#local-6989586621679239772"><span class="hs-identifier hs-var">xs</span></a></span><span>
+</span><span id="line-191"></span><span class="annot"><a href="Text.Gigaparsec.Patterns.html#deleteAt"><span class="hs-identifier hs-var">deleteAt</span></a></span><span> </span><span id="local-6989586621679239773"><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679239773"><span class="hs-identifier hs-var">n</span></a></span></span><span> </span><span class="hs-special">(</span><span id="local-6989586621679239774"><span class="annot"><span class="annottext">a
+</span><a href="#local-6989586621679239774"><span class="hs-identifier hs-var">x</span></a></span></span><span class="annot"><span class="hs-glyph hs-type">:</span></span><span id="local-6989586621679239775"><span class="annot"><span class="annottext">[a]
+</span><a href="#local-6989586621679239775"><span class="hs-identifier hs-var">xs</span></a></span></span><span class="hs-special">)</span><span>  </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">a
+</span><a href="#local-6989586621679239774"><span class="hs-identifier hs-var">x</span></a></span><span> </span><span class="annot"><span class="annottext">a -&gt; [a] -&gt; [a]
 forall a. a -&gt; [a] -&gt; [a]
 </span><span class="hs-glyph hs-var">:</span></span><span> </span><span class="annot"><span class="annottext">Int -&gt; [a] -&gt; [a]
 forall a. Int -&gt; [a] -&gt; [a]
 </span><a href="Text.Gigaparsec.Patterns.html#deleteAt"><span class="hs-identifier hs-var">deleteAt</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679239746"><span class="hs-identifier hs-var">n</span></a></span><span class="annot"><span class="annottext">Int -&gt; Int -&gt; Int
+</span><a href="#local-6989586621679239773"><span class="hs-identifier hs-var">n</span></a></span><span class="annot"><span class="annottext">Int -&gt; Int -&gt; Int
 forall a. Num a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-glyph hs-var">-</span></span><span class="annot"><span class="annottext">Int
 </span><span class="hs-number">1</span></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">[a]
-</span><a href="#local-6989586621679239748"><span class="hs-identifier hs-var">xs</span></a></span><span>
+</span><a href="#local-6989586621679239775"><span class="hs-identifier hs-var">xs</span></a></span><span>
 </span><span id="line-192"></span><span class="annot"><a href="Text.Gigaparsec.Patterns.html#deleteAt"><span class="hs-identifier hs-var">deleteAt</span></a></span><span> </span><span class="annot"><span class="annottext">Int
 </span><span class="hs-identifier">_</span></span><span> </span><span class="hs-special">[</span><span class="hs-special">]</span><span>      </span><span class="hs-glyph">=</span><span> </span><span class="hs-special">[</span><span class="hs-special">]</span><span>
 </span><span id="line-193"></span><span>
-</span><span id="line-194"></span><span class="annot"><a href="Text.Gigaparsec.Patterns.html#elemIndices"><span class="hs-identifier hs-type">elemIndices</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-keyword">forall</span><span> </span><span id="local-6989586621679239504"><span class="annot"><a href="#local-6989586621679239504"><span class="hs-identifier hs-type">a</span></a></span></span><span class="hs-operator">.</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Eq</span></span><span> </span><span class="annot"><a href="#local-6989586621679239504"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><a href="#local-6989586621679239504"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-special">[</span><span class="annot"><a href="#local-6989586621679239504"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">]</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-special">[</span><span class="annot"><span class="hs-identifier hs-type">Int</span></span><span class="hs-special">]</span><span>
+</span><span id="line-194"></span><span class="annot"><a href="Text.Gigaparsec.Patterns.html#elemIndices"><span class="hs-identifier hs-type">elemIndices</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-keyword">forall</span><span> </span><span id="local-6989586621679239531"><span class="annot"><a href="#local-6989586621679239531"><span class="hs-identifier hs-type">a</span></a></span></span><span class="hs-operator">.</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Eq</span></span><span> </span><span class="annot"><a href="#local-6989586621679239531"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><a href="#local-6989586621679239531"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-special">[</span><span class="annot"><a href="#local-6989586621679239531"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">]</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-special">[</span><span class="annot"><span class="hs-identifier hs-type">Int</span></span><span class="hs-special">]</span><span>
 </span><span id="line-195"></span><span id="elemIndices"><span class="annot"><span class="annottext">elemIndices :: forall a. Eq a =&gt; a -&gt; [a] -&gt; [Int]
 </span><a href="Text.Gigaparsec.Patterns.html#elemIndices"><span class="hs-identifier hs-var hs-var">elemIndices</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Int -&gt; a -&gt; [a] -&gt; [Int]
-</span><a href="#local-6989586621679239755"><span class="hs-identifier hs-var">go</span></a></span><span> </span><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679239782"><span class="hs-identifier hs-var">go</span></a></span><span> </span><span class="annot"><span class="annottext">Int
 </span><span class="hs-number">0</span></span><span>
-</span><span id="line-196"></span><span>  </span><span class="hs-keyword">where</span><span> </span><span class="annot"><a href="#local-6989586621679239755"><span class="hs-identifier hs-type">go</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Int</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="#local-6989586621679239504"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-special">[</span><span class="annot"><a href="#local-6989586621679239504"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">]</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-special">[</span><span class="annot"><span class="hs-identifier hs-type">Int</span></span><span class="hs-special">]</span><span>
-</span><span id="line-197"></span><span>        </span><span id="local-6989586621679239755"><span class="annot"><span class="annottext">go :: Int -&gt; a -&gt; [a] -&gt; [Int]
-</span><a href="#local-6989586621679239755"><span class="hs-identifier hs-var hs-var">go</span></a></span></span><span> </span><span class="annot"><span class="annottext">Int
+</span><span id="line-196"></span><span>  </span><span class="hs-keyword">where</span><span> </span><span class="annot"><a href="#local-6989586621679239782"><span class="hs-identifier hs-type">go</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Int</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="#local-6989586621679239531"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-special">[</span><span class="annot"><a href="#local-6989586621679239531"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">]</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-special">[</span><span class="annot"><span class="hs-identifier hs-type">Int</span></span><span class="hs-special">]</span><span>
+</span><span id="line-197"></span><span>        </span><span id="local-6989586621679239782"><span class="annot"><span class="annottext">go :: Int -&gt; a -&gt; [a] -&gt; [Int]
+</span><a href="#local-6989586621679239782"><span class="hs-identifier hs-var hs-var">go</span></a></span></span><span> </span><span class="annot"><span class="annottext">Int
 </span><span class="hs-identifier">_</span></span><span> </span><span class="annot"><span class="annottext">a
 </span><span class="hs-identifier">_</span></span><span> </span><span class="hs-special">[</span><span class="hs-special">]</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-special">[</span><span class="hs-special">]</span><span>
-</span><span id="line-198"></span><span>        </span><span class="annot"><a href="#local-6989586621679239755"><span class="hs-identifier hs-var">go</span></a></span><span> </span><span id="local-6989586621679239756"><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679239756"><span class="hs-identifier hs-var">i</span></a></span></span><span> </span><span id="local-6989586621679239757"><span class="annot"><span class="annottext">a
-</span><a href="#local-6989586621679239757"><span class="hs-identifier hs-var">y</span></a></span></span><span> </span><span class="hs-special">(</span><span id="local-6989586621679239758"><span class="annot"><span class="annottext">a
-</span><a href="#local-6989586621679239758"><span class="hs-identifier hs-var">x</span></a></span></span><span class="annot"><span class="hs-glyph hs-type">:</span></span><span id="local-6989586621679239759"><span class="annot"><span class="annottext">[a]
-</span><a href="#local-6989586621679239759"><span class="hs-identifier hs-var">xs</span></a></span></span><span class="hs-special">)</span><span>
+</span><span id="line-198"></span><span>        </span><span class="annot"><a href="#local-6989586621679239782"><span class="hs-identifier hs-var">go</span></a></span><span> </span><span id="local-6989586621679239783"><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679239783"><span class="hs-identifier hs-var">i</span></a></span></span><span> </span><span id="local-6989586621679239784"><span class="annot"><span class="annottext">a
+</span><a href="#local-6989586621679239784"><span class="hs-identifier hs-var">y</span></a></span></span><span> </span><span class="hs-special">(</span><span id="local-6989586621679239785"><span class="annot"><span class="annottext">a
+</span><a href="#local-6989586621679239785"><span class="hs-identifier hs-var">x</span></a></span></span><span class="annot"><span class="hs-glyph hs-type">:</span></span><span id="local-6989586621679239786"><span class="annot"><span class="annottext">[a]
+</span><a href="#local-6989586621679239786"><span class="hs-identifier hs-var">xs</span></a></span></span><span class="hs-special">)</span><span>
 </span><span id="line-199"></span><span>          </span><span class="hs-glyph">|</span><span> </span><span class="annot"><span class="annottext">a
-</span><a href="#local-6989586621679239758"><span class="hs-identifier hs-var">x</span></a></span><span> </span><span class="annot"><span class="annottext">a -&gt; a -&gt; Bool
+</span><a href="#local-6989586621679239785"><span class="hs-identifier hs-var">x</span></a></span><span> </span><span class="annot"><span class="annottext">a -&gt; a -&gt; Bool
 forall a. Eq a =&gt; a -&gt; a -&gt; Bool
 </span><span class="hs-operator hs-var">==</span></span><span> </span><span class="annot"><span class="annottext">a
-</span><a href="#local-6989586621679239757"><span class="hs-identifier hs-var">y</span></a></span><span>     </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679239756"><span class="hs-identifier hs-var">i</span></a></span><span> </span><span class="annot"><span class="annottext">Int -&gt; [Int] -&gt; [Int]
+</span><a href="#local-6989586621679239784"><span class="hs-identifier hs-var">y</span></a></span><span>     </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679239783"><span class="hs-identifier hs-var">i</span></a></span><span> </span><span class="annot"><span class="annottext">Int -&gt; [Int] -&gt; [Int]
 forall a. a -&gt; [a] -&gt; [a]
 </span><span class="hs-glyph hs-var">:</span></span><span> </span><span class="annot"><span class="annottext">Int -&gt; a -&gt; [a] -&gt; [Int]
-</span><a href="#local-6989586621679239755"><span class="hs-identifier hs-var">go</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679239756"><span class="hs-identifier hs-var">i</span></a></span><span> </span><span class="annot"><span class="annottext">Int -&gt; Int -&gt; Int
+</span><a href="#local-6989586621679239782"><span class="hs-identifier hs-var">go</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679239783"><span class="hs-identifier hs-var">i</span></a></span><span> </span><span class="annot"><span class="annottext">Int -&gt; Int -&gt; Int
 forall a. Num a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">+</span></span><span> </span><span class="annot"><span class="annottext">Int
 </span><span class="hs-number">1</span></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">a
-</span><a href="#local-6989586621679239757"><span class="hs-identifier hs-var">y</span></a></span><span> </span><span class="annot"><span class="annottext">[a]
-</span><a href="#local-6989586621679239759"><span class="hs-identifier hs-var">xs</span></a></span><span>
+</span><a href="#local-6989586621679239784"><span class="hs-identifier hs-var">y</span></a></span><span> </span><span class="annot"><span class="annottext">[a]
+</span><a href="#local-6989586621679239786"><span class="hs-identifier hs-var">xs</span></a></span><span>
 </span><span id="line-200"></span><span>          </span><span class="hs-glyph">|</span><span> </span><span class="annot"><span class="annottext">Bool
 </span><span class="hs-identifier hs-var">otherwise</span></span><span>  </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Int -&gt; a -&gt; [a] -&gt; [Int]
-</span><a href="#local-6989586621679239755"><span class="hs-identifier hs-var">go</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679239756"><span class="hs-identifier hs-var">i</span></a></span><span> </span><span class="annot"><span class="annottext">Int -&gt; Int -&gt; Int
+</span><a href="#local-6989586621679239782"><span class="hs-identifier hs-var">go</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679239783"><span class="hs-identifier hs-var">i</span></a></span><span> </span><span class="annot"><span class="annottext">Int -&gt; Int -&gt; Int
 forall a. Num a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">+</span></span><span> </span><span class="annot"><span class="annottext">Int
 </span><span class="hs-number">1</span></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">a
-</span><a href="#local-6989586621679239757"><span class="hs-identifier hs-var">y</span></a></span><span> </span><span class="annot"><span class="annottext">[a]
-</span><a href="#local-6989586621679239759"><span class="hs-identifier hs-var">xs</span></a></span><span>
+</span><a href="#local-6989586621679239784"><span class="hs-identifier hs-var">y</span></a></span><span> </span><span class="annot"><span class="annottext">[a]
+</span><a href="#local-6989586621679239786"><span class="hs-identifier hs-var">xs</span></a></span><span>
 </span><span id="line-201"></span><span>
 </span><span id="line-202"></span><span class="annot"><a href="Text.Gigaparsec.Patterns.html#pretty"><span class="hs-identifier hs-type">pretty</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Name</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span>
 </span><span id="line-203"></span><span id="pretty"><span class="annot"><span class="annottext">pretty :: Name -&gt; String
