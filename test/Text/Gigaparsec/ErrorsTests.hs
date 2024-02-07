@@ -394,4 +394,10 @@ regressionTests = testGroup "thou shalt not regress"
           testParse (amend greeting <?> ["greeting"]) "hello world." @?=
             Failure (TestError (1, 1) (VanillaError (Just (Raw "h")) [Named "greeting"] [] 1))
       ]
+  , testGroup "hide should"
+      [ testCase "not revive dead hints" do
+          let p = optional digit <* char ']' <* hide (optional letter) <* eof
+          testParse p "]1" @?=
+            Failure (TestError (1, 2) (VanillaError (Just (Raw "1")) [EndOfInput] [] 1))
+      ]
   ]

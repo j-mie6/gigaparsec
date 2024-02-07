@@ -124,7 +124,10 @@ hide :: Parsec a -> Parsec a
 hide (Internal.Parsec p) =
   Internal.Parsec $ \st good bad ->
     let !origConsumed = Internal.consumed st
-        good' x st' = good x st' { Internal.hints = Internal.hints st } -- TODO: should this change valid offset?
+        good' x st' = good x st' {
+          Internal.hints = Internal.hints st,
+          Internal.hintsValidOffset = Internal.hintsValidOffset st
+        }
         bad' err st'
           | Internal.consumed st' /= origConsumed = bad err st'
           | otherwise = Internal.useHints bad (Internal.emptyErr st' 0) st'
