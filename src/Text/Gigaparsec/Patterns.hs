@@ -31,7 +31,7 @@ import Data.Maybe (isJust, isNothing)
 import Language.Haskell.TH (
     Q, Exp, Name, Dec,
     Type (ForallT, AppT, ArrowT, StarT, ConT),
-    Info (DataConI), TyVarBndr (KindedTV, PlainTV),
+    Info (DataConI, PatSynI), TyVarBndr (KindedTV, PlainTV),
     sigD, funD, clause, varP, normalB, varE, reify, mkName, newName,
     isExtEnabled, Extension (KindSignatures),
     forallT, conE, lamE
@@ -48,7 +48,7 @@ then a list of "ticked" constructors to generate lifted constructors for. This
 means adding a single @'@ in front of the constructor name. For example:
 
 > {-# LANGUAGE TemplateHaskell #-}
-> data Foo = Foo a | Bar Int String
+> data Foo a = Foo a | Bar Int String
 > $(deriveLiftedConstructors "mk" ['Foo, 'Bar])
 
 Will generate two lifted constructors of the shape:
@@ -61,6 +61,21 @@ the @pos@ combinator will be applied automatically, and this will not be apparen
 of the generated constructor.
 
 @since 0.2.2.0
+
+Pattern synonyms can be used to set type parameters to `Text.Gigaparsec.Position.Pos`:
+
+> {-# LANGUAGE PatternSynonyms #-}
+> pattern PosFoo :: Pos -> Foo Pos
+> pattern PosFoo p = Foo p
+> $(deriveLiftedConstructors "mk" ['PosFoo])
+
+This will generate a lifted constructor of the shape:
+
+> mkPosFoo :: Parsec (Foo Pos)
+
+The @pos@ combinator will be applied automatically.
+
+@since 0.2.6.0
 -}
 deriveLiftedConstructors :: String -- ^ The prefix to be added to generated names
                          -> [Name] -- ^ The list of "ticked" constructors to generate for
@@ -88,7 +103,7 @@ then a list of "ticked" constructors to generate deferred constructors for. This
 means adding a single @'@ in front of the constructor name. For example:
 
 > {-# LANGUAGE TemplateHaskell #-}
-> data Foo = Foo a | Bar Int String
+> data Foo a = Foo a | Bar Int String
 > $(deriveDeferredConstructors "mk" ['Foo, 'Bar])
 
 Will generate two deferred constructors of the shape:
@@ -101,6 +116,21 @@ the @pos@ combinator will be applied automatically, and this will not be apparen
 of the generated constructor.
 
 @since 0.2.2.0
+
+Pattern synonyms can be used to set type parameters to `Text.Gigaparsec.Position.Pos`:
+
+> {-# LANGUAGE PatternSynonyms #-}
+> pattern PosFoo :: Pos -> Foo Pos
+> pattern PosFoo p = Foo p
+> $(deriveLiftedConstructors "mk" ['PosFoo])
+
+This will generate a lifted constructor of the shape:
+
+> mkPosFoo :: Parsec (Foo Pos)
+
+The @pos@ combinator will be applied automatically.
+
+@since 0.2.6.0
 -}
 deriveDeferredConstructors :: String -- ^ The prefix to be added to generated names
                            -> [Name] -- ^ The list of "ticked" constructors to generate for
@@ -124,10 +154,15 @@ funcType = foldr1 (\ty rest -> [t| $ty -> $rest |])
 parserOf :: Q Type -> Q Type
 parserOf ty = [t| Parsec $ty |]
 
+extractConType :: Info -> Maybe Type
+extractConType (DataConI _ ty _) = Just ty
+extractConType (PatSynI _ ty) = Just ty
+extractConType _ = Nothing
+
 extractMeta :: Bool -> String -> ([Q Type] -> Q Type) -> Name
           -> Q (Name, Q Type, Q Exp, Bool, Int)
 extractMeta posLast prefix buildType con = do
-  DataConI _ ty _ <- reify con
+  Just ty <- fmap extractConType $ reify con
   (forAll, tys) <- splitFun ty
   posIdx <- findPosIdx con tys
   let tys' = maybeApply deleteAt posIdx tys
