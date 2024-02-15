@@ -175,7 +175,8 @@ splitFun :: Type -> Q (Q Type -> Q Type, [Type])
 splitFun (ForallT bndrs ctx ty) = do
   kindSigs <- isExtEnabled KindSignatures
   let bndrs' = if kindSigs then bndrs else map sanitiseStarT bndrs
-  return (forallT bndrs' (pure ctx), splitFun' ty)
+  (forallT', ty') <- splitFun ty
+  return (forallT bndrs' (pure ctx) . forallT', ty')
 splitFun ty                     = return (id, splitFun' ty)
 
 splitFun' :: Type -> [Type]
