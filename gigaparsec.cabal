@@ -24,7 +24,7 @@ version:            0.2.5.1
 
 -- A short (one-line) description of the package.
 synopsis:
-    Refreshed parsec-style library for compatiblity with Scala parsley
+    Refreshed parsec-style library for compatibility with Scala parsley
 
 -- A longer description of the package.
 description:
