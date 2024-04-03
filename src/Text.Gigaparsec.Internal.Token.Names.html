@@ -40,7 +40,7 @@
 </span><span id="line-36"></span><span>
 </span><span id="line-37"></span><span class="annot"><a href="Text.Gigaparsec.Internal.Token.Names.html#mkNames"><span class="hs-identifier hs-type">mkNames</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Token.Descriptions.html#NameDesc"><span class="hs-identifier hs-type">NameDesc</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Token.Descriptions.html#SymbolDesc"><span class="hs-identifier hs-type">SymbolDesc</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Token.Errors.html#ErrorConfig"><span class="hs-identifier hs-type">ErrorConfig</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.Token.Names.html#Names"><span class="hs-identifier hs-type">Names</span></a></span><span>
 </span><span id="line-38"></span><span id="mkNames"><span class="annot"><span class="annottext">mkNames :: NameDesc -&gt; SymbolDesc -&gt; ErrorConfig -&gt; Names
-</span><a href="Text.Gigaparsec.Internal.Token.Names.html#mkNames"><span class="hs-identifier hs-var hs-var">mkNames</span></a></span></span><span> </span><span class="annot"><a href="Text.Gigaparsec.Token.Descriptions.html#NameDesc"><span class="hs-identifier hs-type">NameDesc</span></a></span><span class="hs-special">{</span><span id="local-6989586621679242897"><span id="local-6989586621679242898"><span id="local-6989586621679242899"><span id="local-6989586621679242900"><span class="annot"><span class="annottext">CharPredicate
+</span><a href="Text.Gigaparsec.Internal.Token.Names.html#mkNames"><span class="hs-identifier hs-var hs-var">mkNames</span></a></span></span><span> </span><span class="annot"><a href="Text.Gigaparsec.Token.Descriptions.html#NameDesc"><span class="hs-identifier hs-type">NameDesc</span></a></span><span class="hs-special">{</span><span id="local-6989586621679242894"><span id="local-6989586621679242895"><span id="local-6989586621679242896"><span id="local-6989586621679242897"><span class="annot"><span class="annottext">CharPredicate
 identifierStart :: NameDesc -&gt; CharPredicate
 identifierLetter :: NameDesc -&gt; CharPredicate
 operatorStart :: NameDesc -&gt; CharPredicate
@@ -49,8 +49,8 @@ identifierStart :: CharPredicate
 identifierLetter :: CharPredicate
 operatorStart :: CharPredicate
 operatorLetter :: CharPredicate
-</span><a href="Text.Gigaparsec.Token.Descriptions.html#identifierStart"><span class="hs-glyph hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">..</span></a></span></span></span></span></span><span class="hs-special">}</span><span> </span><span id="local-6989586621679242901"><span class="annot"><span class="annottext">symbolDesc :: SymbolDesc
-</span><a href="#local-6989586621679242901"><span class="hs-identifier hs-var">symbolDesc</span></a></span></span><span class="hs-glyph">@</span><span class="annot"><a href="Text.Gigaparsec.Token.Descriptions.html#SymbolDesc"><span class="hs-identifier hs-type">SymbolDesc</span></a></span><span class="hs-special">{</span><span id="local-6989586621679242902"><span id="local-6989586621679242903"><span id="local-6989586621679242904"><span class="annot"><span class="annottext">Bool
+</span><a href="Text.Gigaparsec.Token.Descriptions.html#identifierStart"><span class="hs-glyph hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">..</span></a></span></span></span></span></span><span class="hs-special">}</span><span> </span><span id="local-6989586621679242898"><span class="annot"><span class="annottext">symbolDesc :: SymbolDesc
+</span><a href="#local-6989586621679242898"><span class="hs-identifier hs-var">symbolDesc</span></a></span></span><span class="hs-glyph">@</span><span class="annot"><a href="Text.Gigaparsec.Token.Descriptions.html#SymbolDesc"><span class="hs-identifier hs-type">SymbolDesc</span></a></span><span class="hs-special">{</span><span id="local-6989586621679242899"><span id="local-6989586621679242900"><span id="local-6989586621679242901"><span class="annot"><span class="annottext">Bool
 Set String
 hardKeywords :: SymbolDesc -&gt; Set String
 hardOperators :: SymbolDesc -&gt; Set String
@@ -58,8 +58,8 @@ caseSensitive :: SymbolDesc -&gt; Bool
 hardKeywords :: Set String
 hardOperators :: Set String
 caseSensitive :: Bool
-</span><a href="Text.Gigaparsec.Token.Descriptions.html#hardKeywords"><span class="hs-glyph hs-var hs-var hs-var hs-var hs-var hs-var">..</span></a></span></span></span></span><span class="hs-special">}</span><span> </span><span class="hs-glyph">!</span><span id="local-6989586621679242905"><span class="annot"><span class="annottext">ErrorConfig
-</span><a href="#local-6989586621679242905"><span class="hs-identifier hs-var">err</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.Token.Names.html#Names"><span class="hs-identifier hs-type">Names</span></a></span><span> </span><span class="hs-special">{</span><span class="annot"><span class="annottext">Parsec String
+</span><a href="Text.Gigaparsec.Token.Descriptions.html#hardKeywords"><span class="hs-glyph hs-var hs-var hs-var hs-var hs-var hs-var">..</span></a></span></span></span></span><span class="hs-special">}</span><span> </span><span class="hs-glyph">!</span><span id="local-6989586621679242902"><span class="annot"><span class="annottext">ErrorConfig
+</span><a href="#local-6989586621679242902"><span class="hs-identifier hs-var">err</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.Token.Names.html#Names"><span class="hs-identifier hs-type">Names</span></a></span><span> </span><span class="hs-special">{</span><span class="annot"><span class="annottext">Parsec String
 CharPredicate -&gt; Parsec String
 identifier :: Parsec String
 identifier' :: CharPredicate -&gt; Parsec String
@@ -71,29 +71,29 @@ userDefinedOperator :: Parsec String
 userDefinedOperator' :: CharPredicate -&gt; Parsec String
 </span><a href="Text.Gigaparsec.Internal.Token.Names.html#identifier"><span class="hs-glyph hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">..</span></a></span><span class="hs-special">}</span><span>
 </span><span id="line-39"></span><span>  </span><span class="hs-keyword">where</span><span>
-</span><span id="line-40"></span><span>    </span><span class="hs-glyph">!</span><span id="local-6989586621679242910"><span class="annot"><span class="annottext">isReserved :: String -&gt; Bool
-</span><a href="#local-6989586621679242910"><span class="hs-identifier hs-var hs-var">isReserved</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">SymbolDesc -&gt; String -&gt; Bool
+</span><span id="line-40"></span><span>    </span><span class="hs-glyph">!</span><span id="local-6989586621679242907"><span class="annot"><span class="annottext">isReserved :: String -&gt; Bool
+</span><a href="#local-6989586621679242907"><span class="hs-identifier hs-var hs-var">isReserved</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">SymbolDesc -&gt; String -&gt; Bool
 </span><a href="Text.Gigaparsec.Internal.Token.Names.html#isReservedName"><span class="hs-identifier hs-var">isReservedName</span></a></span><span> </span><span class="annot"><span class="annottext">SymbolDesc
-</span><a href="#local-6989586621679242901"><span class="hs-identifier hs-var">symbolDesc</span></a></span><span>
-</span><span id="line-41"></span><span>    </span><span class="hs-glyph">!</span><span id="local-6989586621679242906"><span class="annot"><span class="annottext">identifier :: Parsec String
-</span><a href="#local-6989586621679242906"><span class="hs-identifier hs-var hs-var">identifier</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
+</span><a href="#local-6989586621679242898"><span class="hs-identifier hs-var">symbolDesc</span></a></span><span>
+</span><span id="line-41"></span><span>    </span><span class="hs-glyph">!</span><span id="local-6989586621679242903"><span class="annot"><span class="annottext">identifier :: Parsec String
+</span><a href="#local-6989586621679242903"><span class="hs-identifier hs-var hs-var">identifier</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
 </span><span id="line-42"></span><span>      </span><span class="annot"><span class="annottext">CharPredicate
 -&gt; CharPredicate
 -&gt; (String -&gt; Bool)
 -&gt; String
 -&gt; (String -&gt; String)
 -&gt; Parsec String
-</span><a href="#local-6989586621679242912"><span class="hs-identifier hs-var">keyOrOp</span></a></span><span> </span><span class="annot"><span class="annottext">CharPredicate
-</span><a href="#local-6989586621679242897"><span class="hs-identifier hs-var">identifierStart</span></a></span><span> </span><span class="annot"><span class="annottext">CharPredicate
-</span><a href="#local-6989586621679242898"><span class="hs-identifier hs-var">identifierLetter</span></a></span><span> </span><span class="annot"><span class="annottext">String -&gt; Bool
-</span><a href="#local-6989586621679242910"><span class="hs-identifier hs-var">isReserved</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">ErrorConfig -&gt; String
+</span><a href="#local-6989586621679242909"><span class="hs-identifier hs-var">keyOrOp</span></a></span><span> </span><span class="annot"><span class="annottext">CharPredicate
+</span><a href="#local-6989586621679242894"><span class="hs-identifier hs-var">identifierStart</span></a></span><span> </span><span class="annot"><span class="annottext">CharPredicate
+</span><a href="#local-6989586621679242895"><span class="hs-identifier hs-var">identifierLetter</span></a></span><span> </span><span class="annot"><span class="annottext">String -&gt; Bool
+</span><a href="#local-6989586621679242907"><span class="hs-identifier hs-var">isReserved</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">ErrorConfig -&gt; String
 </span><a href="Text.Gigaparsec.Token.Errors.html#labelNameIdentifier"><span class="hs-identifier hs-var">labelNameIdentifier</span></a></span><span> </span><span class="annot"><span class="annottext">ErrorConfig
-</span><a href="#local-6989586621679242905"><span class="hs-identifier hs-var">err</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">ErrorConfig -&gt; String -&gt; String
+</span><a href="#local-6989586621679242902"><span class="hs-identifier hs-var">err</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">ErrorConfig -&gt; String -&gt; String
 </span><a href="Text.Gigaparsec.Token.Errors.html#unexpectedNameIllegalIdentifier"><span class="hs-identifier hs-var">unexpectedNameIllegalIdentifier</span></a></span><span> </span><span class="annot"><span class="annottext">ErrorConfig
-</span><a href="#local-6989586621679242905"><span class="hs-identifier hs-var">err</span></a></span><span class="hs-special">)</span><span>
-</span><span id="line-43"></span><span>    </span><span id="local-6989586621679242907"><span class="annot"><span class="annottext">identifier' :: CharPredicate -&gt; Parsec String
-</span><a href="#local-6989586621679242907"><span class="hs-identifier hs-var hs-var">identifier'</span></a></span></span><span> </span><span id="local-6989586621679242915"><span class="annot"><span class="annottext">CharPredicate
-</span><a href="#local-6989586621679242915"><span class="hs-identifier hs-var">start</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">FilterConfig String
+</span><a href="#local-6989586621679242902"><span class="hs-identifier hs-var">err</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-43"></span><span>    </span><span id="local-6989586621679242904"><span class="annot"><span class="annottext">identifier' :: CharPredicate -&gt; Parsec String
+</span><a href="#local-6989586621679242904"><span class="hs-identifier hs-var hs-var">identifier'</span></a></span></span><span> </span><span id="local-6989586621679242912"><span class="annot"><span class="annottext">CharPredicate
+</span><a href="#local-6989586621679242912"><span class="hs-identifier hs-var">start</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">FilterConfig String
 -&gt; (String -&gt; Bool) -&gt; Parsec String -&gt; Parsec String
 forall a. FilterConfig a -&gt; (a -&gt; Bool) -&gt; Parsec a -&gt; Parsec a
 forall (config :: * -&gt; *) a.
@@ -101,33 +101,33 @@ Filter config =&gt;
 config a -&gt; (a -&gt; Bool) -&gt; Parsec a -&gt; Parsec a
 </span><a href="Text.Gigaparsec.Internal.Token.Errors.html#filterS"><span class="hs-identifier hs-var">filterS</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">ErrorConfig -&gt; FilterConfig String
 </span><a href="Text.Gigaparsec.Token.Errors.html#filterNameIllFormedIdentifier"><span class="hs-identifier hs-var">filterNameIllFormedIdentifier</span></a></span><span> </span><span class="annot"><span class="annottext">ErrorConfig
-</span><a href="#local-6989586621679242905"><span class="hs-identifier hs-var">err</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">CharPredicate -&gt; String -&gt; Bool
-</span><a href="#local-6989586621679242916"><span class="hs-identifier hs-var">startsWith</span></a></span><span> </span><span class="annot"><span class="annottext">CharPredicate
-</span><a href="#local-6989586621679242915"><span class="hs-identifier hs-var">start</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">Parsec String
-</span><a href="#local-6989586621679242906"><span class="hs-identifier hs-var">identifier</span></a></span><span>
-</span><span id="line-44"></span><span>    </span><span class="hs-glyph">!</span><span id="local-6989586621679242908"><span class="annot"><span class="annottext">userDefinedOperator :: Parsec String
-</span><a href="#local-6989586621679242908"><span class="hs-identifier hs-var hs-var">userDefinedOperator</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
+</span><a href="#local-6989586621679242902"><span class="hs-identifier hs-var">err</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">CharPredicate -&gt; String -&gt; Bool
+</span><a href="#local-6989586621679242913"><span class="hs-identifier hs-var">startsWith</span></a></span><span> </span><span class="annot"><span class="annottext">CharPredicate
+</span><a href="#local-6989586621679242912"><span class="hs-identifier hs-var">start</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">Parsec String
+</span><a href="#local-6989586621679242903"><span class="hs-identifier hs-var">identifier</span></a></span><span>
+</span><span id="line-44"></span><span>    </span><span class="hs-glyph">!</span><span id="local-6989586621679242905"><span class="annot"><span class="annottext">userDefinedOperator :: Parsec String
+</span><a href="#local-6989586621679242905"><span class="hs-identifier hs-var hs-var">userDefinedOperator</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
 </span><span id="line-45"></span><span>      </span><span class="annot"><span class="annottext">CharPredicate
 -&gt; CharPredicate
 -&gt; (String -&gt; Bool)
 -&gt; String
 -&gt; (String -&gt; String)
 -&gt; Parsec String
-</span><a href="#local-6989586621679242912"><span class="hs-identifier hs-var">keyOrOp</span></a></span><span> </span><span class="annot"><span class="annottext">CharPredicate
-</span><a href="#local-6989586621679242899"><span class="hs-identifier hs-var">operatorStart</span></a></span><span> </span><span class="annot"><span class="annottext">CharPredicate
-</span><a href="#local-6989586621679242900"><span class="hs-identifier hs-var">operatorLetter</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">(String -&gt; Set String -&gt; Bool) -&gt; Set String -&gt; String -&gt; Bool
+</span><a href="#local-6989586621679242909"><span class="hs-identifier hs-var">keyOrOp</span></a></span><span> </span><span class="annot"><span class="annottext">CharPredicate
+</span><a href="#local-6989586621679242896"><span class="hs-identifier hs-var">operatorStart</span></a></span><span> </span><span class="annot"><span class="annottext">CharPredicate
+</span><a href="#local-6989586621679242897"><span class="hs-identifier hs-var">operatorLetter</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">(String -&gt; Set String -&gt; Bool) -&gt; Set String -&gt; String -&gt; Bool
 forall a b c. (a -&gt; b -&gt; c) -&gt; b -&gt; a -&gt; c
 </span><span class="hs-identifier hs-var">flip</span></span><span> </span><span class="annot"><span class="annottext">String -&gt; Set String -&gt; Bool
 forall a. Ord a =&gt; a -&gt; Set a -&gt; Bool
 </span><span class="hs-identifier hs-var">Set.member</span></span><span> </span><span class="annot"><span class="annottext">Set String
-</span><a href="#local-6989586621679242903"><span class="hs-identifier hs-var">hardOperators</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">ErrorConfig -&gt; String
+</span><a href="#local-6989586621679242900"><span class="hs-identifier hs-var">hardOperators</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">ErrorConfig -&gt; String
 </span><a href="Text.Gigaparsec.Token.Errors.html#labelNameOperator"><span class="hs-identifier hs-var">labelNameOperator</span></a></span><span> </span><span class="annot"><span class="annottext">ErrorConfig
-</span><a href="#local-6989586621679242905"><span class="hs-identifier hs-var">err</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">ErrorConfig -&gt; String -&gt; String
+</span><a href="#local-6989586621679242902"><span class="hs-identifier hs-var">err</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">ErrorConfig -&gt; String -&gt; String
 </span><a href="Text.Gigaparsec.Token.Errors.html#unexpectedNameIllegalOperator"><span class="hs-identifier hs-var">unexpectedNameIllegalOperator</span></a></span><span> </span><span class="annot"><span class="annottext">ErrorConfig
-</span><a href="#local-6989586621679242905"><span class="hs-identifier hs-var">err</span></a></span><span class="hs-special">)</span><span>
-</span><span id="line-46"></span><span>    </span><span id="local-6989586621679242909"><span class="annot"><span class="annottext">userDefinedOperator' :: CharPredicate -&gt; Parsec String
-</span><a href="#local-6989586621679242909"><span class="hs-identifier hs-var hs-var">userDefinedOperator'</span></a></span></span><span> </span><span id="local-6989586621679242921"><span class="annot"><span class="annottext">CharPredicate
-</span><a href="#local-6989586621679242921"><span class="hs-identifier hs-var">start</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">FilterConfig String
+</span><a href="#local-6989586621679242902"><span class="hs-identifier hs-var">err</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-46"></span><span>    </span><span id="local-6989586621679242906"><span class="annot"><span class="annottext">userDefinedOperator' :: CharPredicate -&gt; Parsec String
+</span><a href="#local-6989586621679242906"><span class="hs-identifier hs-var hs-var">userDefinedOperator'</span></a></span></span><span> </span><span id="local-6989586621679242918"><span class="annot"><span class="annottext">CharPredicate
+</span><a href="#local-6989586621679242918"><span class="hs-identifier hs-var">start</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">FilterConfig String
 -&gt; (String -&gt; Bool) -&gt; Parsec String -&gt; Parsec String
 forall a. FilterConfig a -&gt; (a -&gt; Bool) -&gt; Parsec a -&gt; Parsec a
 forall (config :: * -&gt; *) a.
@@ -135,55 +135,55 @@ Filter config =&gt;
 config a -&gt; (a -&gt; Bool) -&gt; Parsec a -&gt; Parsec a
 </span><a href="Text.Gigaparsec.Internal.Token.Errors.html#filterS"><span class="hs-identifier hs-var">filterS</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">ErrorConfig -&gt; FilterConfig String
 </span><a href="Text.Gigaparsec.Token.Errors.html#filterNameIllFormedOperator"><span class="hs-identifier hs-var">filterNameIllFormedOperator</span></a></span><span> </span><span class="annot"><span class="annottext">ErrorConfig
-</span><a href="#local-6989586621679242905"><span class="hs-identifier hs-var">err</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">CharPredicate -&gt; String -&gt; Bool
-</span><a href="#local-6989586621679242916"><span class="hs-identifier hs-var">startsWith</span></a></span><span> </span><span class="annot"><span class="annottext">CharPredicate
-</span><a href="#local-6989586621679242921"><span class="hs-identifier hs-var">start</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">Parsec String
-</span><a href="#local-6989586621679242908"><span class="hs-identifier hs-var">userDefinedOperator</span></a></span><span>
+</span><a href="#local-6989586621679242902"><span class="hs-identifier hs-var">err</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">CharPredicate -&gt; String -&gt; Bool
+</span><a href="#local-6989586621679242913"><span class="hs-identifier hs-var">startsWith</span></a></span><span> </span><span class="annot"><span class="annottext">CharPredicate
+</span><a href="#local-6989586621679242918"><span class="hs-identifier hs-var">start</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">Parsec String
+</span><a href="#local-6989586621679242905"><span class="hs-identifier hs-var">userDefinedOperator</span></a></span><span>
 </span><span id="line-47"></span><span>
-</span><span id="line-48"></span><span>    </span><span class="annot"><a href="#local-6989586621679242912"><span class="hs-identifier hs-type">keyOrOp</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Token.Descriptions.html#CharPredicate"><span class="hs-identifier hs-type">CharPredicate</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Token.Descriptions.html#CharPredicate"><span class="hs-identifier hs-type">CharPredicate</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Bool</span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span>
-</span><span id="line-49"></span><span>    </span><span id="local-6989586621679242912"><span class="annot"><span class="annottext">keyOrOp :: CharPredicate
+</span><span id="line-48"></span><span>    </span><span class="annot"><a href="#local-6989586621679242909"><span class="hs-identifier hs-type">keyOrOp</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Token.Descriptions.html#CharPredicate"><span class="hs-identifier hs-type">CharPredicate</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Token.Descriptions.html#CharPredicate"><span class="hs-identifier hs-type">CharPredicate</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Bool</span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span>
+</span><span id="line-49"></span><span>    </span><span id="local-6989586621679242909"><span class="annot"><span class="annottext">keyOrOp :: CharPredicate
 -&gt; CharPredicate
 -&gt; (String -&gt; Bool)
 -&gt; String
 -&gt; (String -&gt; String)
 -&gt; Parsec String
-</span><a href="#local-6989586621679242912"><span class="hs-identifier hs-var hs-var">keyOrOp</span></a></span></span><span> </span><span id="local-6989586621679242922"><span class="annot"><span class="annottext">CharPredicate
-</span><a href="#local-6989586621679242922"><span class="hs-identifier hs-var">start</span></a></span></span><span> </span><span id="local-6989586621679242923"><span class="annot"><span class="annottext">CharPredicate
-</span><a href="#local-6989586621679242923"><span class="hs-identifier hs-var">letter</span></a></span></span><span> </span><span id="local-6989586621679242924"><span class="annot"><span class="annottext">String -&gt; Bool
-</span><a href="#local-6989586621679242924"><span class="hs-identifier hs-var">illegal</span></a></span></span><span> </span><span id="local-6989586621679242925"><span class="annot"><span class="annottext">String
-</span><a href="#local-6989586621679242925"><span class="hs-identifier hs-var">name</span></a></span></span><span> </span><span id="local-6989586621679242926"><span class="annot"><span class="annottext">String -&gt; String
-</span><a href="#local-6989586621679242926"><span class="hs-identifier hs-var">unexpectedIllegal</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
+</span><a href="#local-6989586621679242909"><span class="hs-identifier hs-var hs-var">keyOrOp</span></a></span></span><span> </span><span id="local-6989586621679242919"><span class="annot"><span class="annottext">CharPredicate
+</span><a href="#local-6989586621679242919"><span class="hs-identifier hs-var">start</span></a></span></span><span> </span><span id="local-6989586621679242920"><span class="annot"><span class="annottext">CharPredicate
+</span><a href="#local-6989586621679242920"><span class="hs-identifier hs-var">letter</span></a></span></span><span> </span><span id="local-6989586621679242921"><span class="annot"><span class="annottext">String -&gt; Bool
+</span><a href="#local-6989586621679242921"><span class="hs-identifier hs-var">illegal</span></a></span></span><span> </span><span id="local-6989586621679242922"><span class="annot"><span class="annottext">String
+</span><a href="#local-6989586621679242922"><span class="hs-identifier hs-var">name</span></a></span></span><span> </span><span id="local-6989586621679242923"><span class="annot"><span class="annottext">String -&gt; String
+</span><a href="#local-6989586621679242923"><span class="hs-identifier hs-var">unexpectedIllegal</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
 </span><span id="line-50"></span><span>      </span><span class="annot"><span class="annottext">Parsec String -&gt; Parsec String
 forall a. Parsec a -&gt; Parsec a
 </span><a href="Text.Gigaparsec.html#atomic"><span class="hs-identifier hs-var">atomic</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">(String -&gt; Maybe String) -&gt; Parsec String -&gt; Parsec String
 forall a. (a -&gt; Maybe String) -&gt; Parsec a -&gt; Parsec a
 </span><a href="Text.Gigaparsec.Errors.Combinator.html#unexpectedWhen"><span class="hs-identifier hs-var">unexpectedWhen</span></a></span><span> </span><span class="annot"><span class="annottext">String -&gt; Maybe String
-</span><a href="#local-6989586621679242927"><span class="hs-identifier hs-var">cond</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">CharPredicate -&gt; CharPredicate -&gt; Parsec String
-</span><a href="#local-6989586621679242928"><span class="hs-identifier hs-var">complete</span></a></span><span> </span><span class="annot"><span class="annottext">CharPredicate
-</span><a href="#local-6989586621679242922"><span class="hs-identifier hs-var">start</span></a></span><span> </span><span class="annot"><span class="annottext">CharPredicate
-</span><a href="#local-6989586621679242923"><span class="hs-identifier hs-var">letter</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">Parsec String -&gt; Set String -&gt; Parsec String
+</span><a href="#local-6989586621679242924"><span class="hs-identifier hs-var">cond</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">CharPredicate -&gt; CharPredicate -&gt; Parsec String
+</span><a href="#local-6989586621679242925"><span class="hs-identifier hs-var">complete</span></a></span><span> </span><span class="annot"><span class="annottext">CharPredicate
+</span><a href="#local-6989586621679242919"><span class="hs-identifier hs-var">start</span></a></span><span> </span><span class="annot"><span class="annottext">CharPredicate
+</span><a href="#local-6989586621679242920"><span class="hs-identifier hs-var">letter</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">Parsec String -&gt; Set String -&gt; Parsec String
 forall a. Parsec a -&gt; Set String -&gt; Parsec a
 </span><a href="Text.Gigaparsec.Errors.Combinator.html#%3C%3F%3E"><span class="hs-operator hs-var">&lt;?&gt;</span></a></span><span> </span><span class="hs-special">[</span><span class="annot"><span class="annottext">String
 Item (Set String)
-</span><a href="#local-6989586621679242925"><span class="hs-identifier hs-var">name</span></a></span><span class="hs-special">]</span><span>
-</span><span id="line-51"></span><span>      </span><span class="hs-keyword">where</span><span> </span><span id="local-6989586621679242927"><span class="annot"><span class="annottext">cond :: String -&gt; Maybe String
-</span><a href="#local-6989586621679242927"><span class="hs-identifier hs-var hs-var">cond</span></a></span></span><span> </span><span id="local-6989586621679242929"><span class="annot"><span class="annottext">String
-</span><a href="#local-6989586621679242929"><span class="hs-identifier hs-var">x</span></a></span></span><span>
+</span><a href="#local-6989586621679242922"><span class="hs-identifier hs-var">name</span></a></span><span class="hs-special">]</span><span>
+</span><span id="line-51"></span><span>      </span><span class="hs-keyword">where</span><span> </span><span id="local-6989586621679242924"><span class="annot"><span class="annottext">cond :: String -&gt; Maybe String
+</span><a href="#local-6989586621679242924"><span class="hs-identifier hs-var hs-var">cond</span></a></span></span><span> </span><span id="local-6989586621679242926"><span class="annot"><span class="annottext">String
+</span><a href="#local-6989586621679242926"><span class="hs-identifier hs-var">x</span></a></span></span><span>
 </span><span id="line-52"></span><span>              </span><span class="hs-glyph">|</span><span> </span><span class="annot"><span class="annottext">String -&gt; Bool
-</span><a href="#local-6989586621679242924"><span class="hs-identifier hs-var">illegal</span></a></span><span> </span><span class="annot"><span class="annottext">String
-</span><a href="#local-6989586621679242929"><span class="hs-identifier hs-var">x</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">String -&gt; Maybe String
+</span><a href="#local-6989586621679242921"><span class="hs-identifier hs-var">illegal</span></a></span><span> </span><span class="annot"><span class="annottext">String
+</span><a href="#local-6989586621679242926"><span class="hs-identifier hs-var">x</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">String -&gt; Maybe String
 forall a. a -&gt; Maybe a
 </span><span class="hs-identifier hs-var">Just</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">String -&gt; String
-</span><a href="#local-6989586621679242926"><span class="hs-identifier hs-var">unexpectedIllegal</span></a></span><span> </span><span class="annot"><span class="annottext">String
-</span><a href="#local-6989586621679242929"><span class="hs-identifier hs-var">x</span></a></span><span class="hs-special">)</span><span>
+</span><a href="#local-6989586621679242923"><span class="hs-identifier hs-var">unexpectedIllegal</span></a></span><span> </span><span class="annot"><span class="annottext">String
+</span><a href="#local-6989586621679242926"><span class="hs-identifier hs-var">x</span></a></span><span class="hs-special">)</span><span>
 </span><span id="line-53"></span><span>              </span><span class="hs-glyph">|</span><span> </span><span class="annot"><span class="annottext">Bool
 </span><span class="hs-identifier hs-var">otherwise</span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Maybe String
 forall a. Maybe a
 </span><span class="hs-identifier hs-var">Nothing</span></span><span>
 </span><span id="line-54"></span><span>
-</span><span id="line-55"></span><span>    </span><span class="annot"><a href="#local-6989586621679242930"><span class="hs-identifier hs-type">trailer</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Token.Descriptions.html#CharPredicate"><span class="hs-identifier hs-type">CharPredicate</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span>
-</span><span id="line-56"></span><span>    </span><span id="local-6989586621679242930"><span class="annot"><span class="annottext">trailer :: CharPredicate -&gt; Parsec String
-</span><a href="#local-6989586621679242930"><span class="hs-identifier hs-var hs-var">trailer</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Parsec String
+</span><span id="line-55"></span><span>    </span><span class="annot"><a href="#local-6989586621679242927"><span class="hs-identifier hs-type">trailer</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Token.Descriptions.html#CharPredicate"><span class="hs-identifier hs-type">CharPredicate</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span>
+</span><span id="line-56"></span><span>    </span><span id="local-6989586621679242927"><span class="annot"><span class="annottext">trailer :: CharPredicate -&gt; Parsec String
+</span><a href="#local-6989586621679242927"><span class="hs-identifier hs-var hs-var">trailer</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Parsec String
 -&gt; ((Char -&gt; Bool) -&gt; Parsec String)
 -&gt; CharPredicate
 -&gt; Parsec String
@@ -195,44 +195,44 @@ forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
 </span><span class="hs-string">&quot;&quot;</span></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">(Char -&gt; Bool) -&gt; Parsec String
 </span><a href="Text.Gigaparsec.Char.html#stringOfMany"><span class="hs-identifier hs-var">stringOfMany</span></a></span><span>
 </span><span id="line-57"></span><span>
-</span><span id="line-58"></span><span>    </span><span class="annot"><a href="#local-6989586621679242928"><span class="hs-identifier hs-type">complete</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Token.Descriptions.html#CharPredicate"><span class="hs-identifier hs-type">CharPredicate</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Token.Descriptions.html#CharPredicate"><span class="hs-identifier hs-type">CharPredicate</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span>
-</span><span id="line-59"></span><span>    </span><span id="local-6989586621679242928"><span class="annot"><span class="annottext">complete :: CharPredicate -&gt; CharPredicate -&gt; Parsec String
-</span><a href="#local-6989586621679242928"><span class="hs-identifier hs-var hs-var">complete</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Just</span></span><span> </span><span id="local-6989586621679242932"><span class="annot"><span class="annottext">Char -&gt; Bool
-</span><a href="#local-6989586621679242932"><span class="hs-identifier hs-var">start</span></a></span></span><span class="hs-special">)</span><span> </span><span id="local-6989586621679242933"><span class="annot"><span class="annottext">CharPredicate
-</span><a href="#local-6989586621679242933"><span class="hs-identifier hs-var">letter</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">(Char -&gt; Bool) -&gt; Parsec Char
+</span><span id="line-58"></span><span>    </span><span class="annot"><a href="#local-6989586621679242925"><span class="hs-identifier hs-type">complete</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Token.Descriptions.html#CharPredicate"><span class="hs-identifier hs-type">CharPredicate</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Token.Descriptions.html#CharPredicate"><span class="hs-identifier hs-type">CharPredicate</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span>
+</span><span id="line-59"></span><span>    </span><span id="local-6989586621679242925"><span class="annot"><span class="annottext">complete :: CharPredicate -&gt; CharPredicate -&gt; Parsec String
+</span><a href="#local-6989586621679242925"><span class="hs-identifier hs-var hs-var">complete</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Just</span></span><span> </span><span id="local-6989586621679242929"><span class="annot"><span class="annottext">Char -&gt; Bool
+</span><a href="#local-6989586621679242929"><span class="hs-identifier hs-var">start</span></a></span></span><span class="hs-special">)</span><span> </span><span id="local-6989586621679242930"><span class="annot"><span class="annottext">CharPredicate
+</span><a href="#local-6989586621679242930"><span class="hs-identifier hs-var">letter</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">(Char -&gt; Bool) -&gt; Parsec Char
 </span><a href="Text.Gigaparsec.Char.html#satisfy"><span class="hs-identifier hs-var">satisfy</span></a></span><span> </span><span class="annot"><span class="annottext">Char -&gt; Bool
-</span><a href="#local-6989586621679242932"><span class="hs-identifier hs-var">start</span></a></span><span> </span><span class="annot"><span class="annottext">Parsec Char -&gt; Parsec String -&gt; Parsec String
+</span><a href="#local-6989586621679242929"><span class="hs-identifier hs-var">start</span></a></span><span> </span><span class="annot"><span class="annottext">Parsec Char -&gt; Parsec String -&gt; Parsec String
 forall a. Parsec a -&gt; Parsec [a] -&gt; Parsec [a]
 </span><a href="Text.Gigaparsec.html#%3C%3A%3E"><span class="hs-operator hs-var">&lt;:&gt;</span></a></span><span> </span><span class="annot"><span class="annottext">CharPredicate -&gt; Parsec String
-</span><a href="#local-6989586621679242930"><span class="hs-identifier hs-var">trailer</span></a></span><span> </span><span class="annot"><span class="annottext">CharPredicate
-</span><a href="#local-6989586621679242933"><span class="hs-identifier hs-var">letter</span></a></span><span>
-</span><span id="line-60"></span><span>    </span><span class="annot"><a href="#local-6989586621679242928"><span class="hs-identifier hs-var">complete</span></a></span><span> </span><span class="annot"><span class="annottext">CharPredicate
+</span><a href="#local-6989586621679242927"><span class="hs-identifier hs-var">trailer</span></a></span><span> </span><span class="annot"><span class="annottext">CharPredicate
+</span><a href="#local-6989586621679242930"><span class="hs-identifier hs-var">letter</span></a></span><span>
+</span><span id="line-60"></span><span>    </span><span class="annot"><a href="#local-6989586621679242925"><span class="hs-identifier hs-var">complete</span></a></span><span> </span><span class="annot"><span class="annottext">CharPredicate
 </span><span class="hs-identifier hs-var">Nothing</span></span><span> </span><span class="annot"><span class="annottext">CharPredicate
 </span><span class="hs-identifier">_</span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Parsec String
 forall a. Parsec a
 forall (f :: * -&gt; *) a. Alternative f =&gt; f a
 </span><span class="hs-identifier hs-var">empty</span></span><span>
 </span><span id="line-61"></span><span>
-</span><span id="line-62"></span><span>    </span><span class="annot"><a href="#local-6989586621679242916"><span class="hs-identifier hs-type">startsWith</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Token.Descriptions.html#CharPredicate"><span class="hs-identifier hs-type">CharPredicate</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Bool</span></span><span>
-</span><span id="line-63"></span><span>    </span><span id="local-6989586621679242916"><span class="annot"><span class="annottext">startsWith :: CharPredicate -&gt; String -&gt; Bool
-</span><a href="#local-6989586621679242916"><span class="hs-identifier hs-var hs-var">startsWith</span></a></span></span><span> </span><span class="annot"><span class="annottext">CharPredicate
+</span><span id="line-62"></span><span>    </span><span class="annot"><a href="#local-6989586621679242913"><span class="hs-identifier hs-type">startsWith</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Token.Descriptions.html#CharPredicate"><span class="hs-identifier hs-type">CharPredicate</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Bool</span></span><span>
+</span><span id="line-63"></span><span>    </span><span id="local-6989586621679242913"><span class="annot"><span class="annottext">startsWith :: CharPredicate -&gt; String -&gt; Bool
+</span><a href="#local-6989586621679242913"><span class="hs-identifier hs-var hs-var">startsWith</span></a></span></span><span> </span><span class="annot"><span class="annottext">CharPredicate
 </span><span class="hs-identifier hs-var">Nothing</span></span><span> </span><span class="annot"><span class="annottext">String
 </span><span class="hs-identifier">_</span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Bool
 </span><span class="hs-identifier hs-var">True</span></span><span>
-</span><span id="line-64"></span><span>    </span><span class="annot"><a href="#local-6989586621679242916"><span class="hs-identifier hs-var">startsWith</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Just</span></span><span> </span><span class="annot"><span class="annottext">Char -&gt; Bool
+</span><span id="line-64"></span><span>    </span><span class="annot"><a href="#local-6989586621679242913"><span class="hs-identifier hs-var">startsWith</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Just</span></span><span> </span><span class="annot"><span class="annottext">Char -&gt; Bool
 </span><span class="hs-identifier">_</span></span><span class="hs-special">)</span><span> </span><span class="hs-special">[</span><span class="hs-special">]</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Bool
 </span><span class="hs-identifier hs-var">False</span></span><span>
-</span><span id="line-65"></span><span>    </span><span class="annot"><a href="#local-6989586621679242916"><span class="hs-identifier hs-var">startsWith</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Just</span></span><span> </span><span id="local-6989586621679242934"><span class="annot"><span class="annottext">Char -&gt; Bool
-</span><a href="#local-6989586621679242934"><span class="hs-identifier hs-var">p</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span id="local-6989586621679242935"><span class="annot"><span class="annottext">Char
-</span><a href="#local-6989586621679242935"><span class="hs-identifier hs-var">c</span></a></span></span><span class="annot"><span class="hs-glyph hs-type">:</span></span><span class="annot"><span class="annottext">String
+</span><span id="line-65"></span><span>    </span><span class="annot"><a href="#local-6989586621679242913"><span class="hs-identifier hs-var">startsWith</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Just</span></span><span> </span><span id="local-6989586621679242931"><span class="annot"><span class="annottext">Char -&gt; Bool
+</span><a href="#local-6989586621679242931"><span class="hs-identifier hs-var">p</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span id="local-6989586621679242932"><span class="annot"><span class="annottext">Char
+</span><a href="#local-6989586621679242932"><span class="hs-identifier hs-var">c</span></a></span></span><span class="annot"><span class="hs-glyph hs-type">:</span></span><span class="annot"><span class="annottext">String
 </span><span class="hs-identifier">_</span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Char -&gt; Bool
-</span><a href="#local-6989586621679242934"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Char
-</span><a href="#local-6989586621679242935"><span class="hs-identifier hs-var">c</span></a></span><span>
+</span><a href="#local-6989586621679242931"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Char
+</span><a href="#local-6989586621679242932"><span class="hs-identifier hs-var">c</span></a></span><span>
 </span><span id="line-66"></span><span>
-</span><span id="line-67"></span><span class="annot"><a href="Text.Gigaparsec.Internal.Token.Names.html#lexeme"><span class="hs-identifier hs-type">lexeme</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-special">(</span><span class="hs-keyword">forall</span><span> </span><span id="local-6989586621679242936"><span class="annot"><a href="#local-6989586621679242936"><span class="hs-identifier hs-type">a</span></a></span></span><span class="hs-operator">.</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679242936"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679242936"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.Token.Names.html#Names"><span class="hs-identifier hs-type">Names</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.Token.Names.html#Names"><span class="hs-identifier hs-type">Names</span></a></span><span>
+</span><span id="line-67"></span><span class="annot"><a href="Text.Gigaparsec.Internal.Token.Names.html#lexeme"><span class="hs-identifier hs-type">lexeme</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-special">(</span><span class="hs-keyword">forall</span><span> </span><span id="local-6989586621679242933"><span class="annot"><a href="#local-6989586621679242933"><span class="hs-identifier hs-type">a</span></a></span></span><span class="hs-operator">.</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679242933"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679242933"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.Token.Names.html#Names"><span class="hs-identifier hs-type">Names</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.Token.Names.html#Names"><span class="hs-identifier hs-type">Names</span></a></span><span>
 </span><span id="line-68"></span><span id="lexeme"><span class="annot"><span class="annottext">lexeme :: (forall a. Parsec a -&gt; Parsec a) -&gt; Names -&gt; Names
-</span><a href="Text.Gigaparsec.Internal.Token.Names.html#lexeme"><span class="hs-identifier hs-var hs-var">lexeme</span></a></span></span><span> </span><span id="local-6989586621679242937"><span class="annot"><span class="annottext">forall a. Parsec a -&gt; Parsec a
-</span><a href="#local-6989586621679242937"><span class="hs-identifier hs-var">lexe</span></a></span></span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.Token.Names.html#Names"><span class="hs-identifier hs-type">Names</span></a></span><span class="hs-special">{</span><span id="local-6989586621679242938"><span id="local-6989586621679242939"><span id="local-6989586621679242940"><span id="local-6989586621679242941"><span class="annot"><span class="annottext">Parsec String
+</span><a href="Text.Gigaparsec.Internal.Token.Names.html#lexeme"><span class="hs-identifier hs-var hs-var">lexeme</span></a></span></span><span> </span><span id="local-6989586621679242934"><span class="annot"><span class="annottext">forall a. Parsec a -&gt; Parsec a
+</span><a href="#local-6989586621679242934"><span class="hs-identifier hs-var">lexe</span></a></span></span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.Token.Names.html#Names"><span class="hs-identifier hs-type">Names</span></a></span><span class="hs-special">{</span><span id="local-6989586621679242935"><span id="local-6989586621679242936"><span id="local-6989586621679242937"><span id="local-6989586621679242938"><span class="annot"><span class="annottext">Parsec String
 CharPredicate -&gt; Parsec String
 identifier :: Names -&gt; Parsec String
 identifier' :: Names -&gt; CharPredicate -&gt; Parsec String
@@ -245,38 +245,38 @@ userDefinedOperator' :: CharPredicate -&gt; Parsec String
 </span><a href="Text.Gigaparsec.Internal.Token.Names.html#identifier"><span class="hs-glyph hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">..</span></a></span></span></span></span></span><span class="hs-special">}</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.Token.Names.html#Names"><span class="hs-identifier hs-type">Names</span></a></span><span> </span><span class="hs-special">{</span><span> </span><span class="annot"><span class="annottext">identifier :: Parsec String
 </span><a href="Text.Gigaparsec.Internal.Token.Names.html#identifier"><span class="hs-identifier hs-var">identifier</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Parsec String -&gt; Parsec String
 forall a. Parsec a -&gt; Parsec a
-</span><a href="#local-6989586621679242937"><span class="hs-identifier hs-var">lexe</span></a></span><span> </span><span class="annot"><span class="annottext">Parsec String
-</span><a href="#local-6989586621679242938"><span class="hs-identifier hs-var">identifier</span></a></span><span>
+</span><a href="#local-6989586621679242934"><span class="hs-identifier hs-var">lexe</span></a></span><span> </span><span class="annot"><span class="annottext">Parsec String
+</span><a href="#local-6989586621679242935"><span class="hs-identifier hs-var">identifier</span></a></span><span>
 </span><span id="line-69"></span><span>                              </span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">identifier' :: CharPredicate -&gt; Parsec String
 </span><a href="Text.Gigaparsec.Internal.Token.Names.html#identifier%27"><span class="hs-identifier hs-var">identifier'</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Parsec String -&gt; Parsec String
 forall a. Parsec a -&gt; Parsec a
-</span><a href="#local-6989586621679242937"><span class="hs-identifier hs-var">lexe</span></a></span><span> </span><span class="annot"><span class="annottext">(Parsec String -&gt; Parsec String)
+</span><a href="#local-6989586621679242934"><span class="hs-identifier hs-var">lexe</span></a></span><span> </span><span class="annot"><span class="annottext">(Parsec String -&gt; Parsec String)
 -&gt; (CharPredicate -&gt; Parsec String)
 -&gt; CharPredicate
 -&gt; Parsec String
 forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
 </span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">CharPredicate -&gt; Parsec String
-</span><a href="#local-6989586621679242939"><span class="hs-identifier hs-var">identifier'</span></a></span><span>
+</span><a href="#local-6989586621679242936"><span class="hs-identifier hs-var">identifier'</span></a></span><span>
 </span><span id="line-70"></span><span>                              </span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">userDefinedOperator :: Parsec String
 </span><a href="Text.Gigaparsec.Internal.Token.Names.html#userDefinedOperator"><span class="hs-identifier hs-var">userDefinedOperator</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Parsec String -&gt; Parsec String
 forall a. Parsec a -&gt; Parsec a
-</span><a href="#local-6989586621679242937"><span class="hs-identifier hs-var">lexe</span></a></span><span> </span><span class="annot"><span class="annottext">Parsec String
-</span><a href="#local-6989586621679242940"><span class="hs-identifier hs-var">userDefinedOperator</span></a></span><span>
+</span><a href="#local-6989586621679242934"><span class="hs-identifier hs-var">lexe</span></a></span><span> </span><span class="annot"><span class="annottext">Parsec String
+</span><a href="#local-6989586621679242937"><span class="hs-identifier hs-var">userDefinedOperator</span></a></span><span>
 </span><span id="line-71"></span><span>                              </span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">userDefinedOperator' :: CharPredicate -&gt; Parsec String
 </span><a href="Text.Gigaparsec.Internal.Token.Names.html#userDefinedOperator%27"><span class="hs-identifier hs-var">userDefinedOperator'</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Parsec String -&gt; Parsec String
 forall a. Parsec a -&gt; Parsec a
-</span><a href="#local-6989586621679242937"><span class="hs-identifier hs-var">lexe</span></a></span><span> </span><span class="annot"><span class="annottext">(Parsec String -&gt; Parsec String)
+</span><a href="#local-6989586621679242934"><span class="hs-identifier hs-var">lexe</span></a></span><span> </span><span class="annot"><span class="annottext">(Parsec String -&gt; Parsec String)
 -&gt; (CharPredicate -&gt; Parsec String)
 -&gt; CharPredicate
 -&gt; Parsec String
 forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
 </span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">CharPredicate -&gt; Parsec String
-</span><a href="#local-6989586621679242941"><span class="hs-identifier hs-var">userDefinedOperator'</span></a></span><span>
+</span><a href="#local-6989586621679242938"><span class="hs-identifier hs-var">userDefinedOperator'</span></a></span><span>
 </span><span id="line-72"></span><span>                              </span><span class="hs-special">}</span><span>
 </span><span id="line-73"></span><span>
 </span><span id="line-74"></span><span class="annot"><a href="Text.Gigaparsec.Internal.Token.Names.html#isReservedName"><span class="hs-identifier hs-type">isReservedName</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Token.Descriptions.html#SymbolDesc"><span class="hs-identifier hs-type">SymbolDesc</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Bool</span></span><span>
 </span><span id="line-75"></span><span id="isReservedName"><span class="annot"><span class="annottext">isReservedName :: SymbolDesc -&gt; String -&gt; Bool
-</span><a href="Text.Gigaparsec.Internal.Token.Names.html#isReservedName"><span class="hs-identifier hs-var hs-var">isReservedName</span></a></span></span><span> </span><span class="annot"><a href="Text.Gigaparsec.Token.Descriptions.html#SymbolDesc"><span class="hs-identifier hs-type">SymbolDesc</span></a></span><span class="hs-special">{</span><span id="local-6989586621679242943"><span id="local-6989586621679242944"><span id="local-6989586621679242945"><span class="annot"><span class="annottext">Bool
+</span><a href="Text.Gigaparsec.Internal.Token.Names.html#isReservedName"><span class="hs-identifier hs-var hs-var">isReservedName</span></a></span></span><span> </span><span class="annot"><a href="Text.Gigaparsec.Token.Descriptions.html#SymbolDesc"><span class="hs-identifier hs-type">SymbolDesc</span></a></span><span class="hs-special">{</span><span id="local-6989586621679242940"><span id="local-6989586621679242941"><span id="local-6989586621679242942"><span class="annot"><span class="annottext">Bool
 Set String
 hardKeywords :: SymbolDesc -&gt; Set String
 hardOperators :: SymbolDesc -&gt; Set String
@@ -286,31 +286,31 @@ hardOperators :: Set String
 caseSensitive :: Bool
 </span><a href="Text.Gigaparsec.Token.Descriptions.html#hardKeywords"><span class="hs-glyph hs-var hs-var hs-var hs-var hs-var hs-var">..</span></a></span></span></span></span><span class="hs-special">}</span><span>
 </span><span id="line-76"></span><span>  </span><span class="hs-glyph">|</span><span> </span><span class="annot"><span class="annottext">Bool
-</span><a href="#local-6989586621679242945"><span class="hs-identifier hs-var">caseSensitive</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">(String -&gt; Set String -&gt; Bool) -&gt; Set String -&gt; String -&gt; Bool
+</span><a href="#local-6989586621679242942"><span class="hs-identifier hs-var">caseSensitive</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">(String -&gt; Set String -&gt; Bool) -&gt; Set String -&gt; String -&gt; Bool
 forall a b c. (a -&gt; b -&gt; c) -&gt; b -&gt; a -&gt; c
 </span><span class="hs-identifier hs-var">flip</span></span><span> </span><span class="annot"><span class="annottext">String -&gt; Set String -&gt; Bool
 forall a. Ord a =&gt; a -&gt; Set a -&gt; Bool
 </span><span class="hs-identifier hs-var">Set.member</span></span><span> </span><span class="annot"><span class="annottext">Set String
-</span><a href="#local-6989586621679242943"><span class="hs-identifier hs-var">hardKeywords</span></a></span><span>
+</span><a href="#local-6989586621679242940"><span class="hs-identifier hs-var">hardKeywords</span></a></span><span>
 </span><span id="line-77"></span><span>  </span><span class="hs-glyph">|</span><span> </span><span class="annot"><span class="annottext">Bool
 </span><span class="hs-identifier hs-var">otherwise</span></span><span>     </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">(String -&gt; Set String -&gt; Bool) -&gt; Set String -&gt; String -&gt; Bool
 forall a b c. (a -&gt; b -&gt; c) -&gt; b -&gt; a -&gt; c
 </span><span class="hs-identifier hs-var">flip</span></span><span> </span><span class="annot"><span class="annottext">String -&gt; Set String -&gt; Bool
 forall a. Ord a =&gt; a -&gt; Set a -&gt; Bool
 </span><span class="hs-identifier hs-var">Set.member</span></span><span> </span><span class="annot"><span class="annottext">Set String
-</span><a href="#local-6989586621679242946"><span class="hs-identifier hs-var">lowerHardKeywords</span></a></span><span> </span><span class="annot"><span class="annottext">(String -&gt; Bool) -&gt; (String -&gt; String) -&gt; String -&gt; Bool
+</span><a href="#local-6989586621679242943"><span class="hs-identifier hs-var">lowerHardKeywords</span></a></span><span> </span><span class="annot"><span class="annottext">(String -&gt; Bool) -&gt; (String -&gt; String) -&gt; String -&gt; Bool
 forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
 </span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">String -&gt; String
-</span><a href="#local-6989586621679242947"><span class="hs-identifier hs-var">allLower</span></a></span><span>
-</span><span id="line-78"></span><span>  </span><span class="hs-keyword">where</span><span> </span><span id="local-6989586621679242947"><span class="annot"><span class="annottext">allLower :: String -&gt; String
-</span><a href="#local-6989586621679242947"><span class="hs-identifier hs-var hs-var">allLower</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">(Char -&gt; Char) -&gt; String -&gt; String
+</span><a href="#local-6989586621679242944"><span class="hs-identifier hs-var">allLower</span></a></span><span>
+</span><span id="line-78"></span><span>  </span><span class="hs-keyword">where</span><span> </span><span id="local-6989586621679242944"><span class="annot"><span class="annottext">allLower :: String -&gt; String
+</span><a href="#local-6989586621679242944"><span class="hs-identifier hs-var hs-var">allLower</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">(Char -&gt; Char) -&gt; String -&gt; String
 forall a b. (a -&gt; b) -&gt; [a] -&gt; [b]
 </span><span class="hs-identifier hs-var">map</span></span><span> </span><span class="annot"><span class="annottext">Char -&gt; Char
 </span><span class="hs-identifier hs-var">toLower</span></span><span>
-</span><span id="line-79"></span><span>        </span><span id="local-6989586621679242946"><span class="annot"><span class="annottext">lowerHardKeywords :: Set String
-</span><a href="#local-6989586621679242946"><span class="hs-identifier hs-var hs-var">lowerHardKeywords</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">(String -&gt; String) -&gt; Set String -&gt; Set String
+</span><span id="line-79"></span><span>        </span><span id="local-6989586621679242943"><span class="annot"><span class="annottext">lowerHardKeywords :: Set String
+</span><a href="#local-6989586621679242943"><span class="hs-identifier hs-var hs-var">lowerHardKeywords</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">(String -&gt; String) -&gt; Set String -&gt; Set String
 forall b a. Ord b =&gt; (a -&gt; b) -&gt; Set a -&gt; Set b
 </span><span class="hs-identifier hs-var">Set.map</span></span><span> </span><span class="annot"><span class="annottext">String -&gt; String
-</span><a href="#local-6989586621679242947"><span class="hs-identifier hs-var">allLower</span></a></span><span> </span><span class="annot"><span class="annottext">Set String
-</span><a href="#local-6989586621679242943"><span class="hs-identifier hs-var">hardKeywords</span></a></span><span>
+</span><a href="#local-6989586621679242944"><span class="hs-identifier hs-var">allLower</span></a></span><span> </span><span class="annot"><span class="annottext">Set String
+</span><a href="#local-6989586621679242940"><span class="hs-identifier hs-var">hardKeywords</span></a></span><span>
 </span><span id="line-80"></span></pre></body></html>
