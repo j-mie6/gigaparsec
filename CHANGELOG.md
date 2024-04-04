@@ -1,5 +1,9 @@
 # Revision history for gigaparsec
 
+## 0.2.6.0 -- TBD
+* Generalised `deriveLiftedConstructors`/`deriveDeferredConstructors` functionality to also work
+  with pattern synonyms and `forall`s in more places.
+
 ## 0.2.5.1 -- 2024-02-07
 * Fixed bug where hints can be revived by the `hide` combinator.
 
