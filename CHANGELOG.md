@@ -4,6 +4,7 @@
 * Generalised `deriveLiftedConstructors`/`deriveDeferredConstructors` functionality to also work
   with pattern synonyms and `forall`s in more places.
 * Added line numbering for the line information in the `ErrorBuilder`.
+* Renamed the `format` method of the `ErrorBuilder` to `build`.
 
 ## 0.2.5.1 -- 2024-02-07
 * Fixed bug where hints can be revived by the `hide` combinator.
