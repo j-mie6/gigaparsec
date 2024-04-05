@@ -45,7 +45,7 @@ instance ErrorBuilder TestError where
   message = id
 
   type LineInfo TestError = Word
-  lineInfo _ _ _ _ width = width
+  lineInfo _ _ _ _ _ width = width
 
   numLinesBefore = 2
   numLinesAfter = 2
