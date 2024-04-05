@@ -46,14 +46,14 @@ fromParseError srcFile input err =
             (Builder.unexpected @err (either (const Nothing) (Just . fst) unexpectedTok))
             (Builder.expected @err (Builder.combineExpectedItems @err (Set.map expectItem expecteds)))
             (Builder.combineMessages @err (Set.foldr (\r -> (Builder.reason @err r :)) [] reasons))
-            (Builder.lineInfo @err curLine linesBefore linesAfter caret (trimToLine caretSize))
+            (Builder.lineInfo @err curLine linesBefore linesAfter line caret (trimToLine caretSize))
           where unexpectedTok = unexpectItem lexicalError <$> unexpected
                 caretSize = either id snd unexpectedTok
 
         formatErr SpecialisedError{..} =
           Builder.specialisedError @err
             (Builder.combineMessages @err (map (Builder.message @err) msgs))
-            (Builder.lineInfo @err curLine linesBefore linesAfter caret (trimToLine caretWidth))
+            (Builder.lineInfo @err curLine linesBefore linesAfter line caret (trimToLine caretWidth))
 
         expectItem :: ExpectItem -> Builder.Item err
         expectItem (ExpectRaw t) = Builder.raw @err t

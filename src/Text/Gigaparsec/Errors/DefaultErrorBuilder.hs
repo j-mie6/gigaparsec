@@ -114,8 +114,8 @@ indentAndUnlines lines indent = fromString pre <> intercalate (fromString ('\n' 
   where pre = replicate indent ' '
 
 {-# INLINABLE lineInfoDefault #-}
-lineInfoDefault :: String -> [String] -> [String] -> Word -> Word -> [StringBuilder]
-lineInfoDefault curLine beforeLines afterLines pointsAt width =
+lineInfoDefault :: String -> [String] -> [String] -> Word -> Word -> Word -> [StringBuilder]
+lineInfoDefault curLine beforeLines afterLines _line pointsAt width =
   concat [map inputLine beforeLines, [inputLine curLine, caretLine], map inputLine afterLines]
   where inputLine :: String -> StringBuilder
         inputLine = fromString . ('>' :)
