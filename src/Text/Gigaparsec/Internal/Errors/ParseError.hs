@@ -38,10 +38,9 @@ data ParseError = VanillaError { presentationOffset :: {-# UNPACK #-} !Word
 {-# INLINABLE fromParseError #-}
 fromParseError :: forall err. ErrorBuilder err => Maybe FilePath -> String -> ParseError -> err
 fromParseError srcFile input err =
-  Builder.format (Builder.pos @err (line err) (col err)) (Builder.source @err srcFile)
-                 (formatErr err)
-  where formatErr :: ParseError -> Builder.ErrorInfoLines err
-        formatErr VanillaError{..} =
+  Builder.build (Builder.pos @err (line err) (col err)) (Builder.source @err srcFile) (buildErr err)
+  where buildErr :: ParseError -> Builder.ErrorInfoLines err
+        buildErr VanillaError{..} =
           Builder.vanillaError @err
             (Builder.unexpected @err (either (const Nothing) (Just . fst) unexpectedTok))
             (Builder.expected @err (Builder.combineExpectedItems @err (Set.map expectItem expecteds)))
@@ -50,7 +49,7 @@ fromParseError srcFile input err =
           where unexpectedTok = unexpectItem lexicalError <$> unexpected
                 caretSize = either id snd unexpectedTok
 
-        formatErr SpecialisedError{..} =
+        buildErr SpecialisedError{..} =
           Builder.specialisedError @err
             (Builder.combineMessages @err (map (Builder.message @err) msgs))
             (Builder.lineInfo @err curLine linesBefore linesAfter line caret (trimToLine caretWidth))

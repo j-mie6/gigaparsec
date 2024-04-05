@@ -17,7 +17,7 @@ data TestErrorLines = VanillaError !(Maybe TestErrorItem) !(Set TestErrorItem) !
 data TestErrorItem = Raw !String | Named !String | EndOfInput deriving stock (Eq, Show, Ord)
 
 instance ErrorBuilder TestError where
-  format p _ = TestError p
+  build p _ = TestError p
 
   type Position TestError = (Word, Word)
   pos = (,)
