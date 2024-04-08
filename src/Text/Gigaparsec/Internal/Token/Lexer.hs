@@ -17,7 +17,7 @@ module Text.Gigaparsec.Internal.Token.Lexer (
 import Text.Gigaparsec (Parsec, eof, void, empty, (<|>), atomic, unit)
 import Text.Gigaparsec.Char (satisfy, string, item, endOfLine)
 import Text.Gigaparsec.Combinator (skipMany, skipManyTill)
-import Text.Gigaparsec.Registers (put, get, localWith, rollback)
+import Text.Gigaparsec.State (put, get, localWith, rollback)
 import Text.Gigaparsec.Errors.Combinator (hide)
 
 import Text.Gigaparsec.Token.Descriptions qualified as Desc

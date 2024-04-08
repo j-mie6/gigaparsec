@@ -1,5 +1,5 @@
 {-# LANGUAGE Safe #-}
-module Text.Gigaparsec.Registers (
+module Text.Gigaparsec.State (
     Reg,
     make, unsafeMake,
     get, gets,

@@ -100,7 +100,7 @@ library
                       Text.Gigaparsec.Expr.Subtype,
                       Text.Gigaparsec.Patterns,
                       Text.Gigaparsec.Position,
-                      Text.Gigaparsec.Registers,
+                      Text.Gigaparsec.State,
                       Text.Gigaparsec.Token.Descriptions,
                       Text.Gigaparsec.Token.Errors,
                       Text.Gigaparsec.Token.Lexer,
