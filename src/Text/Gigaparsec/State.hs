@@ -5,7 +5,7 @@ module Text.Gigaparsec.State (
     get, gets,
     set, sets,
     update,
-    local, localWith,
+    updateDuring, setDuring,
     rollback
   ) where
 
@@ -55,18 +55,18 @@ _update ref pf = _set ref (_gets ref pf)
 update :: Ref r a -> (a -> a) -> Parsec ()
 update ref f = _set ref (gets ref f)
 
-local :: Ref r a -> (a -> a) -> Parsec b -> Parsec b
-local ref f p = do x <- get ref
-                   set ref (f x)
-                   p <* set ref x
+updateDuring :: Ref r a -> (a -> a) -> Parsec b -> Parsec b
+updateDuring ref f p = do x <- get ref
+                          set ref (f x)
+                          p <* set ref x
 
-localWith :: Ref r a -> a -> Parsec b -> Parsec b
-localWith ref x = local ref (const x)
+setDuring :: Ref r a -> a -> Parsec b -> Parsec b
+setDuring ref x = updateDuring ref (const x)
 
-_localWith :: Ref r a -> Parsec a -> Parsec b -> Parsec b
-_localWith ref px q = px >>= flip (localWith ref) q
+_setDuring :: Ref r a -> Parsec a -> Parsec b -> Parsec b
+_setDuring ref px q = px >>= flip (setDuring ref) q
 
-rollback :: Ref r a -> Parsec a -> Parsec a
+rollback :: Ref r a -> Parsec b -> Parsec b
 rollback ref p = get ref >>= \x -> p <|> (set ref x *> empty)
 
 -- TODO: for combinators
