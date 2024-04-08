@@ -116,7 +116,6 @@ library
                       Text.Gigaparsec.Internal.Errors.DefuncTypes,
                       Text.Gigaparsec.Internal.Errors.ErrorItem,
                       Text.Gigaparsec.Internal.Errors.ParseError,
-                      Text.Gigaparsec.Internal.RT,
                       Text.Gigaparsec.Internal.Require,
                       Text.Gigaparsec.Internal.Token.BitBounds,
                       Text.Gigaparsec.Internal.Token.Errors,
@@ -131,7 +130,8 @@ library
     build-depends:    containers       >= 0.6   && < 0.7,
                       selective        >= 0.6   && < 0.8,
                       pretty-terminal  >= 0.1.0 && < 0.2,
-                      template-haskell >= 2.16  && < 3
+                      template-haskell >= 2.16  && < 3,
+                      rt               >= 0.1   && < 0.2
 
     -- Modules included in this library but not exported.
     -- other-modules:
@@ -201,6 +201,7 @@ test-suite gigaparsec-test
         --tasty-bench
         -- we'd need to keep the basefile files somewhere, cache in CI or keep in repo?
         knob >=0.1.1 && <0.3,
+        rt >= 0.1 && < 0.2,
 
 benchmark perf-test
     import:           warnings, extensions, base

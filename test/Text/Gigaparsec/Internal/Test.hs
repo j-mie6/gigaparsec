@@ -10,10 +10,10 @@ import Text.Gigaparsec.Internal.TestError
 
 import Text.Gigaparsec
 import Text.Gigaparsec.Internal
-import Text.Gigaparsec.Internal.RT
 
 import Control.Exception (catches, catch, evaluate, Exception, SomeException(..), Handler(..), throwIO)
 import Control.Monad (unless, forM_)
+import Control.Monad.RT
 import Type.Reflection (typeOf, typeRep)
 import Control.DeepSeq (rnf, NFData)
 

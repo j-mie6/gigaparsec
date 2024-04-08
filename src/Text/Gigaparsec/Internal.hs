@@ -17,7 +17,7 @@ own risk.
 -}
 module Text.Gigaparsec.Internal (module Text.Gigaparsec.Internal) where
 
-import Text.Gigaparsec.Internal.RT (RT)
+import Control.Monad.RT (RT)
 import Text.Gigaparsec.Internal.Errors (Error, Hints, ExpectItem, CaretWidth)
 import Text.Gigaparsec.Internal.Errors qualified as Errors (
     emptyErr, expectedErr, specialisedErr, mergeErr, unexpectedErr,
