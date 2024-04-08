@@ -1,10 +1,10 @@
 {-# LANGUAGE Safe #-}
 module Text.Gigaparsec.State (
-    Reg,
+    Ref,
     make, unsafeMake,
     get, gets,
-    put, puts,
-    modify,
+    set, sets,
+    update,
     local, localWith,
     rollback
   ) where
@@ -14,62 +14,59 @@ import Text.Gigaparsec.Internal qualified as Internal (Parsec(..))
 
 import Data.Ref (Ref, newRef, readRef, writeRef)
 
-type Reg :: * -> * -> *
-type Reg = Ref
-
-unsafeMake :: (forall r. Reg r a -> Parsec b) -> Parsec b
+unsafeMake :: (forall r. Ref r a -> Parsec b) -> Parsec b
 unsafeMake = make (error "reference used but not set")
 
-_make :: Parsec a -> (forall r. Reg r a -> Parsec b) -> Parsec b
+_make :: Parsec a -> (forall r. Ref r a -> Parsec b) -> Parsec b
 _make p f = p >>= \x -> make x f
 
-make :: a -> (forall r. Reg r a -> Parsec b) -> Parsec b
+make :: a -> (forall r. Ref r a -> Parsec b) -> Parsec b
 make x f = Internal.Parsec $ \st good bad ->
-  newRef x $ \reg ->
-    let Internal.Parsec p = f reg
+  newRef x $ \ref ->
+    let Internal.Parsec p = f ref
     in p st good bad
 
-get :: Reg r a -> Parsec a
-get reg = Internal.Parsec $ \st good _ ->
-  do x <- readRef reg
+get :: Ref r a -> Parsec a
+get ref = Internal.Parsec $ \st good _ ->
+  do x <- readRef ref
      good x st
 
 -- parsley provides multiple overloadings...
-_gets :: Reg r a -> Parsec (a -> b) -> Parsec b
-_gets reg pf = pf <*> get reg
+_gets :: Ref r a -> Parsec (a -> b) -> Parsec b
+_gets ref pf = pf <*> get ref
 
-gets :: Reg r a -> (a -> b) -> Parsec b
-gets reg f = f <$> get reg
+gets :: Ref r a -> (a -> b) -> Parsec b
+gets ref f = f <$> get ref
 
-_put :: Reg r a -> Parsec a -> Parsec ()
-_put reg px = px >>= put reg
+_set :: Ref r a -> Parsec a -> Parsec ()
+_set ref px = px >>= set ref
 
-put :: Reg r a -> a -> Parsec ()
-put reg x = Internal.Parsec $ \st good _ ->
-  do writeRef reg x
+set :: Ref r a -> a -> Parsec ()
+set ref x = Internal.Parsec $ \st good _ ->
+  do writeRef ref x
      good () st
 
-puts :: Reg r b -> (a -> b) -> Parsec a -> Parsec ()
-puts reg f px = _put reg (f <$> px)
+sets :: Ref r b -> (a -> b) -> Parsec a -> Parsec ()
+sets ref f px = _set ref (f <$> px)
 
-_modify :: Reg r a -> Parsec (a -> a) -> Parsec ()
-_modify reg pf = _put reg (_gets reg pf)
+_update :: Ref r a -> Parsec (a -> a) -> Parsec ()
+_update ref pf = _set ref (_gets ref pf)
 
-modify :: Reg r a -> (a -> a) -> Parsec ()
-modify reg f = _put reg (gets reg f)
+update :: Ref r a -> (a -> a) -> Parsec ()
+update ref f = _set ref (gets ref f)
 
-local :: Reg r a -> (a -> a) -> Parsec b -> Parsec b
-local reg f p = do x <- get reg
-                   put reg (f x)
-                   p <* put reg x
+local :: Ref r a -> (a -> a) -> Parsec b -> Parsec b
+local ref f p = do x <- get ref
+                   set ref (f x)
+                   p <* set ref x
 
-localWith :: Reg r a -> a -> Parsec b -> Parsec b
-localWith reg x = local reg (const x)
+localWith :: Ref r a -> a -> Parsec b -> Parsec b
+localWith ref x = local ref (const x)
 
-_localWith :: Reg r a -> Parsec a -> Parsec b -> Parsec b
-_localWith reg px q = px >>= flip (localWith reg) q
+_localWith :: Ref r a -> Parsec a -> Parsec b -> Parsec b
+_localWith ref px q = px >>= flip (localWith ref) q
 
-rollback :: Reg r a -> Parsec a -> Parsec a
-rollback reg p = get reg >>= \x -> p <|> (put reg x *> empty)
+rollback :: Ref r a -> Parsec a -> Parsec a
+rollback ref p = get ref >>= \x -> p <|> (set ref x *> empty)
 
 -- TODO: for combinators
