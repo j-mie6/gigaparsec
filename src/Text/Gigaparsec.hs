@@ -83,7 +83,6 @@ module Text.Gigaparsec (
 
 import Text.Gigaparsec.Internal (Parsec(Parsec), emptyState, manyr, somer)
 import Text.Gigaparsec.Internal qualified as Internal (State(..), useHints, expectedErr)
-import Text.Gigaparsec.Internal.RT qualified as Internal (RT, runRT, rtToIO)
 import Text.Gigaparsec.Internal.Errors qualified as Internal (Error, ExpectItem(ExpectEndOfInput), fromError)
 
 import Text.Gigaparsec.Errors.ErrorBuilder (ErrorBuilder)
@@ -93,6 +92,7 @@ import Text.Gigaparsec.Errors.ErrorGen (vanillaGen)
 import Data.Functor (void)
 import Control.Applicative (liftA2, (<|>), empty, many, some, (<**>)) -- liftA2 required until 9.6
 import Control.Selective (select, branch)
+import Control.Monad.RT qualified as Internal (RT, runRT, rtToIO)
 
 import Data.Set qualified as Set (singleton, empty)
 import GHC.Generics (Generic)

@@ -15,11 +15,11 @@ breakpoints that can be used to pause parsing execution.
 module Text.Gigaparsec.Debug (debug, debugWith, debugConfig, DebugConfig(..), WatchedReg(..), Break(..)) where
 
 import Text.Gigaparsec.Internal (Parsec)
-import Text.Gigaparsec.Internal.RT (Reg, readReg)
 import Text.Gigaparsec.Internal qualified as Internal
-import Text.Gigaparsec.Internal.RT qualified as Internal
 
+import Data.Ref (Ref, readRef)
 import Control.Monad (when, forM)
+import Control.Monad.RT.Unsafe qualified as Internal
 import System.IO (hGetEcho, hSetEcho, hPutStr, stdin, stdout, Handle)
 import Data.List (intercalate, isPrefixOf)
 import Data.List.NonEmpty (NonEmpty((:|)), (<|))
@@ -54,7 +54,7 @@ tracked, which is why this datatype is existential.
 -}
 type WatchedReg :: *
 data WatchedReg = forall r a. Show a => WatchedReg String    -- ^ the name of the register
-                                                   (Reg r a) -- ^ the register itself
+                                                   (Ref r a) -- ^ the register itself
 
 {-|
 This is used by 'DebugConfig' to specify whether the parsing should be paused
@@ -146,7 +146,7 @@ printInfo handle name dir st@Internal.State{input, line, col} end ascii regs = d
     if null regs then return []
     else (++ [""]) . ("watched registers:" :) <$>
       forM regs (\(WatchedReg rname reg) ->
-        (\x -> "    " ++ rname ++ " = " ++ show x) <$> readReg reg)
+        (\x -> "    " ++ rname ++ " = " ++ show x) <$> readRef reg)
   Internal.unsafeIOToRT $
     hPutStr handle $ indentAndUnlines st ((prelude ++ cs' ++ end) : caret : regSummary)
 

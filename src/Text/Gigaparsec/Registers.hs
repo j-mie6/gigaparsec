@@ -1,4 +1,4 @@
-{-# LANGUAGE Trustworthy #-}
+{-# LANGUAGE Safe #-}
 module Text.Gigaparsec.Registers (
     Reg,
     make, unsafeMake,
@@ -10,8 +10,12 @@ module Text.Gigaparsec.Registers (
   ) where
 
 import Text.Gigaparsec (Parsec, (<|>), empty)
-import Text.Gigaparsec.Internal.RT (Reg, newReg, readReg, writeReg)
 import Text.Gigaparsec.Internal qualified as Internal (Parsec(..))
+
+import Data.Ref (Ref, newRef, readRef, writeRef)
+
+type Reg :: * -> * -> *
+type Reg = Ref
 
 unsafeMake :: (forall r. Reg r a -> Parsec b) -> Parsec b
 unsafeMake = make (error "reference used but not set")
@@ -21,13 +25,13 @@ _make p f = p >>= \x -> make x f
 
 make :: a -> (forall r. Reg r a -> Parsec b) -> Parsec b
 make x f = Internal.Parsec $ \st good bad ->
-  newReg x $ \reg ->
+  newRef x $ \reg ->
     let Internal.Parsec p = f reg
     in p st good bad
 
 get :: Reg r a -> Parsec a
 get reg = Internal.Parsec $ \st good _ ->
-  do x <- readReg reg
+  do x <- readRef reg
      good x st
 
 -- parsley provides multiple overloadings...
@@ -42,7 +46,7 @@ _put reg px = px >>= put reg
 
 put :: Reg r a -> a -> Parsec ()
 put reg x = Internal.Parsec $ \st good _ ->
-  do writeReg reg x
+  do writeRef reg x
      good () st
 
 puts :: Reg r b -> (a -> b) -> Parsec a -> Parsec ()

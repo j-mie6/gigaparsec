@@ -44,11 +44,11 @@ import Text.Gigaparsec.Internal.Token.Text (
   )
 import Text.Gigaparsec.Internal.Token.Text qualified as Text (lexeme)
 
-import Text.Gigaparsec.Internal.RT (fromIORef)
 import Text.Gigaparsec.Internal.Require (require)
 
 import Data.List (isPrefixOf)
 import Data.IORef (newIORef)
+import Data.Ref (fromIORef)
 import Control.Exception (Exception, throw)
 import Control.Monad (join, guard)
 import System.IO.Unsafe (unsafePerformIO)
