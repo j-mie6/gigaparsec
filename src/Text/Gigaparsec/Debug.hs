@@ -19,7 +19,7 @@ import Text.Gigaparsec.Internal qualified as Internal
 
 import Data.Ref (Ref, readRef)
 import Control.Monad (when, forM)
-import Control.Monad.RT.Unsafe qualified as Internal
+import Control.Monad.RT.Unsafe (RT, unsafeIOToRT)
 import System.IO (hGetEcho, hSetEcho, hPutStr, stdin, stdout, Handle)
 import Data.List (intercalate, isPrefixOf)
 import Data.List.NonEmpty (NonEmpty((:|)), (<|))
@@ -94,7 +94,7 @@ on either entry, exit, or both. The parse is resumed by entering any character o
 debugWith :: DebugConfig -> String -> Parsec a -> Parsec a
 debugWith config@DebugConfig{ascii} name (Internal.Parsec p) = Internal.Parsec $ \st good bad -> do
   -- TODO: could make it so the postamble can print input information from the entry?
-  ascii' <- (\colourful -> ascii || not colourful) <$> Internal.unsafeIOToRT supportsPretty
+  ascii' <- (\colourful -> ascii || not colourful) <$> unsafeIOToRT supportsPretty
   let config' = config { ascii = ascii' }
   doDebug name Enter st ""  config'
   let good' x st' = do
@@ -127,12 +127,12 @@ shouldBreak :: Direction -> Break -> Bool
 shouldBreak Enter = breakOnEntry
 shouldBreak Exit = breakOnExit
 
-doDebug :: String -> Direction -> Internal.State -> String -> DebugConfig -> Internal.RT ()
+doDebug :: String -> Direction -> Internal.State -> String -> DebugConfig -> RT ()
 doDebug name dir st end DebugConfig{..} = do
   printInfo handle name dir st end ascii watchedRegs
   when (shouldBreak dir breakPoint) waitForUser
 
-printInfo :: Handle -> String -> Direction -> Internal.State -> String -> Bool -> [WatchedReg] -> Internal.RT ()
+printInfo :: Handle -> String -> Direction -> Internal.State -> String -> Bool -> [WatchedReg] -> RT ()
 printInfo handle name dir st@Internal.State{input, line, col} end ascii regs = do
   let cs = replace "\n" (newline ascii)
          . replace " " (space ascii)
@@ -147,11 +147,11 @@ printInfo handle name dir st@Internal.State{input, line, col} end ascii regs = d
     else (++ [""]) . ("watched registers:" :) <$>
       forM regs (\(WatchedReg rname reg) ->
         (\x -> "    " ++ rname ++ " = " ++ show x) <$> readRef reg)
-  Internal.unsafeIOToRT $
+  unsafeIOToRT $
     hPutStr handle $ indentAndUnlines st ((prelude ++ cs' ++ end) : caret : regSummary)
 
-waitForUser :: Internal.RT ()
-waitForUser = Internal.unsafeIOToRT $ do
+waitForUser :: RT ()
+waitForUser = unsafeIOToRT $ do
   echo <- hGetEcho stdin
   hSetEcho stdin False
   putStrLn "..."
