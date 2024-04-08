@@ -40,7 +40,7 @@ import Data.Map qualified as Map (insert, map)
 import Data.Set (Set)
 import Data.Set qualified as Set (toList)
 import Data.List.NonEmpty (NonEmpty((:|)), sort)
-import Text.Gigaparsec.Registers (Reg, make, unsafeMake, gets, modify, put, get)
+import Text.Gigaparsec.State (Ref, make, unsafeMake, gets, update, set, get)
 import Text.Gigaparsec.Combinator (guardS, choice, manyTill)
 import Control.Applicative (liftA3)
 import Data.Maybe (catMaybes)
@@ -167,11 +167,11 @@ mkEscape EscapeDesc{..} gen !err = Escape {..}
              | c < toInteger (ord maxValue) = Just (chr (fromInteger c))
              | otherwise = Nothing
 
-    atMost' :: Int -> Parsec Char -> Reg r Word -> Parsec Integer
+    atMost' :: Int -> Parsec Char -> Ref r Word -> Parsec Integer
     atMost' radix dig atMostR =
       -- FIXME: surely this is an inefficient mess with the translations?
       somel (\n d -> n * toInteger radix + toInteger (digitToInt d)) 0
-            (guardS (gets atMostR (> 0)) *> dig <* modify atMostR pred)
+            (guardS (gets atMostR (> 0)) *> dig <* update atMostR pred)
 
     atMost :: Word -> Int -> Parsec Char -> Parsec Integer
     atMost n radix dig = make n (atMost' radix dig)
@@ -182,15 +182,15 @@ mkEscape EscapeDesc{..} gen !err = Escape {..}
                  (\(num, m) -> if m == full then Just num else Nothing)
                  (atMost' radix dig atMostR <~> gets atMostR (full -))
 
-    oneOfExactly' :: NonEmpty Word -> Word -> Word -> [Word] -> Int -> Parsec Char -> Reg r Word -> Parsec Integer
+    oneOfExactly' :: NonEmpty Word -> Word -> Word -> [Word] -> Int -> Parsec Char -> Ref r Word -> Parsec Integer
     oneOfExactly' reqDigits digits m [] radix dig digitsParsed =
-      exactly digits m radix dig reqDigits <* put digitsParsed digits
+      exactly digits m radix dig reqDigits <* set digitsParsed digits
     oneOfExactly' reqDigits digits m (n:ns) radix dig digitsParsed =
       let theseDigits = exactly digits m radix dig reqDigits
           restDigits =
                 atomic (Just <$> oneOfExactly' reqDigits (n - m) n ns radix dig digitsParsed
-                     <* modify digitsParsed (+ digits))
-            <|> put digitsParsed digits $> Nothing
+                     <* update digitsParsed (+ digits))
+            <|> set digitsParsed digits $> Nothing
           combine !x Nothing !_ = x
           -- digits is removed here, because it's been added before the get
           combine x (Just y) e = x * toInteger radix ^ (e - digits) + y

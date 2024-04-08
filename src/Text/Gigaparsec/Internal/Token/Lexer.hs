@@ -17,7 +17,7 @@ module Text.Gigaparsec.Internal.Token.Lexer (
 import Text.Gigaparsec (Parsec, eof, void, empty, (<|>), atomic, unit)
 import Text.Gigaparsec.Char (satisfy, string, item, endOfLine)
 import Text.Gigaparsec.Combinator (skipMany, skipManyTill)
-import Text.Gigaparsec.Registers (put, get, localWith, rollback)
+import Text.Gigaparsec.State (set, get, setDuring, rollback)
 import Text.Gigaparsec.Errors.Combinator (hide)
 
 import Text.Gigaparsec.Token.Descriptions qualified as Desc
@@ -172,10 +172,10 @@ mkSpace desc@Desc.SpaceDesc{..} !errConfig = Space {..}
           | otherwise                    = configuredWhitespace
         !skipComments = skipMany (comment errConfig)
         alter p
-          | whitespaceIsContextDependent = rollback wsImpl . localWith wsImpl (implOf p)
+          | whitespaceIsContextDependent = rollback wsImpl . setDuring wsImpl (implOf p)
           | otherwise                    = throw (UnsupportedOperation badAlter)
         initSpace
-          | whitespaceIsContextDependent = put wsImpl configuredWhitespace
+          | whitespaceIsContextDependent = set wsImpl configuredWhitespace
           | otherwise                    = throw (UnsupportedOperation badInit)
         badInit = "whitespace cannot be initialised unless `spaceDesc.whitespaceIsContextDependent` is True"
         badAlter = "whitespace cannot be altered unless `spaceDesc.whitespaceIsContextDependent` is True"
