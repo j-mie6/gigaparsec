@@ -75,6 +75,10 @@ common base
     -- 4.14 is GHC 8.10 (the 2022 State of Haskell indicates 41% still use 8.10)
     build-depends:    base >=4.14 && < 5
 
+source-repository head
+    type:     git
+    location: git://github.com/j-mie6/gigaparsec.git
+
 library
     import:           warnings, extensions, base
 
