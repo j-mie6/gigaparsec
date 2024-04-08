@@ -1,4 +1,5 @@
 {-# LANGUAGE Safe #-}
+{-# LANGUAGE BlockArguments #-}
 module Text.Gigaparsec.State (
     Ref,
     make, unsafeMake,
@@ -6,11 +7,14 @@ module Text.Gigaparsec.State (
     set, sets,
     update,
     updateDuring, setDuring,
-    rollback
+    rollback,
+    forP, forP', forP_, forP'_
   ) where
 
 import Text.Gigaparsec (Parsec, (<|>), empty)
 import Text.Gigaparsec.Internal qualified as Internal (Parsec(..))
+
+import Text.Gigaparsec.Combinator (ifS, whenS)
 
 import Data.Ref (Ref, newRef, readRef, writeRef)
 
@@ -69,4 +73,23 @@ _setDuring ref px q = px >>= flip (setDuring ref) q
 rollback :: Ref r a -> Parsec b -> Parsec b
 rollback ref p = get ref >>= \x -> p <|> (set ref x *> empty)
 
--- TODO: for combinators
+forP :: Parsec a -> Parsec (a -> Bool) -> Parsec (a -> a) -> Parsec b -> Parsec [b]
+forP ini cond step = forP' ini cond step . const
+
+forP' :: Parsec a -> Parsec (a -> Bool) -> Parsec (a -> a) -> (a -> Parsec b) -> Parsec [b]
+forP' ini cond step body = ini >>= go
+  where go i = flip (ifS (cond <*> pure i)) (pure []) do
+                  x <- body i
+                  f <- step
+                  xs <- go (f i)
+                  return (x : xs)
+
+forP_ :: Parsec a -> Parsec (a -> Bool) -> Parsec (a -> a) -> Parsec b -> Parsec ()
+forP_ ini cond step = forP'_ ini cond step . const
+
+forP'_ :: Parsec a -> Parsec (a -> Bool) -> Parsec (a -> a) -> (a -> Parsec b) -> Parsec ()
+forP'_ ini cond step body = ini >>= go
+  where go i = whenS (cond <*> pure i) do
+                  body i
+                  f <- step
+                  go (f i)
