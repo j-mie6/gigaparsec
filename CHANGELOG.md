@@ -1,5 +1,15 @@
 # Revision history for gigaparsec
 
+## 0.3.0.0 -- TBD
+* Generalised `deriveLiftedConstructors`/`deriveDeferredConstructors` functionality to also work
+  with pattern synonyms and `forall`s in more places.
+* Added line numbering for the line information in the `ErrorBuilder`.
+* Renamed the `format` method of the `ErrorBuilder` to `build`.
+* Removed `RT` from the library's internals, it is now part of the `rt` package.
+* Renamed `Registers` to `State`, and made some combinators more consistent with `parsley`:
+    * `put` -> `set`, `puts` -> `sets`, `local` -> `updateDuring`, `localWith` -> `setDuring`
+* Added `for` combinators.
+
 ## 0.2.5.1 -- 2024-02-07
 * Fixed bug where hints can be revived by the `hide` combinator.
 

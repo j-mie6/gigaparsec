@@ -10,7 +10,6 @@ import Text.Gigaparsec.Debug
 
 import Text.Gigaparsec.Internal qualified as Internal
 import Text.Gigaparsec.Internal.Errors qualified as Internal
-import Text.Gigaparsec.Internal.RT qualified as Internal
 
 import System.IO
 import Data.Knob
@@ -18,6 +17,8 @@ import Data.Knob qualified as Knob (getContents)
 
 import Data.ByteString.Char8 (unpack)
 import Data.List (isInfixOf, isPrefixOf)
+
+import Control.Monad.RT (RT, rtToIO)
 
 {-
 This is quite interesting, because testing the debug combinator is a bit
@@ -54,10 +55,10 @@ debugTests = testGroup "debug should"
   ]
 
 ioParse :: Parsec a -> String -> IO ()
-ioParse (Internal.Parsec p) inp = Internal.rtToIO $ p (Internal.emptyState inp) good bad
-  where good :: a -> Internal.State -> Internal.RT ()
+ioParse (Internal.Parsec p) inp = rtToIO $ p (Internal.emptyState inp) good bad
+  where good :: a -> Internal.State -> RT ()
         good _ _  = return ()
-        bad :: Internal.Error -> Internal.State -> Internal.RT ()
+        bad :: Internal.Error -> Internal.State -> RT ()
         bad _ _ = return ()
 
 mockDebug :: String -> (DebugConfig -> Parsec a) -> IO String

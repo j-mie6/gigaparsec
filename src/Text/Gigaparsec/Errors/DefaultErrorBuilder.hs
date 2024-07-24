@@ -31,9 +31,9 @@ toString (StringBuilder build) = build mempty
 from :: Show a => a -> StringBuilder
 from = StringBuilder . shows
 
-{-# INLINABLE formatDefault #-}
-formatDefault :: StringBuilder -> Maybe StringBuilder -> [StringBuilder] -> String
-formatDefault pos source lines = toString (blockError header lines 2)
+{-# INLINABLE buildDefault #-}
+buildDefault :: StringBuilder -> Maybe StringBuilder -> [StringBuilder] -> String
+buildDefault pos source lines = toString (blockError header lines 2)
   where header = maybe mempty (\src -> "In " <> src <> " ") source <> pos
 
 {-# INLINABLE vanillaErrorDefault #-}
@@ -114,21 +114,21 @@ indentAndUnlines lines indent = fromString pre <> intercalate (fromString ('\n' 
   where pre = replicate indent ' '
 
 {-# INLINABLE lineInfoDefault #-}
-lineInfoDefault :: String -> [String] -> [String] -> Word -> Word -> [StringBuilder]
-lineInfoDefault curLine beforeLines afterLines pointsAt width =
+lineInfoDefault :: String -> [String] -> [String] -> Word -> Word -> Word -> [StringBuilder]
+lineInfoDefault curLine beforeLines afterLines _line pointsAt width =
   concat [map inputLine beforeLines, [inputLine curLine, caretLine], map inputLine afterLines]
   where inputLine :: String -> StringBuilder
         inputLine = fromString . ('>' :)
         caretLine :: StringBuilder
         caretLine = fromString (replicate (fromIntegral (pointsAt + 1)) ' ') <> fromString (replicate (fromIntegral width) '^')
 
-{-# INLINABLE formatPosDefault #-}
-formatPosDefault :: Word -> Word -> StringBuilder
-formatPosDefault line col = "(line "
-                         <> from line
-                         <> ", column "
-                         <> from col
-                         <> ")"
+{-# INLINABLE posDefault #-}
+posDefault :: Word -> Word -> StringBuilder
+posDefault line col = "(line "
+                   <> from line
+                   <> ", column "
+                   <> from col
+                   <> ")"
 
 {-# INLINABLE intercalate #-}
 intercalate :: Monoid m => m -> [m] -> m

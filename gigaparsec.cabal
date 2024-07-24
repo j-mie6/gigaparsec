@@ -20,11 +20,11 @@ name:               gigaparsec
 -- PVP summary:     +-+------- breaking API changes
 --                  | | +----- non-breaking API additions
 --                  | | | +--- code changes with no API change
-version:            0.2.5.1
+version:            0.3.0.0
 
 -- A short (one-line) description of the package.
 synopsis:
-    Refreshed parsec-style library for compatiblity with Scala parsley
+    Refreshed parsec-style library for compatibility with Scala parsley
 
 -- A longer description of the package.
 description:
@@ -75,6 +75,10 @@ common base
     -- 4.14 is GHC 8.10 (the 2022 State of Haskell indicates 41% still use 8.10)
     build-depends:    base >=4.14 && < 5
 
+source-repository head
+    type:     git
+    location: git://github.com/j-mie6/gigaparsec.git
+
 library
     import:           warnings, extensions, base
 
@@ -96,7 +100,7 @@ library
                       Text.Gigaparsec.Expr.Subtype,
                       Text.Gigaparsec.Patterns,
                       Text.Gigaparsec.Position,
-                      Text.Gigaparsec.Registers,
+                      Text.Gigaparsec.State,
                       Text.Gigaparsec.Token.Descriptions,
                       Text.Gigaparsec.Token.Errors,
                       Text.Gigaparsec.Token.Lexer,
@@ -112,7 +116,6 @@ library
                       Text.Gigaparsec.Internal.Errors.DefuncTypes,
                       Text.Gigaparsec.Internal.Errors.ErrorItem,
                       Text.Gigaparsec.Internal.Errors.ParseError,
-                      Text.Gigaparsec.Internal.RT,
                       Text.Gigaparsec.Internal.Require,
                       Text.Gigaparsec.Internal.Token.BitBounds,
                       Text.Gigaparsec.Internal.Token.Errors,
@@ -127,7 +130,8 @@ library
     build-depends:    containers       >= 0.6   && < 0.7,
                       selective        >= 0.6   && < 0.8,
                       pretty-terminal  >= 0.1.0 && < 0.2,
-                      template-haskell >= 2.16  && < 3
+                      template-haskell >= 2.16  && < 3,
+                      rt               >= 0.1   && < 0.2
 
     -- Modules included in this library but not exported.
     -- other-modules:
@@ -197,6 +201,7 @@ test-suite gigaparsec-test
         --tasty-bench
         -- we'd need to keep the basefile files somewhere, cache in CI or keep in repo?
         knob >=0.1.1 && <0.3,
+        rt >= 0.1 && < 0.2,
 
 benchmark perf-test
     import:           warnings, extensions, base

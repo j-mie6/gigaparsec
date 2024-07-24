@@ -83,7 +83,6 @@ module Text.Gigaparsec (
 
 import Text.Gigaparsec.Internal (Parsec(Parsec), emptyState, manyr, somer)
 import Text.Gigaparsec.Internal qualified as Internal (State(..), useHints, expectedErr)
-import Text.Gigaparsec.Internal.RT qualified as Internal (RT, runRT, rtToIO)
 import Text.Gigaparsec.Internal.Errors qualified as Internal (Error, ExpectItem(ExpectEndOfInput), fromError)
 
 import Text.Gigaparsec.Errors.ErrorBuilder (ErrorBuilder)
@@ -93,6 +92,7 @@ import Text.Gigaparsec.Errors.ErrorGen (vanillaGen)
 import Data.Functor (void)
 import Control.Applicative (liftA2, (<|>), empty, many, some, (<**>)) -- liftA2 required until 9.6
 import Control.Selective (select, branch)
+import Control.Monad.RT (RT, runRT, rtToIO)
 
 import Data.Set qualified as Set (singleton, empty)
 import GHC.Generics (Generic)
@@ -137,7 +137,7 @@ parse :: forall err a. ErrorBuilder err
       => Parsec a     -- ^ the parser to execute
       -> String       -- ^ the input to parse
       -> Result err a -- ^ result of the parse, either an error or result
-parse p inp = Internal.runRT $ _parse Nothing p inp
+parse p inp = runRT $ _parse Nothing p inp
 
 {-|
 Runs a parser against some input, pretty-printing the result to the terminal.
@@ -154,7 +154,7 @@ parseRepl :: Show a
           -> String   -- ^ the input to parse
           -> IO ()
 parseRepl p inp =
-  do res <- Internal.rtToIO $ _parse Nothing p inp
+  do res <- rtToIO $ _parse Nothing p inp
      result putStrLn print res
 
 {-# SPECIALISE parseFromFile :: Parsec a -> String -> IO (Result String a) #-}
@@ -180,16 +180,16 @@ parseFromFile :: forall err a. ErrorBuilder err
               -> IO (Result err a) -- ^ the result of the parse, error or otherwise
 parseFromFile p f =
   do inp <- readFile f
-     Internal.rtToIO $ _parse (Just f) p inp
+     rtToIO $ _parse (Just f) p inp
 
 --TODO: parseFromHandle?
 
 {-# INLINE _parse #-}
-_parse :: forall err a. ErrorBuilder err => Maybe FilePath -> Parsec a -> String -> Internal.RT (Result err a)
+_parse :: forall err a. ErrorBuilder err => Maybe FilePath -> Parsec a -> String -> RT (Result err a)
 _parse file (Parsec p) inp = p (emptyState inp) good bad
-  where good :: a -> Internal.State -> Internal.RT (Result err a)
+  where good :: a -> Internal.State -> RT (Result err a)
         good x _  = return (Success x)
-        bad :: Internal.Error -> Internal.State -> Internal.RT (Result err a)
+        bad :: Internal.Error -> Internal.State -> RT (Result err a)
         bad err _ = return (Failure (Internal.fromError file inp err))
 
 {-|
