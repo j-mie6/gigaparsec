@@ -7,6 +7,7 @@ Maintainer  : Jamie Willis, Gigaparsec Maintainers
 Stability   : stable
 
 This module contains variants of combinators that return non-empty lists of results, modifying the result type to 'NonEmpty'.
+These allow for stronger guarantees of parsed results to be baked into their types.
 
 @since 0.3.0.0
 -}
