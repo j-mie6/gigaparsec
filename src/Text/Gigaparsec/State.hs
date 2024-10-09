@@ -37,6 +37,15 @@ import Text.Gigaparsec.Combinator (ifS, whenS)
 
 import Data.Ref (Ref, newRef, readRef, writeRef)
 
+{-|
+Run a parser @f@ parameterised by a reference, which is uninitialised.
+
+The function @f@ effectively defines a parser that has access to a new uninitialised reference of type @a@.
+This reference __must__ be initialised by @f@ before it is read from, otherwise an 'error' will be thrown.
+The parameterization of 'Ref' by @r@ ensures that the reference cannot escape the scope of the inner parser defined by @f@.
+
+This function is __unsafe__, meaning it will throw a GHC `error` if the reference is read before it is set.
+-}
 unsafeMake :: (forall r. Ref r a -> Parsec b) -> Parsec b
 unsafeMake = make (error "reference used but not set")
 
