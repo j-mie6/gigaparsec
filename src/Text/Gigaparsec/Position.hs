@@ -15,7 +15,7 @@ Offset is also exposed by this interface (via 'offset'), which may be useful for
 module Text.Gigaparsec.Position (
   {-| === Position
   The position of a parser determines where in the input stream the next character is to be consumed.
-  This position is determined by the line (see 'line') and column (see 'col') numbers at which the character occurs in the input text.
+  This position is defined in terms of the line (see 'line') and column (see 'col') numbers at which the character occurs in the input text.
 
   To simply see how many characters total have been parsed, see 'offset'.
   -}
@@ -24,7 +24,7 @@ module Text.Gigaparsec.Position (
   col, 
   pos, 
   {-| === Offset & Width
-  'offset' and 'withWidth' allow one to determine how much input has been consumed by a parser.
+  'offset' and 'withWidth' allow one to calculate how much input has been consumed by a parser.
   -}
   offset, 
   withWidth) where
