@@ -1,6 +1,22 @@
 {-# LANGUAGE Safe #-}
 {-# LANGUAGE BlockArguments #-}
+{-|
+Module      : Text.Gigaparsec.State
+Description : This module contains all the functionality and operations for using and manipulating references.
+License     : BSD-3-Clause
+Maintainer  : Jamie Willis, Gigaparsec Maintainers
+Stability   : stable
+
+This module contains all the functionality and operations for using and manipulating references.
+
+These often have a role in performing context-sensitive parsing tasks, where a Turing-powerful system is required. 
+Whilst a generic state monad is capable of such parsing, it is much less efficient than the use of references, though slightly more flexible. 
+-}
 module Text.Gigaparsec.State (
+    {-| === References
+    The Ref type to describes pieces of state that are threaded through a parser. 
+    The creation and basic combinators of references are also found here.
+    -}
     Ref,
     make, unsafeMake,
     get, gets,
@@ -8,6 +24,9 @@ module Text.Gigaparsec.State (
     update,
     updateDuring, setDuring,
     rollback,
+    {-| === Reference-Based Combinators
+    The following are variants of "Text.Gigaparsec.Combinator" combinators, made much more efficient using references.
+    -}
     forP, forP', forP_, forP'_
   ) where
 
