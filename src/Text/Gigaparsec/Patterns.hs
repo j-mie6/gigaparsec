@@ -5,7 +5,7 @@
 {-# OPTIONS_GHC -Wno-monomorphism-restriction #-}
 {-|
 Module      : Text.Gigaparsec.Patterns
-Description : Template Haskell generators to help with patterns
+Description : Template Haskell generators to help with patterns.
 License     : BSD-3-Clause
 Maintainer  : Jamie Willis, Gigaparsec Maintainers
 Stability   : experimental
