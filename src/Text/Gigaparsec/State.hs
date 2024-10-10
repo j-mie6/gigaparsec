@@ -186,7 +186,7 @@ rollback  :: Ref r a  -- ^ @ref@, the reference whose value will be 'rolled-back
 rollback ref p = get ref >>= \x -> p <|> (set ref x *> empty)
 
 {-|
-Repeatedly execute a parser in a stateful loop until the condition passes.
+Repeatedly execute a parser in a loop until the condition passes.
 
 @'forP' ini cond step body@ behaves much like a traditional for loop using @ini@, @cond@, @step@,
 and @body@ as parsers which control the loop itself. 
@@ -202,7 +202,6 @@ In pseudocode, this would be equivalent to:
 @
 
 -}
--- This appears not to be stateful?
 forP  :: Parsec a           -- ^ @ini@,  the initial value of the iterator.
       -> Parsec (a -> Bool) -- ^ @cond@, the condition by which the loop terminates.
       -> Parsec (a -> a)    -- ^ @step@, how the iterator is updated on each iteration.
@@ -211,7 +210,7 @@ forP  :: Parsec a           -- ^ @ini@,  the initial value of the iterator.
 forP ini cond step = forP' ini cond step . const
 
 {-|
-Repeatedly execute a parser in a stateful loop until the condition passes.
+Repeatedly execute a parser in a loop until the condition passes.
 
 'forP'' is similar to 'forP', except the @body@ of the loop is able to access the value of the iterator.
 In pseudocode, this would be equivalent to:
@@ -239,7 +238,7 @@ forP' ini cond step body = ini >>= go
                   return (x : xs)
 
 {-|
-Repeatedly execute a parser in a stateful loop until the condition passes, ignoring any results.
+Repeatedly execute a parser in a loop until the condition passes, ignoring any results.
 
 @'forP_' ini cond step body@ behaves much like a traditional for loop using @ini@, @cond@, @step@,
 and @body@ as parsers which control the loop itself. 
@@ -253,7 +252,7 @@ forP_ :: Parsec a           -- ^ @ini@,  the initial value of the iterator.
 forP_ ini cond step = forP'_ ini cond step . const
 
 {-|
-Repeatedly execute a parser in a stateful loop until the condition passes, ignoring any results.
+Repeatedly execute a parser in a loop until the condition passes, ignoring any results.
 
 'forP'_' is similar to 'forP_', except the @body@ of the loop is able to access the value of the iterator.
 -}
