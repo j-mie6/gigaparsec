@@ -110,10 +110,11 @@ For example, in Haskell, "data" is a keyword, and "->" is a hard operator.
 See the 'plainSymbol' smart constructor for how to implement a custom name description.
 -}
 type SymbolDesc :: *
-data SymbolDesc = SymbolDesc { hardKeywords :: !(Set String)  -- ^ what keywords are always treated as keywords within the language.
-                             , hardOperators :: !(Set String) -- ^ what operators are always treated as reserved operators within the language.
-                             , caseSensitive :: !Bool         -- ^ @True@ if the keywords are case sensitive, @False@ if not (so that e.g. @IF = if@).
-                             }
+data SymbolDesc = SymbolDesc 
+  { hardKeywords :: !(Set String)  -- ^ what keywords are always treated as keywords within the language.
+  , hardOperators :: !(Set String) -- ^ what operators are always treated as reserved operators within the language.
+  , caseSensitive :: !Bool         -- ^ @True@ if the keywords are case sensitive, @False@ if not (so that e.g. @IF = if@).
+  }
 
 {-|
 This is a blank symbol description template, which should be extended to form a custom symbol description.
@@ -142,32 +143,40 @@ plainSymbol = SymbolDesc { hardKeywords = []
                          }
 
 {-|
-This type describes how numeric literals, in different bases, should be lexically processed.
+This type describes how numeric literals (integers, decimals, hexadecimals, etc...), should be lexically processed.
 -}
 type NumericDesc :: *
-data NumericDesc = NumericDesc { literalBreakChar :: !BreakCharDesc -- ^ 
-                               , leadingDotAllowed :: !Bool
-                               , trailingDotAllowed :: !Bool
-                               , leadingZerosAllowed :: !Bool
-                               , positiveSign :: !PlusSignPresence
-                               -- generic number
-                               , integerNumbersCanBeHexadecimal :: !Bool
-                               , integerNumbersCanBeOctal :: !Bool
-                               , integerNumbersCanBeBinary :: !Bool
-                               , realNumbersCanBeHexadecimal :: !Bool
-                               , realNumbersCanBeOctal :: !Bool
-                               , realNumbersCanBeBinary :: !Bool
-                               -- special literals
-                               , hexadecimalLeads :: !(Set Char)
-                               , octalLeads :: !(Set Char)
-                               , binaryLeads :: !(Set Char)
-                               -- exponents
-                               , decimalExponentDesc :: !ExponentDesc
-                               , hexadecimalExponentDesc :: !ExponentDesc
-                               , octalExponentDesc :: !ExponentDesc
-                               , binaryExponentDesc :: !ExponentDesc
-                               }
+data NumericDesc = NumericDesc 
+  { literalBreakChar :: !BreakCharDesc        -- ^ can breaks be found within numeric literals? (see 'BreakCharDesc')
+  , leadingDotAllowed :: !Bool                -- ^ can a real number omit a leading 0 before the point?
+  , trailingDotAllowed :: !Bool               -- ^ can a real number omit a trailing 0 after the point?
+  , leadingZerosAllowed :: !Bool              -- ^ are extraneous zeros allowed at the start of decimal numbers?
+  , positiveSign :: !PlusSignPresence         -- ^ describes if positive (+) signs are allowed, compulsory, or illegal.
+  -- generic number
+  , integerNumbersCanBeHexadecimal :: !Bool   -- ^ can generic "integer numbers" to be hexadecimal?
+  , integerNumbersCanBeOctal :: !Bool         -- ^ can generic "integer numbers" to be octal?
+  , integerNumbersCanBeBinary :: !Bool        -- ^ can generic "integer numbers" to be binary?
+  , realNumbersCanBeHexadecimal :: !Bool      -- ^ can generic "real numbers" to be hexadecimal?
+  , realNumbersCanBeOctal :: !Bool            -- ^ can generic "real numbers" to be octal?
+  , realNumbersCanBeBinary :: !Bool           -- ^ can generic "real numbers" to be binary?
+  -- special literals
+  , hexadecimalLeads :: !(Set Char)           -- ^ the characters that begin a hexadecimal literal following a 0 (may be empty).
+  , octalLeads :: !(Set Char)                 -- ^ the characters that begin an octal literal following a 0 (may be empty).
+  , binaryLeads :: !(Set Char)                -- ^ the characters that begin a binary literal following a 0 (may be empty).
+  -- exponents
+  , decimalExponentDesc :: !ExponentDesc      -- ^ describes how scientific exponent notation should work for decimal literals.
+  , hexadecimalExponentDesc :: !ExponentDesc  -- ^ describes how scientific exponent notation should work for hexadecimal literals.
+  , octalExponentDesc :: !ExponentDesc        -- ^ describes how scientific exponent notation should work for octal literals.
+  , binaryExponentDesc :: !ExponentDesc       -- ^ describes how scientific exponent notation should work for binary literals.
+  }
 
+{-|
+This is a blank numeric description template, which should be extended to form a custom numeric description.
+
+In its default state, 'plainNumeric' allows for hex-, oct-, and bin-ary numeric literals,
+with the standard prefixes.
+To change this, one should use record field copies.
+-}
 plainNumeric :: NumericDesc
 plainNumeric = NumericDesc { literalBreakChar = NoBreakChar
                            , leadingDotAllowed = False
@@ -277,11 +286,11 @@ Most languages must be able to parse strings and characters.
 -}
 type TextDesc :: *
 data TextDesc = TextDesc 
-  { escapeSequences :: {-# UNPACK #-} !EscapeDesc
-  , characterLiteralEnd :: !Char
-  , stringEnds :: !(Set (String, String))
-  , multiStringEnds :: !(Set (String, String))
-  , graphicCharacter :: !CharPredicate
+  { escapeSequences :: {-# UNPACK #-} !EscapeDesc -- ^ the description of how escape sequences in literals.
+  , characterLiteralEnd :: !Char -- ^ the character that starts and ends a character literal.
+  , stringEnds :: !(Set (String, String)) -- ^ the sequences that may begin and end a string literal.
+  , multiStringEnds :: !(Set (String, String)) -- ^ the sequences that may begin and end a multi-line string literal.
+  , graphicCharacter :: !CharPredicate -- ^ the characters that can be written verbatim into a character or string literal.
   }
 
 {-|
@@ -369,15 +378,27 @@ plainEscape = EscapeDesc { escBegin = '\\'
 
 -- TODO: haskellEscape
 
+{-|
+Describes how numeric escape sequences should work for a given base.
+-}
 type NumericEscape :: *
-data NumericEscape = NumericIllegal
-                   | NumericSupported { prefix :: !(Maybe Char)
-                                      , numDigits :: !NumberOfDigits
-                                      , maxValue :: !Char
-                                      }
+data NumericEscape 
+  = NumericIllegal    -- ^ Numeric literals are disallowed for this specific base.
+  | NumericSupported  -- ^ Numeric literals are supported for this specific base.
+    { prefix :: !(Maybe Char)      -- ^ the character, if any, that is required to start the literal (like x for hexadecimal escapes in some languages).
+    , numDigits :: !NumberOfDigits -- ^ the number of digits required for this literal: this may be unbounded, an exact number, or up to a specific number.
+    , maxValue :: !Char            -- ^ the largest character value that can be expressed by this numeric escape.
+    }
 
+{-|
+Describes how many digits a numeric escape sequence is allowed.
+-}
 type NumberOfDigits :: *
-data NumberOfDigits = Unbounded | Exactly !(NonEmpty Word) | AtMost !Word
+data NumberOfDigits 
+  = Unbounded -- ^ there is no limit on the number of digits that may appear in this sequence.
+  | Exactly !(NonEmpty Word) -- ^ the number of digits in the literal must be one of the given values.
+  | AtMost -- ^ there must be at most @n@ digits in the numeric escape literal, up to and including the value given. 
+    !Word  -- ^ the maximum (inclusive) number of digits allowed in the literal..
 
 {-|
 This type describes how whitespace and comments should be handled lexically.
