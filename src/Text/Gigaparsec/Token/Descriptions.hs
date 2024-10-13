@@ -6,12 +6,12 @@
 -- We can move this into an internal module to accommodate that if we want
   {-|
 Module      : Text.Gigaparsec.Token.Descriptions
-Description : This package contains the descriptions of various lexical structures to be fed to the lexer.
+Description : This module contains the descriptions of various lexical structures to be fed to the lexer.
 License     : BSD-3-Clause
 Maintainer  : Jamie Willis, Gigaparsec Maintainers
 Stability   : experimental
 
-This package contains the descriptions of various lexical structures to be fed to the lexer.
+This module contains the descriptions of various lexical structures to be fed to the lexer.
 
 Rather than use the internal constructors, such as @NameDesc@, one should extend the \'@plain@\' definitions with record field updates.
 For example,
