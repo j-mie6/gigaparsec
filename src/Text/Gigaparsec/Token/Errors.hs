@@ -13,12 +13,15 @@ This module contains the relevant functionality for configuring the error messag
 @since 0.2.2.0
 -}
 module Text.Gigaparsec.Token.Errors (
-    {-| === Error Configuration
+    {-| == Error Configuration
     This is the main type that defines the configuration for errors from the Lexer.
     -}
     ErrorConfig,
-    {-| === Labelling and Explanation Configuration
+    {-| == Labelling and Explanation Configuration
     These combinators configure both labels and/or explains for simple description configurations.
+    -}
+    {-| === Numeric Errors
+    These control the errors generated with the numeric component of the Lexer.
     -}
     labelNumericBreakChar, labelIntegerUnsignedDecimal,
     labelIntegerUnsignedHexadecimal, labelIntegerUnsignedOctal,
@@ -30,9 +33,17 @@ module Text.Gigaparsec.Token.Errors (
     labelIntegerHexadecimalEnd, labelIntegerOctalEnd,
     labelIntegerBinaryEnd, labelIntegerNumberEnd,
     filterIntegerOutOfBounds,
+    {-| === Name Errors
+    These control the errors generated with the names component of the Lexer.
+    -}
     labelNameIdentifier, labelNameOperator,
     unexpectedNameIllegalIdentifier, unexpectedNameIllegalOperator,
     filterNameIllFormedIdentifier, filterNameIllFormedOperator,
+    {-| === Text Errors
+    These control the errors generated with the text component of the Lexer.
+    -}
+    VanillaFilterConfig, VanillaFilterConfigurable(..),
+    SpecializedFilterConfig, SpecializedFilterConfigurable(..),
     labelCharAscii, labelCharLatin1, labelCharUnicode,
     labelCharAsciiEnd, labelCharLatin1End, labelCharUnicodeEnd,
     labelStringAscii, labelStringLatin1, labelStringUnicode,
@@ -40,29 +51,33 @@ module Text.Gigaparsec.Token.Errors (
     labelStringCharacter, labelGraphicCharacter, labelEscapeSequence,
     labelEscapeNumeric, labelEscapeNumericEnd, labelEscapeEnd,
     labelStringEscapeEmpty, labelStringEscapeGap, labelStringEscapeGapEnd,
-    {-| === Filtering Configuration
-    These types describe how to generate the filters to rule out specific parses. 
-    They can either generate types of vanilla error or specialised errors.
-    -}
     filterCharNonAscii, filterCharNonLatin1, filterStringNonAscii, filterStringNonLatin1,
     filterEscapeCharRequiresExactDigits, filterEscapeCharNumericSequenceIllegal,
     {-| === Verifying Bad Characters 
     These classes can be used to help configure the Verified Error pattern for illegal string and character literal characters, 
     used by verifiedCharBadCharsUsedInLiteral and verifiedStringBadCharsUsedInLiteral.
     -}
+    VerifiedBadChars, badCharsFail, badCharsReason,
     verifiedCharBadCharsUsedInLiteral, verifiedStringBadCharsUsedInLiteral,
+    {-| === Symbol Errors
+    These control the errors generated with the symbol component of the Lexer.
+    -}
     labelSymbol, labelSymbolEndOfKeyword, labelSymbolEndOfOperator,
+    {-| === Space Errors 
+    These control the errors generated with the space component of the Lexer.
+    -}
     labelSpaceEndOfLineComment, labelSpaceEndOfMultiComment,
+    {-| == Default Config
+    -}
     defaultErrorConfig,
+    {-| == Internal re-exports
+    -}
     LabelWithExplainConfig, LabelWithExplainConfigurable(..),
     LabelConfig, LabelConfigurable(..),
     ExplainConfig, ExplainConfigurable(..),
     NotConfigurable(..),
     FilterConfig,
-    VanillaFilterConfig, VanillaFilterConfigurable(..),
-    SpecializedFilterConfig, SpecializedFilterConfigurable(..),
     BasicFilterConfigurable(..),
-    VerifiedBadChars, badCharsFail, badCharsReason,
     Unverified(..),
     Bits(B8, B16, B32, B64)
   ) where
@@ -86,71 +101,225 @@ import Text.Gigaparsec.Internal.Token.Errors (
     VerifiedBadChars(BadCharsUnverified, BadCharsFail, BadCharsReason)
   )
 
+{-|
+An 'ErrorConfig' specifies how errors should be produced by the 'Text.Gigaparsec.Token.Lexer.Lexer'.
+
+The Lexer is set up to produce a variety of different errors via @label@-ing, @explain@-ing, and @filter@-ing, 
+and some applications of the Verified and Preventative error patterns. 
+The exact content of those errors can be configured here. 
+Errors can be suppressed or specified with different levels of detail, 
+or even switching between vanilla or specialised errors.
+
+A custom 'ErrorConfig' should be created by extending the 'defaultErrorConfig' 
+with record updates to override the relevant default fields.
+Not configuring something does not mean it will not appear in the message, 
+but will mean it uses the underlying base errors.
+-}
 type ErrorConfig :: *
 data ErrorConfig =
-  ErrorConfig { labelNumericBreakChar :: !LabelWithExplainConfig
-              , labelIntegerUnsignedDecimal :: Maybe Bits -> LabelWithExplainConfig
-              , labelIntegerUnsignedHexadecimal :: Maybe Bits -> LabelWithExplainConfig
-              , labelIntegerUnsignedOctal :: Maybe Bits -> LabelWithExplainConfig
-              , labelIntegerUnsignedBinary :: Maybe Bits -> LabelWithExplainConfig
-              , labelIntegerUnsignedNumber :: Maybe Bits -> LabelWithExplainConfig
-              , labelIntegerSignedDecimal :: Maybe Bits -> LabelWithExplainConfig
-              , labelIntegerSignedHexadecimal :: Maybe Bits -> LabelWithExplainConfig
-              , labelIntegerSignedOctal :: Maybe Bits -> LabelWithExplainConfig
-              , labelIntegerSignedBinary :: Maybe Bits -> LabelWithExplainConfig
-              , labelIntegerSignedNumber :: Maybe Bits -> LabelWithExplainConfig
-              , labelIntegerDecimalEnd :: LabelConfig
-              , labelIntegerHexadecimalEnd :: LabelConfig
-              , labelIntegerOctalEnd :: LabelConfig
-              , labelIntegerBinaryEnd :: LabelConfig
-              , labelIntegerNumberEnd :: LabelConfig
-              , filterIntegerOutOfBounds :: Integer -> Integer -> Int -> FilterConfig Integer
-              , labelNameIdentifier :: String
-              , labelNameOperator :: String
-              , unexpectedNameIllegalIdentifier :: String -> String
-              , unexpectedNameIllegalOperator :: String -> String
-              , filterNameIllFormedIdentifier :: FilterConfig String
-              , filterNameIllFormedOperator :: FilterConfig String
-              , labelCharAscii :: LabelWithExplainConfig
-              , labelCharLatin1 :: LabelWithExplainConfig
-              , labelCharUnicode :: LabelWithExplainConfig
-              , labelCharAsciiEnd :: LabelConfig
-              , labelCharLatin1End :: LabelConfig
-              , labelCharUnicodeEnd :: LabelConfig
-              , labelStringAscii :: Bool -> Bool -> LabelWithExplainConfig
-              , labelStringLatin1 :: Bool -> Bool -> LabelWithExplainConfig
-              , labelStringUnicode :: Bool -> Bool -> LabelWithExplainConfig
-              , labelStringAsciiEnd :: Bool -> Bool -> LabelConfig
-              , labelStringLatin1End :: Bool -> Bool -> LabelConfig
-              , labelStringUnicodeEnd :: Bool -> Bool -> LabelConfig
-              , labelStringCharacter :: LabelConfig
-              , labelGraphicCharacter :: LabelWithExplainConfig
-              , labelEscapeSequence :: LabelWithExplainConfig
-              , labelEscapeNumeric :: Int -> LabelWithExplainConfig
-              , labelEscapeNumericEnd :: Char -> Int -> LabelWithExplainConfig
-              , labelEscapeEnd :: LabelWithExplainConfig
-              , labelStringEscapeEmpty :: LabelConfig
-              , labelStringEscapeGap :: LabelConfig
-              , labelStringEscapeGapEnd :: LabelConfig
-              , filterCharNonAscii :: VanillaFilterConfig Char
-              , filterCharNonLatin1 :: VanillaFilterConfig Char
-              , filterStringNonAscii :: SpecializedFilterConfig String
-              , filterStringNonLatin1 :: SpecializedFilterConfig String
-              , filterEscapeCharRequiresExactDigits :: Int -> NonEmpty Word -> SpecializedFilterConfig Word
-              , filterEscapeCharNumericSequenceIllegal :: Char -> Int -> SpecializedFilterConfig Integer
-              , verifiedCharBadCharsUsedInLiteral :: VerifiedBadChars
-              , verifiedStringBadCharsUsedInLiteral :: VerifiedBadChars
-              , labelSymbol :: Map String LabelWithExplainConfig
-              -- don't bother with these until parsley standardises
-              --, defaultSymbolKeyword :: Labeller
-              --, defaultSymbolOperator :: Labeller
-              --, defaultSymbolPunctuaton :: Labeller
-              , labelSymbolEndOfKeyword :: String -> String
-              , labelSymbolEndOfOperator :: String -> String
-              , labelSpaceEndOfLineComment :: LabelWithExplainConfig
-              , labelSpaceEndOfMultiComment :: LabelWithExplainConfig
-              }
+  ErrorConfig { 
+  -- | How a numeric break character should (like @_@) be referred to or explained within an error.
+    labelNumericBreakChar :: !LabelWithExplainConfig
+  -- | How unsigned decimal integers (of a possibly given bit-width) should be referred to or explained within an error.
+  , labelIntegerUnsignedDecimal :: Maybe Bits -> LabelWithExplainConfig
+  -- | How unsigned hexadecimal integers (of a possibly given bit-width) should be referred to or explained within an error.
+  , labelIntegerUnsignedHexadecimal :: Maybe Bits -> LabelWithExplainConfig
+  -- | How unsigned octal integers (of a possibly given bit-width) should be referred to or explained within an error.
+  , labelIntegerUnsignedOctal :: Maybe Bits -> LabelWithExplainConfig
+  -- | How unsigned binary integers (of a possibly given bit-width) should be referred to or explained within an error.
+  , labelIntegerUnsignedBinary :: Maybe Bits -> LabelWithExplainConfig
+  -- | How generic unsigned integers (of a possibly given bit-width) should be referred to or explained within an error.
+  , labelIntegerUnsignedNumber :: Maybe Bits -> LabelWithExplainConfig
+  -- | How signed decimal integers (of a possibly given bit-width) should be referred to or explained within an error.
+  , labelIntegerSignedDecimal :: Maybe Bits -> LabelWithExplainConfig
+  -- | How signed hexadecimal integers (of a possibly given bit-width) should be referred to or explained within an error.
+  , labelIntegerSignedHexadecimal :: Maybe Bits -> LabelWithExplainConfig
+  -- | How signed octal integers (of a possibly given bit-width) should be referred to or explained within an error.
+  , labelIntegerSignedOctal :: Maybe Bits -> LabelWithExplainConfig
+  -- | How signed binary integers (of a possibly given bit-width) should be referred to or explained within an error.
+  , labelIntegerSignedBinary :: Maybe Bits -> LabelWithExplainConfig
+  -- | How generic signed integers (of a possibly given bit-width) should be referred to or explained within an error.
+  , labelIntegerSignedNumber :: Maybe Bits -> LabelWithExplainConfig
+  -- | How the fact that the end of a decimal integer literal is expected should be referred to within an error.
+  , labelIntegerDecimalEnd :: LabelConfig
+  -- | How the fact that the end of a hexadecimal integer literal is expected should be referred to within an error.
+  , labelIntegerHexadecimalEnd :: LabelConfig
+  -- | How the fact that the end of an octal integer literal is expected should be referred to within an error.
+  , labelIntegerOctalEnd :: LabelConfig
+  -- | How the fact that the end of a binary integer literal is expected should be referred to within an error.
+  , labelIntegerBinaryEnd :: LabelConfig
+  -- | How the fact that the end of a generic integer literal is expected should be referred to within an error.
+  , labelIntegerNumberEnd :: LabelConfig
+  -- | Describes the content of the error when an integer literal is parsed and it is not within the required bit-width.
+  --
+  -- In @'filterIntegerOutOfBounds' x y r@: 
+  --
+  --  - @x@ is the smallest value the integer could have taken, 
+  --  - @y@ is the largest value the integer could have taken, and
+  --  - @r@ is the radix that the integer was parsed using
+  , filterIntegerOutOfBounds  :: Integer
+                              -> Integer 
+                              -> Int 
+                              -> FilterConfig Integer
+  -- | How an identifier should be referred to in an error message.
+  , labelNameIdentifier :: String
+  -- | How a user-defined operator should be referred to in an error message.
+  , labelNameOperator :: String
+  -- | How an illegally parsed hard keyword should be referred to as an unexpected component.
+  , unexpectedNameIllegalIdentifier :: String -> String
+  -- | How an illegally parsed hard operator should be referred to as an unexpected component.
+  , unexpectedNameIllegalOperator :: String -> String
+  -- | When parsing identifiers that are required to have specific start characters, how bad identifiers should be reported.
+  , filterNameIllFormedIdentifier :: FilterConfig String
+  -- | When parsing operators that are required to have specific start/end characters, how bad operators should be reported.
+  , filterNameIllFormedOperator :: FilterConfig String
+  -- | How an ASCII character literal should be referred to or explained in error messages.
+  , labelCharAscii :: LabelWithExplainConfig
+  -- | How a Latin1 (extended ASCII) character literal should be referred to or explained in error messages.
+  , labelCharLatin1 :: LabelWithExplainConfig
+  -- | How a UTF-16 character literal should be referred to or explained in error messages.
+  , labelCharUnicode :: LabelWithExplainConfig
+  -- | How the closing quote of an ASCII character literal should be referred to in error messages.
+  , labelCharAsciiEnd :: LabelConfig
+  -- | How the closing quote of a Latin1 (extended ASCII) character literal should be referred to in error messages.
+  , labelCharLatin1End :: LabelConfig
+  -- | How the closing quote of a UTF-16 character literal should be referred to in error messages.
+  , labelCharUnicodeEnd :: LabelConfig
+  {-| How an ASCII-only string should literal be referred to or explained in error messages.
 
+  With the arguments @'labelStringAscii' multi raw@:
+
+  - @multi@: whether this is for a multi-line string
+  - @raw@: whether this is for a raw string
+  -}
+  , labelStringAscii :: Bool -> Bool -> LabelWithExplainConfig
+  {-| How a Latin1-only string should literal be referred to or explained in error messages.
+
+  With the arguments @'labelStringLatin1' multi raw@:
+
+  - @multi@: whether this is for a multi-line string
+  - @raw@: whether this is for a raw string
+  -}
+  , labelStringLatin1 :: Bool -> Bool -> LabelWithExplainConfig
+  {-| How a UTF-16-only string should literal be referred to or explained in error messages.
+
+  With the arguments @'labelStringUnicode' multi raw@:
+
+  - @multi@: whether this is for a multi-line string
+  - @raw@: whether this is for a raw string
+  -}
+  , labelStringUnicode :: Bool -> Bool -> LabelWithExplainConfig
+  {- | How the closing quote(s) of an ASCII string literal should be referred to in error messages.
+
+  With the arguments @'labelStringAsciiEnd' multi raw@:
+
+  - @multi@: whether this is for a multi-line string
+  - @raw@: whether this is for a raw string
+  -}
+  , labelStringAsciiEnd :: Bool -> Bool -> LabelConfig
+  {-| How the closing quote(s) of a Latin1 string literal should be referred to in error messages.
+
+  With the arguments @'labelStringLatin1End' multi raw@:
+
+  - @multi@: whether this is for a multi-line string
+  - @raw@: whether this is for a raw string
+  -}
+  , labelStringLatin1End :: Bool -> Bool -> LabelConfig
+  {-| How the closing quote(s) of a UTF-16 string literal should be referred to in error messages.
+
+  With the arguments @'labelStringUnicodeEnd' multi raw@:
+
+  - @multi@: whether this is for a multi-line string
+  - @raw@: whether this is for a raw string
+  -}
+  , labelStringUnicodeEnd :: Bool -> Bool -> LabelConfig
+  -- | How general string characters should be referred to in error messages.
+  , labelStringCharacter :: LabelConfig
+  -- | How a graphic character (a regular character in the literal) should be referred to or explained in error messages.
+  , labelGraphicCharacter :: LabelWithExplainConfig
+  -- | How an escape sequence should be referred to or explained in error messages.
+  , labelEscapeSequence :: LabelWithExplainConfig
+  {- | How a numeric escape sequence (after the opening character) should be referred to or explained in error messages.
+
+  In @'labelEscapeNumeric' radix@:
+
+  - @radix@: the radix this specific configuration applies to.
+  -}
+  , labelEscapeNumeric :: Int -> LabelWithExplainConfig
+  {-| How the end of a numeric escape sequence (after a prefix) should be referred to or explained in error messages.
+
+  In @'labelEscapeNumericEnd' prefix radix@:
+
+  - @prefix@: the character that started this sequence
+  - @radix@: the radix this specific configuration applies to.
+  -}
+  , labelEscapeNumericEnd :: Char -> Int -> LabelWithExplainConfig
+  -- | How the end of an escape sequence (anything past the opening character) should be referred to or explained within an error message.
+  , labelEscapeEnd :: LabelWithExplainConfig
+  -- | How zero-width escape characters should be referred to within error messages.
+  , labelStringEscapeEmpty :: LabelConfig
+  -- | How string gaps should be referred to within error messages.
+  , labelStringEscapeGap :: LabelConfig
+  -- | How the end of a string gap (the closing slash) should be referred to within error messages.
+  , labelStringEscapeGapEnd :: LabelConfig
+  -- | When a non-ASCII character is found in a ASCII-only character literal, specifies how this should be reported.
+  , filterCharNonAscii :: VanillaFilterConfig Char
+  -- | When a non-Latin1 character is found in a Latin1-only character literal, specifies how this should be reported.
+  , filterCharNonLatin1 :: VanillaFilterConfig Char
+  -- | When a non-ASCII character is found in a ASCII-only string literal, specifies how this should be reported.
+  , filterStringNonAscii :: SpecializedFilterConfig String
+  -- | When a non-Latin1 character is found in a Latin1-only string literal, specifies how this should be reported.
+  , filterStringNonLatin1 :: SpecializedFilterConfig String
+  {-| When a numeric escape sequence requires a specific number of digits but this was not successfully parsed, 
+  this describes how to report that error given the number of successfully parsed digits up this point.
+
+  In @'filterEscapeCharRequiresExactDigits' radix needed@:
+
+  - @radix@: the radix used for this numeric escape sequence.
+  - @needed@: the possible numbers of digits required.
+  -}
+  , filterEscapeCharRequiresExactDigits :: Int -> NonEmpty Word -> SpecializedFilterConfig Word
+  {-| When a numeric escape sequence is not legal, this describes how to report that error, given the original illegal character.
+  
+  In @'filterEscapeCharNumericSequenceIllegal' maxEscape radix@:
+
+  - @maxEscape@: the largest legal escape character.
+  - @radix@: the radix used for this numeric escape sequence.
+  -}
+  , filterEscapeCharNumericSequenceIllegal :: Char -> Int -> SpecializedFilterConfig Integer
+  -- | Character literals parse either graphic characters or escape characters.
+  , verifiedCharBadCharsUsedInLiteral :: VerifiedBadChars
+  -- | String literals parse either graphic characters or escape characters.
+  , verifiedStringBadCharsUsedInLiteral :: VerifiedBadChars
+  {-|
+  Gives names and/or reasons to symbols.
+
+  Symbols that do not appear in the map are assumed to be NotConfigured.
+  -}
+  , labelSymbol :: Map String LabelWithExplainConfig
+  -- don't bother with these until parsley standardises
+  --, defaultSymbolKeyword :: Labeller
+  --, defaultSymbolOperator :: Labeller
+  --, defaultSymbolPunctuaton :: Labeller
+
+  -- | How the required end of a given keyword should be specified in an error.
+  , labelSymbolEndOfKeyword :: String -> String
+  -- | How the required end of a given operator should be specified in an error.
+  , labelSymbolEndOfOperator :: String -> String
+  -- | How the end of a single-line comment should be described or explained.
+  , labelSpaceEndOfLineComment :: LabelWithExplainConfig
+  -- | How the end of a multi-line comment should be described or explained.
+  , labelSpaceEndOfMultiComment :: LabelWithExplainConfig
+  }
+
+{-|
+The default fields are as follows:
+
+- 'labelNameIdentifier': @"identifier"@
+- 'labelNameOperator': @"operator"@
+- @'unexpectedNameIllegalIdentifier' v@: @"keyword v"@
+- @'unexpectedNameIllegalOperator' v@: @"reserved operator v"@;
+-}
 defaultErrorConfig :: ErrorConfig
 defaultErrorConfig = ErrorConfig {..}
   where labelNumericBreakChar = notConfigured
