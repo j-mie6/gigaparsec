@@ -6,21 +6,28 @@
 -- We can move this into an internal module to accommodate that if we want
   {-|
 Module      : Text.Gigaparsec.Token.Descriptions
-Description : This module contains the descriptions of various lexical structures to be fed to the lexer.
+Description : This module contains the descriptions of various lexical structures to configure the lexer.
 License     : BSD-3-Clause
 Maintainer  : Jamie Willis, Gigaparsec Maintainers
 Stability   : experimental
 
-This module contains the descriptions of various lexical structures to be fed to the lexer.
+This module contains the descriptions of various lexical structures to configure the lexer.
 
+Many languages share common lexical tokens, such as numeric and string literals.
+Writing lexers turning these strings into tokens is effectively boilerplate.
+A __Description__ encodes how to lex one of these common tokens.
+Feeding a 'LexicalDesc' to a 'Text.Gigaparsec.Token.Lexer.Lexer' provides many combinators
+for dealing with these tokens.
+
+==== Usage
 Rather than use the internal constructors, such as @NameDesc@, one should extend the \'@plain@\' definitions with record field updates.
 For example,
 
 @
-  myLexicalDesc = plain 
-    { nameDesc = myNameDesc,
-      textDesc = myTextDesc  
-    }
+myLexicalDesc = plain 
+  { nameDesc = myNameDesc
+  , textDesc = myTextDesc  
+  }
 @
 
 will produce a description that overrides the default name and text descriptions by those given.
@@ -28,7 +35,176 @@ See 'plainName', 'plainSymbol', 'plainNumeric', 'plainText' and 'plainSpace' for
 
 @since 0.2.2.0
 -}
-module Text.Gigaparsec.Token.Descriptions (module Text.Gigaparsec.Token.Descriptions) where
+module Text.Gigaparsec.Token.Descriptions (
+  {-| = Lexical Descriptions
+  A lexer is configured by extending the default 'plain' template, producing a 'LexicalDesc'.
+
+  * 'LexicalDesc'
+  * 'plain'
+
+  -}
+  {-| == Name Descriptions
+  A 'NameDesc' configures the lexing of name-like tokens, such as variable and function names.
+  To create a 'NameDesc', use 'plainName', and configure it to your liking with record updates.
+
+  * 'NameDesc'
+
+      * 'identifierStart'
+      * 'identifierLetter'
+      * 'operatorStart'
+      * 'operatorLetter'
+
+  * 'plainName'
+
+  -}
+  {-| == Symbol Descriptions
+  A 'SymbolDesc' configures the lexing of \'symbols\' (textual literals), such as keywords and operators.
+  To create a 'SymbolDesc', use 'plainSymbol' and configure it to your liking with record updates.
+
+  * 'SymbolDesc'
+
+      * 'hardKeywords'
+      * 'hardOperators'
+      * 'caseSensitive'
+
+  * 'plainSymbol'
+
+  -}
+  {-| == Numeric Descriptions
+  A 'NumericDesc' configures the lexing of numeric literals, such as integer and floating point literals.
+  To create a 'NumericDesc', use 'plainNumeric' and configure it to your liking with record updates.
+  Also see 'ExponentDesc', 'BreakCharDesc', and 'PlusSignPresence', for further configuration options.
+
+  * 'NumericDesc'
+
+      * 'literalBreakChar'
+      * 'leadingDotAllowed'
+      * 'trailingDotAllowed'
+      * 'leadingZerosAllowed'
+      * 'positiveSign'
+      * 'integerNumbersCanBeHexadecimal'
+      * 'integerNumbersCanBeOctal'
+      * 'integerNumbersCanBeBinary'
+      * 'realNumbersCanBeHexadecimal'
+      * 'realNumbersCanBeOctal'
+      * 'realNumbersCanBeBinary'
+      * 'hexadecimalLeads'
+      * 'octalLeads'
+      * 'binaryLeads'
+      * 'decimalExponentDesc'
+      * 'hexadecimalExponentDesc'
+      * 'octalExponentDesc'
+      * 'binaryExponentDesc'
+
+  * 'plainNumeric'
+  -}
+  {-| === Exponent Descriptions
+  An 'ExponentDesc' configures scientific exponent notation.
+
+    * 'ExponentDesc'
+
+        * 'NoExponents'
+        * 'ExponentsSupported'
+
+            * 'compulsory'
+            * 'chars'
+            * 'base'
+            * 'expSign'
+            * 'expLeadingZerosAllowd'
+  -}
+  {-| === Break-Characters in Numeric Literals
+  Some languages allow a single numeric literal to be separated by a \'break\' symbol.
+
+    * 'BreakCharDesc'
+
+      * 'NoBreakChar'
+      * 'BreakCharSupported'
+
+          * 'breakChar'
+          * 'allowedAfterNonDecimalPrefix'
+  -}
+  {-| === Numeric Literal Prefix Configuration
+
+  * 'PlusSignPresence'
+
+      * 'PlusRequired'
+      * 'PlusOptional'
+      * 'PlusIllegal'
+  -}
+  {-| == Text Descriptions
+  A 'TextDesc' configures the lexing of string and character literals, as well as escaped numeric literals.
+  To create a 'TextDesc', use 'plainText' and configure it to your liking with record updates.
+  See 'EscapeDesc', 'NumericEscape' and 'NumberOfDigits' for further configuration of escape sequences and escaped numeric literals.
+
+  * 'TextDesc'
+
+      * 'escapeSequences'
+      * 'characterLiteralEnd'
+      * 'stringEnds'
+      * 'multiStringEnds'
+      * 'graphicCharacter'
+
+  * 'plainText'
+  -}
+  {-| === Escape Character Descriptions
+  Configuration of escape sequences, such as tabs @\t@ and newlines @\n@, and 
+  escaped numbers, such as hexadecimals @0x...@ and binary @0b...@.
+
+  * 'EscapeDesc'
+
+      * 'escBegin'
+      * 'literals'
+      * 'mapping'
+      * 'decimalEscape'
+      * 'hexadecimalEscape'
+      * 'octalEscape'
+      * 'binaryEscape'
+      * 'emptyEscape'
+      * 'gapsSupported'
+
+  * 'plainEscape'
+  -}
+  {-| === Numeric Escape Sequences
+  Configuration of escaped numeric literals.
+  For example, hexadecimals, @0x...@.
+
+  * 'NumericEscape'
+
+      * 'NumericIllegal'
+      * 'NumericSupported'
+
+          * 'prefix'
+          * 'numDigits'
+          * 'maxValue'
+
+  * 'NumberOfDigits'
+
+      * 'Unbounded'
+      * 'Exactly'
+      * 'AtMost'
+
+  -}
+
+  {-| == Whitespace and Comment Descriptions
+  A 'SpaceDesc' configures the lexing whitespace and comments.
+  To create a 'SpaceDesc', use 'plainSpace' and configure it to your liking with record updates.
+
+  * 'SpaceDesc'
+
+      * 'lineCommentStart'
+      * 'lineCommentAllowsEOF'
+      * 'multiLineCommentStart'
+      * 'multiLineCommentEnd'
+      * 'multiLineNestedComments'
+      * 'space'
+      * 'whitespaceIsContextDependent'
+
+  * 'plainSpace'
+  * 'CharPredicate'
+
+  -}
+  module Text.Gigaparsec.Token.Descriptions
+  ) where
 
 import Data.Char (isSpace)
 import Data.Set (Set)
@@ -272,21 +448,12 @@ data PlusSignPresence
   | PlusOptional -- ^ (@+@) may precede a positive numeric literal, but is not necessary
   | PlusIllegal  -- ^ (@+@) cannot precede a numeric literal as a prefix (this is separate to allowing an infix binary @+@ operator).
 
--- TODO: this should be moved into the exports of the module once we update the API.
-{-|
-=== Text Descriptions
-
-Most languages must be able to parse strings and characters.
-'TextDesc' and 'plainText' describe how to parse these.
-
--}
-
 {-|
   This type describes how to parse string and character literals.
 -}
 type TextDesc :: *
 data TextDesc = TextDesc 
-  { escapeSequences :: {-# UNPACK #-} !EscapeDesc -- ^ the description of how escape sequences in literals.
+  { escapeSequences :: {-# UNPACK #-} !EscapeDesc -- ^ the description of escape sequences in literals.
   , characterLiteralEnd :: !Char -- ^ the character that starts and ends a character literal.
   , stringEnds :: !(Set (String, String)) -- ^ the sequences that may begin and end a string literal.
   , multiStringEnds :: !(Set (String, String)) -- ^ the sequences that may begin and end a multi-line string literal.
@@ -404,15 +571,16 @@ data NumberOfDigits
 This type describes how whitespace and comments should be handled lexically.
 -}
 type SpaceDesc :: *
-data SpaceDesc = SpaceDesc { lineCommentStart :: !String           -- ^ how to start single-line comments (empty for no single-line comments).
-                           , lineCommentAllowsEOF :: !Bool         -- ^ can a single-line comment be terminated by the end-of-file (@True@), or must it end with a newline (@False@)?
-                           , multiLineCommentStart :: !String      -- ^ how to start multi-line comments (empty for no multi-line comments).
-                           , multiLineCommentEnd :: !String        -- ^ how to end multi-line comments (empty for no multi-line comments).
-                           , multiLineNestedComments :: !Bool      -- ^ @True@ when multi-line comments can be nested, @False@ otherwise.
-                           , space :: !CharPredicate               -- ^ the characters to be treated as whitespace
-                           , whitespaceIsContextDependent :: !Bool -- ^ does the context change the definition of whitespace (@True@), or not (@False@)? 
-                                                                   --  (e.g. in Python, newlines are valid whitespace within parentheses, but are significant outside of them)
-                           }
+data SpaceDesc = SpaceDesc 
+  { lineCommentStart :: !String           -- ^ how to start single-line comments (empty for no single-line comments).
+  , lineCommentAllowsEOF :: !Bool         -- ^ can a single-line comment be terminated by the end-of-file (@True@), or must it end with a newline (@False@)?
+  , multiLineCommentStart :: !String      -- ^ how to start multi-line comments (empty for no multi-line comments).
+  , multiLineCommentEnd :: !String        -- ^ how to end multi-line comments (empty for no multi-line comments).
+  , multiLineNestedComments :: !Bool      -- ^ @True@ when multi-line comments can be nested, @False@ otherwise.
+  , space :: !CharPredicate               -- ^ the characters to be treated as whitespace
+  , whitespaceIsContextDependent :: !Bool -- ^ does the context change the definition of whitespace (@True@), or not (@False@)? 
+                                          --  (e.g. in Python, newlines are valid whitespace within parentheses, but are significant outside of them)
+  }
 {-|
 This is a blank whitespace description template, which should be extended to form the desired whitespace descriptions.
 
