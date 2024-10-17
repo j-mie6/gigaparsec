@@ -217,16 +217,21 @@ This type describes the aggregation of a bunch of different sub-configurations f
 See the 'plain' smart constructor to define a @LexicalDesc@.
 -}
 type LexicalDesc :: *
-data LexicalDesc = LexicalDesc 
-  { nameDesc :: {-# UNPACK #-} !NameDesc       -- ^ the description of name-like lexemes
-  , symbolDesc :: {-# UNPACK #-} !SymbolDesc   -- ^ the description of specific symbolic lexemes
-  , numericDesc :: {-# UNPACK #-} !NumericDesc -- ^ the description of numeric literals
-  , textDesc :: {-# UNPACK #-} !TextDesc       -- ^ the description of text literals
-  , spaceDesc :: {-# UNPACK #-} !SpaceDesc     -- ^ the description of whitespace
+data LexicalDesc = LexicalDesc {
+  -- | the description of name-like lexemes
+     nameDesc :: {-# UNPACK #-} !NameDesc       
+  -- | the description of specific symbolic lexemes
+  , symbolDesc :: {-# UNPACK #-} !SymbolDesc   
+  -- | the description of numeric literals
+  , numericDesc :: {-# UNPACK #-} !NumericDesc 
+  -- | the description of text literals
+  , textDesc :: {-# UNPACK #-} !TextDesc       
+  -- | the description of whitespace
+  , spaceDesc :: {-# UNPACK #-} !SpaceDesc     
   }
 
 {-|
-This lexical description contains the template @plain<...>@ descriptions defined in this module.
+This lexical description contains the template @plain\<...\>@ descriptions defined in this module.
 See 'plainName', 'plainSymbol', 'plainNumeric', 'plainText' and 'plainSpace' for how this description configures the lexer.
 -}
 plain :: LexicalDesc
@@ -245,11 +250,15 @@ In particular, this defines which characters will constitute identifiers and ope
 See the 'plainName' smart constructor for how to implement a custom name description.
 -}
 type NameDesc :: *
-data NameDesc = NameDesc 
-  { identifierStart :: !CharPredicate  -- ^ the characters that start an identifier
-  , identifierLetter :: !CharPredicate -- ^ the characters that continue an identifier
-  , operatorStart :: !CharPredicate    -- ^ the characters that start a user-defined operator
-  , operatorLetter :: !CharPredicate   -- ^ the characters that continue a user-defined operator
+data NameDesc = NameDesc {
+  -- | the characters that start an identifier
+    identifierStart :: !CharPredicate  
+  -- | the characters that continue an identifier
+  , identifierLetter :: !CharPredicate 
+  -- | the characters that start a user-defined operator
+  , operatorStart :: !CharPredicate    
+  -- | the characters that continue a user-defined operator
+  , operatorLetter :: !CharPredicate   
   }
 
 {-|
@@ -286,10 +295,13 @@ For example, in Haskell, "data" is a keyword, and "->" is a hard operator.
 See the 'plainSymbol' smart constructor for how to implement a custom name description.
 -}
 type SymbolDesc :: *
-data SymbolDesc = SymbolDesc 
-  { hardKeywords :: !(Set String)  -- ^ what keywords are always treated as keywords within the language.
-  , hardOperators :: !(Set String) -- ^ what operators are always treated as reserved operators within the language.
-  , caseSensitive :: !Bool         -- ^ @True@ if the keywords are case sensitive, @False@ if not (so that e.g. @IF = if@).
+data SymbolDesc = SymbolDesc {
+  -- | what keywords are always treated as keywords within the language.
+    hardKeywords :: !(Set String)  
+  -- | what operators are always treated as reserved operators within the language.
+  , hardOperators :: !(Set String) 
+  -- | @True@ if the keywords are case sensitive, @False@ if not (so that e.g. @IF = if@).
+  , caseSensitive :: !Bool         
   }
 
 {-|
@@ -322,28 +334,47 @@ plainSymbol = SymbolDesc { hardKeywords = []
 This type describes how numeric literals (integers, decimals, hexadecimals, etc...), should be lexically processed.
 -}
 type NumericDesc :: *
-data NumericDesc = NumericDesc 
-  { literalBreakChar :: !BreakCharDesc        -- ^ can breaks be found within numeric literals? (see 'BreakCharDesc')
-  , leadingDotAllowed :: !Bool                -- ^ can a real number omit a leading 0 before the point?
-  , trailingDotAllowed :: !Bool               -- ^ can a real number omit a trailing 0 after the point?
-  , leadingZerosAllowed :: !Bool              -- ^ are extraneous zeros allowed at the start of decimal numbers?
-  , positiveSign :: !PlusSignPresence         -- ^ describes if positive (+) signs are allowed, compulsory, or illegal.
+data NumericDesc = NumericDesc {
+  -- | can breaks be found within numeric literals? (see 'BreakCharDesc')
+    literalBreakChar :: !BreakCharDesc        
+  -- | can a real number omit a leading 0 before the point?
+  , leadingDotAllowed :: !Bool                
+  -- | can a real number omit a trailing 0 after the point?
+  , trailingDotAllowed :: !Bool               
+  -- | are extraneous zeros allowed at the start of decimal numbers?
+  , leadingZerosAllowed :: !Bool              
+  -- | describes if positive (+) signs are allowed, compulsory, or illegal.
+  , positiveSign :: !PlusSignPresence         
   -- generic number
-  , integerNumbersCanBeHexadecimal :: !Bool   -- ^ can generic "integer numbers" to be hexadecimal?
-  , integerNumbersCanBeOctal :: !Bool         -- ^ can generic "integer numbers" to be octal?
-  , integerNumbersCanBeBinary :: !Bool        -- ^ can generic "integer numbers" to be binary?
-  , realNumbersCanBeHexadecimal :: !Bool      -- ^ can generic "real numbers" to be hexadecimal?
-  , realNumbersCanBeOctal :: !Bool            -- ^ can generic "real numbers" to be octal?
-  , realNumbersCanBeBinary :: !Bool           -- ^ can generic "real numbers" to be binary?
+  -- | can generic "integer numbers" to be hexadecimal?
+  , integerNumbersCanBeHexadecimal :: !Bool   
+  -- | can generic "integer numbers" to be octal?
+  , integerNumbersCanBeOctal :: !Bool         
+  -- | can generic "integer numbers" to be binary?
+  , integerNumbersCanBeBinary :: !Bool        
+  -- | can generic "real numbers" to be hexadecimal?
+  , realNumbersCanBeHexadecimal :: !Bool      
+  -- | can generic "real numbers" to be octal?
+  , realNumbersCanBeOctal :: !Bool            
+  -- | can generic "real numbers" to be binary?
+  , realNumbersCanBeBinary :: !Bool           
   -- special literals
-  , hexadecimalLeads :: !(Set Char)           -- ^ the characters that begin a hexadecimal literal following a 0 (may be empty).
-  , octalLeads :: !(Set Char)                 -- ^ the characters that begin an octal literal following a 0 (may be empty).
-  , binaryLeads :: !(Set Char)                -- ^ the characters that begin a binary literal following a 0 (may be empty).
+  -- | the characters that begin a hexadecimal literal following a 0 (may be empty).
+  , hexadecimalLeads :: !(Set Char)
+  -- | the characters that begin an octal literal following a 0 (may be empty).           
+  , octalLeads :: !(Set Char)      
+  -- | the characters that begin a binary literal following a 0 (may be empty).           
+  , binaryLeads :: !(Set Char)    
+              
   -- exponents
-  , decimalExponentDesc :: !ExponentDesc      -- ^ describes how scientific exponent notation should work for decimal literals.
-  , hexadecimalExponentDesc :: !ExponentDesc  -- ^ describes how scientific exponent notation should work for hexadecimal literals.
-  , octalExponentDesc :: !ExponentDesc        -- ^ describes how scientific exponent notation should work for octal literals.
-  , binaryExponentDesc :: !ExponentDesc       -- ^ describes how scientific exponent notation should work for binary literals.
+  -- | describes how scientific exponent notation should work for decimal literals.
+  , decimalExponentDesc :: !ExponentDesc      
+  -- | describes how scientific exponent notation should work for hexadecimal literals.
+  , hexadecimalExponentDesc :: !ExponentDesc  
+  -- | describes how scientific exponent notation should work for octal literals.
+  , octalExponentDesc :: !ExponentDesc        
+  -- | describes how scientific exponent notation should work for binary literals.
+  , binaryExponentDesc :: !ExponentDesc       
   }
 
 {-|
