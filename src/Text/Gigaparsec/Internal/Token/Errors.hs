@@ -21,6 +21,9 @@ import Data.Maybe (isJust, fromJust)
 import Data.List.NonEmpty (NonEmpty)
 import Data.List.NonEmpty qualified as NonEmpty (toList)
 
+{-|
+This type can be used to configure both errors that make labels and those that make reasons.
+-}
 type LabelWithExplainConfig :: *
 data LabelWithExplainConfig = LENotConfigured
                             | LELabel !(Set String)
