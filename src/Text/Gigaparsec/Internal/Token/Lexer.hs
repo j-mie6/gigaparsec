@@ -53,17 +53,36 @@ import Control.Exception (Exception, throw)
 import Control.Monad (join, guard)
 import System.IO.Unsafe (unsafePerformIO)
 
+{-|
+A lexer describes how to transform the input string into a series of tokens.
+-}
 type Lexer :: *
-data Lexer = Lexer { lexeme :: !Lexeme
-                   , nonlexeme :: !Lexeme
-                   , fully :: !(forall a. Parsec a -> Parsec a)
-                   , space :: !Space
-                   }
+data Lexer = Lexer { 
+  -- | This contains parsers for tokens treated as "words", 
+  -- such that whitespace will be consumed after each token has been parsed.
+    lexeme :: !Lexeme
+  -- | This contains parsers for tokens that do not give any special treatment to whitespace.
+  , nonlexeme :: !Lexeme
+  -- | This combinator ensures a parser fully parses all available input, and consumes whitespace at the start.
+  , fully :: !(forall a. Parsec a -> Parsec a)
+  -- | This contains parsers that directly treat whitespace.
+  , space :: !Space
+  }
 
-mkLexer :: Desc.LexicalDesc -> Lexer
+{-|
+Create a 'Lexer' with a given description for the lexical structure of the language.
+-}
+mkLexer :: Desc.LexicalDesc -- ^ The description of the lexical structure of the language.
+        -> Lexer -- ^ A lexer which can convert the input stream into a series of lexemes.
 mkLexer !desc = mkLexerWithErrorConfig desc defaultErrorConfig
 
-mkLexerWithErrorConfig :: Desc.LexicalDesc -> ErrorConfig -> Lexer
+{-|
+Create a 'Lexer' with a given description for the lexical structure of the language, 
+which reports errors according to the given error config.
+-}
+mkLexerWithErrorConfig  :: Desc.LexicalDesc -- ^ The description of the lexical structure of the language.
+                        -> ErrorConfig -- ^ The description of how to process errors during lexing.
+                        -> Lexer -- ^ A lexer which can convert the input stream into a series of lexemes.
 mkLexerWithErrorConfig Desc.LexicalDesc{..} !errConfig = Lexer {..}
   where apply p = p <* whiteSpace space
         gen = mkGeneric errConfig
@@ -115,47 +134,164 @@ mkLexerWithErrorConfig Desc.LexicalDesc{..} !errConfig = Lexer {..}
         space = mkSpace spaceDesc errConfig
 
 --TODO: better name for this, I guess?
+{-|
+A 'Lexeme' is a collection of parsers for handling various tokens (such as symbols and names), where either all or none of the parsers consume whitespace.
+-}
 type Lexeme :: *
-data Lexeme = Lexeme
-                { apply :: !(forall a. Parsec a -> Parsec a) -- this is tricky...
-                , sym :: !(String -> Parsec ())
-                , symbol :: !Symbol
-                , names :: !Names
-                , natural :: !(IntegerParsers CanHoldUnsigned)
-                , integer :: !(IntegerParsers CanHoldSigned)
-                -- desperate times, desperate measures
-                --, floating :: !FloatingParsers
-                --, unsignedCombined :: !CombinedParsers
-                --, signedCombined :: !CombinedParsers
-                , stringLiteral :: !(TextParsers String)
-                , rawStringLiteral :: !(TextParsers String)
-                , multiStringLiteral :: !(TextParsers String)
-                , rawMultiStringLiteral :: !(TextParsers String)
-                , charLiteral :: !(TextParsers Char)
-                }
-            | NonLexeme
-                { sym :: !(String -> Parsec ())
-                , symbol :: !Symbol
-                , names :: !Names
-                , natural :: !(IntegerParsers CanHoldUnsigned)
-                , integer :: !(IntegerParsers CanHoldSigned)
-                -- desperate times, desperate measures
-                --, floating :: !FloatingParsers
-                --, unsignedCombined :: !CombinedParsers
-                --, signedCombined :: !CombinedParsers
-                , stringLiteral :: !(TextParsers String)
-                , rawStringLiteral :: !(TextParsers String)
-                , multiStringLiteral :: !(TextParsers String)
-                , rawMultiStringLiteral :: !(TextParsers String)
-                , charLiteral :: !(TextParsers Char)
-                }
+data Lexeme = 
+  -- | The parsers do consume whitespace
+  Lexeme
+      -- | This turns a non-lexeme parser into a lexeme one by ensuring whitespace is consumed after the parser.
+      { apply :: !(forall a. Parsec a -> Parsec a) -- this is tricky...
+      -- | Parse the given string.
+      , sym :: !(String -> Parsec ())
+      -- | This contains lexing functionality relevant to the parsing of atomic symbols.
+      , symbol :: !Symbol
+      -- | This contains lexing functionality relevant to the parsing of names, which include operators or identifiers.
+      -- The parsing of names is mostly concerned with finding the longest valid name that is not a reserved name, 
+      -- such as a hard keyword or a special operator.
+      , names :: !Names
+      -- | A collection of parsers concerned with handling unsigned (positive) integer literals.
+      , natural :: !(IntegerParsers CanHoldUnsigned)
+      {-|
+      This is a collection of parsers concerned with handling signed integer literals.
 
+      Signed integer literals are an extension of unsigned integer literals which may be prefixed by a sign.
+      -}
+      , integer :: !(IntegerParsers CanHoldSigned)
+      -- desperate times, desperate measures
+      --, floating :: !FloatingParsers
+      --, unsignedCombined :: !CombinedParsers
+      --, signedCombined :: !CombinedParsers
+      {-|
+      A collection of parsers concerned with handling single-line string literals.
+
+      String literals are generally described by the 'Text.Gigaparsec.Token.Descriptions.TextDesc' fields:
+
+      * 'Text.Gigaparsec.Token.Descriptions.stringEnds'
+      * 'Text.Gigaparsec.Token.Descriptions.graphicCharacter'
+      * 'Text.Gigaparsec.Token.Descriptions.escapeSequences'
+
+      -}
+      , stringLiteral :: !(TextParsers String)
+      {-|
+      A collection of parsers concerned with handling single-line string literals, /without/ handling any escape sequences:
+      this includes literal-end characters and the escape prefix (often @"@ and @\\@ respectively).
+
+      String literals are generally described by the 'Text.Gigaparsec.Token.Descriptions.TextDesc' fields:
+
+      * 'Text.Gigaparsec.Token.Descriptions.stringEnds'
+      * 'Text.Gigaparsec.Token.Descriptions.graphicCharacter'
+      * 'Text.Gigaparsec.Token.Descriptions.escapeSequences'
+
+      -}
+      , rawStringLiteral :: !(TextParsers String)
+      {-|
+      A collection of parsers concerned with handling multi-line string literals.
+
+      Multi-string literals are generally described by the 'Text.Gigaparsec.Token.Descriptions.TextDesc' fields:
+
+      * 'Text.Gigaparsec.Token.Descriptions.multiStringEnds'
+      * 'Text.Gigaparsec.Token.Descriptions.graphicCharacter'
+      * 'Text.Gigaparsec.Token.Descriptions.escapeSequences'
+
+      -}
+      , multiStringLiteral :: !(TextParsers String)
+      {-|
+      A collection of parsers concerned with handling multi-line string literals, /without/ handling any escape sequences:
+      this includes literal-end characters and the escape prefix (often @"@ and @\\@ respectively).
+
+      Multi-string literals are generally described by the 'Text.Gigaparsec.Token.Descriptions.TextDesc' fields:
+
+      * 'Text.Gigaparsec.Token.Descriptions.multiStringEnds'
+      * 'Text.Gigaparsec.Token.Descriptions.graphicCharacter'
+      * 'Text.Gigaparsec.Token.Descriptions.escapeSequences'
+  
+      -}
+      , rawMultiStringLiteral :: !(TextParsers String)
+      {-|
+      A collection of parsers concerned with handling character literals.
+
+      Charcter literals are generally described by the 'Text.Gigaparsec.Token.Descriptions.TextDesc' fields:
+
+      * 'Text.Gigaparsec.Token.Descriptions.characterLiteralEnd'
+      * 'Text.Gigaparsec.Token.Descriptions.graphicCharacter'
+      * 'Text.Gigaparsec.Token.Descriptions.escapeSequences'
+
+      -}
+      , charLiteral :: !(TextParsers Char)
+      }
+  -- | The parsers do not consume whitespace
+  | NonLexeme
+      { sym :: !(String -> Parsec ())
+      , symbol :: !Symbol
+      , names :: !Names
+      , natural :: !(IntegerParsers CanHoldUnsigned)
+      , integer :: !(IntegerParsers CanHoldSigned)
+      -- desperate times, desperate measures
+      --, floating :: !FloatingParsers
+      --, unsignedCombined :: !CombinedParsers
+      --, signedCombined :: !CombinedParsers
+      , stringLiteral :: !(TextParsers String)
+      , rawStringLiteral :: !(TextParsers String)
+      , multiStringLiteral :: !(TextParsers String)
+      , rawMultiStringLiteral :: !(TextParsers String)
+      , charLiteral :: !(TextParsers Char)
+      }
+
+{-|
+This type is concerned with special treatment of whitespace.
+
+For the vast majority of cases, the functionality within this object shouldn't be needed, 
+as whitespace is consistently handled by lexeme and fully. 
+However, for grammars where whitespace is significant (like indentation-sensitive languages), 
+this object provides some more fine-grained control over how whitespace is consumed by the parsers within lexeme.
+-}
 type Space :: *
-data Space = Space { whiteSpace :: !(Parsec ())
-                   , skipComments :: !(Parsec ())
-                   , alter :: forall a. Desc.CharPredicate -> Parsec a -> Parsec a
-                   , initSpace :: Parsec ()
-                   }
+data Space = Space { 
+  {-|
+  Skips zero or more (insignificant) whitespace characters as well as comments.
+
+  The implementation of this parser depends on whether 'Text.Gigaparsec.Token.Descriptions.whiteSpaceIsContextDependent' is true: 
+  when it is, this parser may change based on the use of the alter combinator. 
+
+  This parser will always use the hide combinator as to not appear as a valid alternative in an error message: 
+  it's likely always the case whitespace can be added at any given time, but that doesn't make it a useful suggestion unless it is significant.
+  -}
+    whiteSpace :: !(Parsec ())
+  {-|
+  Skips zero or more comments.
+
+  The implementation of this combinator does not vary with 'Text.Gigaparsec.Token.Descriptions.whiteSpaceIsContextDependent'. 
+  It will use the hide combinator as to not appear as a valid alternative in an error message: 
+  adding a comment is often legal, 
+  but not a useful solution for how to make the input syntactically valid.
+  -}
+  , skipComments :: !(Parsec ())
+  {-|
+  This combinator changes how lexemes parse whitespace for the duration of a given parser.
+
+  So long as 'Text.Gigaparsec.Token.Descriptions.whiteSpaceIsContextDependent' is true, 
+  this combinator will be able to locally change the definition of whitespace during the given parser.
+
+  === __Examples__
+  * In indentation sensitive languages, the indentation sensitivity is often ignored within parentheses or braces. 
+  In these cases, 
+  @parens (alter withNewLine p)@ 
+  would allow unrestricted newlines within parentheses.
+  -}
+  , alter :: forall a. Desc.CharPredicate -> Parsec a -> Parsec a
+  {-|
+  This parser initialises the whitespace used by the lexer when 'Text.Gigaparsec.Token.Descriptions.whiteSpaceIsContextDependent' is true.
+
+  The whitespace is set to the implementation given by the lexical description.
+  This parser must be used, by fully or otherwise, 
+  as the first thing the global parser does or an UnfilledRegisterException will occur.
+
+  See 'alter' for how to change whitespace during a parse.
+  -}
+  , initSpace :: Parsec ()
+  }
 
 mkSpace :: Desc.SpaceDesc -> ErrorConfig -> Space
 mkSpace desc@Desc.SpaceDesc{..} !errConfig = Space {..}
