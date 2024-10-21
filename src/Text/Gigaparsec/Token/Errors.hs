@@ -13,15 +13,48 @@ This module contains the relevant functionality for configuring the error messag
 @since 0.2.2.0
 -}
 module Text.Gigaparsec.Token.Errors (
-    {-| == Error Configuration
-    This is the main type that defines the configuration for errors from the Lexer.
-    -}
+    -- ** Error Configuration
+    -- | This is the main type that defines the configuration for errors from the Lexer.
     ErrorConfig,
-    {-| == Labelling and Explanation Configuration
-    These combinators configure both labels and/or explains for simple description configurations.
+    -- *** Labelling and Explanation Configuration
+    {-| 
+    Labels and Explanations make parser errors more descriptive, by giving a name to the parser that failed, or providing a reason a particular parser failed.
+    These help make error messages more descriptive than the usual 'unexpected symbol' messages.
+
+    'LabelConfigurable' types describe errors that can provide labels upon failure, 
+    'ExplainConfigurable' types those that can providing reaons for failure, 
+    and 'LabelWithExplainConfigurable' types those that can provide both.    
+    These configs are used by the 'ErrorConfig', whose fields include combinators that configure both labels and/or explains for simple description configurations.
     -}
-    {-| === Numeric Errors
-    These control the errors generated with the numeric component of the Lexer.
+    -- **** Label Configurations 
+    {-| 
+    Labels provide names to a parser to be used upon failure.
+    A 'LabelConfig' or 'LabelConfigurable' type is able to produce these sorts of errors.
+    -}
+    LabelConfig, LabelConfigurable(..),
+    -- **** Explain Configurations 
+    {-| 
+    Explains provide a reason that a parser has failed.
+    An 'ExplainConfig' or 'ExplainConfigurable' type is able to produce these sorts of errors.
+    -}
+    ExplainConfig, ExplainConfigurable(..),
+    -- **** Label-with-Explain Configurations 
+    {-| 
+    'LabelWithExplainConfig' combines 'LabelConfig' and 'ExplainConfig', 
+    describing configs that are able to give labels and/or reasons to errors.
+
+    'LabelWithExplainConfigurable' types are those able to produce an error providing both labels and a reason.
+    -}
+    LabelWithExplainConfig, LabelWithExplainConfigurable(..),
+    -- **** No-special-error-generating Configs
+    {-|
+    Sometimes it is best to defer to the default errors, instead of generating specialised ones.
+    Configs that allow this are 'NotConfigurable'.
+    -}
+    NotConfigurable(..),
+    -- *** Numeric Errors
+    {-|
+    These control the errors generated with the numeric ('Text.Gigaparsec.Token.Descriptions.NumericDesc') component of the 'Text.Gigaparsec.Token.Lexer'.
     -}
     labelNumericBreakChar, labelIntegerUnsignedDecimal,
     labelIntegerUnsignedHexadecimal, labelIntegerUnsignedOctal,
@@ -33,17 +66,24 @@ module Text.Gigaparsec.Token.Errors (
     labelIntegerHexadecimalEnd, labelIntegerOctalEnd,
     labelIntegerBinaryEnd, labelIntegerNumberEnd,
     filterIntegerOutOfBounds,
-    {-| === Name Errors
-    These control the errors generated with the names component of the Lexer.
+    -- **** Bit-Widths
+    {-|
+    Some of the numeric errors can take into account the supposed bit-width of the parsed data.
+    
+    Using 'Bits' achieves this.
+    -}
+    Bits(B8, B16, B32, B64),
+    -- *** Name Errors
+    {-|
+    These control the errors generated with the names ('Text.Gigaparsec.Token.Descriptions.NameDesc') component of the 'Text.Gigaparsec.Token.Lexer'.
     -}
     labelNameIdentifier, labelNameOperator,
     unexpectedNameIllegalIdentifier, unexpectedNameIllegalOperator,
     filterNameIllFormedIdentifier, filterNameIllFormedOperator,
-    {-| === Text Errors
-    These control the errors generated with the text component of the Lexer.
+     -- *** Text Errors
+    {-|
+    These control the errors generated with the text ('Text.Gigaparsec.Token.Descriptions.TextDesc') component of the 'Text.Gigaparsec.Token.Lexer'.
     -}
-    VanillaFilterConfig, VanillaFilterConfigurable(..),
-    SpecializedFilterConfig, SpecializedFilterConfigurable(..),
     labelCharAscii, labelCharLatin1, labelCharUnicode,
     labelCharAsciiEnd, labelCharLatin1End, labelCharUnicodeEnd,
     labelStringAscii, labelStringLatin1, labelStringUnicode,
@@ -51,35 +91,45 @@ module Text.Gigaparsec.Token.Errors (
     labelStringCharacter, labelGraphicCharacter, labelEscapeSequence,
     labelEscapeNumeric, labelEscapeNumericEnd, labelEscapeEnd,
     labelStringEscapeEmpty, labelStringEscapeGap, labelStringEscapeGapEnd,
-    filterCharNonAscii, filterCharNonLatin1, filterStringNonAscii, filterStringNonLatin1,
-    filterEscapeCharRequiresExactDigits, filterEscapeCharNumericSequenceIllegal,
-    {-| === Verifying Bad Characters 
-    These classes can be used to help configure the Verified Error pattern for illegal string and character literal characters, 
-    used by verifiedCharBadCharsUsedInLiteral and verifiedStringBadCharsUsedInLiteral.
+    -- *** Filtering Errors
+    {-|
+    These configs and combinators describe how to generate the filters to rule out specific parses. 
+    They can generate types of vanilla error or specialised errors.
     -}
-    VerifiedBadChars, badCharsFail, badCharsReason,
-    verifiedCharBadCharsUsedInLiteral, verifiedStringBadCharsUsedInLiteral,
-    {-| === Symbol Errors
-    These control the errors generated with the symbol component of the Lexer.
-    -}
-    labelSymbol, labelSymbolEndOfKeyword, labelSymbolEndOfOperator,
-    {-| === Space Errors 
-    These control the errors generated with the space component of the Lexer.
-    -}
-    labelSpaceEndOfLineComment, labelSpaceEndOfMultiComment,
-    {-| == Default Config
-    -}
-    defaultErrorConfig,
-    {-| == Internal re-exports
-    -}
-    LabelWithExplainConfig, LabelWithExplainConfigurable(..),
-    LabelConfig, LabelConfigurable(..),
-    ExplainConfig, ExplainConfigurable(..),
-    NotConfigurable(..),
+    -- **** Filtering Configs
     FilterConfig,
     BasicFilterConfigurable(..),
+    VanillaFilterConfig, VanillaFilterConfigurable(..),
+    SpecializedFilterConfig, SpecializedFilterConfigurable(..),
+    -- **** Filtering Combinators
+    filterCharNonAscii, filterCharNonLatin1, filterStringNonAscii, filterStringNonLatin1,
+    filterEscapeCharRequiresExactDigits, filterEscapeCharNumericSequenceIllegal,
+    -- *** Verifying Bad Characters 
+    {-|
+    These types and combinators help implement the Verified Error™ pattern for illegal string and literal characters.
+    -}
+    -- **** Configs
+    {-|
+    These types help configure the Verified Error pattern for illegal string and character literal characters, 
+    used by 'verifiedCharBadCharsUsedInLiteral' and 'verifiedStringBadCharsUsedInLiteral'.
+    -}
+    VerifiedBadChars, 
     Unverified(..),
-    Bits(B8, B16, B32, B64)
+    -- **** Combinators
+    badCharsFail, badCharsReason,
+    verifiedCharBadCharsUsedInLiteral, verifiedStringBadCharsUsedInLiteral,
+    -- *** Symbol Errors
+    {-| 
+    These control the errors generated with the symbol ('Text.Gigaparsec.Token.Descriptions.SymbolDesc') component of the 'Text.Gigaparsec.Token.Lexer'
+    -}
+    labelSymbol, labelSymbolEndOfKeyword, labelSymbolEndOfOperator,
+    -- *** Space Errors
+    {-| 
+    These control the errors generated with the space ('Text.Gigaparsec.Token.Descriptions.SpaceDesc') component of the 'Text.Gigaparsec.Token.Lexer'.
+    -}
+    labelSpaceEndOfLineComment, labelSpaceEndOfMultiComment,
+    -- ** The Default Configuration
+    defaultErrorConfig,
   ) where
 
 import Data.Set (Set)
@@ -294,7 +344,7 @@ data ErrorConfig =
   {-|
   Gives names and/or reasons to symbols.
 
-  Symbols that do not appear in the map are assumed to be NotConfigured.
+  Symbols that do not appear in the map are assumed to be 'NotConfigurable'.
   -}
   , labelSymbol :: Map String LabelWithExplainConfig
   -- don't bother with these until parsley standardises
@@ -313,12 +363,8 @@ data ErrorConfig =
   }
 
 {-|
-The default fields are as follows:
-
-- 'labelNameIdentifier': @"identifier"@
-- 'labelNameOperator': @"operator"@
-- @'unexpectedNameIllegalIdentifier' v@: @"keyword v"@
-- @'unexpectedNameIllegalOperator' v@: @"reserved operator v"@;
+The default configuration.
+This serves as the base configuration, to be customised using record field updates.
 -}
 defaultErrorConfig :: ErrorConfig
 defaultErrorConfig = ErrorConfig {..}
@@ -404,9 +450,17 @@ outOfBounds small big radix _n = singleton $
           | n < 0 = ('-' :) . showIntAtBase (toInteger radix) intToDigit (abs n)
           | otherwise = showIntAtBase (toInteger radix) intToDigit n
 
+{-|
+A type @config@ is 'ExplainConfigurable' when it is able to configure errors that make labels.
+
+This means @config@ is able to behave like a 'LabelConfig'
+-}
 type LabelConfigurable :: * -> Constraint
 class LabelConfigurable config where
-  label :: Set String -> config
+  -- | The configuration produces the labels in the given set, which should not be empty.
+  label :: Set String -- ^ The labels to produce.
+        -> config
+  -- | Configure a label by stating it must be hidden.
   hidden :: config
 
 instance LabelConfigurable LabelConfig where
@@ -416,32 +470,63 @@ instance LabelConfigurable LabelWithExplainConfig where
   label = LELabel
   hidden = LEHidden
 
+{-|
+A type @config@ is 'ExplainConfigurable' when it is able to configure an error which provides a reason.
+
+This means @config@ is able to behave like an 'ExplainConfig'
+-}
 type ExplainConfigurable :: * -> Constraint
 class ExplainConfigurable config where
-  reason :: String -> config
+  -- | The error should be displayed using the given reason.
+  reason  :: String -- ^ The reason a parser failed.
+          -> config
 
 instance ExplainConfigurable ExplainConfig where reason = EReason
 instance ExplainConfigurable LabelWithExplainConfig where reason = LEReason
 
+{-|
+A type @config@ is 'LabelWithExplainConfigurable' when it is able to configure an error which provides both a reason and labels.
+-}
 type LabelWithExplainConfigurable :: * -> Constraint
 class LabelWithExplainConfigurable config where
-  labelAndReason :: Set String -> String -> config
+  -- | The configuration produces the labels in the given set, and provides the given reason.
+  labelAndReason :: Set String -- ^ The labels to produce
+                 -> String     -- ^ The reason for the error.
+                 -> config
 
 instance LabelWithExplainConfigurable LabelWithExplainConfig where labelAndReason = LELabelAndReason
 
+{-|
+A type @config@ is 'NotConfigurable' when it is able to specify that no special error should be generated,
+and instead use default errors.
+-}
 type NotConfigurable :: * -> Constraint
 class NotConfigurable config where
+  -- | No special error should be generated, and default errors should be used instead.
   notConfigured :: config
 
 instance NotConfigurable LabelWithExplainConfig where notConfigured = LENotConfigured
 instance NotConfigurable LabelConfig where notConfigured = LNotConfigured
 instance NotConfigurable ExplainConfig where notConfigured = ENotConfigured
 
+{-|
+A type @config@ is 'VanillaFilterConfigurable' when it is able to generate vanilla errors.
+
+This means @config@ is able to behave like a 'VanillaFilterConfig'
+-}
 type VanillaFilterConfigurable :: (* -> *) -> Constraint
 class VanillaFilterConfigurable config where
-  unexpected :: (a -> String) -> config a
-  because :: (a -> String) -> config a
-  unexpectedBecause :: (a -> String) -> (a -> String) -> config a
+  -- | Ensure the filter generates a /vanilla/ unexpected item for the given failing parse.
+  unexpected  :: (a -> String) -- ^ a function producing the unexpected label for the given value.
+              -> config a
+  -- | Ensure the filter generates a /vanilla/ reason for the given failing parse.
+  because :: (a -> String)  -- ^ a function producing the reason for the given value.
+          -> config a
+  -- | Ensure the filter generates a /vanilla/ unexpected item and a reason for the given failing parse.
+  unexpectedBecause 
+    :: (a -> String) -- ^ @reason@, a function producing the reason for the given value.
+    -> (a -> String) -- ^ @unexpected@, a function producing the unexpected label for the given value.
+    -> config a
 
 instance VanillaFilterConfigurable FilterConfig where
   unexpected = VSUnexpected
@@ -453,30 +538,53 @@ instance VanillaFilterConfigurable VanillaFilterConfig where
   because = VBecause
   unexpectedBecause = VUnexpectedBecause
 
+{-|
+A type @config@ is 'SpecializedFilterConfigurable' when it is able to generate specialised errors.
+
+This means @config@ is able to behave like a 'SpecializedFilterConfig'
+-}
 type SpecializedFilterConfigurable :: (* -> *) -> Constraint
 class SpecializedFilterConfigurable config where
-  specializedFilter :: (a -> NonEmpty String) -> config a
+  -- | Ensure the filter generates /specialised/ messages for the given failing parse.
+  specializedFilter 
+    :: (a -> NonEmpty String) -- ^ @message@: a function producing the message for the given value.
+    -> config a
 
 instance SpecializedFilterConfigurable FilterConfig where
   specializedFilter = VSSpecializedFilter
 instance SpecializedFilterConfigurable SpecializedFilterConfig where
   specializedFilter = SSpecializedFilter
 
+{-|
+A type @config@ is 'BasicFilterConfigurable' when it is able to provide /no/ error configuration, 
+and instead defer to a regular filter.
+-}
 type BasicFilterConfigurable :: (* -> *) -> Constraint
 class BasicFilterConfigurable config where
+  -- | No error configuration for the filter is specified; a regular filter is used instead.
   basicFilter :: config a
 
 instance BasicFilterConfigurable FilterConfig where basicFilter = VSBasicFilter
 instance BasicFilterConfigurable VanillaFilterConfig where basicFilter = VBasicFilter
 instance BasicFilterConfigurable SpecializedFilterConfig where basicFilter = SBasicFilter
 
+-- | Makes "bad literal chars" generate a bunch of given messages in a specialised error. 
+-- Requires a map from bad characters to their messages.
 badCharsFail :: Map Char (NonEmpty String) -> VerifiedBadChars
 badCharsFail = BadCharsFail
+
+-- | Makes "bad literal chars" generate a reason in a vanilla error. 
+-- Requires a map from bad characters to their reasons.
 badCharsReason :: Map Char String -> VerifiedBadChars
 badCharsReason = BadCharsReason
 
+{-|
+A type @config@ is 'Unverified' when it can disable the verified error for bad characters:
+this may improve parsing performance slightly on the failure case.
+-}
 type Unverified :: * -> Constraint
 class Unverified config where
+  -- | A configuration which disables the verified error for bad characters.
   unverified :: config
 
 instance Unverified VerifiedBadChars where unverified = BadCharsUnverified
