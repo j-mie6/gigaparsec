@@ -4,7 +4,7 @@
 -- TODO: In next major, don't expose the constructors of the descriptions,
 -- we want them built up by record copy for forwards compatible evolution
 -- We can move this into an internal module to accommodate that if we want
-  {-|
+{-|
 Module      : Text.Gigaparsec.Token.Descriptions
 Description : This module contains the descriptions of various lexical structures to configure the lexer.
 License     : BSD-3-Clause
@@ -36,14 +36,16 @@ See 'plainName', 'plainSymbol', 'plainNumeric', 'plainText' and 'plainSpace' for
 @since 0.2.2.0
 -}
 module Text.Gigaparsec.Token.Descriptions (
-  {-| = Lexical Descriptions
+  -- * Lexical Descriptions
+  {-|
   A lexer is configured by extending the default 'plain' template, producing a 'LexicalDesc'.
 
   * 'LexicalDesc'
   * 'plain'
 
   -}
-  {-| == Name Descriptions
+  -- ** Name Descriptions
+  {-|
   A 'NameDesc' configures the lexing of name-like tokens, such as variable and function names.
   To create a 'NameDesc', use 'plainName', and configure it to your liking with record updates.
 
@@ -57,7 +59,8 @@ module Text.Gigaparsec.Token.Descriptions (
   * 'plainName'
 
   -}
-  {-| == Symbol Descriptions
+  -- ** Symbol Descriptions
+  {-| 
   A 'SymbolDesc' configures the lexing of \'symbols\' (textual literals), such as keywords and operators.
   To create a 'SymbolDesc', use 'plainSymbol' and configure it to your liking with record updates.
 
@@ -70,7 +73,8 @@ module Text.Gigaparsec.Token.Descriptions (
   * 'plainSymbol'
 
   -}
-  {-| == Numeric Descriptions
+  -- ** Numeric Descriptions
+  {-| 
   A 'NumericDesc' configures the lexing of numeric literals, such as integer and floating point literals.
   To create a 'NumericDesc', use 'plainNumeric' and configure it to your liking with record updates.
   Also see 'ExponentDesc', 'BreakCharDesc', and 'PlusSignPresence', for further configuration options.
@@ -98,7 +102,8 @@ module Text.Gigaparsec.Token.Descriptions (
 
   * 'plainNumeric'
   -}
-  {-| === Exponent Descriptions
+  -- *** Exponent Descriptions
+  {-| 
   An 'ExponentDesc' configures scientific exponent notation.
 
     * 'ExponentDesc'
@@ -112,7 +117,8 @@ module Text.Gigaparsec.Token.Descriptions (
             * 'expSign'
             * 'expLeadingZerosAllowd'
   -}
-  {-| === Break-Characters in Numeric Literals
+  -- *** Break-Characters in Numeric Literals
+  {-| 
   Some languages allow a single numeric literal to be separated by a \'break\' symbol.
 
     * 'BreakCharDesc'
@@ -123,7 +129,8 @@ module Text.Gigaparsec.Token.Descriptions (
           * 'breakChar'
           * 'allowedAfterNonDecimalPrefix'
   -}
-  {-| === Numeric Literal Prefix Configuration
+  -- *** Numeric Literal Prefix Configuration
+  {-| 
 
   * 'PlusSignPresence'
 
@@ -131,7 +138,8 @@ module Text.Gigaparsec.Token.Descriptions (
       * 'PlusOptional'
       * 'PlusIllegal'
   -}
-  {-| == Text Descriptions
+  -- ** Text Descriptions
+  {-| 
   A 'TextDesc' configures the lexing of string and character literals, as well as escaped numeric literals.
   To create a 'TextDesc', use 'plainText' and configure it to your liking with record updates.
   See 'EscapeDesc', 'NumericEscape' and 'NumberOfDigits' for further configuration of escape sequences and escaped numeric literals.
@@ -146,7 +154,8 @@ module Text.Gigaparsec.Token.Descriptions (
 
   * 'plainText'
   -}
-  {-| === Escape Character Descriptions
+  -- *** Escape Character Descriptions
+  {-| 
   Configuration of escape sequences, such as tabs @\t@ and newlines @\n@, and 
   escaped numbers, such as hexadecimals @0x...@ and binary @0b...@.
 
@@ -164,7 +173,8 @@ module Text.Gigaparsec.Token.Descriptions (
 
   * 'plainEscape'
   -}
-  {-| === Numeric Escape Sequences
+  -- *** Numeric Escape Sequences
+  {-| 
   Configuration of escaped numeric literals.
   For example, hexadecimals, @0x...@.
 
@@ -184,8 +194,8 @@ module Text.Gigaparsec.Token.Descriptions (
       * 'AtMost'
 
   -}
-
-  {-| == Whitespace and Comment Descriptions
+  -- ** Whitespace and Comment Descriptions
+  {-| 
   A 'SpaceDesc' configures the lexing whitespace and comments.
   To create a 'SpaceDesc', use 'plainSpace' and configure it to your liking with record updates.
 
