@@ -86,7 +86,7 @@ Create a 'Names' -- an interface for parsing identifiers and operators
 -- according to the given name and symbol descriptions.
 -}
 mkNames :: NameDesc    -- ^ the description of identifiers.
-        -> SymbolDesc  -- ^ the description of operators.
+        -> SymbolDesc  -- ^ the description of symbols.
         -> ErrorConfig -- ^ how errors should be produced on failed parses.
         -> Names       -- ^ a collection of parsers for identifiers and operators as described by the given descriptions.
 mkNames NameDesc{..} symbolDesc@SymbolDesc{..} !err = Names {..}
