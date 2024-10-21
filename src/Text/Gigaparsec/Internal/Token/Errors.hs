@@ -124,7 +124,7 @@ data FilterConfig a
   | VSBecause 
     (a -> String) -- ^ a function producing the reason for the given value.
   {-| 
-  The filter generates a /vanilla/ unexpected item, and a reason for the given failing parse.
+  The filter generates a /vanilla/ unexpected item and a reason for the given failing parse.
   
   Usage: @'VSUnexpectedBecause' reason unexpected@, where
 
@@ -151,6 +151,13 @@ data VanillaFilterConfig a
   -}
   | VUnexpected 
     (a -> String) -- ^ a function producing the unexpected label for the given value.
+  {-| 
+  Ensure that the filter will generate a /vanilla/ reason for the given failing parse.
+  
+  Usage: @'VBecause' reason@, where
+
+  - @reason@: a function producing the reason for the given value.
+  -}
   | VBecause 
     (a -> String)
   {-| 
