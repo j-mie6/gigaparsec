@@ -23,8 +23,21 @@ module Text.Gigaparsec.Expr (
   Although these combinators do have their uses, 
   they are overshadowed by the 'precedence' combinator, 
   which allows for the combining of multiple levels of infix-chaining in a clean and concise way.
+
+  See 'Text.Gigaparsec.Expr.Infix' and 'Text.Gigaparsec.Expr.Chain' for more information on chaining combinators.
   -}
-  infixl1, infixr1, infixn1, prefix, postfix,
+  -- *** Binary Operator Chains
+  {-|
+  These combinators allow for the chaining together of values and binary operators in either left-, 
+  right- or non-associative application.
+  -}
+  infixl1, infixr1, infixn1, 
+  -- *** Unary Operator Chains
+  {-|
+  These combinators allow for the chaining together, and application, of multiple 
+  prefix or postfix unary operators to a single value.
+  -}
+  prefix, postfix,
   -- ** Precedence Combinators
   {-|
   These combinators represent each of the different "shapes" of precedence combinator, 
@@ -82,7 +95,7 @@ import Data.List (foldl')
 {-|
 Denotes the fixity and associativity of an operator. 
 
-Importantly, it also specifies the type of the operations themselves.
+Importantly, it also specifies the types of the operations themselves.
 -}
 type Fixity :: * -> * -> * -> *
 data Fixity a b sig where
