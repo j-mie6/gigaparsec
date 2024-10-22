@@ -2,7 +2,7 @@
 {-# LANGUAGE ConstraintKinds, DataKinds #-}
 -- Ideally, we should probably expose all the functionally via this one file
 -- for ergonomics
-  {-|
+{-|
 Module      : Text.Gigaparsec.Token.Lexer
 Description : This module provides a large selection of functionality concerned with lexing.
 License     : BSD-3-Clause
