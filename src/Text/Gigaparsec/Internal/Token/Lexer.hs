@@ -140,9 +140,9 @@ A 'Lexeme' is a collection of parsers for handling various tokens (such as symbo
 type Lexeme :: *
 data Lexeme = 
   -- | The parsers do consume whitespace
-  Lexeme
+  Lexeme {
       -- | This turns a non-lexeme parser into a lexeme one by ensuring whitespace is consumed after the parser.
-      { apply :: !(forall a. Parsec a -> Parsec a) -- this is tricky...
+        apply :: !(forall a. Parsec a -> Parsec a) -- this is tricky...
       -- | Parse the given string.
       , sym :: !(String -> Parsec ())
       -- | This contains lexing functionality relevant to the parsing of atomic symbols.
@@ -222,8 +222,8 @@ data Lexeme =
       , charLiteral :: !(TextParsers Char)
       }
   -- | The parsers do not consume whitespace
-  | NonLexeme
-      { sym :: !(String -> Parsec ())
+  | NonLexeme {
+        sym :: !(String -> Parsec ())
       , symbol :: !Symbol
       , names :: !Names
       , natural :: !(IntegerParsers CanHoldUnsigned)
