@@ -54,7 +54,7 @@ module Text.Gigaparsec.Token.Errors (
     NotConfigurable(..),
     -- *** Numeric Errors
     {-|
-    These control the errors generated with the numeric ('Text.Gigaparsec.Token.Descriptions.NumericDesc') component of the 'Text.Gigaparsec.Token.Lexer'.
+    These control the errors generated with the numeric ('Text.Gigaparsec.Token.Descriptions.NumericDesc') component of the 'Text.Gigaparsec.Token.Lexer.Lexer'.
     -}
     labelNumericBreakChar, labelIntegerUnsignedDecimal,
     labelIntegerUnsignedHexadecimal, labelIntegerUnsignedOctal,
@@ -75,14 +75,14 @@ module Text.Gigaparsec.Token.Errors (
     Bits(B8, B16, B32, B64),
     -- *** Name Errors
     {-|
-    These control the errors generated with the names ('Text.Gigaparsec.Token.Descriptions.NameDesc') component of the 'Text.Gigaparsec.Token.Lexer'.
+    These control the errors generated with the names ('Text.Gigaparsec.Token.Descriptions.NameDesc') component of the 'Text.Gigaparsec.Token.Lexer.Lexer'.
     -}
     labelNameIdentifier, labelNameOperator,
     unexpectedNameIllegalIdentifier, unexpectedNameIllegalOperator,
     filterNameIllFormedIdentifier, filterNameIllFormedOperator,
      -- *** Text Errors
     {-|
-    These control the errors generated with the text ('Text.Gigaparsec.Token.Descriptions.TextDesc') component of the 'Text.Gigaparsec.Token.Lexer'.
+    These control the errors generated with the text ('Text.Gigaparsec.Token.Descriptions.TextDesc') component of the 'Text.Gigaparsec.Token.Lexer.Lexer'.
     -}
     labelCharAscii, labelCharLatin1, labelCharUnicode,
     labelCharAsciiEnd, labelCharLatin1End, labelCharUnicodeEnd,
@@ -120,12 +120,12 @@ module Text.Gigaparsec.Token.Errors (
     verifiedCharBadCharsUsedInLiteral, verifiedStringBadCharsUsedInLiteral,
     -- *** Symbol Errors
     {-| 
-    These control the errors generated with the symbol ('Text.Gigaparsec.Token.Descriptions.SymbolDesc') component of the 'Text.Gigaparsec.Token.Lexer'
+    These control the errors generated with the symbol ('Text.Gigaparsec.Token.Descriptions.SymbolDesc') component of the 'Text.Gigaparsec.Token.Lexer.Lexer'
     -}
     labelSymbol, labelSymbolEndOfKeyword, labelSymbolEndOfOperator,
     -- *** Space Errors
     {-| 
-    These control the errors generated with the space ('Text.Gigaparsec.Token.Descriptions.SpaceDesc') component of the 'Text.Gigaparsec.Token.Lexer'.
+    These control the errors generated with the space ('Text.Gigaparsec.Token.Descriptions.SpaceDesc') component of the 'Text.Gigaparsec.Token.Lexer.Lexer'.
     -}
     labelSpaceEndOfLineComment, labelSpaceEndOfMultiComment,
     -- ** The Default Configuration

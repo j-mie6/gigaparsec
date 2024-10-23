@@ -12,7 +12,7 @@ This module contains the very useful chaining family of combinators,
 
 It is a lower-level API than 'Text.Gigaparsec.Expr.precedence'.
 
-Compared with the combinators in 'Text.Gigaparsec.Expr.Chain', 
+Compared with the combinators in "Text.Gigaparsec.Expr.Chain", 
 these allow for more freedom in the type of the values and the operators.
 -}
 module Text.Gigaparsec.Expr.Infix (

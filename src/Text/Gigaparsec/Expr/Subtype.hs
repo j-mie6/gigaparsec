@@ -10,7 +10,7 @@ Stability   : experimental
 
 This module defines explicit subtyping, with up- and -downcasting.
 
-Subtyping is used in 'Text.Gigaparsec.Expr' to allow for more specific types within a single layer of a precedence table,
+Subtyping is used in "Text.Gigaparsec.Expr" to allow for more specific types within a single layer of a precedence table,
 as long as they all have a common supertype.
 -}
 module Text.Gigaparsec.Expr.Subtype (

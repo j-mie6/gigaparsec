@@ -24,7 +24,7 @@ module Text.Gigaparsec.Expr (
   they are overshadowed by the 'precedence' combinator, 
   which allows for the combining of multiple levels of infix-chaining in a clean and concise way.
 
-  See 'Text.Gigaparsec.Expr.Infix' and 'Text.Gigaparsec.Expr.Chain' for more information on chaining combinators.
+  See "Text.Gigaparsec.Expr.Infix" and "Text.Gigaparsec.Expr.Chain" for more information on chaining combinators.
   -}
   -- *** Binary Operator Chains
   {-|

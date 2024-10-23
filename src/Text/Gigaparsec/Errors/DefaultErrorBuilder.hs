@@ -1,6 +1,16 @@
 {-# LANGUAGE Trustworthy #-}
 {-# LANGUAGE DerivingVia, OverloadedStrings #-}
 {-# OPTIONS_GHC -Wno-missing-import-lists #-}
+{-|
+Module      : Text.Gigaparsec.Errors.DefaultErrorBuilder
+Description : This module defines Gigaparsec's default error messages.
+License     : BSD-3-Clause
+Maintainer  : Jamie Willis, Gigaparsec Maintainers
+Stability   : stable
+
+This module defines Gigaparsec's default error messages.
+
+-}
 module Text.Gigaparsec.Errors.DefaultErrorBuilder (module Text.Gigaparsec.Errors.DefaultErrorBuilder) where
 
 import Prelude hiding (lines)

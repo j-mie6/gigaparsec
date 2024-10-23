@@ -12,7 +12,7 @@ which are mostly used to parse operators and expressions of varying fixities.
 
 It is a lower-level API than 'Text.Gigaparsec.Expr.precedence'.
 
-See 'Text.Gigaparsec.Expr.Infix' for combinators that allow for more 
+See "Text.Gigaparsec.Expr.Infix" for combinators that allow for more 
 freedom in the type of the values and the operators.
 -}
 module Text.Gigaparsec.Expr.Chain (

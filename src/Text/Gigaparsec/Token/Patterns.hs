@@ -21,14 +21,14 @@ import Data.String (IsString(fromString))
 import Language.Haskell.TH.Syntax (Q, Dec, Exp)
 
 {-|
-When given a quoted reference to a 'Text.Gigaparsec.Token.Lexer', for example
+When given a quoted reference to a 'Text.Gigaparsec.Token.Lexer.Lexer', for example
 @[|lexer|]@, this function will synthesise an `IsString` instance that will
 allow string literals to serve as @Parsec ()@. These literals will parse symbols
 in the language associated with the lexer, followed by consuming valid whitespace.
 
 @since 0.2.2.0
 -}
-overloadedStrings :: Q Exp   -- ^ the quoted 'Text.Gigaparsec.Token.Lexer'
+overloadedStrings :: Q Exp   -- ^ the quoted 'Text.Gigaparsec.Token.Lexer.Lexer'
                   -> Q [Dec] -- ^ a synthesised `IsString` instance.
 overloadedStrings qlexer = [d|
     instance u ~ () => IsString (Parsec u) where
