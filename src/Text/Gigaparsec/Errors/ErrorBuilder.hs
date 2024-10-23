@@ -124,7 +124,7 @@ module Text.Gigaparsec.Errors.ErrorBuilder (
   -- * The Error Builder API
   -- ** Top-Level Construction
   {-|
-  These methods help assembly the final products of the error messages. 
+  These methods help assemble the final products of the error messages. 
   The 'build' method will return the desired @err@ types, 
   whereas 'specialisedError' and 'vanillaError' both assemble an 'ErrorInfoLines' that 
   the 'build' method can consume.
@@ -383,6 +383,11 @@ class Ord (Item err) => ErrorBuilder err where
 {-|
 Builds error messages as @String@, using the functions found in
 "Text.Gigaparsec.Errors.DefaultErrorBuilder".
+
+While this comes with 'ErrorBuilder' typeclass, it should not be considered a stable contract: 
+the formatting can be changed at any time and without notice. 
+The API, however, will remain stable.
+
 -}
 instance ErrorBuilder String where
   {-# INLINE build #-}
