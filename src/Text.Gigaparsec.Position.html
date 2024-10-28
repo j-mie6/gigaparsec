@@ -1,15 +1,55 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><link rel="stylesheet" type="text/css" href="style.css" /><script type="text/javascript" src="highlight.js"></script></head><body><pre><span class="hs-pragma">{-# LANGUAGE Safe #-}</span><span>
-</span><span id="line-2"></span><span class="hs-keyword">module</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Position.html"><span class="hs-identifier">Text.Gigaparsec.Position</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Text.Gigaparsec.Position.html#Pos"><span class="hs-identifier">Pos</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Position.html#line"><span class="hs-identifier">line</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Position.html#col"><span class="hs-identifier">col</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Position.html#pos"><span class="hs-identifier">pos</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Position.html#offset"><span class="hs-identifier">offset</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Position.html#withWidth"><span class="hs-identifier">withWidth</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-keyword">where</span><span>
-</span><span id="line-3"></span><span>
-</span><span id="line-4"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html"><span class="hs-identifier">Text.Gigaparsec.Internal</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier">Parsec</span></a></span><span class="hs-special">)</span><span>
-</span><span id="line-5"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html"><span class="hs-identifier">Text.Gigaparsec.Internal</span></a></span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="hs-keyword">as</span><span> </span><span class="annot"><span class="hs-identifier">Internal</span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier">Parsec</span></a></span><span class="hs-special">(</span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier">Parsec</span></a></span><span class="hs-special">)</span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#line"><span class="hs-identifier">line</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#col"><span class="hs-identifier">col</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#consumed"><span class="hs-identifier">consumed</span></a></span><span class="hs-special">)</span><span>
-</span><span id="line-6"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Control.Applicative</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">liftA2</span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier">liftA3</span></span><span class="hs-special">)</span><span>
-</span><span id="line-7"></span><span>
-</span><span id="line-8"></span><span class="hs-keyword">type</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Position.html#Pos"><span class="hs-identifier hs-type">Pos</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-operator">*</span></span><span>
-</span><span id="line-9"></span><span class="hs-keyword">type</span><span> </span><span id="Pos"><span class="annot"><a href="Text.Gigaparsec.Position.html#Pos"><span class="hs-identifier hs-var">Pos</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Word</span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Word</span></span><span class="hs-special">)</span><span>
-</span><span id="line-10"></span><span>
-</span><span id="line-11"></span><span class="annot"><a href="Text.Gigaparsec.Position.html#line"><span class="hs-identifier hs-type">line</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Word</span></span><span>
-</span><span id="line-12"></span><span id="line"><span class="annot"><span class="annottext">line :: Parsec Word
+</span><span id="line-2"></span><span class="annot"><span class="hs-comment">{-|
+Module      : Text.Gigaparsec.Position
+Description : This module contains parsers that provide a way to extract position information during parsing.
+License     : BSD-3-Clause
+Maintainer  : Jamie Willis, Gigaparsec Maintainers
+Stability   : stable
+
+This module contains parsers that provide a way to extract position information during parsing.
+
+Position parsers can be important for when the final result of the parser needs to encode position information for later consumption: 
+this is particularly useful for abstract syntax trees. 
+Offset is also exposed by this interface (via 'offset'), which may be useful for establishing a caret size in specialised error messages.
+-}</span></span><span>
+</span><span id="line-15"></span><span class="hs-keyword">module</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Position.html"><span class="hs-identifier">Text.Gigaparsec.Position</span></a></span><span> </span><span class="hs-special">(</span><span>
+</span><span id="line-16"></span><span>  </span><span class="annot"><span class="hs-comment">{-| === Position
+  The position of a parser determines where in the input stream the next character is to be consumed.
+  This position is defined in terms of the line (see 'line') and column (see 'col') numbers at which the character occurs in the input text.
+
+  To simply see how many characters total have been parsed, see 'offset'.
+  -}</span></span><span>
+</span><span id="line-22"></span><span>  </span><span class="annot"><a href="Text.Gigaparsec.Position.html#Pos"><span class="hs-identifier">Pos</span></a></span><span class="hs-special">,</span><span> </span><span>
+</span><span id="line-23"></span><span>  </span><span class="annot"><a href="Text.Gigaparsec.Position.html#line"><span class="hs-identifier">line</span></a></span><span class="hs-special">,</span><span> </span><span>
+</span><span id="line-24"></span><span>  </span><span class="annot"><a href="Text.Gigaparsec.Position.html#col"><span class="hs-identifier">col</span></a></span><span class="hs-special">,</span><span> </span><span>
+</span><span id="line-25"></span><span>  </span><span class="annot"><a href="Text.Gigaparsec.Position.html#pos"><span class="hs-identifier">pos</span></a></span><span class="hs-special">,</span><span> </span><span>
+</span><span id="line-26"></span><span>  </span><span class="annot"><span class="hs-comment">{-| === Offset &amp; Width
+  'offset' and 'withWidth' allow one to calculate how much input has been consumed by a parser.
+  -}</span></span><span>
+</span><span id="line-29"></span><span>  </span><span class="annot"><a href="Text.Gigaparsec.Position.html#offset"><span class="hs-identifier">offset</span></a></span><span class="hs-special">,</span><span> </span><span>
+</span><span id="line-30"></span><span>  </span><span class="annot"><a href="Text.Gigaparsec.Position.html#withWidth"><span class="hs-identifier">withWidth</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-31"></span><span>
+</span><span id="line-32"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html"><span class="hs-identifier">Text.Gigaparsec.Internal</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier">Parsec</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-33"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html"><span class="hs-identifier">Text.Gigaparsec.Internal</span></a></span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="hs-keyword">as</span><span> </span><span class="annot"><span class="hs-identifier">Internal</span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier">Parsec</span></a></span><span class="hs-special">(</span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier">Parsec</span></a></span><span class="hs-special">)</span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#line"><span class="hs-identifier">line</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#col"><span class="hs-identifier">col</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#consumed"><span class="hs-identifier">consumed</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-34"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Control.Applicative</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">liftA2</span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier">liftA3</span></span><span class="hs-special">)</span><span>
+</span><span id="line-35"></span><span>
+</span><span id="line-36"></span><span>
+</span><span id="line-37"></span><span class="annot"><span class="hs-comment">{-|
+A type representing the position of a parser in terms of line and column numbers.
+-}</span></span><span>
+</span><span id="line-40"></span><span class="hs-keyword">type</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Position.html#Pos"><span class="hs-identifier hs-type">Pos</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-operator">*</span></span><span>
+</span><span id="line-41"></span><span class="hs-keyword">type</span><span> </span><span id="Pos"><span class="annot"><a href="Text.Gigaparsec.Position.html#Pos"><span class="hs-identifier hs-var">Pos</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Word</span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Word</span></span><span class="hs-special">)</span><span>
+</span><span id="line-42"></span><span>
+</span><span id="line-43"></span><span class="annot"><span class="hs-comment">{-|
+This parser returns the current line number (starting at 1) of the input without having any other effect.
+
+When this combinator is ran, no input is required, nor consumed, and the current line number will always be successfully returned. 
+It has no other effect on the state of the parser.
+
+@since 0.3.0.0
+-}</span></span><span>
+</span><span id="line-51"></span><span class="annot"><a href="Text.Gigaparsec.Position.html#line"><span class="hs-identifier hs-type">line</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Word</span></span><span> </span><span class="annot"><span class="hs-comment">-- ^ a parser that returns the line number the parser is currently at.</span></span><span>
+</span><span id="line-52"></span><span id="line"><span class="annot"><span class="annottext">line :: Parsec Word
 </span><a href="Text.Gigaparsec.Position.html#line"><span class="hs-identifier hs-var hs-var">line</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">(forall r.
  State
  -&gt; (Word -&gt; State -&gt; RT r) -&gt; (Error -&gt; State -&gt; RT r) -&gt; RT r)
@@ -27,17 +67,24 @@ forall a.
     -&gt; (Word -&gt; State -&gt; RT r) -&gt; (Error -&gt; State -&gt; RT r) -&gt; RT r)
 -&gt; Parsec Word
 forall a b. (a -&gt; b) -&gt; a -&gt; b
-</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-glyph">\</span><span id="local-6989586621679243913"><span class="annot"><span class="annottext">State
-</span><a href="#local-6989586621679243913"><span class="hs-identifier hs-var">st</span></a></span></span><span> </span><span id="local-6989586621679243914"><span class="annot"><span class="annottext">Word -&gt; State -&gt; RT r
-</span><a href="#local-6989586621679243914"><span class="hs-identifier hs-var">good</span></a></span></span><span> </span><span class="annot"><span class="annottext">Error -&gt; State -&gt; RT r
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-glyph">\</span><span id="local-6989586621679243958"><span class="annot"><span class="annottext">State
+</span><a href="#local-6989586621679243958"><span class="hs-identifier hs-var">st</span></a></span></span><span> </span><span id="local-6989586621679243959"><span class="annot"><span class="annottext">Word -&gt; State -&gt; RT r
+</span><a href="#local-6989586621679243959"><span class="hs-identifier hs-var">good</span></a></span></span><span> </span><span class="annot"><span class="annottext">Error -&gt; State -&gt; RT r
 </span><span class="hs-identifier">_</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Word -&gt; State -&gt; RT r
-</span><a href="#local-6989586621679243914"><span class="hs-identifier hs-var">good</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">State -&gt; Word
+</span><a href="#local-6989586621679243959"><span class="hs-identifier hs-var">good</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">State -&gt; Word
 </span><a href="Text.Gigaparsec.Internal.html#line"><span class="hs-identifier hs-var">Internal.line</span></a></span><span> </span><span class="annot"><span class="annottext">State
-</span><a href="#local-6989586621679243913"><span class="hs-identifier hs-var">st</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">State
-</span><a href="#local-6989586621679243913"><span class="hs-identifier hs-var">st</span></a></span><span>
-</span><span id="line-13"></span><span>
-</span><span id="line-14"></span><span class="annot"><a href="Text.Gigaparsec.Position.html#col"><span class="hs-identifier hs-type">col</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Word</span></span><span>
-</span><span id="line-15"></span><span id="col"><span class="annot"><span class="annottext">col :: Parsec Word
+</span><a href="#local-6989586621679243958"><span class="hs-identifier hs-var">st</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">State
+</span><a href="#local-6989586621679243958"><span class="hs-identifier hs-var">st</span></a></span><span>
+</span><span id="line-53"></span><span>
+</span><span id="line-54"></span><span class="annot"><span class="hs-comment">{-|
+This parser returns the current column number (starting at 1) of the input without having any other effect.
+
+When this combinator is run, no input is required, nor consumed, and the current column number will always be successfully returned. 
+It has no other effect on the state of the parser.
+@since 0.3.0.0
+-}</span></span><span>
+</span><span id="line-61"></span><span class="annot"><a href="Text.Gigaparsec.Position.html#col"><span class="hs-identifier hs-type">col</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Word</span></span><span> </span><span class="annot"><span class="hs-comment">-- ^ a parser that returns the column number the parser is currently at.</span></span><span>
+</span><span id="line-62"></span><span id="col"><span class="annot"><span class="annottext">col :: Parsec Word
 </span><a href="Text.Gigaparsec.Position.html#col"><span class="hs-identifier hs-var hs-var">col</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">(forall r.
  State
  -&gt; (Word -&gt; State -&gt; RT r) -&gt; (Error -&gt; State -&gt; RT r) -&gt; RT r)
@@ -55,17 +102,41 @@ forall a.
     -&gt; (Word -&gt; State -&gt; RT r) -&gt; (Error -&gt; State -&gt; RT r) -&gt; RT r)
 -&gt; Parsec Word
 forall a b. (a -&gt; b) -&gt; a -&gt; b
-</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-glyph">\</span><span id="local-6989586621679243915"><span class="annot"><span class="annottext">State
-</span><a href="#local-6989586621679243915"><span class="hs-identifier hs-var">st</span></a></span></span><span> </span><span id="local-6989586621679243916"><span class="annot"><span class="annottext">Word -&gt; State -&gt; RT r
-</span><a href="#local-6989586621679243916"><span class="hs-identifier hs-var">good</span></a></span></span><span> </span><span class="annot"><span class="annottext">Error -&gt; State -&gt; RT r
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-glyph">\</span><span id="local-6989586621679243960"><span class="annot"><span class="annottext">State
+</span><a href="#local-6989586621679243960"><span class="hs-identifier hs-var">st</span></a></span></span><span> </span><span id="local-6989586621679243961"><span class="annot"><span class="annottext">Word -&gt; State -&gt; RT r
+</span><a href="#local-6989586621679243961"><span class="hs-identifier hs-var">good</span></a></span></span><span> </span><span class="annot"><span class="annottext">Error -&gt; State -&gt; RT r
 </span><span class="hs-identifier">_</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Word -&gt; State -&gt; RT r
-</span><a href="#local-6989586621679243916"><span class="hs-identifier hs-var">good</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">State -&gt; Word
+</span><a href="#local-6989586621679243961"><span class="hs-identifier hs-var">good</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">State -&gt; Word
 </span><a href="Text.Gigaparsec.Internal.html#col"><span class="hs-identifier hs-var">Internal.col</span></a></span><span> </span><span class="annot"><span class="annottext">State
-</span><a href="#local-6989586621679243915"><span class="hs-identifier hs-var">st</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">State
-</span><a href="#local-6989586621679243915"><span class="hs-identifier hs-var">st</span></a></span><span>
-</span><span id="line-16"></span><span>
-</span><span id="line-17"></span><span class="annot"><a href="Text.Gigaparsec.Position.html#offset"><span class="hs-identifier hs-type">offset</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Word</span></span><span>
-</span><span id="line-18"></span><span id="offset"><span class="annot"><span class="annottext">offset :: Parsec Word
+</span><a href="#local-6989586621679243960"><span class="hs-identifier hs-var">st</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">State
+</span><a href="#local-6989586621679243960"><span class="hs-identifier hs-var">st</span></a></span><span>
+</span><span id="line-63"></span><span>
+</span><span id="line-64"></span><span class="annot"><span class="hs-comment">{-|
+This parser returns the current line and column numbers (starting at 1) of the input without having any other effect.
+
+When this combinator is ran, no input is required, nor consumed, and the current line and column number will always be successfully returned. 
+It has no other effect on the state of the parser.
+@since 0.3.0.0
+-}</span></span><span>
+</span><span id="line-71"></span><span class="annot"><a href="Text.Gigaparsec.Position.html#pos"><span class="hs-identifier hs-type">pos</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="annot"><a href="Text.Gigaparsec.Position.html#Pos"><span class="hs-identifier hs-type">Pos</span></a></span><span> </span><span class="annot"><span class="hs-comment">-- ^ a parser that returns the line and column number the parser is currently at.</span></span><span>
+</span><span id="line-72"></span><span id="pos"><span class="annot"><span class="annottext">pos :: Parsec Pos
+</span><a href="Text.Gigaparsec.Position.html#pos"><span class="hs-identifier hs-var hs-var">pos</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">(Word -&gt; Word -&gt; Pos) -&gt; Parsec Word -&gt; Parsec Word -&gt; Parsec Pos
+forall a b c. (a -&gt; b -&gt; c) -&gt; Parsec a -&gt; Parsec b -&gt; Parsec c
+forall (f :: * -&gt; *) a b c.
+Applicative f =&gt;
+(a -&gt; b -&gt; c) -&gt; f a -&gt; f b -&gt; f c
+</span><span class="hs-identifier hs-var">liftA2</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">,</span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">Parsec Word
+</span><a href="Text.Gigaparsec.Position.html#line"><span class="hs-identifier hs-var">line</span></a></span><span> </span><span class="annot"><span class="annottext">Parsec Word
+</span><a href="Text.Gigaparsec.Position.html#col"><span class="hs-identifier hs-var">col</span></a></span><span>
+</span><span id="line-73"></span><span>
+</span><span id="line-74"></span><span class="annot"><span class="hs-comment">{-|
+This parser returns the current offset - the total number of characters consumed - into the input (starting at 0) without having any other effect.
+
+When this combinator is ran, no input is required, nor consumed, and the current offset into the input will always be successfully returned. 
+It has no other effect on the state of the parser.
+-}</span></span><span>
+</span><span id="line-80"></span><span class="annot"><a href="Text.Gigaparsec.Position.html#offset"><span class="hs-identifier hs-type">offset</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Word</span></span><span> </span><span class="annot"><span class="hs-comment">-- ^ a parser that returns the offset the parser is currently at.</span></span><span>
+</span><span id="line-81"></span><span id="offset"><span class="annot"><span class="annottext">offset :: Parsec Word
 </span><a href="Text.Gigaparsec.Position.html#offset"><span class="hs-identifier hs-var hs-var">offset</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">(forall r.
  State
  -&gt; (Word -&gt; State -&gt; RT r) -&gt; (Error -&gt; State -&gt; RT r) -&gt; RT r)
@@ -83,44 +154,42 @@ forall a.
     -&gt; (Word -&gt; State -&gt; RT r) -&gt; (Error -&gt; State -&gt; RT r) -&gt; RT r)
 -&gt; Parsec Word
 forall a b. (a -&gt; b) -&gt; a -&gt; b
-</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-glyph">\</span><span id="local-6989586621679243917"><span class="annot"><span class="annottext">State
-</span><a href="#local-6989586621679243917"><span class="hs-identifier hs-var">st</span></a></span></span><span> </span><span id="local-6989586621679243918"><span class="annot"><span class="annottext">Word -&gt; State -&gt; RT r
-</span><a href="#local-6989586621679243918"><span class="hs-identifier hs-var">good</span></a></span></span><span> </span><span class="annot"><span class="annottext">Error -&gt; State -&gt; RT r
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-glyph">\</span><span id="local-6989586621679243962"><span class="annot"><span class="annottext">State
+</span><a href="#local-6989586621679243962"><span class="hs-identifier hs-var">st</span></a></span></span><span> </span><span id="local-6989586621679243963"><span class="annot"><span class="annottext">Word -&gt; State -&gt; RT r
+</span><a href="#local-6989586621679243963"><span class="hs-identifier hs-var">good</span></a></span></span><span> </span><span class="annot"><span class="annottext">Error -&gt; State -&gt; RT r
 </span><span class="hs-identifier">_</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Word -&gt; State -&gt; RT r
-</span><a href="#local-6989586621679243918"><span class="hs-identifier hs-var">good</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">State -&gt; Word
+</span><a href="#local-6989586621679243963"><span class="hs-identifier hs-var">good</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">State -&gt; Word
 </span><a href="Text.Gigaparsec.Internal.html#consumed"><span class="hs-identifier hs-var">Internal.consumed</span></a></span><span> </span><span class="annot"><span class="annottext">State
-</span><a href="#local-6989586621679243917"><span class="hs-identifier hs-var">st</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">State
-</span><a href="#local-6989586621679243917"><span class="hs-identifier hs-var">st</span></a></span><span>
-</span><span id="line-19"></span><span>
-</span><span id="line-20"></span><span class="annot"><a href="Text.Gigaparsec.Position.html#pos"><span class="hs-identifier hs-type">pos</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="annot"><a href="Text.Gigaparsec.Position.html#Pos"><span class="hs-identifier hs-type">Pos</span></a></span><span>
-</span><span id="line-21"></span><span id="pos"><span class="annot"><span class="annottext">pos :: Parsec Pos
-</span><a href="Text.Gigaparsec.Position.html#pos"><span class="hs-identifier hs-var hs-var">pos</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">(Word -&gt; Word -&gt; Pos) -&gt; Parsec Word -&gt; Parsec Word -&gt; Parsec Pos
-forall a b c. (a -&gt; b -&gt; c) -&gt; Parsec a -&gt; Parsec b -&gt; Parsec c
-forall (f :: * -&gt; *) a b c.
-Applicative f =&gt;
-(a -&gt; b -&gt; c) -&gt; f a -&gt; f b -&gt; f c
-</span><span class="hs-identifier hs-var">liftA2</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">,</span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">Parsec Word
-</span><a href="Text.Gigaparsec.Position.html#line"><span class="hs-identifier hs-var">line</span></a></span><span> </span><span class="annot"><span class="annottext">Parsec Word
-</span><a href="Text.Gigaparsec.Position.html#col"><span class="hs-identifier hs-var">col</span></a></span><span>
-</span><span id="line-22"></span><span>
-</span><span id="line-23"></span><span id="local-6989586621679243892"><span class="annot"><a href="Text.Gigaparsec.Position.html#withWidth"><span class="hs-identifier hs-type">withWidth</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679243892"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="#local-6989586621679243892"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Word</span></span><span class="hs-special">)</span></span><span>
-</span><span id="line-24"></span><span id="withWidth"><span class="annot"><span class="annottext">withWidth :: forall a. Parsec a -&gt; Parsec (a, Word)
-</span><a href="Text.Gigaparsec.Position.html#withWidth"><span class="hs-identifier hs-var hs-var">withWidth</span></a></span></span><span> </span><span id="local-6989586621679243922"><span class="annot"><span class="annottext">Parsec a
-</span><a href="#local-6989586621679243922"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">(Word -&gt; a -&gt; Word -&gt; (a, Word))
+</span><a href="#local-6989586621679243962"><span class="hs-identifier hs-var">st</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">State
+</span><a href="#local-6989586621679243962"><span class="hs-identifier hs-var">st</span></a></span><span>
+</span><span id="line-82"></span><span>
+</span><span id="line-83"></span><span class="annot"><span class="hs-comment">{-|
+This combinator returns the result of a given parser @p@ and the number of characters it consumed.
+
+First records the initial offset on entry to given parser @p@, then executes @p@. 
+If @p@ succeeds, then the offset is taken again, and the two values are subtracted to give width @w@. 
+The result, @x@, of @p@ is returned along with @w@ as the pair @(x, w)@. 
+If @p@ fails, this combinator will also fail.
+-}</span></span><span>
+</span><span id="line-91"></span><span id="local-6989586621679243937"><span class="annot"><a href="Text.Gigaparsec.Position.html#withWidth"><span class="hs-identifier hs-type">withWidth</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679243937"><span class="hs-identifier hs-type">a</span></a></span><span>         </span><span class="annot"><span class="hs-comment">-- ^ the parser whose width we wish to compute</span></span><span>
+</span><span id="line-92"></span><span>          </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="#local-6989586621679243937"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Word</span></span><span class="hs-special">)</span></span><span> </span><span class="annot"><span class="hs-comment">-- ^ a parser that pairs the result of the parser @p@ with the number of characters it consumed</span></span><span>
+</span><span id="line-93"></span><span id="withWidth"><span class="annot"><span class="annottext">withWidth :: forall a. Parsec a -&gt; Parsec (a, Word)
+</span><a href="Text.Gigaparsec.Position.html#withWidth"><span class="hs-identifier hs-var hs-var">withWidth</span></a></span></span><span> </span><span id="local-6989586621679243967"><span class="annot"><span class="annottext">Parsec a
+</span><a href="#local-6989586621679243967"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">(Word -&gt; a -&gt; Word -&gt; (a, Word))
 -&gt; Parsec Word -&gt; Parsec a -&gt; Parsec Word -&gt; Parsec (a, Word)
 forall (f :: * -&gt; *) a b c d.
 Applicative f =&gt;
 (a -&gt; b -&gt; c -&gt; d) -&gt; f a -&gt; f b -&gt; f c -&gt; f d
-</span><span class="hs-identifier hs-var">liftA3</span></span><span> </span><span class="hs-special">(</span><span class="hs-glyph">\</span><span id="local-6989586621679243923"><span class="annot"><span class="annottext">Word
-</span><a href="#local-6989586621679243923"><span class="hs-identifier hs-var">s</span></a></span></span><span> </span><span id="local-6989586621679243924"><span class="annot"><span class="annottext">a
-</span><a href="#local-6989586621679243924"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span id="local-6989586621679243925"><span class="annot"><span class="annottext">Word
-</span><a href="#local-6989586621679243925"><span class="hs-identifier hs-var">e</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">a
-</span><a href="#local-6989586621679243924"><span class="hs-identifier hs-var">x</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">Word
-</span><a href="#local-6989586621679243925"><span class="hs-identifier hs-var">e</span></a></span><span class="annot"><span class="annottext">Word -&gt; Word -&gt; Word
+</span><span class="hs-identifier hs-var">liftA3</span></span><span> </span><span class="hs-special">(</span><span class="hs-glyph">\</span><span id="local-6989586621679243968"><span class="annot"><span class="annottext">Word
+</span><a href="#local-6989586621679243968"><span class="hs-identifier hs-var">s</span></a></span></span><span> </span><span id="local-6989586621679243969"><span class="annot"><span class="annottext">a
+</span><a href="#local-6989586621679243969"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span id="local-6989586621679243970"><span class="annot"><span class="annottext">Word
+</span><a href="#local-6989586621679243970"><span class="hs-identifier hs-var">e</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">a
+</span><a href="#local-6989586621679243969"><span class="hs-identifier hs-var">x</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">Word
+</span><a href="#local-6989586621679243970"><span class="hs-identifier hs-var">e</span></a></span><span class="annot"><span class="annottext">Word -&gt; Word -&gt; Word
 forall a. Num a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-glyph hs-var">-</span></span><span class="annot"><span class="annottext">Word
-</span><a href="#local-6989586621679243923"><span class="hs-identifier hs-var">s</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">Parsec Word
+</span><a href="#local-6989586621679243968"><span class="hs-identifier hs-var">s</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">Parsec Word
 </span><a href="Text.Gigaparsec.Position.html#offset"><span class="hs-identifier hs-var">offset</span></a></span><span> </span><span class="annot"><span class="annottext">Parsec a
-</span><a href="#local-6989586621679243922"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Parsec Word
+</span><a href="#local-6989586621679243967"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Parsec Word
 </span><a href="Text.Gigaparsec.Position.html#offset"><span class="hs-identifier hs-var">offset</span></a></span><span>
-</span><span id="line-25"></span></pre></body></html>
+</span><span id="line-94"></span></pre></body></html>
