@@ -24,9 +24,9 @@ Rather than use the internal constructors, such as @NameDesc@, one should extend
 For example,
 
 @
-myLexicalDesc = plain 
+myLexicalDesc = plain
   { nameDesc = myNameDesc
-  , textDesc = myTextDesc  
+  , textDesc = myTextDesc
   }
 @
 
@@ -60,7 +60,7 @@ See 'plainName', 'plainSymbol', 'plainNumeric', 'plainText' and 'plainSpace' for
 
   -}</span></span><span>
 </span><span id="line-62"></span><span>  </span><span class="annot"><span class="hs-comment">-- ** Symbol Descriptions</span></span><span>
-</span><span id="line-63"></span><span>  </span><span class="annot"><span class="hs-comment">{-| 
+</span><span id="line-63"></span><span>  </span><span class="annot"><span class="hs-comment">{-|
   A 'SymbolDesc' configures the lexing of \'symbols\' (textual literals), such as keywords and operators.
   To create a 'SymbolDesc', use 'plainSymbol' and configure it to your liking with record updates.
 
@@ -74,7 +74,7 @@ See 'plainName', 'plainSymbol', 'plainNumeric', 'plainText' and 'plainSpace' for
 
   -}</span></span><span>
 </span><span id="line-76"></span><span>  </span><span class="annot"><span class="hs-comment">-- ** Numeric Descriptions</span></span><span>
-</span><span id="line-77"></span><span>  </span><span class="annot"><span class="hs-comment">{-| 
+</span><span id="line-77"></span><span>  </span><span class="annot"><span class="hs-comment">{-|
   A 'NumericDesc' configures the lexing of numeric literals, such as integer and floating point literals.
   To create a 'NumericDesc', use 'plainNumeric' and configure it to your liking with record updates.
   Also see 'ExponentDesc', 'BreakCharDesc', and 'PlusSignPresence', for further configuration options.
@@ -103,7 +103,7 @@ See 'plainName', 'plainSymbol', 'plainNumeric', 'plainText' and 'plainSpace' for
   * 'plainNumeric'
   -}</span></span><span>
 </span><span id="line-105"></span><span>  </span><span class="annot"><span class="hs-comment">-- *** Exponent Descriptions</span></span><span>
-</span><span id="line-106"></span><span>  </span><span class="annot"><span class="hs-comment">{-| 
+</span><span id="line-106"></span><span>  </span><span class="annot"><span class="hs-comment">{-|
   An 'ExponentDesc' configures scientific exponent notation.
 
     * 'ExponentDesc'
@@ -118,7 +118,7 @@ See 'plainName', 'plainSymbol', 'plainNumeric', 'plainText' and 'plainSpace' for
             * 'expLeadingZerosAllowd'
   -}</span></span><span>
 </span><span id="line-120"></span><span>  </span><span class="annot"><span class="hs-comment">-- *** Break-Characters in Numeric Literals</span></span><span>
-</span><span id="line-121"></span><span>  </span><span class="annot"><span class="hs-comment">{-| 
+</span><span id="line-121"></span><span>  </span><span class="annot"><span class="hs-comment">{-|
   Some languages allow a single numeric literal to be separated by a \'break\' symbol.
 
     * 'BreakCharDesc'
@@ -130,7 +130,7 @@ See 'plainName', 'plainSymbol', 'plainNumeric', 'plainText' and 'plainSpace' for
           * 'allowedAfterNonDecimalPrefix'
   -}</span></span><span>
 </span><span id="line-132"></span><span>  </span><span class="annot"><span class="hs-comment">-- *** Numeric Literal Prefix Configuration</span></span><span>
-</span><span id="line-133"></span><span>  </span><span class="annot"><span class="hs-comment">{-| 
+</span><span id="line-133"></span><span>  </span><span class="annot"><span class="hs-comment">{-|
 
   * 'PlusSignPresence'
 
@@ -139,7 +139,7 @@ See 'plainName', 'plainSymbol', 'plainNumeric', 'plainText' and 'plainSpace' for
       * 'PlusIllegal'
   -}</span></span><span>
 </span><span id="line-141"></span><span>  </span><span class="annot"><span class="hs-comment">-- ** Text Descriptions</span></span><span>
-</span><span id="line-142"></span><span>  </span><span class="annot"><span class="hs-comment">{-| 
+</span><span id="line-142"></span><span>  </span><span class="annot"><span class="hs-comment">{-|
   A 'TextDesc' configures the lexing of string and character literals, as well as escaped numeric literals.
   To create a 'TextDesc', use 'plainText' and configure it to your liking with record updates.
   See 'EscapeDesc', 'NumericEscape' and 'NumberOfDigits' for further configuration of escape sequences and escaped numeric literals.
@@ -155,8 +155,8 @@ See 'plainName', 'plainSymbol', 'plainNumeric', 'plainText' and 'plainSpace' for
   * 'plainText'
   -}</span></span><span>
 </span><span id="line-157"></span><span>  </span><span class="annot"><span class="hs-comment">-- *** Escape Character Descriptions</span></span><span>
-</span><span id="line-158"></span><span>  </span><span class="annot"><span class="hs-comment">{-| 
-  Configuration of escape sequences, such as tabs @\t@ and newlines @\n@, and 
+</span><span id="line-158"></span><span>  </span><span class="annot"><span class="hs-comment">{-|
+  Configuration of escape sequences, such as tabs @\t@ and newlines @\n@, and
   escaped numbers, such as hexadecimals @0x...@ and binary @0b...@.
 
   * 'EscapeDesc'
@@ -174,7 +174,7 @@ See 'plainName', 'plainSymbol', 'plainNumeric', 'plainText' and 'plainSpace' for
   * 'plainEscape'
   -}</span></span><span>
 </span><span id="line-176"></span><span>  </span><span class="annot"><span class="hs-comment">-- *** Numeric Escape Sequences</span></span><span>
-</span><span id="line-177"></span><span>  </span><span class="annot"><span class="hs-comment">{-| 
+</span><span id="line-177"></span><span>  </span><span class="annot"><span class="hs-comment">{-|
   Configuration of escaped numeric literals.
   For example, hexadecimals, @0x...@.
 
@@ -195,7 +195,7 @@ See 'plainName', 'plainSymbol', 'plainNumeric', 'plainText' and 'plainSpace' for
 
   -}</span></span><span>
 </span><span id="line-197"></span><span>  </span><span class="annot"><span class="hs-comment">-- ** Whitespace and Comment Descriptions</span></span><span>
-</span><span id="line-198"></span><span>  </span><span class="annot"><span class="hs-comment">{-| 
+</span><span id="line-198"></span><span>  </span><span class="annot"><span class="hs-comment">{-|
   A 'SpaceDesc' configures the lexing whitespace and comments.
   To create a 'SpaceDesc', use 'plainSpace' and configure it to your liking with record updates.
 
@@ -230,19 +230,19 @@ See the 'plain' smart constructor to define a @LexicalDesc@.
 </span><span id="line-230"></span><span class="hs-keyword">data</span><span> </span><span id="LexicalDesc"><span class="annot"><a href="Text.Gigaparsec.Token.Descriptions.html#LexicalDesc"><span class="hs-identifier hs-var">LexicalDesc</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="LexicalDesc"><span class="annot"><a href="Text.Gigaparsec.Token.Descriptions.html#LexicalDesc"><span class="hs-identifier hs-var">LexicalDesc</span></a></span></span><span> </span><span class="hs-special">{</span><span>
 </span><span id="line-231"></span><span>  </span><span class="annot"><span class="hs-comment">-- | the description of name-like lexemes</span></span><span>
 </span><span id="line-232"></span><span>     </span><span id="nameDesc"><span class="annot"><span class="annottext">LexicalDesc -&gt; NameDesc
-</span><a href="Text.Gigaparsec.Token.Descriptions.html#nameDesc"><span class="hs-identifier hs-var hs-var">nameDesc</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-pragma">{-# UNPACK</span><span> </span><span class="hs-pragma">#-}</span><span> </span><span class="hs-glyph">!</span><span class="annot"><a href="Text.Gigaparsec.Token.Descriptions.html#NameDesc"><span class="hs-identifier hs-type">NameDesc</span></a></span><span>       </span><span>
+</span><a href="Text.Gigaparsec.Token.Descriptions.html#nameDesc"><span class="hs-identifier hs-var hs-var">nameDesc</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-pragma">{-# UNPACK</span><span> </span><span class="hs-pragma">#-}</span><span> </span><span class="hs-glyph">!</span><span class="annot"><a href="Text.Gigaparsec.Token.Descriptions.html#NameDesc"><span class="hs-identifier hs-type">NameDesc</span></a></span><span>
 </span><span id="line-233"></span><span>  </span><span class="annot"><span class="hs-comment">-- | the description of specific symbolic lexemes</span></span><span>
 </span><span id="line-234"></span><span>  </span><span class="hs-special">,</span><span> </span><span id="symbolDesc"><span class="annot"><span class="annottext">LexicalDesc -&gt; SymbolDesc
-</span><a href="Text.Gigaparsec.Token.Descriptions.html#symbolDesc"><span class="hs-identifier hs-var hs-var">symbolDesc</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-pragma">{-# UNPACK</span><span> </span><span class="hs-pragma">#-}</span><span> </span><span class="hs-glyph">!</span><span class="annot"><a href="Text.Gigaparsec.Token.Descriptions.html#SymbolDesc"><span class="hs-identifier hs-type">SymbolDesc</span></a></span><span>   </span><span>
+</span><a href="Text.Gigaparsec.Token.Descriptions.html#symbolDesc"><span class="hs-identifier hs-var hs-var">symbolDesc</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-pragma">{-# UNPACK</span><span> </span><span class="hs-pragma">#-}</span><span> </span><span class="hs-glyph">!</span><span class="annot"><a href="Text.Gigaparsec.Token.Descriptions.html#SymbolDesc"><span class="hs-identifier hs-type">SymbolDesc</span></a></span><span>
 </span><span id="line-235"></span><span>  </span><span class="annot"><span class="hs-comment">-- | the description of numeric literals</span></span><span>
 </span><span id="line-236"></span><span>  </span><span class="hs-special">,</span><span> </span><span id="numericDesc"><span class="annot"><span class="annottext">LexicalDesc -&gt; NumericDesc
-</span><a href="Text.Gigaparsec.Token.Descriptions.html#numericDesc"><span class="hs-identifier hs-var hs-var">numericDesc</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-pragma">{-# UNPACK</span><span> </span><span class="hs-pragma">#-}</span><span> </span><span class="hs-glyph">!</span><span class="annot"><a href="Text.Gigaparsec.Token.Descriptions.html#NumericDesc"><span class="hs-identifier hs-type">NumericDesc</span></a></span><span> </span><span>
+</span><a href="Text.Gigaparsec.Token.Descriptions.html#numericDesc"><span class="hs-identifier hs-var hs-var">numericDesc</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-pragma">{-# UNPACK</span><span> </span><span class="hs-pragma">#-}</span><span> </span><span class="hs-glyph">!</span><span class="annot"><a href="Text.Gigaparsec.Token.Descriptions.html#NumericDesc"><span class="hs-identifier hs-type">NumericDesc</span></a></span><span>
 </span><span id="line-237"></span><span>  </span><span class="annot"><span class="hs-comment">-- | the description of text literals</span></span><span>
 </span><span id="line-238"></span><span>  </span><span class="hs-special">,</span><span> </span><span id="textDesc"><span class="annot"><span class="annottext">LexicalDesc -&gt; TextDesc
-</span><a href="Text.Gigaparsec.Token.Descriptions.html#textDesc"><span class="hs-identifier hs-var hs-var">textDesc</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-pragma">{-# UNPACK</span><span> </span><span class="hs-pragma">#-}</span><span> </span><span class="hs-glyph">!</span><span class="annot"><a href="Text.Gigaparsec.Token.Descriptions.html#TextDesc"><span class="hs-identifier hs-type">TextDesc</span></a></span><span>       </span><span>
+</span><a href="Text.Gigaparsec.Token.Descriptions.html#textDesc"><span class="hs-identifier hs-var hs-var">textDesc</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-pragma">{-# UNPACK</span><span> </span><span class="hs-pragma">#-}</span><span> </span><span class="hs-glyph">!</span><span class="annot"><a href="Text.Gigaparsec.Token.Descriptions.html#TextDesc"><span class="hs-identifier hs-type">TextDesc</span></a></span><span>
 </span><span id="line-239"></span><span>  </span><span class="annot"><span class="hs-comment">-- | the description of whitespace</span></span><span>
 </span><span id="line-240"></span><span>  </span><span class="hs-special">,</span><span> </span><span id="spaceDesc"><span class="annot"><span class="annottext">LexicalDesc -&gt; SpaceDesc
-</span><a href="Text.Gigaparsec.Token.Descriptions.html#spaceDesc"><span class="hs-identifier hs-var hs-var">spaceDesc</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-pragma">{-# UNPACK</span><span> </span><span class="hs-pragma">#-}</span><span> </span><span class="hs-glyph">!</span><span class="annot"><a href="Text.Gigaparsec.Token.Descriptions.html#SpaceDesc"><span class="hs-identifier hs-type">SpaceDesc</span></a></span><span>     </span><span>
+</span><a href="Text.Gigaparsec.Token.Descriptions.html#spaceDesc"><span class="hs-identifier hs-var hs-var">spaceDesc</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-pragma">{-# UNPACK</span><span> </span><span class="hs-pragma">#-}</span><span> </span><span class="hs-glyph">!</span><span class="annot"><a href="Text.Gigaparsec.Token.Descriptions.html#SpaceDesc"><span class="hs-identifier hs-type">SpaceDesc</span></a></span><span>
 </span><span id="line-241"></span><span>  </span><span class="hs-special">}</span><span>
 </span><span id="line-242"></span><span>
 </span><span id="line-243"></span><span class="annot"><span class="hs-comment">{-|
@@ -279,16 +279,16 @@ See the 'plainName' smart constructor for how to implement a custom name descrip
 </span><span id="line-263"></span><span class="hs-keyword">data</span><span> </span><span id="NameDesc"><span class="annot"><a href="Text.Gigaparsec.Token.Descriptions.html#NameDesc"><span class="hs-identifier hs-var">NameDesc</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="NameDesc"><span class="annot"><a href="Text.Gigaparsec.Token.Descriptions.html#NameDesc"><span class="hs-identifier hs-var">NameDesc</span></a></span></span><span> </span><span class="hs-special">{</span><span>
 </span><span id="line-264"></span><span>  </span><span class="annot"><span class="hs-comment">-- | the characters that start an identifier</span></span><span>
 </span><span id="line-265"></span><span>    </span><span id="identifierStart"><span class="annot"><span class="annottext">NameDesc -&gt; CharPredicate
-</span><a href="Text.Gigaparsec.Token.Descriptions.html#identifierStart"><span class="hs-identifier hs-var hs-var">identifierStart</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-glyph">!</span><span class="annot"><a href="Text.Gigaparsec.Token.Descriptions.html#CharPredicate"><span class="hs-identifier hs-type">CharPredicate</span></a></span><span>  </span><span>
+</span><a href="Text.Gigaparsec.Token.Descriptions.html#identifierStart"><span class="hs-identifier hs-var hs-var">identifierStart</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-glyph">!</span><span class="annot"><a href="Text.Gigaparsec.Token.Descriptions.html#CharPredicate"><span class="hs-identifier hs-type">CharPredicate</span></a></span><span>
 </span><span id="line-266"></span><span>  </span><span class="annot"><span class="hs-comment">-- | the characters that continue an identifier</span></span><span>
 </span><span id="line-267"></span><span>  </span><span class="hs-special">,</span><span> </span><span id="identifierLetter"><span class="annot"><span class="annottext">NameDesc -&gt; CharPredicate
-</span><a href="Text.Gigaparsec.Token.Descriptions.html#identifierLetter"><span class="hs-identifier hs-var hs-var">identifierLetter</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-glyph">!</span><span class="annot"><a href="Text.Gigaparsec.Token.Descriptions.html#CharPredicate"><span class="hs-identifier hs-type">CharPredicate</span></a></span><span> </span><span>
+</span><a href="Text.Gigaparsec.Token.Descriptions.html#identifierLetter"><span class="hs-identifier hs-var hs-var">identifierLetter</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-glyph">!</span><span class="annot"><a href="Text.Gigaparsec.Token.Descriptions.html#CharPredicate"><span class="hs-identifier hs-type">CharPredicate</span></a></span><span>
 </span><span id="line-268"></span><span>  </span><span class="annot"><span class="hs-comment">-- | the characters that start a user-defined operator</span></span><span>
 </span><span id="line-269"></span><span>  </span><span class="hs-special">,</span><span> </span><span id="operatorStart"><span class="annot"><span class="annottext">NameDesc -&gt; CharPredicate
-</span><a href="Text.Gigaparsec.Token.Descriptions.html#operatorStart"><span class="hs-identifier hs-var hs-var">operatorStart</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-glyph">!</span><span class="annot"><a href="Text.Gigaparsec.Token.Descriptions.html#CharPredicate"><span class="hs-identifier hs-type">CharPredicate</span></a></span><span>    </span><span>
+</span><a href="Text.Gigaparsec.Token.Descriptions.html#operatorStart"><span class="hs-identifier hs-var hs-var">operatorStart</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-glyph">!</span><span class="annot"><a href="Text.Gigaparsec.Token.Descriptions.html#CharPredicate"><span class="hs-identifier hs-type">CharPredicate</span></a></span><span>
 </span><span id="line-270"></span><span>  </span><span class="annot"><span class="hs-comment">-- | the characters that continue a user-defined operator</span></span><span>
 </span><span id="line-271"></span><span>  </span><span class="hs-special">,</span><span> </span><span id="operatorLetter"><span class="annot"><span class="annottext">NameDesc -&gt; CharPredicate
-</span><a href="Text.Gigaparsec.Token.Descriptions.html#operatorLetter"><span class="hs-identifier hs-var hs-var">operatorLetter</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-glyph">!</span><span class="annot"><a href="Text.Gigaparsec.Token.Descriptions.html#CharPredicate"><span class="hs-identifier hs-type">CharPredicate</span></a></span><span>   </span><span>
+</span><a href="Text.Gigaparsec.Token.Descriptions.html#operatorLetter"><span class="hs-identifier hs-var hs-var">operatorLetter</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-glyph">!</span><span class="annot"><a href="Text.Gigaparsec.Token.Descriptions.html#CharPredicate"><span class="hs-identifier hs-type">CharPredicate</span></a></span><span>
 </span><span id="line-272"></span><span>  </span><span class="hs-special">}</span><span>
 </span><span id="line-273"></span><span>
 </span><span id="line-274"></span><span class="annot"><span class="hs-comment">{-|
@@ -299,8 +299,8 @@ To change this, one should use record field copies, for example:
 
 @
 myNameDesc :: NameDesc
-myNameDesc = plainName 
-  { identifierStart = myIdentifierStartPredicate 
+myNameDesc = plainName
+  { identifierStart = myIdentifierStartPredicate
   , identifierLetter = myIdentifierLetterPredicate
   }
 @
@@ -332,7 +332,7 @@ forall a. Maybe a
 </span><span id="line-299"></span><span class="annot"><span class="hs-comment">{-|
 This type describes how symbols (textual literals in a BNF) should be processed lexically, including keywords and operators.
 
-This includes keywords and (hard) operators that are reserved by the language. 
+This includes keywords and (hard) operators that are reserved by the language.
 For example, in Haskell, &quot;data&quot; is a keyword, and &quot;-&gt;&quot; is a hard operator.
 
 See the 'plainSymbol' smart constructor for how to implement a custom name description.
@@ -341,13 +341,13 @@ See the 'plainSymbol' smart constructor for how to implement a custom name descr
 </span><span id="line-308"></span><span class="hs-keyword">data</span><span> </span><span id="SymbolDesc"><span class="annot"><a href="Text.Gigaparsec.Token.Descriptions.html#SymbolDesc"><span class="hs-identifier hs-var">SymbolDesc</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="SymbolDesc"><span class="annot"><a href="Text.Gigaparsec.Token.Descriptions.html#SymbolDesc"><span class="hs-identifier hs-var">SymbolDesc</span></a></span></span><span> </span><span class="hs-special">{</span><span>
 </span><span id="line-309"></span><span>  </span><span class="annot"><span class="hs-comment">-- | what keywords are always treated as keywords within the language.</span></span><span>
 </span><span id="line-310"></span><span>    </span><span id="hardKeywords"><span class="annot"><span class="annottext">SymbolDesc -&gt; Set String
-</span><a href="Text.Gigaparsec.Token.Descriptions.html#hardKeywords"><span class="hs-identifier hs-var hs-var">hardKeywords</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-glyph">!</span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Set</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span class="hs-special">)</span><span>  </span><span>
+</span><a href="Text.Gigaparsec.Token.Descriptions.html#hardKeywords"><span class="hs-identifier hs-var hs-var">hardKeywords</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-glyph">!</span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Set</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span class="hs-special">)</span><span>
 </span><span id="line-311"></span><span>  </span><span class="annot"><span class="hs-comment">-- | what operators are always treated as reserved operators within the language.</span></span><span>
 </span><span id="line-312"></span><span>  </span><span class="hs-special">,</span><span> </span><span id="hardOperators"><span class="annot"><span class="annottext">SymbolDesc -&gt; Set String
-</span><a href="Text.Gigaparsec.Token.Descriptions.html#hardOperators"><span class="hs-identifier hs-var hs-var">hardOperators</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-glyph">!</span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Set</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span class="hs-special">)</span><span> </span><span>
+</span><a href="Text.Gigaparsec.Token.Descriptions.html#hardOperators"><span class="hs-identifier hs-var hs-var">hardOperators</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-glyph">!</span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Set</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span class="hs-special">)</span><span>
 </span><span id="line-313"></span><span>  </span><span class="annot"><span class="hs-comment">-- | @True@ if the keywords are case sensitive, @False@ if not (so that e.g. @IF = if@).</span></span><span>
 </span><span id="line-314"></span><span>  </span><span class="hs-special">,</span><span> </span><span id="caseSensitive"><span class="annot"><span class="annottext">SymbolDesc -&gt; Bool
-</span><a href="Text.Gigaparsec.Token.Descriptions.html#caseSensitive"><span class="hs-identifier hs-var hs-var">caseSensitive</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-glyph">!</span><span class="annot"><span class="hs-identifier hs-type">Bool</span></span><span>         </span><span>
+</span><a href="Text.Gigaparsec.Token.Descriptions.html#caseSensitive"><span class="hs-identifier hs-var hs-var">caseSensitive</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-glyph">!</span><span class="annot"><span class="hs-identifier hs-type">Bool</span></span><span>
 </span><span id="line-315"></span><span>  </span><span class="hs-special">}</span><span>
 </span><span id="line-316"></span><span>
 </span><span id="line-317"></span><span class="annot"><span class="hs-comment">{-|
@@ -360,8 +360,8 @@ To change this, one should use record field copies, for example:
 {-# LANGUAGE OverloadedLists #-} -- This lets us write @[a,b]@ to get a 'Data.Set' containing @a@ and @b@
                                  -- If you don't want to use this, just use @'Data.Set.fromList' [a,b]@
 mySymbolDesc :: SymbolDesc
-mySymbolDesc = plainSymbol 
-  { hardKeywords = [&quot;data&quot;, &quot;where&quot;] 
+mySymbolDesc = plainSymbol
+  { hardKeywords = [&quot;data&quot;, &quot;where&quot;]
   , hardOperators = [&quot;-&gt;&quot;]
   , caseSensitive = True
   }
@@ -388,62 +388,62 @@ This type describes how numeric literals (integers, decimals, hexadecimals, etc.
 </span><span id="line-347"></span><span class="hs-keyword">data</span><span> </span><span id="NumericDesc"><span class="annot"><a href="Text.Gigaparsec.Token.Descriptions.html#NumericDesc"><span class="hs-identifier hs-var">NumericDesc</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="NumericDesc"><span class="annot"><a href="Text.Gigaparsec.Token.Descriptions.html#NumericDesc"><span class="hs-identifier hs-var">NumericDesc</span></a></span></span><span> </span><span class="hs-special">{</span><span>
 </span><span id="line-348"></span><span>  </span><span class="annot"><span class="hs-comment">-- | can breaks be found within numeric literals? (see 'BreakCharDesc')</span></span><span>
 </span><span id="line-349"></span><span>    </span><span id="literalBreakChar"><span class="annot"><span class="annottext">NumericDesc -&gt; BreakCharDesc
-</span><a href="Text.Gigaparsec.Token.Descriptions.html#literalBreakChar"><span class="hs-identifier hs-var hs-var">literalBreakChar</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-glyph">!</span><span class="annot"><a href="Text.Gigaparsec.Token.Descriptions.html#BreakCharDesc"><span class="hs-identifier hs-type">BreakCharDesc</span></a></span><span>        </span><span>
+</span><a href="Text.Gigaparsec.Token.Descriptions.html#literalBreakChar"><span class="hs-identifier hs-var hs-var">literalBreakChar</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-glyph">!</span><span class="annot"><a href="Text.Gigaparsec.Token.Descriptions.html#BreakCharDesc"><span class="hs-identifier hs-type">BreakCharDesc</span></a></span><span>
 </span><span id="line-350"></span><span>  </span><span class="annot"><span class="hs-comment">-- | can a real number omit a leading 0 before the point?</span></span><span>
 </span><span id="line-351"></span><span>  </span><span class="hs-special">,</span><span> </span><span id="leadingDotAllowed"><span class="annot"><span class="annottext">NumericDesc -&gt; Bool
-</span><a href="Text.Gigaparsec.Token.Descriptions.html#leadingDotAllowed"><span class="hs-identifier hs-var hs-var">leadingDotAllowed</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-glyph">!</span><span class="annot"><span class="hs-identifier hs-type">Bool</span></span><span>                </span><span>
+</span><a href="Text.Gigaparsec.Token.Descriptions.html#leadingDotAllowed"><span class="hs-identifier hs-var hs-var">leadingDotAllowed</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-glyph">!</span><span class="annot"><span class="hs-identifier hs-type">Bool</span></span><span>
 </span><span id="line-352"></span><span>  </span><span class="annot"><span class="hs-comment">-- | can a real number omit a trailing 0 after the point?</span></span><span>
 </span><span id="line-353"></span><span>  </span><span class="hs-special">,</span><span> </span><span id="trailingDotAllowed"><span class="annot"><span class="annottext">NumericDesc -&gt; Bool
-</span><a href="Text.Gigaparsec.Token.Descriptions.html#trailingDotAllowed"><span class="hs-identifier hs-var hs-var">trailingDotAllowed</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-glyph">!</span><span class="annot"><span class="hs-identifier hs-type">Bool</span></span><span>               </span><span>
+</span><a href="Text.Gigaparsec.Token.Descriptions.html#trailingDotAllowed"><span class="hs-identifier hs-var hs-var">trailingDotAllowed</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-glyph">!</span><span class="annot"><span class="hs-identifier hs-type">Bool</span></span><span>
 </span><span id="line-354"></span><span>  </span><span class="annot"><span class="hs-comment">-- | are extraneous zeros allowed at the start of decimal numbers?</span></span><span>
 </span><span id="line-355"></span><span>  </span><span class="hs-special">,</span><span> </span><span id="leadingZerosAllowed"><span class="annot"><span class="annottext">NumericDesc -&gt; Bool
-</span><a href="Text.Gigaparsec.Token.Descriptions.html#leadingZerosAllowed"><span class="hs-identifier hs-var hs-var">leadingZerosAllowed</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-glyph">!</span><span class="annot"><span class="hs-identifier hs-type">Bool</span></span><span>              </span><span>
+</span><a href="Text.Gigaparsec.Token.Descriptions.html#leadingZerosAllowed"><span class="hs-identifier hs-var hs-var">leadingZerosAllowed</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-glyph">!</span><span class="annot"><span class="hs-identifier hs-type">Bool</span></span><span>
 </span><span id="line-356"></span><span>  </span><span class="annot"><span class="hs-comment">-- | describes if positive (+) signs are allowed, compulsory, or illegal.</span></span><span>
 </span><span id="line-357"></span><span>  </span><span class="hs-special">,</span><span> </span><span id="positiveSign"><span class="annot"><span class="annottext">NumericDesc -&gt; PlusSignPresence
-</span><a href="Text.Gigaparsec.Token.Descriptions.html#positiveSign"><span class="hs-identifier hs-var hs-var">positiveSign</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-glyph">!</span><span class="annot"><a href="Text.Gigaparsec.Token.Descriptions.html#PlusSignPresence"><span class="hs-identifier hs-type">PlusSignPresence</span></a></span><span>         </span><span>
+</span><a href="Text.Gigaparsec.Token.Descriptions.html#positiveSign"><span class="hs-identifier hs-var hs-var">positiveSign</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-glyph">!</span><span class="annot"><a href="Text.Gigaparsec.Token.Descriptions.html#PlusSignPresence"><span class="hs-identifier hs-type">PlusSignPresence</span></a></span><span>
 </span><span id="line-358"></span><span>  </span><span class="hs-comment">-- generic number</span><span>
 </span><span id="line-359"></span><span>  </span><span class="annot"><span class="hs-comment">-- | can generic &quot;integer numbers&quot; to be hexadecimal?</span></span><span>
 </span><span id="line-360"></span><span>  </span><span class="hs-special">,</span><span> </span><span id="integerNumbersCanBeHexadecimal"><span class="annot"><span class="annottext">NumericDesc -&gt; Bool
-</span><a href="Text.Gigaparsec.Token.Descriptions.html#integerNumbersCanBeHexadecimal"><span class="hs-identifier hs-var hs-var">integerNumbersCanBeHexadecimal</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-glyph">!</span><span class="annot"><span class="hs-identifier hs-type">Bool</span></span><span>   </span><span>
+</span><a href="Text.Gigaparsec.Token.Descriptions.html#integerNumbersCanBeHexadecimal"><span class="hs-identifier hs-var hs-var">integerNumbersCanBeHexadecimal</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-glyph">!</span><span class="annot"><span class="hs-identifier hs-type">Bool</span></span><span>
 </span><span id="line-361"></span><span>  </span><span class="annot"><span class="hs-comment">-- | can generic &quot;integer numbers&quot; to be octal?</span></span><span>
 </span><span id="line-362"></span><span>  </span><span class="hs-special">,</span><span> </span><span id="integerNumbersCanBeOctal"><span class="annot"><span class="annottext">NumericDesc -&gt; Bool
-</span><a href="Text.Gigaparsec.Token.Descriptions.html#integerNumbersCanBeOctal"><span class="hs-identifier hs-var hs-var">integerNumbersCanBeOctal</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-glyph">!</span><span class="annot"><span class="hs-identifier hs-type">Bool</span></span><span>         </span><span>
+</span><a href="Text.Gigaparsec.Token.Descriptions.html#integerNumbersCanBeOctal"><span class="hs-identifier hs-var hs-var">integerNumbersCanBeOctal</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-glyph">!</span><span class="annot"><span class="hs-identifier hs-type">Bool</span></span><span>
 </span><span id="line-363"></span><span>  </span><span class="annot"><span class="hs-comment">-- | can generic &quot;integer numbers&quot; to be binary?</span></span><span>
 </span><span id="line-364"></span><span>  </span><span class="hs-special">,</span><span> </span><span id="integerNumbersCanBeBinary"><span class="annot"><span class="annottext">NumericDesc -&gt; Bool
-</span><a href="Text.Gigaparsec.Token.Descriptions.html#integerNumbersCanBeBinary"><span class="hs-identifier hs-var hs-var">integerNumbersCanBeBinary</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-glyph">!</span><span class="annot"><span class="hs-identifier hs-type">Bool</span></span><span>        </span><span>
+</span><a href="Text.Gigaparsec.Token.Descriptions.html#integerNumbersCanBeBinary"><span class="hs-identifier hs-var hs-var">integerNumbersCanBeBinary</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-glyph">!</span><span class="annot"><span class="hs-identifier hs-type">Bool</span></span><span>
 </span><span id="line-365"></span><span>  </span><span class="annot"><span class="hs-comment">-- | can generic &quot;real numbers&quot; to be hexadecimal?</span></span><span>
 </span><span id="line-366"></span><span>  </span><span class="hs-special">,</span><span> </span><span id="realNumbersCanBeHexadecimal"><span class="annot"><span class="annottext">NumericDesc -&gt; Bool
-</span><a href="Text.Gigaparsec.Token.Descriptions.html#realNumbersCanBeHexadecimal"><span class="hs-identifier hs-var hs-var">realNumbersCanBeHexadecimal</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-glyph">!</span><span class="annot"><span class="hs-identifier hs-type">Bool</span></span><span>      </span><span>
+</span><a href="Text.Gigaparsec.Token.Descriptions.html#realNumbersCanBeHexadecimal"><span class="hs-identifier hs-var hs-var">realNumbersCanBeHexadecimal</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-glyph">!</span><span class="annot"><span class="hs-identifier hs-type">Bool</span></span><span>
 </span><span id="line-367"></span><span>  </span><span class="annot"><span class="hs-comment">-- | can generic &quot;real numbers&quot; to be octal?</span></span><span>
 </span><span id="line-368"></span><span>  </span><span class="hs-special">,</span><span> </span><span id="realNumbersCanBeOctal"><span class="annot"><span class="annottext">NumericDesc -&gt; Bool
-</span><a href="Text.Gigaparsec.Token.Descriptions.html#realNumbersCanBeOctal"><span class="hs-identifier hs-var hs-var">realNumbersCanBeOctal</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-glyph">!</span><span class="annot"><span class="hs-identifier hs-type">Bool</span></span><span>            </span><span>
+</span><a href="Text.Gigaparsec.Token.Descriptions.html#realNumbersCanBeOctal"><span class="hs-identifier hs-var hs-var">realNumbersCanBeOctal</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-glyph">!</span><span class="annot"><span class="hs-identifier hs-type">Bool</span></span><span>
 </span><span id="line-369"></span><span>  </span><span class="annot"><span class="hs-comment">-- | can generic &quot;real numbers&quot; to be binary?</span></span><span>
 </span><span id="line-370"></span><span>  </span><span class="hs-special">,</span><span> </span><span id="realNumbersCanBeBinary"><span class="annot"><span class="annottext">NumericDesc -&gt; Bool
-</span><a href="Text.Gigaparsec.Token.Descriptions.html#realNumbersCanBeBinary"><span class="hs-identifier hs-var hs-var">realNumbersCanBeBinary</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-glyph">!</span><span class="annot"><span class="hs-identifier hs-type">Bool</span></span><span>           </span><span>
+</span><a href="Text.Gigaparsec.Token.Descriptions.html#realNumbersCanBeBinary"><span class="hs-identifier hs-var hs-var">realNumbersCanBeBinary</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-glyph">!</span><span class="annot"><span class="hs-identifier hs-type">Bool</span></span><span>
 </span><span id="line-371"></span><span>  </span><span class="hs-comment">-- special literals</span><span>
 </span><span id="line-372"></span><span>  </span><span class="annot"><span class="hs-comment">-- | the characters that begin a hexadecimal literal following a 0 (may be empty).</span></span><span>
 </span><span id="line-373"></span><span>  </span><span class="hs-special">,</span><span> </span><span id="hexadecimalLeads"><span class="annot"><span class="annottext">NumericDesc -&gt; Set Char
 </span><a href="Text.Gigaparsec.Token.Descriptions.html#hexadecimalLeads"><span class="hs-identifier hs-var hs-var">hexadecimalLeads</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-glyph">!</span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Set</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Char</span></span><span class="hs-special">)</span><span>
-</span><span id="line-374"></span><span>  </span><span class="annot"><span class="hs-comment">-- | the characters that begin an octal literal following a 0 (may be empty).           </span></span><span>
+</span><span id="line-374"></span><span>  </span><span class="annot"><span class="hs-comment">-- | the characters that begin an octal literal following a 0 (may be empty).</span></span><span>
 </span><span id="line-375"></span><span>  </span><span class="hs-special">,</span><span> </span><span id="octalLeads"><span class="annot"><span class="annottext">NumericDesc -&gt; Set Char
-</span><a href="Text.Gigaparsec.Token.Descriptions.html#octalLeads"><span class="hs-identifier hs-var hs-var">octalLeads</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-glyph">!</span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Set</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Char</span></span><span class="hs-special">)</span><span>      </span><span>
-</span><span id="line-376"></span><span>  </span><span class="annot"><span class="hs-comment">-- | the characters that begin a binary literal following a 0 (may be empty).           </span></span><span>
+</span><a href="Text.Gigaparsec.Token.Descriptions.html#octalLeads"><span class="hs-identifier hs-var hs-var">octalLeads</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-glyph">!</span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Set</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Char</span></span><span class="hs-special">)</span><span>
+</span><span id="line-376"></span><span>  </span><span class="annot"><span class="hs-comment">-- | the characters that begin a binary literal following a 0 (may be empty).</span></span><span>
 </span><span id="line-377"></span><span>  </span><span class="hs-special">,</span><span> </span><span id="binaryLeads"><span class="annot"><span class="annottext">NumericDesc -&gt; Set Char
-</span><a href="Text.Gigaparsec.Token.Descriptions.html#binaryLeads"><span class="hs-identifier hs-var hs-var">binaryLeads</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-glyph">!</span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Set</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Char</span></span><span class="hs-special">)</span><span>    </span><span>
-</span><span id="line-378"></span><span>              </span><span>
+</span><a href="Text.Gigaparsec.Token.Descriptions.html#binaryLeads"><span class="hs-identifier hs-var hs-var">binaryLeads</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-glyph">!</span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Set</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Char</span></span><span class="hs-special">)</span><span>
+</span><span id="line-378"></span><span>
 </span><span id="line-379"></span><span>  </span><span class="hs-comment">-- exponents</span><span>
 </span><span id="line-380"></span><span>  </span><span class="annot"><span class="hs-comment">-- | describes how scientific exponent notation should work for decimal literals.</span></span><span>
 </span><span id="line-381"></span><span>  </span><span class="hs-special">,</span><span> </span><span id="decimalExponentDesc"><span class="annot"><span class="annottext">NumericDesc -&gt; ExponentDesc
-</span><a href="Text.Gigaparsec.Token.Descriptions.html#decimalExponentDesc"><span class="hs-identifier hs-var hs-var">decimalExponentDesc</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-glyph">!</span><span class="annot"><a href="Text.Gigaparsec.Token.Descriptions.html#ExponentDesc"><span class="hs-identifier hs-type">ExponentDesc</span></a></span><span>      </span><span>
+</span><a href="Text.Gigaparsec.Token.Descriptions.html#decimalExponentDesc"><span class="hs-identifier hs-var hs-var">decimalExponentDesc</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-glyph">!</span><span class="annot"><a href="Text.Gigaparsec.Token.Descriptions.html#ExponentDesc"><span class="hs-identifier hs-type">ExponentDesc</span></a></span><span>
 </span><span id="line-382"></span><span>  </span><span class="annot"><span class="hs-comment">-- | describes how scientific exponent notation should work for hexadecimal literals.</span></span><span>
 </span><span id="line-383"></span><span>  </span><span class="hs-special">,</span><span> </span><span id="hexadecimalExponentDesc"><span class="annot"><span class="annottext">NumericDesc -&gt; ExponentDesc
-</span><a href="Text.Gigaparsec.Token.Descriptions.html#hexadecimalExponentDesc"><span class="hs-identifier hs-var hs-var">hexadecimalExponentDesc</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-glyph">!</span><span class="annot"><a href="Text.Gigaparsec.Token.Descriptions.html#ExponentDesc"><span class="hs-identifier hs-type">ExponentDesc</span></a></span><span>  </span><span>
+</span><a href="Text.Gigaparsec.Token.Descriptions.html#hexadecimalExponentDesc"><span class="hs-identifier hs-var hs-var">hexadecimalExponentDesc</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-glyph">!</span><span class="annot"><a href="Text.Gigaparsec.Token.Descriptions.html#ExponentDesc"><span class="hs-identifier hs-type">ExponentDesc</span></a></span><span>
 </span><span id="line-384"></span><span>  </span><span class="annot"><span class="hs-comment">-- | describes how scientific exponent notation should work for octal literals.</span></span><span>
 </span><span id="line-385"></span><span>  </span><span class="hs-special">,</span><span> </span><span id="octalExponentDesc"><span class="annot"><span class="annottext">NumericDesc -&gt; ExponentDesc
-</span><a href="Text.Gigaparsec.Token.Descriptions.html#octalExponentDesc"><span class="hs-identifier hs-var hs-var">octalExponentDesc</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-glyph">!</span><span class="annot"><a href="Text.Gigaparsec.Token.Descriptions.html#ExponentDesc"><span class="hs-identifier hs-type">ExponentDesc</span></a></span><span>        </span><span>
+</span><a href="Text.Gigaparsec.Token.Descriptions.html#octalExponentDesc"><span class="hs-identifier hs-var hs-var">octalExponentDesc</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-glyph">!</span><span class="annot"><a href="Text.Gigaparsec.Token.Descriptions.html#ExponentDesc"><span class="hs-identifier hs-type">ExponentDesc</span></a></span><span>
 </span><span id="line-386"></span><span>  </span><span class="annot"><span class="hs-comment">-- | describes how scientific exponent notation should work for binary literals.</span></span><span>
 </span><span id="line-387"></span><span>  </span><span class="hs-special">,</span><span> </span><span id="binaryExponentDesc"><span class="annot"><span class="annottext">NumericDesc -&gt; ExponentDesc
-</span><a href="Text.Gigaparsec.Token.Descriptions.html#binaryExponentDesc"><span class="hs-identifier hs-var hs-var">binaryExponentDesc</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-glyph">!</span><span class="annot"><a href="Text.Gigaparsec.Token.Descriptions.html#ExponentDesc"><span class="hs-identifier hs-type">ExponentDesc</span></a></span><span>       </span><span>
+</span><a href="Text.Gigaparsec.Token.Descriptions.html#binaryExponentDesc"><span class="hs-identifier hs-var hs-var">binaryExponentDesc</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-glyph">!</span><span class="annot"><a href="Text.Gigaparsec.Token.Descriptions.html#ExponentDesc"><span class="hs-identifier hs-type">ExponentDesc</span></a></span><span>
 </span><span id="line-388"></span><span>  </span><span class="hs-special">}</span><span>
 </span><span id="line-389"></span><span>
 </span><span id="line-390"></span><span class="annot"><span class="hs-comment">{-|
@@ -607,9 +607,9 @@ A common notation would be @1.6e3@ for @1.6 &#215; 10&#179;@, which the followin
 @
 {-# LANGUAGE OverloadedLists #-} -- Lets us write @[a]@ to generate a singleton 'Data.Set' containing @a@.
 usualNotation :: ExponentDesc
-usualNotation = ExponentsSupported 
+usualNotation = ExponentsSupported
   { compulsory = False
-  , chars = [\'e\']  -- The letter 'e' separates the significand from the exponent
+  , chars = [\'e\']  -- The letter \'e\' separates the significand from the exponent
   , base  = 10   -- The base of the exponent is 10, so that @2.3e5@ means @2.3 &#215; 10&#8309;@
   , expSign = PlusOptional -- A positive exponent does not need a plus sign, but can have one.
   , expLeadingZerosAllowd = True -- We allow leading zeros on exponents; so @1.2e005@ is valid.
@@ -618,7 +618,7 @@ usualNotation = ExponentsSupported
 
 -}</span></span><span>
 </span><span id="line-459"></span><span class="hs-keyword">type</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Token.Descriptions.html#ExponentDesc"><span class="hs-identifier hs-type">ExponentDesc</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-operator">*</span></span><span>
-</span><span id="line-460"></span><span class="hs-keyword">data</span><span> </span><span id="ExponentDesc"><span class="annot"><a href="Text.Gigaparsec.Token.Descriptions.html#ExponentDesc"><span class="hs-identifier hs-var">ExponentDesc</span></a></span></span><span> </span><span>
+</span><span id="line-460"></span><span class="hs-keyword">data</span><span> </span><span id="ExponentDesc"><span class="annot"><a href="Text.Gigaparsec.Token.Descriptions.html#ExponentDesc"><span class="hs-identifier hs-var">ExponentDesc</span></a></span></span><span>
 </span><span id="line-461"></span><span>  </span><span class="hs-glyph">=</span><span> </span><span id="NoExponents"><span class="annot"><a href="Text.Gigaparsec.Token.Descriptions.html#NoExponents"><span class="hs-identifier hs-var">NoExponents</span></a></span></span><span>         </span><span class="annot"><span class="hs-comment">-- ^ The language does not allow exponent notation.</span></span><span>
 </span><span id="line-462"></span><span>  </span><span class="hs-glyph">|</span><span> </span><span id="ExponentsSupported"><span class="annot"><a href="Text.Gigaparsec.Token.Descriptions.html#ExponentsSupported"><span class="hs-identifier hs-var">ExponentsSupported</span></a></span></span><span>  </span><span class="annot"><span class="hs-comment">-- ^ The language does allow exponent notation, according to the following fields:</span></span><span>
 </span><span id="line-463"></span><span>    </span><span class="hs-special">{</span><span> </span><span id="compulsory"><span class="annot"><span class="annottext">ExponentDesc -&gt; Bool
@@ -639,7 +639,7 @@ Prescribes whether or not numeric literals can be broken up by a specific symbol
 For example, can one write @300.2_3@?
 -}</span></span><span>
 </span><span id="line-475"></span><span class="hs-keyword">type</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Token.Descriptions.html#BreakCharDesc"><span class="hs-identifier hs-type">BreakCharDesc</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-operator">*</span></span><span>
-</span><span id="line-476"></span><span class="hs-keyword">data</span><span> </span><span id="BreakCharDesc"><span class="annot"><a href="Text.Gigaparsec.Token.Descriptions.html#BreakCharDesc"><span class="hs-identifier hs-var">BreakCharDesc</span></a></span></span><span> </span><span>
+</span><span id="line-476"></span><span class="hs-keyword">data</span><span> </span><span id="BreakCharDesc"><span class="annot"><a href="Text.Gigaparsec.Token.Descriptions.html#BreakCharDesc"><span class="hs-identifier hs-var">BreakCharDesc</span></a></span></span><span>
 </span><span id="line-477"></span><span>  </span><span class="hs-glyph">=</span><span> </span><span id="NoBreakChar"><span class="annot"><a href="Text.Gigaparsec.Token.Descriptions.html#NoBreakChar"><span class="hs-identifier hs-var">NoBreakChar</span></a></span></span><span>                             </span><span class="annot"><span class="hs-comment">-- ^ Literals cannot be broken.</span></span><span>
 </span><span id="line-478"></span><span>  </span><span class="hs-glyph">|</span><span> </span><span id="BreakCharSupported"><span class="annot"><a href="Text.Gigaparsec.Token.Descriptions.html#BreakCharSupported"><span class="hs-identifier hs-var">BreakCharSupported</span></a></span></span><span>                      </span><span class="annot"><span class="hs-comment">-- ^ Literals can be broken.</span></span><span>
 </span><span id="line-479"></span><span>    </span><span class="hs-special">{</span><span> </span><span id="breakChar"><span class="annot"><span class="annottext">BreakCharDesc -&gt; Char
@@ -652,7 +652,7 @@ For example, can one write @300.2_3@?
 Whether or not a plus sign (@+@) can prefix a numeric literal.
 -}</span></span><span>
 </span><span id="line-486"></span><span class="hs-keyword">type</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Token.Descriptions.html#PlusSignPresence"><span class="hs-identifier hs-type">PlusSignPresence</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-operator">*</span></span><span>
-</span><span id="line-487"></span><span class="hs-keyword">data</span><span> </span><span id="PlusSignPresence"><span class="annot"><a href="Text.Gigaparsec.Token.Descriptions.html#PlusSignPresence"><span class="hs-identifier hs-var">PlusSignPresence</span></a></span></span><span> </span><span>
+</span><span id="line-487"></span><span class="hs-keyword">data</span><span> </span><span id="PlusSignPresence"><span class="annot"><a href="Text.Gigaparsec.Token.Descriptions.html#PlusSignPresence"><span class="hs-identifier hs-var">PlusSignPresence</span></a></span></span><span>
 </span><span id="line-488"></span><span>  </span><span class="hs-glyph">=</span><span> </span><span id="PlusRequired"><span class="annot"><a href="Text.Gigaparsec.Token.Descriptions.html#PlusRequired"><span class="hs-identifier hs-var">PlusRequired</span></a></span></span><span> </span><span class="annot"><span class="hs-comment">-- ^ (@+@) must always precede a positive numeric literal</span></span><span>
 </span><span id="line-489"></span><span>  </span><span class="hs-glyph">|</span><span> </span><span id="PlusOptional"><span class="annot"><a href="Text.Gigaparsec.Token.Descriptions.html#PlusOptional"><span class="hs-identifier hs-var">PlusOptional</span></a></span></span><span> </span><span class="annot"><span class="hs-comment">-- ^ (@+@) may precede a positive numeric literal, but is not necessary</span></span><span>
 </span><span id="line-490"></span><span>  </span><span class="hs-glyph">|</span><span> </span><span id="PlusIllegal"><span class="annot"><a href="Text.Gigaparsec.Token.Descriptions.html#PlusIllegal"><span class="hs-identifier hs-var">PlusIllegal</span></a></span></span><span>  </span><span class="annot"><span class="hs-comment">-- ^ (@+@) cannot precede a numeric literal as a prefix (this is separate to allowing an infix binary @+@ operator).</span></span><span>
@@ -661,7 +661,7 @@ Whether or not a plus sign (@+@) can prefix a numeric literal.
   This type describes how to parse string and character literals.
 -}</span></span><span>
 </span><span id="line-495"></span><span class="hs-keyword">type</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Token.Descriptions.html#TextDesc"><span class="hs-identifier hs-type">TextDesc</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-operator">*</span></span><span>
-</span><span id="line-496"></span><span class="hs-keyword">data</span><span> </span><span id="TextDesc"><span class="annot"><a href="Text.Gigaparsec.Token.Descriptions.html#TextDesc"><span class="hs-identifier hs-var">TextDesc</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="TextDesc"><span class="annot"><a href="Text.Gigaparsec.Token.Descriptions.html#TextDesc"><span class="hs-identifier hs-var">TextDesc</span></a></span></span><span> </span><span>
+</span><span id="line-496"></span><span class="hs-keyword">data</span><span> </span><span id="TextDesc"><span class="annot"><a href="Text.Gigaparsec.Token.Descriptions.html#TextDesc"><span class="hs-identifier hs-var">TextDesc</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="TextDesc"><span class="annot"><a href="Text.Gigaparsec.Token.Descriptions.html#TextDesc"><span class="hs-identifier hs-var">TextDesc</span></a></span></span><span>
 </span><span id="line-497"></span><span>  </span><span class="hs-special">{</span><span> </span><span id="escapeSequences"><span class="annot"><span class="annottext">TextDesc -&gt; EscapeDesc
 </span><a href="Text.Gigaparsec.Token.Descriptions.html#escapeSequences"><span class="hs-identifier hs-var hs-var">escapeSequences</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-pragma">{-# UNPACK</span><span> </span><span class="hs-pragma">#-}</span><span> </span><span class="hs-glyph">!</span><span class="annot"><a href="Text.Gigaparsec.Token.Descriptions.html#EscapeDesc"><span class="hs-identifier hs-type">EscapeDesc</span></a></span><span> </span><span class="annot"><span class="hs-comment">-- ^ the description of escape sequences in literals.</span></span><span>
 </span><span id="line-498"></span><span>  </span><span class="hs-special">,</span><span> </span><span id="characterLiteralEnd"><span class="annot"><span class="annottext">TextDesc -&gt; Char
@@ -685,7 +685,7 @@ To change this, one should use record field copies, for example:
 {-# LANGUAGE OverloadedLists #-} -- This lets us write @[a,b]@ to get a 'Data.Set' containing @a@ and @b@
                                  -- If you don't want to use this, just use @'Data.Set.fromList' [a,b]@
 myPlainText:: TextDesc
-myPlainText= plainText 
+myPlainText= plainText
   { characterLiteralEnd = a
   , stringEnds = [(b, c)]
   }
@@ -723,11 +723,11 @@ Defines the escape characters, and their meaning.
 This includes character escapes (e.g. tabs, carriage returns), and numeric escapes, such as binary (usually \&quot;0b\&quot;) and hexadecimal, \&quot;0x\&quot;.
 -}</span></span><span>
 </span><span id="line-537"></span><span class="hs-keyword">type</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Token.Descriptions.html#EscapeDesc"><span class="hs-identifier hs-type">EscapeDesc</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-operator">*</span></span><span>
-</span><span id="line-538"></span><span class="hs-keyword">data</span><span> </span><span id="EscapeDesc"><span class="annot"><a href="Text.Gigaparsec.Token.Descriptions.html#EscapeDesc"><span class="hs-identifier hs-var">EscapeDesc</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="EscapeDesc"><span class="annot"><a href="Text.Gigaparsec.Token.Descriptions.html#EscapeDesc"><span class="hs-identifier hs-var">EscapeDesc</span></a></span></span><span> </span><span>
+</span><span id="line-538"></span><span class="hs-keyword">data</span><span> </span><span id="EscapeDesc"><span class="annot"><a href="Text.Gigaparsec.Token.Descriptions.html#EscapeDesc"><span class="hs-identifier hs-var">EscapeDesc</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="EscapeDesc"><span class="annot"><a href="Text.Gigaparsec.Token.Descriptions.html#EscapeDesc"><span class="hs-identifier hs-var">EscapeDesc</span></a></span></span><span>
 </span><span id="line-539"></span><span>  </span><span class="hs-special">{</span><span> </span><span id="escBegin"><span class="annot"><span class="annottext">EscapeDesc -&gt; Char
 </span><a href="Text.Gigaparsec.Token.Descriptions.html#escBegin"><span class="hs-identifier hs-var hs-var">escBegin</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-glyph">!</span><span class="annot"><span class="hs-identifier hs-type">Char</span></span><span>                   </span><span class="annot"><span class="hs-comment">-- ^ the character that begins an escape sequence: this is usually @\\@.</span></span><span>
 </span><span id="line-540"></span><span>  </span><span class="hs-special">,</span><span> </span><span id="literals"><span class="annot"><span class="annottext">EscapeDesc -&gt; Set Char
-</span><a href="Text.Gigaparsec.Token.Descriptions.html#literals"><span class="hs-identifier hs-var hs-var">literals</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-glyph">!</span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Set</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Char</span></span><span class="hs-special">)</span><span>             </span><span class="annot"><span class="hs-comment">-- ^ the characters that can be directly escaped, but still represent themselves, for instance '&quot;', or '\\'.</span></span><span>
+</span><a href="Text.Gigaparsec.Token.Descriptions.html#literals"><span class="hs-identifier hs-var hs-var">literals</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-glyph">!</span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Set</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Char</span></span><span class="hs-special">)</span><span>             </span><span class="annot"><span class="hs-comment">-- ^ the characters that can be directly escaped, but still represent themselves, for instance \'&quot;\', or \'\\\'.</span></span><span>
 </span><span id="line-541"></span><span>  </span><span class="hs-special">,</span><span> </span><span id="mapping"><span class="annot"><span class="annottext">EscapeDesc -&gt; Map String Char
 </span><a href="Text.Gigaparsec.Token.Descriptions.html#mapping"><span class="hs-identifier hs-var hs-var">mapping</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-glyph">!</span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Map</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Char</span></span><span class="hs-special">)</span><span>       </span><span class="annot"><span class="hs-comment">-- ^ the possible escape sequences that map to a character other than themselves and the (full UTF-16) character they map to, for instance &quot;n&quot; -&gt; 0xa</span></span><span>
 </span><span id="line-542"></span><span>  </span><span class="hs-special">,</span><span> </span><span id="decimalEscape"><span class="annot"><span class="annottext">EscapeDesc -&gt; NumericEscape
@@ -739,11 +739,11 @@ This includes character escapes (e.g. tabs, carriage returns), and numeric escap
 </span><span id="line-545"></span><span>  </span><span class="hs-special">,</span><span> </span><span id="binaryEscape"><span class="annot"><span class="annottext">EscapeDesc -&gt; NumericEscape
 </span><a href="Text.Gigaparsec.Token.Descriptions.html#binaryEscape"><span class="hs-identifier hs-var hs-var">binaryEscape</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-glyph">!</span><span class="annot"><a href="Text.Gigaparsec.Token.Descriptions.html#NumericEscape"><span class="hs-identifier hs-type">NumericEscape</span></a></span><span>      </span><span class="annot"><span class="hs-comment">-- ^ if allowed, the description of how numeric escape sequences work for base 2</span></span><span>
 </span><span id="line-546"></span><span>  </span><span class="hs-special">,</span><span> </span><span id="emptyEscape"><span class="annot"><span class="annottext">EscapeDesc -&gt; Maybe Char
-</span><a href="Text.Gigaparsec.Token.Descriptions.html#emptyEscape"><span class="hs-identifier hs-var hs-var">emptyEscape</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-glyph">!</span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Maybe</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Char</span></span><span class="hs-special">)</span><span>        </span><span class="hs-comment">-- ^ if one should exist, the character which has no effect on </span><span>
+</span><a href="Text.Gigaparsec.Token.Descriptions.html#emptyEscape"><span class="hs-identifier hs-var hs-var">emptyEscape</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-glyph">!</span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Maybe</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Char</span></span><span class="hs-special">)</span><span>        </span><span class="hs-comment">-- ^ if one should exist, the character which has no effect on</span><span>
 </span><span id="line-547"></span><span>                                        </span><span class="hs-comment">-- the string but can be used to disambiguate other escape sequences: in Haskell this would be \&amp;</span><span>
 </span><span id="line-548"></span><span>  </span><span class="hs-special">,</span><span> </span><span id="gapsSupported"><span class="annot"><span class="annottext">EscapeDesc -&gt; Bool
-</span><a href="Text.Gigaparsec.Token.Descriptions.html#gapsSupported"><span class="hs-identifier hs-var hs-var">gapsSupported</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-glyph">!</span><span class="annot"><span class="hs-identifier hs-type">Bool</span></span><span>              </span><span class="hs-comment">-- ^ specifies whether or not string gaps are supported: </span><span>
-</span><span id="line-549"></span><span>                                        </span><span class="hs-comment">-- this is where whitespace can be injected between two escBegin characters and this will all be ignored in the final string, </span><span>
+</span><a href="Text.Gigaparsec.Token.Descriptions.html#gapsSupported"><span class="hs-identifier hs-var hs-var">gapsSupported</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-glyph">!</span><span class="annot"><span class="hs-identifier hs-type">Bool</span></span><span>              </span><span class="hs-comment">-- ^ specifies whether or not string gaps are supported:</span><span>
+</span><span id="line-549"></span><span>                                        </span><span class="hs-comment">-- this is where whitespace can be injected between two escBegin characters and this will all be ignored in the final string,</span><span>
 </span><span id="line-550"></span><span>                                        </span><span class="hs-comment">-- such that &quot;hello \ \world&quot; is &quot;hello world&quot;</span><span>
 </span><span id="line-551"></span><span>  </span><span class="hs-special">}</span><span>
 </span><span id="line-552"></span><span>
@@ -758,7 +758,7 @@ To change this, one should use record field copies, for example:
 {-# LANGUAGE OverloadedLists #-} -- This lets us write @[a,b]@ to get a 'Data.Set' containing @a@ and @b@,
                                  -- and [(a,b),(c,d)] for a 'Data.Map' which sends @a &#8614; b@ and @c &#8614; d@
 myPlainEscape:: EscapeDesc
-myPlainEscape= plainEscape 
+myPlainEscape= plainEscape
   { literals = a
   , stringEnds = [(b, c)]
   , mapping = [(&quot;t&quot;,0x0009), (&quot;r&quot;,0x000D)]
@@ -807,7 +807,7 @@ forall a. Maybe a
 Describes how numeric escape sequences should work for a given base.
 -}</span></span><span>
 </span><span id="line-592"></span><span class="hs-keyword">type</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Token.Descriptions.html#NumericEscape"><span class="hs-identifier hs-type">NumericEscape</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-operator">*</span></span><span>
-</span><span id="line-593"></span><span class="hs-keyword">data</span><span> </span><span id="NumericEscape"><span class="annot"><a href="Text.Gigaparsec.Token.Descriptions.html#NumericEscape"><span class="hs-identifier hs-var">NumericEscape</span></a></span></span><span> </span><span>
+</span><span id="line-593"></span><span class="hs-keyword">data</span><span> </span><span id="NumericEscape"><span class="annot"><a href="Text.Gigaparsec.Token.Descriptions.html#NumericEscape"><span class="hs-identifier hs-var">NumericEscape</span></a></span></span><span>
 </span><span id="line-594"></span><span>  </span><span class="hs-glyph">=</span><span> </span><span id="NumericIllegal"><span class="annot"><a href="Text.Gigaparsec.Token.Descriptions.html#NumericIllegal"><span class="hs-identifier hs-var">NumericIllegal</span></a></span></span><span>    </span><span class="annot"><span class="hs-comment">-- ^ Numeric literals are disallowed for this specific base.</span></span><span>
 </span><span id="line-595"></span><span>  </span><span class="hs-glyph">|</span><span> </span><span id="NumericSupported"><span class="annot"><a href="Text.Gigaparsec.Token.Descriptions.html#NumericSupported"><span class="hs-identifier hs-var">NumericSupported</span></a></span></span><span>  </span><span class="annot"><span class="hs-comment">-- ^ Numeric literals are supported for this specific base.</span></span><span>
 </span><span id="line-596"></span><span>    </span><span class="hs-special">{</span><span> </span><span id="prefix"><span class="annot"><span class="annottext">NumericEscape -&gt; Maybe Char
@@ -822,17 +822,17 @@ Describes how numeric escape sequences should work for a given base.
 Describes how many digits a numeric escape sequence is allowed.
 -}</span></span><span>
 </span><span id="line-604"></span><span class="hs-keyword">type</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Token.Descriptions.html#NumberOfDigits"><span class="hs-identifier hs-type">NumberOfDigits</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-operator">*</span></span><span>
-</span><span id="line-605"></span><span class="hs-keyword">data</span><span> </span><span id="NumberOfDigits"><span class="annot"><a href="Text.Gigaparsec.Token.Descriptions.html#NumberOfDigits"><span class="hs-identifier hs-var">NumberOfDigits</span></a></span></span><span> </span><span>
+</span><span id="line-605"></span><span class="hs-keyword">data</span><span> </span><span id="NumberOfDigits"><span class="annot"><a href="Text.Gigaparsec.Token.Descriptions.html#NumberOfDigits"><span class="hs-identifier hs-var">NumberOfDigits</span></a></span></span><span>
 </span><span id="line-606"></span><span>  </span><span class="hs-glyph">=</span><span> </span><span id="Unbounded"><span class="annot"><a href="Text.Gigaparsec.Token.Descriptions.html#Unbounded"><span class="hs-identifier hs-var">Unbounded</span></a></span></span><span> </span><span class="annot"><span class="hs-comment">-- ^ there is no limit on the number of digits that may appear in this sequence.</span></span><span>
 </span><span id="line-607"></span><span>  </span><span class="hs-glyph">|</span><span> </span><span id="Exactly"><span class="annot"><a href="Text.Gigaparsec.Token.Descriptions.html#Exactly"><span class="hs-identifier hs-var">Exactly</span></a></span></span><span> </span><span class="hs-glyph">!</span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">NonEmpty</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Word</span></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="hs-comment">-- ^ the number of digits in the literal must be one of the given values.</span></span><span>
-</span><span id="line-608"></span><span>  </span><span class="hs-glyph">|</span><span> </span><span id="AtMost"><span class="annot"><a href="Text.Gigaparsec.Token.Descriptions.html#AtMost"><span class="hs-identifier hs-var">AtMost</span></a></span></span><span> </span><span class="annot"><span class="hs-comment">-- ^ there must be at most @n@ digits in the numeric escape literal, up to and including the value given. </span></span><span>
+</span><span id="line-608"></span><span>  </span><span class="hs-glyph">|</span><span> </span><span id="AtMost"><span class="annot"><a href="Text.Gigaparsec.Token.Descriptions.html#AtMost"><span class="hs-identifier hs-var">AtMost</span></a></span></span><span> </span><span class="annot"><span class="hs-comment">-- ^ there must be at most @n@ digits in the numeric escape literal, up to and including the value given.</span></span><span>
 </span><span id="line-609"></span><span>    </span><span class="hs-glyph">!</span><span class="annot"><span class="hs-identifier hs-type">Word</span></span><span>  </span><span class="annot"><span class="hs-comment">-- ^ the maximum (inclusive) number of digits allowed in the literal..</span></span><span>
 </span><span id="line-610"></span><span>
 </span><span id="line-611"></span><span class="annot"><span class="hs-comment">{-|
 This type describes how whitespace and comments should be handled lexically.
 -}</span></span><span>
 </span><span id="line-614"></span><span class="hs-keyword">type</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Token.Descriptions.html#SpaceDesc"><span class="hs-identifier hs-type">SpaceDesc</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-operator">*</span></span><span>
-</span><span id="line-615"></span><span class="hs-keyword">data</span><span> </span><span id="SpaceDesc"><span class="annot"><a href="Text.Gigaparsec.Token.Descriptions.html#SpaceDesc"><span class="hs-identifier hs-var">SpaceDesc</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="SpaceDesc"><span class="annot"><a href="Text.Gigaparsec.Token.Descriptions.html#SpaceDesc"><span class="hs-identifier hs-var">SpaceDesc</span></a></span></span><span> </span><span>
+</span><span id="line-615"></span><span class="hs-keyword">data</span><span> </span><span id="SpaceDesc"><span class="annot"><a href="Text.Gigaparsec.Token.Descriptions.html#SpaceDesc"><span class="hs-identifier hs-var">SpaceDesc</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="SpaceDesc"><span class="annot"><a href="Text.Gigaparsec.Token.Descriptions.html#SpaceDesc"><span class="hs-identifier hs-var">SpaceDesc</span></a></span></span><span>
 </span><span id="line-616"></span><span>  </span><span class="hs-special">{</span><span> </span><span id="lineCommentStart"><span class="annot"><span class="annottext">SpaceDesc -&gt; String
 </span><a href="Text.Gigaparsec.Token.Descriptions.html#lineCommentStart"><span class="hs-identifier hs-var hs-var">lineCommentStart</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-glyph">!</span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span>           </span><span class="annot"><span class="hs-comment">-- ^ how to start single-line comments (empty for no single-line comments).</span></span><span>
 </span><span id="line-617"></span><span>  </span><span class="hs-special">,</span><span> </span><span id="lineCommentAllowsEOF"><span class="annot"><span class="annottext">SpaceDesc -&gt; Bool
@@ -846,7 +846,7 @@ This type describes how whitespace and comments should be handled lexically.
 </span><span id="line-621"></span><span>  </span><span class="hs-special">,</span><span> </span><span id="space"><span class="annot"><span class="annottext">SpaceDesc -&gt; CharPredicate
 </span><a href="Text.Gigaparsec.Token.Descriptions.html#space"><span class="hs-identifier hs-var hs-var">space</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-glyph">!</span><span class="annot"><a href="Text.Gigaparsec.Token.Descriptions.html#CharPredicate"><span class="hs-identifier hs-type">CharPredicate</span></a></span><span>               </span><span class="annot"><span class="hs-comment">-- ^ the characters to be treated as whitespace</span></span><span>
 </span><span id="line-622"></span><span>  </span><span class="hs-special">,</span><span> </span><span id="whitespaceIsContextDependent"><span class="annot"><span class="annottext">SpaceDesc -&gt; Bool
-</span><a href="Text.Gigaparsec.Token.Descriptions.html#whitespaceIsContextDependent"><span class="hs-identifier hs-var hs-var">whitespaceIsContextDependent</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-glyph">!</span><span class="annot"><span class="hs-identifier hs-type">Bool</span></span><span> </span><span class="hs-comment">-- ^ does the context change the definition of whitespace (@True@), or not (@False@)? </span><span>
+</span><a href="Text.Gigaparsec.Token.Descriptions.html#whitespaceIsContextDependent"><span class="hs-identifier hs-var hs-var">whitespaceIsContextDependent</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-glyph">!</span><span class="annot"><span class="hs-identifier hs-type">Bool</span></span><span> </span><span class="hs-comment">-- ^ does the context change the definition of whitespace (@True@), or not (@False@)?</span><span>
 </span><span id="line-623"></span><span>                                          </span><span class="hs-comment">--  (e.g. in Python, newlines are valid whitespace within parentheses, but are significant outside of them)</span><span>
 </span><span id="line-624"></span><span>  </span><span class="hs-special">}</span><span>
 </span><span id="line-625"></span><span class="annot"><span class="hs-comment">{-|
@@ -883,18 +883,18 @@ forall a. a -&gt; Maybe a
 </span><span id="line-639"></span><span>                       </span><span class="hs-special">}</span><span>
 </span><span id="line-640"></span><span>
 </span><span id="line-641"></span><span class="annot"><span class="hs-comment">{-|
-An optional predicate on characters: 
+An optional predicate on characters:
 if @pred :: CharPredicate@ and @pred x = Just True@, then the lexer should accept the character @x@.
 
 ==== __Examples__
 - A predicate that only accepts alphabetical or numbers:
-  
+
   @
-    isAlphaNumPred = Just . isAlphaNum 
+    isAlphaNumPred = Just . isAlphaNum
   @
 
 - A predicate that only accepts capital letters:
-  
+
   @
     isCapital = Just . isAsciiUpper
   @

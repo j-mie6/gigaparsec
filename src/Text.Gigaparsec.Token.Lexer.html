@@ -15,59 +15,59 @@ In traditional compilers, lexing and parsing are two largely separate processes;
 lexing turns raw input into a series of tokens, and parsing then processes these tokens.
 Parser combinators, on the other hand, are often implemented to deal directly with the input stream.
 
-Nonetheless, a lexer abstraction may be achieved by defining a core set of 'lexing' combinators that convert input to tokens, 
-and then defining the 'parsing' combinators in terms of these.
-The parsers defined using 'Lexer' construct these 'lexing' combinators, which creates a clear and logical separation from the rest of the parser.
+Nonetheless, a lexer abstraction may be achieved by defining a core set of /lexing/ combinators that convert input to tokens,
+and then defining the /parsing/ combinators in terms of these.
+The parsers defined using 'Lexer' construct these /lexing/ combinators, which creates a clear and logical separation from the rest of the parser.
 
-It is possible that some of the implementations of parsers found within this class may have been hand-optimised for performance: 
+It is possible that some of the implementations of parsers found within this class may have been hand-optimised for performance:
 care will have been taken to ensure these implementations precisely match the semantics of the originals.
 
 -}</span></span><span>
 </span><span id="line-26"></span><span class="hs-keyword">module</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Token.Lexer.html"><span class="hs-identifier">Text.Gigaparsec.Token.Lexer</span></a></span><span> </span><span class="hs-special">(</span><span>
 </span><span id="line-27"></span><span>    </span><span class="annot"><span class="hs-comment">-- ** Lexing</span></span><span>
-</span><span id="line-28"></span><span>    </span><span class="annot"><a href="Text.Gigaparsec.Internal.Token.Lexer.html#Lexer"><span class="hs-identifier">Lexer</span></a></span><span class="hs-special">,</span><span> </span><span>
-</span><span id="line-29"></span><span>    </span><span class="annot"><a href="Text.Gigaparsec.Internal.Token.Lexer.html#mkLexer"><span class="hs-identifier">mkLexer</span></a></span><span class="hs-special">,</span><span> </span><span>
+</span><span id="line-28"></span><span>    </span><span class="annot"><a href="Text.Gigaparsec.Internal.Token.Lexer.html#Lexer"><span class="hs-identifier">Lexer</span></a></span><span class="hs-special">,</span><span>
+</span><span id="line-29"></span><span>    </span><span class="annot"><a href="Text.Gigaparsec.Internal.Token.Lexer.html#mkLexer"><span class="hs-identifier">mkLexer</span></a></span><span class="hs-special">,</span><span>
 </span><span id="line-30"></span><span>    </span><span class="annot"><a href="Text.Gigaparsec.Internal.Token.Lexer.html#mkLexerWithErrorConfig"><span class="hs-identifier">mkLexerWithErrorConfig</span></a></span><span class="hs-special">,</span><span>
 </span><span id="line-31"></span><span>    </span><span class="annot"><span class="hs-comment">-- ** Lexemes and Non-Lexemes</span></span><span>
 </span><span id="line-32"></span><span>    </span><span class="annot"><span class="hs-comment">{-|
     A key distinction in lexers is between lexemes and non-lexemes:
 
-    * 'lexeme' consumes whitespace. 
+    * 'lexeme' consumes whitespace.
     It should be used by a wider parser, to ensure whitespace is handled uniformly.
-    The output of 'lexeme' can be considered a 'token' as provided by traditional lexers, and can be used by the parser.
+    The output of 'lexeme' can be considered a /token/ as provided by traditional lexers, and can be used by the parser.
     * 'nonlexeme' does not consume whitespace.
     It should be used to define further composite tokens or in special circumstances where whitespace should not be consumed.
-    One may consider the output of 'nonlexeme' to still be in the 'lexing' stage of parsing, and not necessarily a valid token.
+    One may consider the output of 'nonlexeme' to still be in the /lexing/ stage of parsing, and not necessarily a valid token.
     -}</span></span><span>
-</span><span id="line-42"></span><span>    </span><span>
+</span><span id="line-42"></span><span>
 </span><span id="line-43"></span><span>    </span><span class="annot"><span class="hs-comment">-- *** Lexemes</span></span><span>
 </span><span id="line-44"></span><span>    </span><span class="annot"><span class="hs-comment">{-|
-    Ideally, a wider parser should not be concerned with handling whitespace, 
-    as it is responsible for dealing with a stream of tokens. 
-    With parser combinators, however, it is usually not the case that there is a separate distinction between the parsing phase and the lexing phase. 
-    That said, it is good practice to establish a logical separation between the two worlds. 
-    As such, 'lexeme' contains parsers that parse tokens, and these are whitespace-aware. 
-    This means that whitespace will be consumed after any of these parsers are parsed. 
+    Ideally, a wider parser should not be concerned with handling whitespace,
+    as it is responsible for dealing with a stream of tokens.
+    With parser combinators, however, it is usually not the case that there is a separate distinction between the parsing phase and the lexing phase.
+    That said, it is good practice to establish a logical separation between the two worlds.
+    As such, 'lexeme' contains parsers that parse tokens, and these are whitespace-aware.
+    This means that whitespace will be consumed after any of these parsers are parsed.
     It is not required that whitespace be present.
     -}</span></span><span>
-</span><span id="line-53"></span><span>    </span><span class="annot"><a href="Text.Gigaparsec.Internal.Token.Lexer.html#lexeme"><span class="hs-identifier">lexeme</span></a></span><span class="hs-special">,</span><span> </span><span>
+</span><span id="line-53"></span><span>    </span><span class="annot"><a href="Text.Gigaparsec.Internal.Token.Lexer.html#lexeme"><span class="hs-identifier">lexeme</span></a></span><span class="hs-special">,</span><span>
 </span><span id="line-54"></span><span>    </span><span class="annot"><span class="hs-comment">-- *** Non-Lexemes</span></span><span>
 </span><span id="line-55"></span><span>    </span><span class="annot"><span class="hs-comment">{-|
-    Whilst the functionality in lexeme is strongly recommended for wider use in a parser, the functionality here may be useful for more specialised use-cases. 
-    In particular, these may for the building blocks for more complex tokens (where whitespace is not allowed between them, say), 
-    in which case these compound tokens can be turned into lexemes manually. 
+    Whilst the functionality in lexeme is strongly recommended for wider use in a parser, the functionality here may be useful for more specialised use-cases.
+    In particular, these may for the building blocks for more complex tokens (where whitespace is not allowed between them, say),
+    in which case these compound tokens can be turned into lexemes manually.
 
-    For example, the lexer does not have configuration for trailing specifiers on numeric literals (like, 1024L in Scala, say): 
+    For example, the lexer does not have configuration for trailing specifiers on numeric literals (like, 1024L in Scala, say):
     the desired numeric literal parser could be extended with this functionality before whitespace is consumed by using the variant found in this object.
 
-    These tokens can also be used for lexical extraction, 
-    which can be performed by the ErrorBuilder typeclass: 
-    this can be used to try and extract tokens from the input stream when an error happens, 
-    to provide a more informative error. 
-    In this case, it is desirable to not consume whitespace after the token to keep 
+    These tokens can also be used for lexical extraction,
+    which can be performed by the ErrorBuilder typeclass:
+    this can be used to try and extract tokens from the input stream when an error happens,
+    to provide a more informative error.
+    In this case, it is desirable to not consume whitespace after the token to keep
     the error tight and precise.
     -}</span></span><span>
-</span><span id="line-70"></span><span>    </span><span class="annot"><a href="Text.Gigaparsec.Internal.Token.Lexer.html#nonlexeme"><span class="hs-identifier">nonlexeme</span></a></span><span class="hs-special">,</span><span> </span><span>
+</span><span id="line-70"></span><span>    </span><span class="annot"><a href="Text.Gigaparsec.Internal.Token.Lexer.html#nonlexeme"><span class="hs-identifier">nonlexeme</span></a></span><span class="hs-special">,</span><span>
 </span><span id="line-71"></span><span>    </span><span class="annot"><span class="hs-comment">-- *** Fully and Space</span></span><span>
 </span><span id="line-72"></span><span>    </span><span class="annot"><a href="Text.Gigaparsec.Internal.Token.Lexer.html#fully"><span class="hs-identifier">fully</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.Token.Lexer.html#space"><span class="hs-identifier">space</span></a></span><span class="hs-special">,</span><span>
 </span><span id="line-73"></span><span>    </span><span class="annot"><span class="hs-comment">-- *** 'Lexeme' Fields</span></span><span>
@@ -75,7 +75,7 @@ care will have been taken to ensure these implementations precisely match the se
     Despite their differences, lexemes and non-lexemes share a lot of common functionality.
     The type 'Lexeme' describes both lexemes and non-lexemes, so that this common functionality may be exploited.
     -}</span></span><span>
-</span><span id="line-78"></span><span>    </span><span class="annot"><a href="Text.Gigaparsec.Internal.Token.Lexer.html#Lexeme"><span class="hs-identifier">Lexeme</span></a></span><span class="hs-special">,</span><span> </span><span>
+</span><span id="line-78"></span><span>    </span><span class="annot"><a href="Text.Gigaparsec.Internal.Token.Lexer.html#Lexeme"><span class="hs-identifier">Lexeme</span></a></span><span class="hs-special">,</span><span>
 </span><span id="line-79"></span><span>    </span><span class="annot"><span class="hs-comment">{-|
     Lexemes and Non-Lexemes are described by these common fields.
     -}</span></span><span>
@@ -102,7 +102,7 @@ care will have been taken to ensure these implementations precisely match the se
     This is mainly used by the combinators 'integer' and 'natural'.
     -}</span></span><span>
 </span><span id="line-104"></span><span>    </span><span class="annot"><a href="Text.Gigaparsec.Internal.Token.Numeric.html#IntegerParsers"><span class="hs-identifier">IntegerParsers</span></a></span><span class="hs-special">,</span><span>
-</span><span id="line-105"></span><span>    </span><span class="annot"><a href="Text.Gigaparsec.Internal.Token.Lexer.html#integer"><span class="hs-identifier">integer</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.Token.Lexer.html#natural"><span class="hs-identifier">natural</span></a></span><span class="hs-special">,</span><span> </span><span>
+</span><span id="line-105"></span><span>    </span><span class="annot"><a href="Text.Gigaparsec.Internal.Token.Lexer.html#integer"><span class="hs-identifier">integer</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.Token.Lexer.html#natural"><span class="hs-identifier">natural</span></a></span><span class="hs-special">,</span><span>
 </span><span id="line-106"></span><span>    </span><span class="annot"><span class="hs-comment">-- **** Fixed-Base Parsers</span></span><span>
 </span><span id="line-107"></span><span>    </span><span class="annot"><a href="Text.Gigaparsec.Internal.Token.Numeric.html#decimal"><span class="hs-identifier">decimal</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.Token.Numeric.html#hexadecimal"><span class="hs-identifier">hexadecimal</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.Token.Numeric.html#octal"><span class="hs-identifier">octal</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.Token.Numeric.html#binary"><span class="hs-identifier">binary</span></a></span><span class="hs-special">,</span><span>
 </span><span id="line-108"></span><span>    </span><span class="annot"><span class="hs-comment">-- **** Fixed-Width Numeric Tokens</span></span><span>
@@ -138,9 +138,9 @@ care will have been taken to ensure these implementations precisely match the se
 </span><span id="line-138"></span><span>    </span><span class="annot"><span class="hs-comment">{-|
     'Space' and its fields are concerned with special treatment of whitespace itself.
 
-    Most of the time, the functionality herein will not be required, 
+    Most of the time, the functionality herein will not be required,
     as 'lexeme' and 'fully' will consistently handle whitespace.
-    
+
     However, whitespace /is/ significant in some languages, like Python and Haskell,
     in which case 'Space' provides a way to control how whitespace is consumed.
     -}</span></span><span>
