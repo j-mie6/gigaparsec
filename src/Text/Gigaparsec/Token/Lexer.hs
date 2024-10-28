@@ -15,59 +15,59 @@ In traditional compilers, lexing and parsing are two largely separate processes;
 lexing turns raw input into a series of tokens, and parsing then processes these tokens.
 Parser combinators, on the other hand, are often implemented to deal directly with the input stream.
 
-Nonetheless, a lexer abstraction may be achieved by defining a core set of 'lexing' combinators that convert input to tokens, 
-and then defining the 'parsing' combinators in terms of these.
-The parsers defined using 'Lexer' construct these 'lexing' combinators, which creates a clear and logical separation from the rest of the parser.
+Nonetheless, a lexer abstraction may be achieved by defining a core set of /lexing/ combinators that convert input to tokens,
+and then defining the /parsing/ combinators in terms of these.
+The parsers defined using 'Lexer' construct these /lexing/ combinators, which creates a clear and logical separation from the rest of the parser.
 
-It is possible that some of the implementations of parsers found within this class may have been hand-optimised for performance: 
+It is possible that some of the implementations of parsers found within this class may have been hand-optimised for performance:
 care will have been taken to ensure these implementations precisely match the semantics of the originals.
 
 -}
 module Text.Gigaparsec.Token.Lexer (
     -- ** Lexing
-    Lexer, 
-    mkLexer, 
+    Lexer,
+    mkLexer,
     mkLexerWithErrorConfig,
     -- ** Lexemes and Non-Lexemes
     {-|
     A key distinction in lexers is between lexemes and non-lexemes:
 
-    * 'lexeme' consumes whitespace. 
+    * 'lexeme' consumes whitespace.
     It should be used by a wider parser, to ensure whitespace is handled uniformly.
-    The output of 'lexeme' can be considered a 'token' as provided by traditional lexers, and can be used by the parser.
+    The output of 'lexeme' can be considered a /token/ as provided by traditional lexers, and can be used by the parser.
     * 'nonlexeme' does not consume whitespace.
     It should be used to define further composite tokens or in special circumstances where whitespace should not be consumed.
-    One may consider the output of 'nonlexeme' to still be in the 'lexing' stage of parsing, and not necessarily a valid token.
+    One may consider the output of 'nonlexeme' to still be in the /lexing/ stage of parsing, and not necessarily a valid token.
     -}
-    
+
     -- *** Lexemes
     {-|
-    Ideally, a wider parser should not be concerned with handling whitespace, 
-    as it is responsible for dealing with a stream of tokens. 
-    With parser combinators, however, it is usually not the case that there is a separate distinction between the parsing phase and the lexing phase. 
-    That said, it is good practice to establish a logical separation between the two worlds. 
-    As such, 'lexeme' contains parsers that parse tokens, and these are whitespace-aware. 
-    This means that whitespace will be consumed after any of these parsers are parsed. 
+    Ideally, a wider parser should not be concerned with handling whitespace,
+    as it is responsible for dealing with a stream of tokens.
+    With parser combinators, however, it is usually not the case that there is a separate distinction between the parsing phase and the lexing phase.
+    That said, it is good practice to establish a logical separation between the two worlds.
+    As such, 'lexeme' contains parsers that parse tokens, and these are whitespace-aware.
+    This means that whitespace will be consumed after any of these parsers are parsed.
     It is not required that whitespace be present.
     -}
-    lexeme, 
+    lexeme,
     -- *** Non-Lexemes
     {-|
-    Whilst the functionality in lexeme is strongly recommended for wider use in a parser, the functionality here may be useful for more specialised use-cases. 
-    In particular, these may for the building blocks for more complex tokens (where whitespace is not allowed between them, say), 
-    in which case these compound tokens can be turned into lexemes manually. 
+    Whilst the functionality in lexeme is strongly recommended for wider use in a parser, the functionality here may be useful for more specialised use-cases.
+    In particular, these may for the building blocks for more complex tokens (where whitespace is not allowed between them, say),
+    in which case these compound tokens can be turned into lexemes manually.
 
-    For example, the lexer does not have configuration for trailing specifiers on numeric literals (like, 1024L in Scala, say): 
+    For example, the lexer does not have configuration for trailing specifiers on numeric literals (like, 1024L in Scala, say):
     the desired numeric literal parser could be extended with this functionality before whitespace is consumed by using the variant found in this object.
 
-    These tokens can also be used for lexical extraction, 
-    which can be performed by the ErrorBuilder typeclass: 
-    this can be used to try and extract tokens from the input stream when an error happens, 
-    to provide a more informative error. 
-    In this case, it is desirable to not consume whitespace after the token to keep 
+    These tokens can also be used for lexical extraction,
+    which can be performed by the ErrorBuilder typeclass:
+    this can be used to try and extract tokens from the input stream when an error happens,
+    to provide a more informative error.
+    In this case, it is desirable to not consume whitespace after the token to keep
     the error tight and precise.
     -}
-    nonlexeme, 
+    nonlexeme,
     -- *** Fully and Space
     fully, space,
     -- *** 'Lexeme' Fields
@@ -75,7 +75,7 @@ module Text.Gigaparsec.Token.Lexer (
     Despite their differences, lexemes and non-lexemes share a lot of common functionality.
     The type 'Lexeme' describes both lexemes and non-lexemes, so that this common functionality may be exploited.
     -}
-    Lexeme, 
+    Lexeme,
     {-|
     Lexemes and Non-Lexemes are described by these common fields.
     -}
@@ -102,7 +102,7 @@ module Text.Gigaparsec.Token.Lexer (
     This is mainly used by the combinators 'integer' and 'natural'.
     -}
     IntegerParsers,
-    integer, natural, 
+    integer, natural,
     -- **** Fixed-Base Parsers
     decimal, hexadecimal, octal, binary,
     -- **** Fixed-Width Numeric Tokens
@@ -138,9 +138,9 @@ module Text.Gigaparsec.Token.Lexer (
     {-|
     'Space' and its fields are concerned with special treatment of whitespace itself.
 
-    Most of the time, the functionality herein will not be required, 
+    Most of the time, the functionality herein will not be required,
     as 'lexeme' and 'fully' will consistently handle whitespace.
-    
+
     However, whitespace /is/ significant in some languages, like Python and Haskell,
     in which case 'Space' provides a way to control how whitespace is consumed.
     -}

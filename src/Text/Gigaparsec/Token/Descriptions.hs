@@ -24,9 +24,9 @@ Rather than use the internal constructors, such as @NameDesc@, one should extend
 For example,
 
 @
-myLexicalDesc = plain 
+myLexicalDesc = plain
   { nameDesc = myNameDesc
-  , textDesc = myTextDesc  
+  , textDesc = myTextDesc
   }
 @
 
@@ -60,7 +60,7 @@ module Text.Gigaparsec.Token.Descriptions (
 
   -}
   -- ** Symbol Descriptions
-  {-| 
+  {-|
   A 'SymbolDesc' configures the lexing of \'symbols\' (textual literals), such as keywords and operators.
   To create a 'SymbolDesc', use 'plainSymbol' and configure it to your liking with record updates.
 
@@ -74,7 +74,7 @@ module Text.Gigaparsec.Token.Descriptions (
 
   -}
   -- ** Numeric Descriptions
-  {-| 
+  {-|
   A 'NumericDesc' configures the lexing of numeric literals, such as integer and floating point literals.
   To create a 'NumericDesc', use 'plainNumeric' and configure it to your liking with record updates.
   Also see 'ExponentDesc', 'BreakCharDesc', and 'PlusSignPresence', for further configuration options.
@@ -103,7 +103,7 @@ module Text.Gigaparsec.Token.Descriptions (
   * 'plainNumeric'
   -}
   -- *** Exponent Descriptions
-  {-| 
+  {-|
   An 'ExponentDesc' configures scientific exponent notation.
 
     * 'ExponentDesc'
@@ -118,7 +118,7 @@ module Text.Gigaparsec.Token.Descriptions (
             * 'expLeadingZerosAllowd'
   -}
   -- *** Break-Characters in Numeric Literals
-  {-| 
+  {-|
   Some languages allow a single numeric literal to be separated by a \'break\' symbol.
 
     * 'BreakCharDesc'
@@ -130,7 +130,7 @@ module Text.Gigaparsec.Token.Descriptions (
           * 'allowedAfterNonDecimalPrefix'
   -}
   -- *** Numeric Literal Prefix Configuration
-  {-| 
+  {-|
 
   * 'PlusSignPresence'
 
@@ -139,7 +139,7 @@ module Text.Gigaparsec.Token.Descriptions (
       * 'PlusIllegal'
   -}
   -- ** Text Descriptions
-  {-| 
+  {-|
   A 'TextDesc' configures the lexing of string and character literals, as well as escaped numeric literals.
   To create a 'TextDesc', use 'plainText' and configure it to your liking with record updates.
   See 'EscapeDesc', 'NumericEscape' and 'NumberOfDigits' for further configuration of escape sequences and escaped numeric literals.
@@ -155,8 +155,8 @@ module Text.Gigaparsec.Token.Descriptions (
   * 'plainText'
   -}
   -- *** Escape Character Descriptions
-  {-| 
-  Configuration of escape sequences, such as tabs @\t@ and newlines @\n@, and 
+  {-|
+  Configuration of escape sequences, such as tabs @\t@ and newlines @\n@, and
   escaped numbers, such as hexadecimals @0x...@ and binary @0b...@.
 
   * 'EscapeDesc'
@@ -174,7 +174,7 @@ module Text.Gigaparsec.Token.Descriptions (
   * 'plainEscape'
   -}
   -- *** Numeric Escape Sequences
-  {-| 
+  {-|
   Configuration of escaped numeric literals.
   For example, hexadecimals, @0x...@.
 
@@ -195,7 +195,7 @@ module Text.Gigaparsec.Token.Descriptions (
 
   -}
   -- ** Whitespace and Comment Descriptions
-  {-| 
+  {-|
   A 'SpaceDesc' configures the lexing whitespace and comments.
   To create a 'SpaceDesc', use 'plainSpace' and configure it to your liking with record updates.
 
@@ -229,15 +229,15 @@ See the 'plain' smart constructor to define a @LexicalDesc@.
 type LexicalDesc :: *
 data LexicalDesc = LexicalDesc {
   -- | the description of name-like lexemes
-     nameDesc :: {-# UNPACK #-} !NameDesc       
+     nameDesc :: {-# UNPACK #-} !NameDesc
   -- | the description of specific symbolic lexemes
-  , symbolDesc :: {-# UNPACK #-} !SymbolDesc   
+  , symbolDesc :: {-# UNPACK #-} !SymbolDesc
   -- | the description of numeric literals
-  , numericDesc :: {-# UNPACK #-} !NumericDesc 
+  , numericDesc :: {-# UNPACK #-} !NumericDesc
   -- | the description of text literals
-  , textDesc :: {-# UNPACK #-} !TextDesc       
+  , textDesc :: {-# UNPACK #-} !TextDesc
   -- | the description of whitespace
-  , spaceDesc :: {-# UNPACK #-} !SpaceDesc     
+  , spaceDesc :: {-# UNPACK #-} !SpaceDesc
   }
 
 {-|
@@ -262,13 +262,13 @@ See the 'plainName' smart constructor for how to implement a custom name descrip
 type NameDesc :: *
 data NameDesc = NameDesc {
   -- | the characters that start an identifier
-    identifierStart :: !CharPredicate  
+    identifierStart :: !CharPredicate
   -- | the characters that continue an identifier
-  , identifierLetter :: !CharPredicate 
+  , identifierLetter :: !CharPredicate
   -- | the characters that start a user-defined operator
-  , operatorStart :: !CharPredicate    
+  , operatorStart :: !CharPredicate
   -- | the characters that continue a user-defined operator
-  , operatorLetter :: !CharPredicate   
+  , operatorLetter :: !CharPredicate
   }
 
 {-|
@@ -279,8 +279,8 @@ To change this, one should use record field copies, for example:
 
 @
 myNameDesc :: NameDesc
-myNameDesc = plainName 
-  { identifierStart = myIdentifierStartPredicate 
+myNameDesc = plainName
+  { identifierStart = myIdentifierStartPredicate
   , identifierLetter = myIdentifierLetterPredicate
   }
 @
@@ -299,7 +299,7 @@ plainName = NameDesc { identifierStart = Nothing
 {-|
 This type describes how symbols (textual literals in a BNF) should be processed lexically, including keywords and operators.
 
-This includes keywords and (hard) operators that are reserved by the language. 
+This includes keywords and (hard) operators that are reserved by the language.
 For example, in Haskell, "data" is a keyword, and "->" is a hard operator.
 
 See the 'plainSymbol' smart constructor for how to implement a custom name description.
@@ -307,11 +307,11 @@ See the 'plainSymbol' smart constructor for how to implement a custom name descr
 type SymbolDesc :: *
 data SymbolDesc = SymbolDesc {
   -- | what keywords are always treated as keywords within the language.
-    hardKeywords :: !(Set String)  
+    hardKeywords :: !(Set String)
   -- | what operators are always treated as reserved operators within the language.
-  , hardOperators :: !(Set String) 
+  , hardOperators :: !(Set String)
   -- | @True@ if the keywords are case sensitive, @False@ if not (so that e.g. @IF = if@).
-  , caseSensitive :: !Bool         
+  , caseSensitive :: !Bool
   }
 
 {-|
@@ -324,8 +324,8 @@ To change this, one should use record field copies, for example:
 {-# LANGUAGE OverloadedLists #-} -- This lets us write @[a,b]@ to get a 'Data.Set' containing @a@ and @b@
                                  -- If you don't want to use this, just use @'Data.Set.fromList' [a,b]@
 mySymbolDesc :: SymbolDesc
-mySymbolDesc = plainSymbol 
-  { hardKeywords = ["data", "where"] 
+mySymbolDesc = plainSymbol
+  { hardKeywords = ["data", "where"]
   , hardOperators = ["->"]
   , caseSensitive = True
   }
@@ -346,45 +346,45 @@ This type describes how numeric literals (integers, decimals, hexadecimals, etc.
 type NumericDesc :: *
 data NumericDesc = NumericDesc {
   -- | can breaks be found within numeric literals? (see 'BreakCharDesc')
-    literalBreakChar :: !BreakCharDesc        
+    literalBreakChar :: !BreakCharDesc
   -- | can a real number omit a leading 0 before the point?
-  , leadingDotAllowed :: !Bool                
+  , leadingDotAllowed :: !Bool
   -- | can a real number omit a trailing 0 after the point?
-  , trailingDotAllowed :: !Bool               
+  , trailingDotAllowed :: !Bool
   -- | are extraneous zeros allowed at the start of decimal numbers?
-  , leadingZerosAllowed :: !Bool              
+  , leadingZerosAllowed :: !Bool
   -- | describes if positive (+) signs are allowed, compulsory, or illegal.
-  , positiveSign :: !PlusSignPresence         
+  , positiveSign :: !PlusSignPresence
   -- generic number
   -- | can generic "integer numbers" to be hexadecimal?
-  , integerNumbersCanBeHexadecimal :: !Bool   
+  , integerNumbersCanBeHexadecimal :: !Bool
   -- | can generic "integer numbers" to be octal?
-  , integerNumbersCanBeOctal :: !Bool         
+  , integerNumbersCanBeOctal :: !Bool
   -- | can generic "integer numbers" to be binary?
-  , integerNumbersCanBeBinary :: !Bool        
+  , integerNumbersCanBeBinary :: !Bool
   -- | can generic "real numbers" to be hexadecimal?
-  , realNumbersCanBeHexadecimal :: !Bool      
+  , realNumbersCanBeHexadecimal :: !Bool
   -- | can generic "real numbers" to be octal?
-  , realNumbersCanBeOctal :: !Bool            
+  , realNumbersCanBeOctal :: !Bool
   -- | can generic "real numbers" to be binary?
-  , realNumbersCanBeBinary :: !Bool           
+  , realNumbersCanBeBinary :: !Bool
   -- special literals
   -- | the characters that begin a hexadecimal literal following a 0 (may be empty).
   , hexadecimalLeads :: !(Set Char)
-  -- | the characters that begin an octal literal following a 0 (may be empty).           
-  , octalLeads :: !(Set Char)      
-  -- | the characters that begin a binary literal following a 0 (may be empty).           
-  , binaryLeads :: !(Set Char)    
-              
+  -- | the characters that begin an octal literal following a 0 (may be empty).
+  , octalLeads :: !(Set Char)
+  -- | the characters that begin a binary literal following a 0 (may be empty).
+  , binaryLeads :: !(Set Char)
+
   -- exponents
   -- | describes how scientific exponent notation should work for decimal literals.
-  , decimalExponentDesc :: !ExponentDesc      
+  , decimalExponentDesc :: !ExponentDesc
   -- | describes how scientific exponent notation should work for hexadecimal literals.
-  , hexadecimalExponentDesc :: !ExponentDesc  
+  , hexadecimalExponentDesc :: !ExponentDesc
   -- | describes how scientific exponent notation should work for octal literals.
-  , octalExponentDesc :: !ExponentDesc        
+  , octalExponentDesc :: !ExponentDesc
   -- | describes how scientific exponent notation should work for binary literals.
-  , binaryExponentDesc :: !ExponentDesc       
+  , binaryExponentDesc :: !ExponentDesc
   }
 
 {-|
@@ -446,9 +446,9 @@ A common notation would be @1.6e3@ for @1.6 × 10³@, which the following @Expon
 @
 {-# LANGUAGE OverloadedLists #-} -- Lets us write @[a]@ to generate a singleton 'Data.Set' containing @a@.
 usualNotation :: ExponentDesc
-usualNotation = ExponentsSupported 
+usualNotation = ExponentsSupported
   { compulsory = False
-  , chars = [\'e\']  -- The letter 'e' separates the significand from the exponent
+  , chars = [\'e\']  -- The letter \'e\' separates the significand from the exponent
   , base  = 10   -- The base of the exponent is 10, so that @2.3e5@ means @2.3 × 10⁵@
   , expSign = PlusOptional -- A positive exponent does not need a plus sign, but can have one.
   , expLeadingZerosAllowd = True -- We allow leading zeros on exponents; so @1.2e005@ is valid.
@@ -457,7 +457,7 @@ usualNotation = ExponentsSupported
 
 -}
 type ExponentDesc :: *
-data ExponentDesc 
+data ExponentDesc
   = NoExponents         -- ^ The language does not allow exponent notation.
   | ExponentsSupported  -- ^ The language does allow exponent notation, according to the following fields:
     { compulsory :: !Bool            -- ^ Is exponent notation required for real literals?
@@ -473,7 +473,7 @@ Prescribes whether or not numeric literals can be broken up by a specific symbol
 For example, can one write @300.2_3@?
 -}
 type BreakCharDesc :: *
-data BreakCharDesc 
+data BreakCharDesc
   = NoBreakChar                             -- ^ Literals cannot be broken.
   | BreakCharSupported                      -- ^ Literals can be broken.
     { breakChar :: !Char                    -- ^ the character allowed to break a literal (often _).
@@ -484,7 +484,7 @@ data BreakCharDesc
 Whether or not a plus sign (@+@) can prefix a numeric literal.
 -}
 type PlusSignPresence :: *
-data PlusSignPresence 
+data PlusSignPresence
   = PlusRequired -- ^ (@+@) must always precede a positive numeric literal
   | PlusOptional -- ^ (@+@) may precede a positive numeric literal, but is not necessary
   | PlusIllegal  -- ^ (@+@) cannot precede a numeric literal as a prefix (this is separate to allowing an infix binary @+@ operator).
@@ -493,7 +493,7 @@ data PlusSignPresence
   This type describes how to parse string and character literals.
 -}
 type TextDesc :: *
-data TextDesc = TextDesc 
+data TextDesc = TextDesc
   { escapeSequences :: {-# UNPACK #-} !EscapeDesc -- ^ the description of escape sequences in literals.
   , characterLiteralEnd :: !Char -- ^ the character that starts and ends a character literal.
   , stringEnds :: !(Set (String, String)) -- ^ the sequences that may begin and end a string literal.
@@ -512,7 +512,7 @@ To change this, one should use record field copies, for example:
 {-# LANGUAGE OverloadedLists #-} -- This lets us write @[a,b]@ to get a 'Data.Set' containing @a@ and @b@
                                  -- If you don't want to use this, just use @'Data.Set.fromList' [a,b]@
 myPlainText:: TextDesc
-myPlainText= plainText 
+myPlainText= plainText
   { characterLiteralEnd = a
   , stringEnds = [(b, c)]
   }
@@ -535,18 +535,18 @@ Defines the escape characters, and their meaning.
 This includes character escapes (e.g. tabs, carriage returns), and numeric escapes, such as binary (usually \"0b\") and hexadecimal, \"0x\".
 -}
 type EscapeDesc :: *
-data EscapeDesc = EscapeDesc 
+data EscapeDesc = EscapeDesc
   { escBegin :: !Char                   -- ^ the character that begins an escape sequence: this is usually @\\@.
-  , literals :: !(Set Char)             -- ^ the characters that can be directly escaped, but still represent themselves, for instance '"', or '\\'.
+  , literals :: !(Set Char)             -- ^ the characters that can be directly escaped, but still represent themselves, for instance \'"\', or \'\\\'.
   , mapping :: !(Map String Char)       -- ^ the possible escape sequences that map to a character other than themselves and the (full UTF-16) character they map to, for instance "n" -> 0xa
   , decimalEscape :: !NumericEscape     -- ^ if allowed, the description of how numeric escape sequences work for base 10.
   , hexadecimalEscape :: !NumericEscape -- ^ if allowed, the description of how numeric escape sequences work for base 16
   , octalEscape :: !NumericEscape       -- ^ if allowed, the description of how numeric escape sequences work for base 8
   , binaryEscape :: !NumericEscape      -- ^ if allowed, the description of how numeric escape sequences work for base 2
-  , emptyEscape :: !(Maybe Char)        -- ^ if one should exist, the character which has no effect on 
+  , emptyEscape :: !(Maybe Char)        -- ^ if one should exist, the character which has no effect on
                                         -- the string but can be used to disambiguate other escape sequences: in Haskell this would be \&
-  , gapsSupported :: !Bool              -- ^ specifies whether or not string gaps are supported: 
-                                        -- this is where whitespace can be injected between two escBegin characters and this will all be ignored in the final string, 
+  , gapsSupported :: !Bool              -- ^ specifies whether or not string gaps are supported:
+                                        -- this is where whitespace can be injected between two escBegin characters and this will all be ignored in the final string,
                                         -- such that "hello \ \world" is "hello world"
   }
 
@@ -561,7 +561,7 @@ To change this, one should use record field copies, for example:
 {-# LANGUAGE OverloadedLists #-} -- This lets us write @[a,b]@ to get a 'Data.Set' containing @a@ and @b@,
                                  -- and [(a,b),(c,d)] for a 'Data.Map' which sends @a ↦ b@ and @c ↦ d@
 myPlainEscape:: EscapeDesc
-myPlainEscape= plainEscape 
+myPlainEscape= plainEscape
   { literals = a
   , stringEnds = [(b, c)]
   , mapping = [("t",0x0009), ("r",0x000D)]
@@ -590,7 +590,7 @@ plainEscape = EscapeDesc { escBegin = '\\'
 Describes how numeric escape sequences should work for a given base.
 -}
 type NumericEscape :: *
-data NumericEscape 
+data NumericEscape
   = NumericIllegal    -- ^ Numeric literals are disallowed for this specific base.
   | NumericSupported  -- ^ Numeric literals are supported for this specific base.
     { prefix :: !(Maybe Char)      -- ^ the character, if any, that is required to start the literal (like x for hexadecimal escapes in some languages).
@@ -602,24 +602,24 @@ data NumericEscape
 Describes how many digits a numeric escape sequence is allowed.
 -}
 type NumberOfDigits :: *
-data NumberOfDigits 
+data NumberOfDigits
   = Unbounded -- ^ there is no limit on the number of digits that may appear in this sequence.
   | Exactly !(NonEmpty Word) -- ^ the number of digits in the literal must be one of the given values.
-  | AtMost -- ^ there must be at most @n@ digits in the numeric escape literal, up to and including the value given. 
+  | AtMost -- ^ there must be at most @n@ digits in the numeric escape literal, up to and including the value given.
     !Word  -- ^ the maximum (inclusive) number of digits allowed in the literal..
 
 {-|
 This type describes how whitespace and comments should be handled lexically.
 -}
 type SpaceDesc :: *
-data SpaceDesc = SpaceDesc 
+data SpaceDesc = SpaceDesc
   { lineCommentStart :: !String           -- ^ how to start single-line comments (empty for no single-line comments).
   , lineCommentAllowsEOF :: !Bool         -- ^ can a single-line comment be terminated by the end-of-file (@True@), or must it end with a newline (@False@)?
   , multiLineCommentStart :: !String      -- ^ how to start multi-line comments (empty for no multi-line comments).
   , multiLineCommentEnd :: !String        -- ^ how to end multi-line comments (empty for no multi-line comments).
   , multiLineNestedComments :: !Bool      -- ^ @True@ when multi-line comments can be nested, @False@ otherwise.
   , space :: !CharPredicate               -- ^ the characters to be treated as whitespace
-  , whitespaceIsContextDependent :: !Bool -- ^ does the context change the definition of whitespace (@True@), or not (@False@)? 
+  , whitespaceIsContextDependent :: !Bool -- ^ does the context change the definition of whitespace (@True@), or not (@False@)?
                                           --  (e.g. in Python, newlines are valid whitespace within parentheses, but are significant outside of them)
   }
 {-|
@@ -639,18 +639,18 @@ plainSpace = SpaceDesc { lineCommentStart = ""
                        }
 
 {-|
-An optional predicate on characters: 
+An optional predicate on characters:
 if @pred :: CharPredicate@ and @pred x = Just True@, then the lexer should accept the character @x@.
 
 ==== __Examples__
 - A predicate that only accepts alphabetical or numbers:
-  
+
   @
-    isAlphaNumPred = Just . isAlphaNum 
+    isAlphaNumPred = Just . isAlphaNum
   @
 
 - A predicate that only accepts capital letters:
-  
+
   @
     isCapital = Just . isAsciiUpper
   @
