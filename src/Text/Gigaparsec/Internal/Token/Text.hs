@@ -47,11 +47,35 @@ import Data.Maybe (catMaybes)
 
 -- TODO: is it possible to /actually/ support Text/Bytestring in future?
 -- Perhaps something like the Numeric stuff?
+{-|
+This type defines a uniform interface for defining parsers for textual literals, independent of how whitespace should be handled after the literal.
+
+The type of these literals is determined by the parameter @t@.
+-}
 type TextParsers :: * -> *
-data TextParsers t = TextParsers { unicode :: Parsec t
-                                 , ascii :: Parsec t
-                                 , latin1 :: Parsec t
-                                 }
+data TextParsers t = TextParsers { 
+    {-|
+    Parses a single @t@-literal, which may contain any unicode graphic character 
+    as defined by up to two UTF-16 codepoints.
+
+    It may also contain escape sequences.
+    -}
+    unicode :: Parsec t
+    {-|
+    Parses a single @t@-literal, which may contain any graphic ASCII character. 
+    These are characters with ordinals in range 0 to 127 inclusive. 
+
+    It may also contain escape sequences, but only those which result in ASCII characters.
+    -}
+  , ascii :: Parsec t
+    {-|
+    Parses a single @t@-literal, which may contain any graphic extended ASCII character. 
+    These are characters with ordinals in range 0 to 255 inclusive. 
+
+    It may also contain escape sequences, but only those which result in extended ASCII characters.
+    -}
+  , latin1 :: Parsec t
+  }
 
 -- I want the convenient naming, sue me
 type StringParsers :: *

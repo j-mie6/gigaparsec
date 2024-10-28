@@ -27,8 +27,21 @@ type family Assert b c where
 
 #endif
 
+{-| The bit-width of certain data.
+
+This is used to help enforce parsers of bounded precision to only return types
+that can losslessly accomodate that precision.
+-}
 type Bits :: *
-data Bits = B8 | B16 | B32 | B64
+data Bits 
+  -- | 8 bits of data
+  = B8 
+  -- | 17 bits of data
+  | B16 
+  -- | 32 bits of data
+  | B32 
+  -- | 64 bits of data
+  | B64
 
 type BitWidth :: * -> Bits
 type family BitWidth t where

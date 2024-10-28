@@ -7,7 +7,7 @@ License     : BSD-3-Clause
 Maintainer  : Jamie Willis, Gigaparsec Maintainers
 Stability   : stable
 
-This object contains the core combinators and parser type: all parsers will require something from
+This module contains the core combinators and parser type: all parsers will require something from
 within!
 
 @since 0.1.0.0

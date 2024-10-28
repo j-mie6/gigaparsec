@@ -27,14 +27,68 @@ import Text.Gigaparsec.Token.Errors (
 import Text.Gigaparsec.Internal.Token.Errors (filterS)
 
 -- TODO: primes are gross, better way?
-type Names :: *
-data Names = Names { identifier :: !(Parsec String)
-                   , identifier' :: !(CharPredicate -> Parsec String)
-                   , userDefinedOperator :: !(Parsec String)
-                   , userDefinedOperator' :: !(CharPredicate -> Parsec String)
-                   }
+{-|
+This class defines a uniform interface for defining parsers for user-defined names 
+(identifiers and operators), independent of how whitespace should be handled after the name.
 
-mkNames :: NameDesc -> SymbolDesc -> ErrorConfig -> Names
+The parsing of names is mostly concerned with finding the longest valid name that is not a reserved name, 
+such as a hard keyword or a special operator.
+-}
+type Names :: *
+data Names = Names { 
+  {-| 
+  Parse an identifier based on the given 'NameDesc' predicates 'identifierStart' and 'identifierLetter'.
+  The 'NameDesc' is provided by 'mkNames'.
+
+  Capable of handling unicode characters if the configuration permits.
+  If hard keywords are specified by the configuration, this parser is not permitted to parse them.
+  -}
+    identifier :: !(Parsec String)
+  {-| 
+  Parse an identifier whose start satisfies the given predicate, and subseqeunt letters satisfy 'identifierLetter' in the given 'NameDesc'.
+  The 'NameDesc' is provided by 'mkNames'.
+
+  Behaves as 'identifier', then ensures the first character matches the given predicate.
+  Thus, 'identifier'' can only /refine/ the output of 'identifier';
+  if 'identifier' fails due to the first character, then so will 'identifier'', 
+  even if this character passes the supplied predicate.
+  
+  Capable of handling unicode characters if the configuration permits.
+  If hard keywords are specified by the configuration, this parser is not permitted to parse them.
+  -}
+  , identifier' :: !(CharPredicate -> Parsec String)
+  {-| 
+  Parse a user-defined operator based on the given 'SymbolDesc' predicates 'operatorStart' and 'operatorLetter'.
+  The 'SymbolDesc' is provided by 'mkNames'.
+
+  Capable of handling unicode characters if the configuration permits. 
+  If hard operators are specified by the configuration, this parser is not permitted to parse them.
+  -}
+  , userDefinedOperator :: !(Parsec String)
+  {-| 
+  Parse a user-defined operator whose first character satisfies the given predicate,
+  and subsequent characters satisfying 'operatorLetter' in the given 'SymbolDesc'.
+  The 'SymbolDesc' is provided by 'mkNames'.
+
+  Behaves as 'userDefinedOperator', then ensures the first character matches the given predicate.
+  Thus, 'userDefinedOperator'' can only /refine/ the output of 'userDefinedOperator';
+  if 'userDefinedOperator' fails due to the first character, then so will 'userDefinedOperator'', 
+  even if this character passes the supplied predicate.
+
+  Capable of handling unicode characters if the configuration permits. 
+  If hard operators are specified by the configuration, this parser is not permitted to parse them.
+  -}
+  , userDefinedOperator' :: !(CharPredicate -> Parsec String)
+  }
+
+{-|
+Create a 'Names' -- an interface for parsing identifiers and operators 
+-- according to the given name and symbol descriptions.
+-}
+mkNames :: NameDesc    -- ^ the description of identifiers.
+        -> SymbolDesc  -- ^ the description of symbols.
+        -> ErrorConfig -- ^ how errors should be produced on failed parses.
+        -> Names       -- ^ a collection of parsers for identifiers and operators as described by the given descriptions.
 mkNames NameDesc{..} symbolDesc@SymbolDesc{..} !err = Names {..}
   where
     !isReserved = isReservedName symbolDesc

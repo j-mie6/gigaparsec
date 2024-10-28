@@ -37,19 +37,31 @@ import Control.Monad (when, unless)
 import Text.Gigaparsec.Internal.Token.Errors (mapMaybeS, LabelWithExplainConfig, annotate)
 
 -- TODO: switch to private versions in future
+{-|
+A uniform interface for defining parsers for integer literals, 
+independent of how whitespace should be handled after the literal 
+or whether the literal should allow for negative numbers.
+-}
 type IntegerParsers :: (Bits -> * -> Constraint) -> *
-data IntegerParsers canHold = IntegerParsers { decimal :: Parsec Integer
-                                             , hexadecimal :: Parsec Integer
-                                             , octal :: Parsec Integer
-                                             , binary :: Parsec Integer
-                                             , number :: Parsec Integer
-                                             , _bounded :: forall (bits :: Bits) t. canHold bits t
-                                                        => Proxy bits
-                                                        -> Parsec Integer
-                                                        -> Int
-                                                        -> (ErrorConfig -> Bool -> Maybe Bits -> LabelWithExplainConfig)
-                                                        -> Parsec t
-                                             }
+data IntegerParsers canHold = IntegerParsers { 
+  -- | Parse a single integer literal in decimal form (base 10).
+    decimal :: Parsec Integer
+  -- | Parse a single integer literal in hexadecimal form (base 16).
+  , hexadecimal :: Parsec Integer
+  -- | Parse a single integer literal in octal form (base 8).
+  , octal :: Parsec Integer
+  -- | Parse a single integer literal in binary form (base 2).
+  , binary :: Parsec Integer
+  -- | Parse a single integer literal, 
+  -- which can be in many forms and bases depending on the configuration.
+  , number :: Parsec Integer
+  , _bounded :: forall (bits :: Bits) t. canHold bits t
+            => Proxy bits
+            -> Parsec Integer
+            -> Int
+            -> (ErrorConfig -> Bool -> Maybe Bits -> LabelWithExplainConfig)
+            -> Parsec t
+  }
 
 decimalBounded :: forall (bits :: Bits) canHold t. canHold bits t => IntegerParsers canHold -> Parsec t
 decimalBounded IntegerParsers{..} = _bounded (Proxy @bits) decimal 10 label
@@ -76,47 +88,198 @@ numberBounded IntegerParsers{..} = _bounded (Proxy @bits) number 10 label
   where label !err True = labelIntegerSignedNumber err
         label err False = labelIntegerUnsignedNumber err
 
+{-|
+This parser behaves the same as 'decimal' except it ensures that the resulting value is a valid 8-bit number.
+
+The resulting number will be converted to the given type @a@, which must be able to losslessly store the parsed value; 
+this is enforced by the @canHold@ constraint on the type. 
+This accounts for unsignedness when necessary.
+-}
 decimal8 :: forall a canHold. canHold 'B8 a => IntegerParsers canHold -> Parsec a
 decimal8 = decimalBounded @'B8
+{-|
+This parser behaves the same as 'hexadecimal' except it ensures that the resulting value is a valid 8-bit number.
+
+The resulting number will be converted to the given type @a@, which must be able to losslessly store the parsed value; 
+this is enforced by the @canHold@ constraint on the type. 
+This accounts for unsignedness when necessary.
+-}
 hexadecimal8 :: forall a canHold. canHold 'B8 a => IntegerParsers canHold -> Parsec a
 hexadecimal8 = hexadecimalBounded @'B8
+{-|
+This parser behaves the same as 'octal' except it ensures that the resulting value is a valid 8-bit number.
+
+The resulting number will be converted to the given type @a@, which must be able to losslessly store the parsed value; 
+this is enforced by the @canHold@ constraint on the type. 
+This accounts for unsignedness when necessary.
+-}
 octal8 :: forall a canHold. canHold 'B8 a => IntegerParsers canHold -> Parsec a
 octal8 = octalBounded @'B8
+{-|
+This parser behaves the same as 'binary' except it ensures that the resulting value is a valid 8-bit number.
+
+The resulting number will be converted to the given type @a@, which must be able to losslessly store the parsed value; 
+this is enforced by the @canHold@ constraint on the type. 
+This accounts for unsignedness when necessary.
+-}
 binary8 :: forall a canHold. canHold 'B8 a => IntegerParsers canHold -> Parsec a
 binary8 = binaryBounded @'B8
+{-|
+This parser behaves the same as 'number' except it ensures that the resulting value is a valid 8-bit number.
+
+The resulting number will be converted to the given type @a@, which must be able to losslessly store the parsed value; 
+this is enforced by the @canHold@ constraint on the type. 
+This accounts for unsignedness when necessary.
+-}
 number8 :: forall a canHold. canHold 'B8 a => IntegerParsers canHold -> Parsec a
 number8 = numberBounded @'B8
 
+
+---------------------------------------------------------------------------------------------------
+-- *** 16-bit Parsers
+
+{-|
+This parser behaves the same as 'decimal' except it ensures that the resulting value is a valid 16-bit number.
+
+The resulting number will be converted to the given type @a@, which must be able to losslessly store the parsed value; 
+this is enforced by the @canHold@ constraint on the type. 
+This accounts for unsignedness when necessary.
+-}
 decimal16 :: forall a canHold. canHold 'B16 a => IntegerParsers canHold -> Parsec a
 decimal16 = decimalBounded @'B16
+{-|
+This parser behaves the same as 'hexadecimal' except it ensures that the resulting value is a valid 16-bit number.
+
+The resulting number will be converted to the given type @a@, which must be able to losslessly store the parsed value; 
+this is enforced by the @canHold@ constraint on the type. 
+This accounts for unsignedness when necessary.
+-}
 hexadecimal16 :: forall a canHold. canHold 'B16 a => IntegerParsers canHold -> Parsec a
 hexadecimal16 = hexadecimalBounded @'B16
+{-|
+This parser behaves the same as 'octal' except it ensures that the resulting value is a valid 16-bit number.
+
+The resulting number will be converted to the given type @a@, which must be able to losslessly store the parsed value; 
+this is enforced by the @canHold@ constraint on the type. 
+This accounts for unsignedness when necessary.
+-}
 octal16 :: forall a canHold. canHold 'B16 a => IntegerParsers canHold -> Parsec a
 octal16 = octalBounded @'B16
+{-|
+This parser behaves the same as 'binary' except it ensures that the resulting value is a valid 16-bit number.
+
+The resulting number will be converted to the given type @a@, which must be able to losslessly store the parsed value; 
+this is enforced by the @canHold@ constraint on the type. 
+This accounts for unsignedness when necessary.
+-}
 binary16 :: forall a canHold. canHold 'B16 a => IntegerParsers canHold -> Parsec a
 binary16 = binaryBounded @'B16
+{-|
+This parser behaves the same as 'number' except it ensures that the resulting value is a valid 16-bit number.
+
+The resulting number will be converted to the given type @a@, which must be able to losslessly store the parsed value; 
+this is enforced by the @canHold@ constraint on the type. 
+This accounts for unsignedness when necessary.
+-}
 number16 :: forall a canHold. canHold 'B16 a => IntegerParsers canHold -> Parsec a
 number16 = numberBounded @'B16
 
+
+---------------------------------------------------------------------------------------------------
+-- *** 32-bit Parsers
+{-|
+This parser behaves the same as 'decimal' except it ensures that the resulting value is a valid 32-bit number.
+
+The resulting number will be converted to the given type @a@, which must be able to losslessly store the parsed value; 
+this is enforced by the @canHold@ constraint on the type. 
+This accounts for unsignedness when necessary.
+-}
 decimal32 :: forall a canHold. canHold 'B32 a => IntegerParsers canHold -> Parsec a
 decimal32 = decimalBounded @'B32
+{-|
+This parser behaves the same as 'hexadecimal' except it ensures that the resulting value is a valid 32-bit number.
+
+The resulting number will be converted to the given type @a@, which must be able to losslessly store the parsed value; 
+this is enforced by the @canHold@ constraint on the type. 
+This accounts for unsignedness when necessary.
+-}
 hexadecimal32 :: forall a canHold. canHold 'B32 a => IntegerParsers canHold -> Parsec a
 hexadecimal32 = hexadecimalBounded @'B32
+{-|
+This parser behaves the same as 'octal' except it ensures that the resulting value is a valid 32-bit number.
+
+The resulting number will be converted to the given type @a@, which must be able to losslessly store the parsed value; 
+this is enforced by the @canHold@ constraint on the type. 
+This accounts for unsignedness when necessary.
+-}
 octal32 :: forall a canHold. canHold 'B32 a => IntegerParsers canHold -> Parsec a
 octal32 = octalBounded @'B32
+{-|
+This parser behaves the same as 'binary' except it ensures that the resulting value is a valid 32-bit number.
+
+The resulting number will be converted to the given type @a@, which must be able to losslessly store the parsed value; 
+this is enforced by the @canHold@ constraint on the type. 
+This accounts for unsignedness when necessary.
+-}
 binary32 :: forall a canHold. canHold 'B32 a => IntegerParsers canHold -> Parsec a
 binary32 = binaryBounded @'B32
+{-|
+This parser behaves the same as 'number' except it ensures that the resulting value is a valid 32-bit number.
+
+The resulting number will be converted to the given type @a@, which must be able to losslessly store the parsed value; 
+this is enforced by the @canHold@ constraint on the type. 
+This accounts for unsignedness when necessary.
+-}
 number32 :: forall a canHold. canHold 'B32 a => IntegerParsers canHold -> Parsec a
 number32 = numberBounded @'B32
 
+
+---------------------------------------------------------------------------------------------------
+-- *** 64-bit Parsers
+
+{-|
+This parser behaves the same as 'decimal' except it ensures that the resulting value is a valid 64-bit number.
+
+The resulting number will be converted to the given type @a@, which must be able to losslessly store the parsed value; 
+this is enforced by the @canHold@ constraint on the type. 
+This accounts for unsignedness when necessary.
+-}
 decimal64 :: forall a canHold. canHold 'B64 a => IntegerParsers canHold -> Parsec a
 decimal64 = decimalBounded @'B64
+{-|
+This parser behaves the same as 'hexadecimal' except it ensures that the resulting value is a valid 64-bit number.
+
+The resulting number will be converted to the given type @a@, which must be able to losslessly store the parsed value; 
+this is enforced by the @canHold@ constraint on the type. 
+This accounts for unsignedness when necessary.
+-}
 hexadecimal64 :: forall a canHold. canHold 'B64 a => IntegerParsers canHold -> Parsec a
 hexadecimal64 = hexadecimalBounded @'B64
+{-|
+This parser behaves the same as 'octal' except it ensures that the resulting value is a valid 64-bit number.
+
+The resulting number will be converted to the given type @a@, which must be able to losslessly store the parsed value; 
+this is enforced by the @canHold@ constraint on the type. 
+This accounts for unsignedness when necessary.
+-}
 octal64 :: forall a canHold. canHold 'B64 a => IntegerParsers canHold -> Parsec a
 octal64 = octalBounded @'B64
+{-|
+This parser behaves the same as 'binary' except it ensures that the resulting value is a valid 64-bit number.
+
+The resulting number will be converted to the given type @a@, which must be able to losslessly store the parsed value; 
+this is enforced by the @canHold@ constraint on the type. 
+This accounts for unsignedness when necessary.
+-}
 binary64 :: forall a canHold. canHold 'B64 a => IntegerParsers canHold -> Parsec a
 binary64 = binaryBounded @'B64
+{-|
+This parser behaves the same as 'number' except it ensures that the resulting value is a valid 64-bit number.
+
+The resulting number will be converted to the given type @a@, which must be able to losslessly store the parsed value; 
+this is enforced by the @canHold@ constraint on the type. 
+This accounts for unsignedness when necessary.
+-}
 number64 :: forall a canHold. canHold 'B64 a => IntegerParsers canHold -> Parsec a
 number64 = numberBounded @'B64
 

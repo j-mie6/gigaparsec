@@ -21,25 +21,58 @@ import Data.Maybe (isJust, fromJust)
 import Data.List.NonEmpty (NonEmpty)
 import Data.List.NonEmpty qualified as NonEmpty (toList)
 
+{-|
+This type configures both errors that make labels and those that make reasons.
+-}
 type LabelWithExplainConfig :: *
-data LabelWithExplainConfig = LENotConfigured
-                            | LELabel !(Set String)
-                            | LEReason !String
-                            | LEHidden
-                            | LELabelAndReason !(Set String) !String
+data LabelWithExplainConfig 
+  -- | No special labels or reasons should be generated, and default errors should be used instead.
+  = LENotConfigured
+  -- | The configuration produces the labels in the given set, which should be non-empty.
+  | LELabel !(Set String)
+  -- | The error should be displayed using the given reason.
+  | LEReason !String
+  -- | This label should be hidden.
+  | LEHidden
+  -- | The configuration produces the labels in the given set, and provides the given reason.
+  | LELabelAndReason !(Set String) !String
 
+{-|
+This type configures errors that make labels.
+-}
 type LabelConfig :: *
-data LabelConfig = LNotConfigured
-                 | LLabel !(Set String)
-                 | LHidden
+data LabelConfig
+  -- | No special labels should be generated, and default errors should be used instead.
+  = LNotConfigured
+  -- | The configuration produces the labels in the given set, which should not be empty.
+  | LLabel !(Set String)
+  -- | This label should be hidden.
+  | LHidden
 
+{-|
+This type configures errors that give reasons.
+-}
 type ExplainConfig :: *
-data ExplainConfig = ENotConfigured
-                   | EReason !String
+data ExplainConfig 
+  -- | No special reasons should be generated, and default errors should be used instead.
+  = ENotConfigured
+  -- | The error should be displayed using the given reason.
+  | EReason !String
 
+{-|
+A type @config@ is an 'Annotate' if it can be used to attach extra information to a 'Parsec' parser.
+
+These annotations may consist of, for example: 
+
+- Labels ('LabelConfig'), which give a parser a name (or names) they can be referred to by.
+- Reasons for errors ('ExplainConfig'), which will supply a reason for when a parser produces an error.
+-}
 type Annotate :: * -> Constraint
 class Annotate config where
-  annotate :: config -> Parsec a -> Parsec a
+  -- | Annotate the given parser according to the @config@.
+  annotate :: config   -- ^ The configuration controlling the annotation.
+           -> Parsec a -- ^ The parser to annotate
+           -> Parsec a -- ^ An annotated parser.
 
 instance Annotate LabelConfig where
   annotate LNotConfigured = id
@@ -57,28 +90,140 @@ instance Annotate LabelWithExplainConfig where
   annotate (LEReason r) = Errors.explain r
   annotate (LELabelAndReason ls r) = Errors.label ls . Errors.explain r
 
+{-|
+Configures how filters should be used within the 'Text.Gigaparsec.Token.Lexer.Lexer'.
+-}
 type FilterConfig :: * -> *
-data FilterConfig a = VSBasicFilter
-                    | VSSpecializedFilter (a -> NonEmpty String)
-                    | VSUnexpected (a -> String)
-                    | VSBecause (a -> String)
-                    | VSUnexpectedBecause (a -> String) (a -> String)
+data FilterConfig a 
+  -- | No error configuration for the filter is specified; a regular filter is used instead.
+  = VSBasicFilter
+  {-| 
+  Ensure the filter will generate specialised messages for the given failing parse.
+   
+  Usage: @'VSSpecializedFilter' message@, where
 
+  - @message@: a function producing the message for the given value.
+  -}
+  | VSSpecializedFilter 
+    (a -> NonEmpty String) -- ^ a function producing the message for the given value.
+  {-|
+  Ensure the filter generates a /vanilla/ unexpected item for the given failing parse.
+
+  Usage: @'VSUnexpected' unexpected@, where
+
+  - @unexpected@: a function producing the unexpected label for the given value.
+  -}
+  | VSUnexpected (a -> String)
+  {-| 
+  Ensure that the filter will generate a /vanilla/ reason for the given failing parse.
+  
+  Usage: @'VSBecause' reason@, where
+
+  - @reason@: a function producing the reason for the given value.
+  -}
+  | VSBecause 
+    (a -> String) -- ^ a function producing the reason for the given value.
+  {-| 
+  The filter generates a /vanilla/ unexpected item and a reason for the given failing parse.
+  
+  Usage: @'VSUnexpectedBecause' reason unexpected@, where
+
+  - @reason@: a function producing the reason for the given value.
+  - @unexpected@: a function producing the unexpected label for the given value.
+  -}
+  | VSUnexpectedBecause 
+    (a -> String) -- ^ a function producing the reason for the given value.
+    (a -> String) -- ^ a function producing the unexpected label for the given value.
+
+{-|
+Specifies that only filters generating /vanilla/ errors can be used.
+-}
 type VanillaFilterConfig :: * -> *
-data VanillaFilterConfig a = VBasicFilter
-                           | VUnexpected (a -> String)
-                           | VBecause (a -> String)
-                           | VUnexpectedBecause (a -> String) (a -> String)
+data VanillaFilterConfig a 
+  -- | No error configuration for the filter is specified; a regular filter is used instead.
+  = VBasicFilter
+  {-|
+  Ensure the filter generates a /vanilla/ unexpected item for the given failing parse.
 
+  Usage: @'VUnexpected' unexpected@, where
+
+  - @unexpected@: a function producing the unexpected label for the given value.
+  -}
+  | VUnexpected 
+    (a -> String) -- ^ a function producing the unexpected label for the given value.
+  {-| 
+  Ensure that the filter will generate a /vanilla/ reason for the given failing parse.
+  
+  Usage: @'VBecause' reason@, where
+
+  - @reason@: a function producing the reason for the given value.
+  -}
+  | VBecause 
+    (a -> String)
+  {-| 
+  The filter generates a /vanilla/ unexpected item, and a reason for the given failing parse.
+  
+  Usage: @'VUnexpectedBecause' reason unexpected@, where
+
+  - @reason@: a function producing the reason for the given value.
+  - @unexpected@: a function producing the unexpected label for the given value.
+  -}
+  | VUnexpectedBecause 
+    (a -> String) -- ^ a function producing the reason for the given value.
+    (a -> String) -- ^ a function producing the unexpected label for the given value.
+
+{-|
+Specifies that only filters generating /specialised/ errors can be used.
+-}
 type SpecializedFilterConfig :: * -> *
-data SpecializedFilterConfig a = SBasicFilter
-                               | SSpecializedFilter (a -> NonEmpty String)
+data SpecializedFilterConfig a 
+  -- | No error configuration for the filter is specified; a regular filter is used instead.
+  = SBasicFilter
+  {-| 
+  Ensure the filter will generate specialised messages for the given failing parse.
+   
+  Usage: @'SSpecializedFilter' message@, where
 
+  - @message@: a function producing the message for the given value.
+  -}
+  | SSpecializedFilter 
+    (a -> NonEmpty String) -- ^ a function producing the message for the given value.
+
+
+{-|
+A type @config@ is a 'Filter' when it describes how to process the results of a 'Errors.filterS' or 'Errors.mapMaybeS' on a parser.
+
+The @config@ may allow for these results to have more specialised error messages.
+-}
 type Filter :: (* -> *) -> Constraint
 class Filter config where
-  filterS :: config a -> (a -> Bool) -> Parsec a -> Parsec a
+  {-|
+  Filter a parser according to a predicate, use the @config@ to improve the error message if the predicate fails.
+
+  This combinator filters the result of this parser using a given predicate, succeeding only if the predicate returns true;
+  if the predicate fails, the @config@ is used to elaborate the error message.
+
+  This will likely have the same success/failure behaviour as 'Errors.filterS', except the messages output by failure will
+  be changed according to the @config@.
+  -}
+  filterS :: config a     -- ^ The configuration which alters the failure message.
+          -> (a -> Bool)  -- ^ @pred@, the predicate to filter by.
+          -> Parsec a     -- ^ @p@, the parser whose results are to be filtered.
+          -> Parsec a     -- ^ a parser that returns the result of @p@ if it passes @pred@;
+                          --   if @pred@ fails, then the error message is altered according to the config.
   filterS = filterS' id
-  mapMaybeS :: config a -> (a -> Maybe b) -> Parsec a -> Parsec b
+  {-|
+  This combinator filters the result of this parser using a given predicate, succeeding only if the predicate returns @Just x@ for some @x@;
+  if the predicate fails, the @config@ is used to elaborate the error message.
+
+  This will likely have the same success/failure behaviour as 'Errors.mapMaybeS', except the messages output by failure will
+  be changed according to the @config@.
+  -}
+  mapMaybeS :: config a       -- ^ The configuration which alters the failure message.
+            -> (a -> Maybe b) -- ^ @pred@, the predicate to filter by.
+            -> Parsec a       -- ^ @p@, the parser whose results are to be filtered.
+            -> Parsec b       -- ^ a parser that returns the result of @pred@ applied to that of @p@;
+                              --   if @pred@ returns @Nothing@, then the error message is altered according to the config.
   mapMaybeS = mapMaybeS' id
 
   filterS' :: (a -> x) -> config x -> (a -> Bool) -> Parsec a -> Parsec a
@@ -126,10 +271,26 @@ mapMaybeSDefault :: ((a -> x) -> config x -> (a -> Bool) -> Parsec a -> Parsec a
 mapMaybeSDefault filt f config g = fmap (fromJust . g) . filt f config (isJust . g)
 
 
+{-|
+Configures what error should be generated when illegal characters in a string or character literal are parsable.
+-}
 type VerifiedBadChars :: *
-data VerifiedBadChars = BadCharsFail !(Map Char (NonEmpty String))
-                      | BadCharsReason !(Map Char String)
-                      | BadCharsUnverified
+data VerifiedBadChars 
+  {-|
+  "bad literal chars" generate a bunch of given messages in a specialised error. 
+  The map sends bad characters to their messages.
+  -}
+  = BadCharsFail !(Map Char (NonEmpty String))
+  {-|
+  "bad literal chars" generate a reason as a /vanilla/ error. 
+  The map sends bad characters to their reasons.
+  -}
+  | BadCharsReason !(Map Char String)
+  {-|
+  Disable the verified error for bad characters: 
+  this may improve parsing performance slightly on the failure case.
+  -}
+  | BadCharsUnverified
 
 checkBadChar :: VerifiedBadChars -> Parsec a
 checkBadChar (BadCharsFail cs) = verifiedFail (NonEmpty.toList . (cs Map.!)) (satisfy (`Map.member` cs))
