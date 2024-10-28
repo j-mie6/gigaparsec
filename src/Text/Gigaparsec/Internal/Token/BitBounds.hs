@@ -33,13 +33,13 @@ This is used to help enforce parsers of bounded precision to only return types
 that can losslessly accomodate that precision.
 -}
 type Bits :: *
-data Bits 
+data Bits
   -- | 8 bits of data
-  = B8 
-  -- | 17 bits of data
-  | B16 
+  = B8
+  -- | 16 bits of data
+  | B16
   -- | 32 bits of data
-  | B32 
+  | B32
   -- | 64 bits of data
   | B64
 

@@ -25,7 +25,7 @@ import Data.List.NonEmpty qualified as NonEmpty (toList)
 This type configures both errors that make labels and those that make reasons.
 -}
 type LabelWithExplainConfig :: *
-data LabelWithExplainConfig 
+data LabelWithExplainConfig
   -- | No special labels or reasons should be generated, and default errors should be used instead.
   = LENotConfigured
   -- | The configuration produces the labels in the given set, which should be non-empty.
@@ -53,7 +53,7 @@ data LabelConfig
 This type configures errors that give reasons.
 -}
 type ExplainConfig :: *
-data ExplainConfig 
+data ExplainConfig
   -- | No special reasons should be generated, and default errors should be used instead.
   = ENotConfigured
   -- | The error should be displayed using the given reason.
@@ -62,7 +62,7 @@ data ExplainConfig
 {-|
 A type @config@ is an 'Annotate' if it can be used to attach extra information to a 'Parsec' parser.
 
-These annotations may consist of, for example: 
+These annotations may consist of, for example:
 
 - Labels ('LabelConfig'), which give a parser a name (or names) they can be referred to by.
 - Reasons for errors ('ExplainConfig'), which will supply a reason for when a parser produces an error.
@@ -94,17 +94,17 @@ instance Annotate LabelWithExplainConfig where
 Configures how filters should be used within the 'Text.Gigaparsec.Token.Lexer.Lexer'.
 -}
 type FilterConfig :: * -> *
-data FilterConfig a 
+data FilterConfig a
   -- | No error configuration for the filter is specified; a regular filter is used instead.
   = VSBasicFilter
-  {-| 
+  {-|
   Ensure the filter will generate specialised messages for the given failing parse.
-   
+
   Usage: @'VSSpecializedFilter' message@, where
 
   - @message@: a function producing the message for the given value.
   -}
-  | VSSpecializedFilter 
+  | VSSpecializedFilter
     (a -> NonEmpty String) -- ^ a function producing the message for the given value.
   {-|
   Ensure the filter generates a /vanilla/ unexpected item for the given failing parse.
@@ -114,24 +114,24 @@ data FilterConfig a
   - @unexpected@: a function producing the unexpected label for the given value.
   -}
   | VSUnexpected (a -> String)
-  {-| 
+  {-|
   Ensure that the filter will generate a /vanilla/ reason for the given failing parse.
-  
+
   Usage: @'VSBecause' reason@, where
 
   - @reason@: a function producing the reason for the given value.
   -}
-  | VSBecause 
+  | VSBecause
     (a -> String) -- ^ a function producing the reason for the given value.
-  {-| 
+  {-|
   The filter generates a /vanilla/ unexpected item and a reason for the given failing parse.
-  
+
   Usage: @'VSUnexpectedBecause' reason unexpected@, where
 
   - @reason@: a function producing the reason for the given value.
   - @unexpected@: a function producing the unexpected label for the given value.
   -}
-  | VSUnexpectedBecause 
+  | VSUnexpectedBecause
     (a -> String) -- ^ a function producing the reason for the given value.
     (a -> String) -- ^ a function producing the unexpected label for the given value.
 
@@ -139,7 +139,7 @@ data FilterConfig a
 Specifies that only filters generating /vanilla/ errors can be used.
 -}
 type VanillaFilterConfig :: * -> *
-data VanillaFilterConfig a 
+data VanillaFilterConfig a
   -- | No error configuration for the filter is specified; a regular filter is used instead.
   = VBasicFilter
   {-|
@@ -149,26 +149,26 @@ data VanillaFilterConfig a
 
   - @unexpected@: a function producing the unexpected label for the given value.
   -}
-  | VUnexpected 
+  | VUnexpected
     (a -> String) -- ^ a function producing the unexpected label for the given value.
-  {-| 
+  {-|
   Ensure that the filter will generate a /vanilla/ reason for the given failing parse.
-  
+
   Usage: @'VBecause' reason@, where
 
   - @reason@: a function producing the reason for the given value.
   -}
-  | VBecause 
+  | VBecause
     (a -> String)
-  {-| 
+  {-|
   The filter generates a /vanilla/ unexpected item, and a reason for the given failing parse.
-  
+
   Usage: @'VUnexpectedBecause' reason unexpected@, where
 
   - @reason@: a function producing the reason for the given value.
   - @unexpected@: a function producing the unexpected label for the given value.
   -}
-  | VUnexpectedBecause 
+  | VUnexpectedBecause
     (a -> String) -- ^ a function producing the reason for the given value.
     (a -> String) -- ^ a function producing the unexpected label for the given value.
 
@@ -176,17 +176,17 @@ data VanillaFilterConfig a
 Specifies that only filters generating /specialised/ errors can be used.
 -}
 type SpecializedFilterConfig :: * -> *
-data SpecializedFilterConfig a 
+data SpecializedFilterConfig a
   -- | No error configuration for the filter is specified; a regular filter is used instead.
   = SBasicFilter
-  {-| 
+  {-|
   Ensure the filter will generate specialised messages for the given failing parse.
-   
+
   Usage: @'SSpecializedFilter' message@, where
 
   - @message@: a function producing the message for the given value.
   -}
-  | SSpecializedFilter 
+  | SSpecializedFilter
     (a -> NonEmpty String) -- ^ a function producing the message for the given value.
 
 
@@ -275,19 +275,19 @@ mapMaybeSDefault filt f config g = fmap (fromJust . g) . filt f config (isJust .
 Configures what error should be generated when illegal characters in a string or character literal are parsable.
 -}
 type VerifiedBadChars :: *
-data VerifiedBadChars 
+data VerifiedBadChars
   {-|
-  "bad literal chars" generate a bunch of given messages in a specialised error. 
+  "bad literal chars" generate a bunch of given messages in a specialised error.
   The map sends bad characters to their messages.
   -}
   = BadCharsFail !(Map Char (NonEmpty String))
   {-|
-  "bad literal chars" generate a reason as a /vanilla/ error. 
+  "bad literal chars" generate a reason as a /vanilla/ error.
   The map sends bad characters to their reasons.
   -}
   | BadCharsReason !(Map Char String)
   {-|
-  Disable the verified error for bad characters: 
+  Disable the verified error for bad characters:
   this may improve parsing performance slightly on the failure case.
   -}
   | BadCharsUnverified
