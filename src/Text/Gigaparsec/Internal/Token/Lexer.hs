@@ -1,7 +1,6 @@
 {-# LANGUAGE Trustworthy #-}
 {-# OPTIONS_GHC -Wno-partial-fields #-}
 {-# OPTIONS_HADDOCK hide #-}
-{-# LANGUAGE LambdaCase #-}
 module Text.Gigaparsec.Internal.Token.Lexer (
     Lexer, mkLexer, mkLexerWithErrorConfig,
     Lexeme, lexeme, nonlexeme, fully, space,
