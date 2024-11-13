@@ -71,7 +71,7 @@ import Data.Map qualified as Map (fromSet, toAscList, member)
 _satisfy :: Set Internal.ExpectItem -> (Char -> Bool) -> Parsec Char
 _satisfy expecteds test = Internal.Parsec $ \st ok bad ->
   case Internal.unconsInput (Internal.input st) of
-    (c, Just cs) | test c -> ok c (updateState st c cs)
+    Just (c, cs) | test c -> ok c (updateState st c cs)
     _             -> Internal.useHints bad (Internal.expectedErr st expecteds 1) st
   where
   -- The duplicated input & consumed update avoids double allocation

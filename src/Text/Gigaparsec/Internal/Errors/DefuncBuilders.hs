@@ -26,7 +26,7 @@ import Text.Gigaparsec.Internal.Errors.ErrorItem (
     ExpectItem(ExpectNamed),
     UnexpectItem(UnexpectEndOfInput, UnexpectNamed, UnexpectRaw)
   )
-import Text.Gigaparsec.Internal.Input (Input, dropInput)
+import Text.Gigaparsec.Internal.Input (Input)
 import Text.Gigaparsec.Internal.Input qualified as Input
 
 import Data.Set (Set)

@@ -3,12 +3,13 @@
 {-# LANGUAGE UnicodeSyntax, ExistentialQuantification, TypeSynonymInstances, FlexibleInstances #-}
 {-# LANGUAGE PatternSynonyms #-}
 {-# LANGUAGE AllowAmbiguousTypes #-}
+{-# LANGUAGE MultiParamTypeClasses #-}
 module Text.Gigaparsec.Internal.Input where
 
 import Data.Kind (Constraint)
-import Data.List.NonEmpty (NonEmpty((:|)), nonEmpty, (<|))
 
 
+-- TODO: add a NonEmptyInputStream subclass of InputStream
 type InputStream :: * -> Constraint
 class InputStream s where
   -- | 'True' when the input stream is empty/has reached the end
@@ -17,24 +18,9 @@ class InputStream s where
   -- TODO: perhaps we should also parametrise on *where* the input comes from?
   readInputStream :: FilePath -> IO s 
 
-  lengthInputStream :: s -> Int
-  breakLinesInputStream :: Word -> NonEmpty s -> ([s], s, [s])
-
-  dropInputStream :: Int -> s -> s
-
   toStringInputStream :: s -> String
 
-  unconsInputStream :: s -> (Char, Maybe s) 
-
-  -- nonEmptyInputStream :: s ->
-
-type NonEmptyInputStream :: * -> Constraint
-class InputStream s => NonEmptyInputStream s where
-  
-
-  -- | 'toString' is used when printing back error messages.
-
-
+  unconsInputStream :: s -> Maybe (Char, s) 
 
 type Input :: *
 data Input = ∀ s . InputStream s => Input !s
@@ -44,29 +30,38 @@ isEmptyInput :: Input -> Bool
 isEmptyInput (Input x) = isEmptyInputStream x
 
 {-# INLINE readInput #-}
-readInput :: ∀ s . InputStream s => FilePath -> IO Input
-readInput = (Input <$>) . readInputStream @s
+{-| Read input from a file.
 
-{-# INLINE dropInput #-}
-dropInput :: Int -> Input -> Input
-dropInput n (Input x) = Input $! dropInputStream n x
+Note: Requires a type application for the 'InputStream' type
+-}
+readInput :: ∀ s . InputStream s => FilePath -> IO Input
+readInput = (Input @s <$>) . readInputStream @s
+
 
 {-# INLINE inputToString #-}
 inputToString :: Input -> String
 inputToString (Input x) = toStringInputStream x
 
 -- Could just use Control.Arrow.second, but idk if this has the right strictness properties
-{-# INLINE unconsInput #-}
-unconsInput :: Input -> (Char, Maybe Input)
+{-# INLINABLE unconsInput #-}
+unconsInput :: Input -> Maybe (Char, Input)
 unconsInput (Input x) = case unconsInputStream x of
-  (!c, !x') -> (c, Input <$> x')
+  Just (!c, !x') -> Just (c, Input x')
+  Nothing -> Nothing
 
 instance InputStream String where
   {-# INLINE isEmptyInputStream #-}
-  isEmptyInputStream = ([] ==)
+  isEmptyInputStream = ("" ==)
 
   {-# INLINE readInputStream #-}
   readInputStream = readFile
+
+  {-# INLINE unconsInputStream #-}
+  unconsInputStream [] = Nothing
+  unconsInputStream (c: cs) = Just (c, cs)
+
+  {-# INLINE toStringInputStream #-}
+  toStringInputStream = id
 
 stringInput :: String -> Input
 stringInput = Input
