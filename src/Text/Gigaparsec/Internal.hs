@@ -2,6 +2,7 @@
 {-# LANGUAGE DeriveFunctor, StandaloneDeriving, NamedFieldPuns, CPP #-}
 #include "portable-unlifted.h"
 {-# OPTIONS_HADDOCK hide #-}
+{-# LANGUAGE ExistentialQuantification, UnicodeSyntax #-}
 {-|
 Module      : Text.Gigaparsec.Internal
 Description : Internals of Gigaparsec
@@ -29,7 +30,8 @@ import Control.Selective (Selective(select))
 
 import Data.Set (Set)
 
-CPP_import_PortableUnlifted
+import GHC.Exts (TYPE, RuntimeRep(BoxedRep), Levity(Unlifted), Constraint)
+import Text.Gigaparsec.Internal.Token.InputStream (InputStream)
 
 {-
 Notes:
@@ -203,9 +205,11 @@ instance Monoid m => Monoid (Parsec m) where
   {-# INLINE mempty #-}
 
 type State :: UnliftedDatatype
-data State = State {
+data State = ∀ s . InputStream s => State {
+
+    -- inputStreamConstraint :: InputStream s,
     -- | the input string, in future this may be generalised
-    input :: !String,
+    input :: !s,
     -- | has the parser consumed input since the last relevant handler?
     consumed :: {-# UNPACK #-} !Word,
     -- | the current line number (incremented by \n)
@@ -220,7 +224,7 @@ data State = State {
     debugLevel :: {-# UNPACK #-} !Int
   }
 
-emptyState :: String -> State
+emptyState :: InputStream s => s -> State
 emptyState !str = State { input = str
                         , consumed = 0
                         , line = 1

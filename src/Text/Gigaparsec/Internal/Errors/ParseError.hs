@@ -18,6 +18,7 @@ import Text.Gigaparsec.Internal.Errors.CaretControl
 import Text.Gigaparsec.Internal.Errors.ErrorItem
 
 import Data.Set (Set)
+import Text.Gigaparsec.Internal.Token.InputStream (InputStream)
 
 type ParseError :: *
 data ParseError = VanillaError { presentationOffset :: {-# UNPACK #-} !Word
@@ -36,7 +37,7 @@ data ParseError = VanillaError { presentationOffset :: {-# UNPACK #-} !Word
                                    }
 
 {-# INLINABLE fromParseError #-}
-fromParseError :: forall err. ErrorBuilder err => Maybe FilePath -> String -> ParseError -> err
+fromParseError :: forall err s. (ErrorBuilder err, InputStream s) => Maybe FilePath -> s -> ParseError -> err
 fromParseError srcFile input err =
   Builder.build (Builder.pos @err (line err) (col err)) (Builder.source @err srcFile) (buildErr err)
   where buildErr :: ParseError -> Builder.ErrorInfoLines err
@@ -75,10 +76,15 @@ fromParseError srcFile input err =
         caret = col err - 1
         trimToLine width = min width (fromIntegral (length curLine) - caret + 1)
 
-        lines :: String -> NonEmpty String
-        lines [] = "" :| []
-        lines ('\n':cs) = "" <| lines cs
-        lines (c:cs) = let l :| ls = lines cs in (c:l) :| ls
+
+        lines :: s -> NonEmpty s
+        lines = _
+
+        {-# RULES "lines/s" lines = lines_String #-}
+        lines_String :: String -> NonEmpty String
+        lines_String [] = "" :| []
+        lines_String ('\n':cs) = "" <| lines_String cs
+        lines_String (c:cs) = let l :| ls = lines_String cs in (c:l) :| ls
 
         breakLines :: Word -> NonEmpty String -> ([String], String, [String])
         breakLines 0 (l :| ls) = ([], l, ls)

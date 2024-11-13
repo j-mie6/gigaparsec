@@ -84,6 +84,7 @@ module Text.Gigaparsec (
 import Text.Gigaparsec.Internal (Parsec(Parsec), emptyState, manyr, somer)
 import Text.Gigaparsec.Internal qualified as Internal (State(..), useHints, expectedErr)
 import Text.Gigaparsec.Internal.Errors qualified as Internal (Error, ExpectItem(ExpectEndOfInput), fromError)
+import Text.Gigaparsec.Internal.Token.InputStream qualified as Internal (InputStream (isEmptyInputStream))
 
 import Text.Gigaparsec.Errors.ErrorBuilder (ErrorBuilder)
 import Text.Gigaparsec.Errors.Combinator (filterSWith, mapMaybeSWith)
@@ -174,7 +175,7 @@ error messages. This may not be required if it is clear from context.
 
 @since 0.2.1.0
 -}
-parseFromFile :: forall err a. ErrorBuilder err
+parseFromFile :: forall err a. (ErrorBuilder err)
               => Parsec a -- ^ the parser to execute
               -> FilePath -- ^ the file to source the input from
               -> IO (Result err a) -- ^ the result of the parse, error or otherwise
@@ -185,7 +186,12 @@ parseFromFile p f =
 --TODO: parseFromHandle?
 
 {-# INLINE _parse #-}
-_parse :: forall err a. ErrorBuilder err => Maybe FilePath -> Parsec a -> String -> RT (Result err a)
+_parse :: forall err a s . 
+          (ErrorBuilder err, Internal.InputStream s) 
+       => Maybe FilePath 
+       -> Parsec a 
+       -> s 
+       -> RT (Result err a)
 _parse file (Parsec p) inp = p (emptyState inp) good bad
   where good :: a -> Internal.State -> RT (Result err a)
         good x _  = return (Success x)
@@ -273,10 +279,11 @@ Success ()
 @since 0.1.0.0
 -}
 eof :: Parsec ()
-eof = Parsec $ \st good bad -> case Internal.input st of
-  (:){} -> Internal.useHints bad
+eof = Parsec $ \st@Internal.State{Internal.input = input} good bad ->
+  if Internal.isEmptyInputStream input 
+    then Internal.useHints bad
              (Internal.expectedErr st (Set.singleton Internal.ExpectEndOfInput) 1) st
-  []    -> good () st
+    else good () st
 
 {-|
 This parser produces @()@ without having any other effect.
