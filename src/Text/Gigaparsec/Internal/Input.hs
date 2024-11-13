@@ -4,6 +4,8 @@
 {-# LANGUAGE PatternSynonyms #-}
 {-# LANGUAGE AllowAmbiguousTypes #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
+{-# LANGUAGE StandaloneDeriving #-}
+{-# LANGUAGE TypeFamilies #-}
 module Text.Gigaparsec.Internal.Input where
 
 import Data.Kind (Constraint)
@@ -11,7 +13,7 @@ import Data.List (uncons)
 
 -- TODO: add a NonEmptyInputStream subclass of InputStream
 type InputStream :: * -> Constraint
-class InputStream s where
+class (Eq s, Show s) => InputStream s where
   -- | 'True' when the input stream is empty/has reached the end
   isEmptyInputStream :: s -> Bool
   -- | Read a file and return its contents as an @s@.
@@ -20,10 +22,18 @@ class InputStream s where
 
   toStringInputStream :: s -> String
 
-  unconsInputStream :: s -> Maybe (Char, s) 
+  unconsInputStream :: s -> Maybe (Char, s)
 
 type Input :: *
 data Input = ∀ s . InputStream s => Input !s
+
+deriving stock instance Show Input
+
+{-|
+This is obviously hideously expensive.
+-}
+instance Eq Input where
+  (Input x) == (Input y) = toStringInputStream x == toStringInputStream y
 
 {-# INLINE isEmptyInput #-}
 isEmptyInput :: Input -> Bool

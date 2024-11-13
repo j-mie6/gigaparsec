@@ -55,7 +55,7 @@ debugTests = testGroup "debug should"
   ]
 
 ioParse :: Parsec a -> String -> IO ()
-ioParse (Internal.Parsec p) inp = rtToIO $ p (Internal.emptyState inp) good bad
+ioParse (Internal.Parsec p) inp = rtToIO $ p (Internal.emptyState (Internal.stringInput inp)) good bad
   where good :: a -> Internal.State -> RT ()
         good _ _  = return ()
         bad :: Internal.Error -> Internal.State -> RT ()

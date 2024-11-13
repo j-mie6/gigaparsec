@@ -16,7 +16,7 @@ own risk.
 
 @since 0.1.0.0
 -}
-module Text.Gigaparsec.Internal (module Text.Gigaparsec.Internal, unconsInput, inputToString) where
+module Text.Gigaparsec.Internal (module Text.Gigaparsec.Internal, unconsInput, inputToString, stringInput) where
 
 import Control.Monad.RT (RT)
 import Text.Gigaparsec.Internal.Errors (Error, Hints, ExpectItem, CaretWidth)
@@ -24,7 +24,7 @@ import Text.Gigaparsec.Internal.Errors qualified as Errors (
     emptyErr, expectedErr, specialisedErr, mergeErr, unexpectedErr,
     isExpectedEmpty, presentationOffset, useHints, DefuncHints(Blank), addError,
   )
-import Text.Gigaparsec.Internal.Input (Input, inputToString, unconsInput)
+import Text.Gigaparsec.Internal.Input (Input, inputToString, unconsInput, stringInput)
 import Text.Gigaparsec.Internal.Input qualified as Input
 
 import Control.Applicative (Applicative(liftA2), Alternative(empty, (<|>), many, some)) -- liftA2 required until 9.6

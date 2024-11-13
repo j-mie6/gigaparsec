@@ -33,7 +33,7 @@ pureParseWith (Parsec p) inp = do
   run (initSt { consumed = 1 })
   run (initSt { line = 10, col = 20 })
   run (initSt { consumed = 200, line = 10, col = 20 })
-  where initSt = emptyState inp
+  where initSt = emptyState (stringInput inp)
         run :: State -> Assertion
         run st = do
           let st' = runRT (p st (\ !_ s -> return (Lifted s)) (\ _ s -> return (Lifted s)))
@@ -57,7 +57,7 @@ impureParseWith p inp = do
   --run (initSt { consumed = True })
   run (initSt { line = 10, col = 20 })
   --run (initSt { consumed = True, line = 10, col = 20 })
-  where initSt = emptyState inp
+  where initSt = emptyState (stringInput inp)
         run :: State -> Assertion
         run st = do
           let st' = parseState p st
@@ -96,7 +96,7 @@ notThrow x = catch (evaluate (rnf x)) $ \(SomeException ex) ->
 (~~) :: HasCallStack => Parsec a -> Parsec a -> [String] -> Assertion
 (p ~~ q) inps =
   forM_ inps $ \inp -> do
-    let st = emptyState inp
+    let st = emptyState (stringInput inp)
         pSt = parseState p st
         qSt = parseState q st
     unless (pSt == qSt) $

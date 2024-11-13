@@ -281,9 +281,9 @@ Success ()
 eof :: Parsec ()
 eof = Parsec $ \st good bad ->
   if Internal.isEmptyInput (Internal.input st) 
-    then Internal.useHints bad
+    then good () st
+    else Internal.useHints bad
              (Internal.expectedErr st (Set.singleton Internal.ExpectEndOfInput) 1) st
-    else good () st
 
 {-|
 This parser produces @()@ without having any other effect.
