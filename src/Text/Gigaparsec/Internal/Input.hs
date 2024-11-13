@@ -7,7 +7,7 @@
 module Text.Gigaparsec.Internal.Input where
 
 import Data.Kind (Constraint)
-
+import Data.List (uncons)
 
 -- TODO: add a NonEmptyInputStream subclass of InputStream
 type InputStream :: * -> Constraint
@@ -57,8 +57,7 @@ instance InputStream String where
   readInputStream = readFile
 
   {-# INLINE unconsInputStream #-}
-  unconsInputStream [] = Nothing
-  unconsInputStream (c: cs) = Just (c, cs)
+  unconsInputStream = uncons
 
   {-# INLINE toStringInputStream #-}
   toStringInputStream = id
