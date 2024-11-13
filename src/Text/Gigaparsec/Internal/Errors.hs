@@ -26,7 +26,7 @@ import Text.Gigaparsec.Internal.Errors.DefuncBuilders (asParseError)
 import Text.Gigaparsec.Internal.Errors.DefuncBuilders (asParseError)
 
 CPP_import_PortableUnlifted
-import Text.Gigaparsec.Internal.Token.InputStream (InputStream)
+import Text.Gigaparsec.Internal.Input (Input)
 
 type Error :: UnliftedDatatype
 type Error = DefuncError
@@ -42,7 +42,7 @@ replaceHints :: Set String -> Hints -> Hints
 replaceHints = Hints.replace
 
 {-# INLINABLE fromError #-}
-fromError :: forall err s. (ErrorBuilder err, InputStream s) => Maybe FilePath -> s -> Error -> err
+fromError :: forall err. ErrorBuilder err => Maybe FilePath -> Input -> Error -> err
 fromError fp inp err = fromParseError fp inp (asParseError inp err)
 
 {-# INLINE emptyErr #-}

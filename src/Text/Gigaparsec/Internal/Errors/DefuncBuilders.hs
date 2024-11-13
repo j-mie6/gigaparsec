@@ -26,6 +26,8 @@ import Text.Gigaparsec.Internal.Errors.ErrorItem (
     ExpectItem(ExpectNamed),
     UnexpectItem(UnexpectEndOfInput, UnexpectNamed, UnexpectRaw)
   )
+import Text.Gigaparsec.Internal.Input (Input, dropInput)
+import Text.Gigaparsec.Internal.Input qualified as Input
 
 import Data.Set (Set)
 import Data.Set qualified as Set (empty, insert, union, member, map)
@@ -33,7 +35,7 @@ import Data.List.NonEmpty (nonEmpty)
 
 CPP_import_PortableUnlifted
 
-asParseError :: String -> DefuncError -> ParseError
+asParseError :: Input -> DefuncError -> ParseError
 asParseError !input e@DefuncError{..} = case errKind of
   IsVanilla -> case makeVanilla 0 0 Set.empty (NoItem 0) Set.empty True errTy of
     (# line, col, exs, unex, reasons #) ->
@@ -42,7 +44,7 @@ asParseError !input e@DefuncError{..} = case errKind of
     (# line, col, width, _, dmsgs #) ->
       SpecialisedError presentationOffset line col (distinct (dmsgs [])) width
   where
-    !outOfRange = presentationOffset >= fromIntegral (length input)
+    !outOfRange = presentationOffset >= fromIntegral (length (Input.inputToString input))
 
     makeVanilla :: Word -> Word -> Set ExpectItem -> BuilderUnexpectItem -> Set String -> Bool
                 -> DefuncError_ 'Vanilla
@@ -146,12 +148,14 @@ addLabels :: Bool -> Set ExpectItem -> Set ExpectItem -> Set ExpectItem
 addLabels True !exs !exs' = Set.union exs exs'
 addLabels False exs _     = exs
 
-toErrorItem :: String -> Word -> BuilderUnexpectItem -> Either Word UnexpectItem
+-- | Convert a 'BuilderUnexpectItem' into an 'UnexpectItem',
+-- Or ??? if it is a 'NoItem' error.
+toErrorItem :: Input -> Word -> BuilderUnexpectItem -> Either Word UnexpectItem
 toErrorItem !_ !_ (NoItem w) = Left w
 toErrorItem _ _ (NamedItem item cw) = Right (UnexpectNamed item cw)
 toErrorItem _ _ EndOfInput = Right UnexpectEndOfInput
 toErrorItem input off (RawItem w) =
-  case nonEmpty (drop (fromIntegral off) input) of
+  case nonEmpty (drop (fromIntegral off) (Input.inputToString input)) of
     Nothing -> Right UnexpectEndOfInput
     Just cs -> Right (UnexpectRaw cs w)
 

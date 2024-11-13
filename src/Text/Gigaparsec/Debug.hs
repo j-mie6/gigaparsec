@@ -138,7 +138,7 @@ printInfo handle name dir st@Internal.State{input, line, col} end ascii regs = d
          . replace " " (space ascii)
          . replace "\r" (carriageReturn ascii)
          . replace "\t" (tab ascii)
-         $ take (5 + 1) input
+         $ take (5 + 1) (Internal.inputToString input)
   let cs' = if length cs < (5 + 1) then cs ++ endOfInput ascii else cs
   let prelude = portal dir name ++ " " ++ show (line, col) ++ ": "
   let caret = replicate (length prelude) ' ' ++ blue ascii "^"

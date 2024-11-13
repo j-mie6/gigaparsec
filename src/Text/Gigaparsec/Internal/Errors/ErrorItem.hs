@@ -3,7 +3,8 @@
 -- Yes, this is redundant, however, it is necessary to get the UNPACK to fire on CaretWidth
 {-# OPTIONS_GHC -Wno-redundant-strictness-flags #-}
 module Text.Gigaparsec.Internal.Errors.ErrorItem (
-    module Text.Gigaparsec.Internal.Errors.ErrorItem
+    UnexpectItem(..),
+    ExpectItem(..)
   ) where
 
 import Data.List.NonEmpty (NonEmpty)

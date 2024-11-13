@@ -84,7 +84,7 @@ module Text.Gigaparsec (
 import Text.Gigaparsec.Internal (Parsec(Parsec), emptyState, manyr, somer)
 import Text.Gigaparsec.Internal qualified as Internal (State(..), useHints, expectedErr)
 import Text.Gigaparsec.Internal.Errors qualified as Internal (Error, ExpectItem(ExpectEndOfInput), fromError)
-import Text.Gigaparsec.Internal.Token.InputStream qualified as Internal (InputStream (isEmptyInputStream))
+import Text.Gigaparsec.Internal.Input qualified as Internal (Input, InputStream, stringInput, isEmptyInput)
 
 import Text.Gigaparsec.Errors.ErrorBuilder (ErrorBuilder)
 import Text.Gigaparsec.Errors.Combinator (filterSWith, mapMaybeSWith)
@@ -138,7 +138,7 @@ parse :: forall err a. ErrorBuilder err
       => Parsec a     -- ^ the parser to execute
       -> String       -- ^ the input to parse
       -> Result err a -- ^ result of the parse, either an error or result
-parse p inp = runRT $ _parse Nothing p inp
+parse p inp = runRT $ _parse Nothing p (Internal.stringInput inp)
 
 {-|
 Runs a parser against some input, pretty-printing the result to the terminal.
@@ -155,7 +155,7 @@ parseRepl :: Show a
           -> String   -- ^ the input to parse
           -> IO ()
 parseRepl p inp =
-  do res <- rtToIO $ _parse Nothing p inp
+  do res <- rtToIO $ _parse Nothing p (Internal.stringInput inp)
      result putStrLn print res
 
 {-# SPECIALISE parseFromFile :: Parsec a -> String -> IO (Result String a) #-}
@@ -181,16 +181,16 @@ parseFromFile :: forall err a. (ErrorBuilder err)
               -> IO (Result err a) -- ^ the result of the parse, error or otherwise
 parseFromFile p f =
   do inp <- readFile f
-     rtToIO $ _parse (Just f) p inp
+     rtToIO $ _parse (Just f) p (Internal.stringInput inp)
 
 --TODO: parseFromHandle?
 
 {-# INLINE _parse #-}
-_parse :: forall err a s . 
-          (ErrorBuilder err, Internal.InputStream s) 
+_parse :: forall err a . 
+          (ErrorBuilder err) 
        => Maybe FilePath 
        -> Parsec a 
-       -> s 
+       -> Internal.Input
        -> RT (Result err a)
 _parse file (Parsec p) inp = p (emptyState inp) good bad
   where good :: a -> Internal.State -> RT (Result err a)
@@ -279,8 +279,8 @@ Success ()
 @since 0.1.0.0
 -}
 eof :: Parsec ()
-eof = Parsec $ \st@Internal.State{Internal.input = input} good bad ->
-  if Internal.isEmptyInputStream input 
+eof = Parsec $ \st good bad ->
+  if Internal.isEmptyInput (Internal.input st) 
     then Internal.useHints bad
              (Internal.expectedErr st (Set.singleton Internal.ExpectEndOfInput) 1) st
     else good () st

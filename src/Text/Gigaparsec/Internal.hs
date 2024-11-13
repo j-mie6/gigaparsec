@@ -16,14 +16,16 @@ own risk.
 
 @since 0.1.0.0
 -}
-module Text.Gigaparsec.Internal (module Text.Gigaparsec.Internal) where
+module Text.Gigaparsec.Internal (module Text.Gigaparsec.Internal, unconsInput, inputToString) where
 
 import Control.Monad.RT (RT)
 import Text.Gigaparsec.Internal.Errors (Error, Hints, ExpectItem, CaretWidth)
 import Text.Gigaparsec.Internal.Errors qualified as Errors (
     emptyErr, expectedErr, specialisedErr, mergeErr, unexpectedErr,
-    isExpectedEmpty, presentationOffset, useHints, DefuncHints(Blank), addError
+    isExpectedEmpty, presentationOffset, useHints, DefuncHints(Blank), addError,
   )
+import Text.Gigaparsec.Internal.Input (Input, inputToString, unconsInput)
+import Text.Gigaparsec.Internal.Input qualified as Input
 
 import Control.Applicative (Applicative(liftA2), Alternative(empty, (<|>), many, some)) -- liftA2 required until 9.6
 import Control.Selective (Selective(select))
@@ -31,7 +33,6 @@ import Control.Selective (Selective(select))
 import Data.Set (Set)
 
 import GHC.Exts (TYPE, RuntimeRep(BoxedRep), Levity(Unlifted), Constraint)
-import Text.Gigaparsec.Internal.Token.InputStream (InputStream)
 
 {-
 Notes:
@@ -205,11 +206,11 @@ instance Monoid m => Monoid (Parsec m) where
   {-# INLINE mempty #-}
 
 type State :: UnliftedDatatype
-data State = ∀ s . InputStream s => State {
+data State = State {
 
     -- inputStreamConstraint :: InputStream s,
     -- | the input string, in future this may be generalised
-    input :: !s,
+    input :: !Input,
     -- | has the parser consumed input since the last relevant handler?
     consumed :: {-# UNPACK #-} !Word,
     -- | the current line number (incremented by \n)
@@ -224,7 +225,7 @@ data State = ∀ s . InputStream s => State {
     debugLevel :: {-# UNPACK #-} !Int
   }
 
-emptyState :: InputStream s => s -> State
+emptyState :: Input -> State
 emptyState !str = State { input = str
                         , consumed = 0
                         , line = 1

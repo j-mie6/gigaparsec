@@ -18,7 +18,8 @@ import Text.Gigaparsec.Internal.Errors.CaretControl
 import Text.Gigaparsec.Internal.Errors.ErrorItem
 
 import Data.Set (Set)
-import Text.Gigaparsec.Internal.Token.InputStream (InputStream)
+import Text.Gigaparsec.Internal.Input (Input)
+import Text.Gigaparsec.Internal.Input qualified as Input
 
 type ParseError :: *
 data ParseError = VanillaError { presentationOffset :: {-# UNPACK #-} !Word
@@ -37,7 +38,7 @@ data ParseError = VanillaError { presentationOffset :: {-# UNPACK #-} !Word
                                    }
 
 {-# INLINABLE fromParseError #-}
-fromParseError :: forall err s. (ErrorBuilder err, InputStream s) => Maybe FilePath -> s -> ParseError -> err
+fromParseError :: forall err. ErrorBuilder err => Maybe FilePath -> Input -> ParseError -> err
 fromParseError srcFile input err =
   Builder.build (Builder.pos @err (line err) (col err)) (Builder.source @err srcFile) (buildErr err)
   where buildErr :: ParseError -> Builder.ErrorInfoLines err
@@ -76,15 +77,14 @@ fromParseError srcFile input err =
         caret = col err - 1
         trimToLine width = min width (fromIntegral (length curLine) - caret + 1)
 
-
-        lines :: s -> NonEmpty s
-        lines = _
-
-        {-# RULES "lines/s" lines = lines_String #-}
-        lines_String :: String -> NonEmpty String
-        lines_String [] = "" :| []
-        lines_String ('\n':cs) = "" <| lines_String cs
-        lines_String (c:cs) = let l :| ls = lines_String cs in (c:l) :| ls
+        -- TODO(generalise-input): make this not force conversion to String yet?
+        lines :: Input -> NonEmpty String
+        lines x = linesString (Input.inputToString x)
+          where
+          linesString :: String -> NonEmpty String
+          linesString [] = "" :| []
+          linesString ('\n':cs) = "" <| linesString cs
+          linesString (c:cs) = let l :| ls = linesString cs in (c:l) :| ls
 
         breakLines :: Word -> NonEmpty String -> ([String], String, [String])
         breakLines 0 (l :| ls) = ([], l, ls)
