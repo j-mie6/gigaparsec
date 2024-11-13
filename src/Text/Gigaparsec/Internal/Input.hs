@@ -51,7 +51,7 @@ unconsInput (Input x) = case unconsInputStream x of
 
 instance InputStream String where
   {-# INLINE isEmptyInputStream #-}
-  isEmptyInputStream = ("" ==)
+  isEmptyInputStream = null
 
   {-# INLINE readInputStream #-}
   readInputStream = readFile
