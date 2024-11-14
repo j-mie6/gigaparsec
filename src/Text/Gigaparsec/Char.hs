@@ -75,11 +75,17 @@ _satisfy expecteds test = Internal.Parsec $ \st@(Internal.State {..}) ok bad ->
     Just (c, cs) | test c  -> ok c (updateState st c cs inputOps)
     _ -> Internal.useHints bad (Internal.expectedErr st expecteds 1) st
   where
+  -- Update the state depending on which character we have parsed. 
+  -- Newlines and tabs affect the lines/columns differently to standard characters.
+  updateState :: Internal.State -> Char -> s -> Internal.InputOps s -> Internal.State
+  updateState st '\n' cs ops = updateStateHelper st cs ops True  (const 1)
+  updateState st '\t' cs ops = updateStateHelper st cs ops False (\col -> ((col + 3) .&. (-4)) .|. 1)
+  updateState st _    cs ops = updateStateHelper st cs ops False (+ 1)
 
   -- The duplicated input & consumed update avoids double allocation
   -- that occurs if they were done separately to the line and col updates.
   -- 
-  -- TODO: In GHC < 9.8 (and maybe 9.6), record updates typechecking cannot handle records with existentials.
+  -- In GHC < 9.8 (and maybe 9.6), record updates typechecking cannot handle records with existentials.
   -- Sadly, this means we must reconstruct the entire state.
   updateStateHelper 
     :: Internal.State         -- old state
@@ -100,10 +106,6 @@ _satisfy expecteds test = Internal.Parsec $ \st@(Internal.State {..}) ok bad ->
     , Internal.hints = hints
     , Internal.debugLevel = debugLevel
     }
-  updateState :: Internal.State -> Char -> s -> Internal.InputOps s -> Internal.State
-  updateState st '\n' cs ops = updateStateHelper st cs ops True  (const 1)
-  updateState st '\t' cs ops = updateStateHelper st cs ops False (\col -> ((col + 3) .&. (-4)) .|. 1)
-  updateState st _    cs ops = updateStateHelper st cs ops False (+ 1)
 
 {-|
 This combinator tries to parse a single character from the input that matches the given predicate.
