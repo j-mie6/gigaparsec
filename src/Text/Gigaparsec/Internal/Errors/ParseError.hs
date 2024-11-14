@@ -18,7 +18,7 @@ import Text.Gigaparsec.Internal.Errors.CaretControl
 import Text.Gigaparsec.Internal.Errors.ErrorItem
 
 import Data.Set (Set)
-import Text.Gigaparsec.Internal.Input (Input, InputStream)
+import Text.Gigaparsec.Internal.Input (Input)
 import Text.Gigaparsec.Internal.Input qualified as Input
 
 type ParseError :: *

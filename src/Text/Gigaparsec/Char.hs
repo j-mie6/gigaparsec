@@ -49,7 +49,7 @@ import Text.Gigaparsec (Parsec, atomic, empty, some, many, (<|>))
 import Text.Gigaparsec.Combinator (skipMany)
 import Text.Gigaparsec.Errors.Combinator ((<?>))
 -- We want to use this to make the docs point to the right definition for users.
-import Text.Gigaparsec.Internal qualified as Internal (Parsec(Parsec, unParsec), State(..), expectedErr, useHints, unconsInput, InputStream)
+import Text.Gigaparsec.Internal qualified as Internal (Parsec(Parsec, unParsec), State(..), expectedErr, useHints, unconsInput, InputOps)
 import Text.Gigaparsec.Internal.Errors qualified as Internal (ExpectItem(ExpectRaw), Error)
 import Text.Gigaparsec.Internal.Require (require)
 
@@ -84,7 +84,7 @@ _satisfy expecteds test = Internal.Parsec $ \st@(Internal.State {..}) ok bad ->
   updateStateHelper 
     :: Internal.State         -- old state
     -> s                      -- input
-    -> Internal.InputStream s -- inputOps
+    -> Internal.InputOps s    -- inputOps
     -> Bool                   -- increaseLine?
     -> (Word -> Word)         -- how to update the column
     -> Internal.State
@@ -100,7 +100,7 @@ _satisfy expecteds test = Internal.Parsec $ \st@(Internal.State {..}) ok bad ->
     , Internal.hints = hints
     , Internal.debugLevel = debugLevel
     }
-  updateState :: Internal.State -> Char -> s -> Internal.InputStream s -> Internal.State
+  updateState :: Internal.State -> Char -> s -> Internal.InputOps s -> Internal.State
   updateState st '\n' cs ops = updateStateHelper st cs ops True  (const 1)
   updateState st '\t' cs ops = updateStateHelper st cs ops False (\col -> ((col + 3) .&. (-4)) .|. 1)
   updateState st _    cs ops = updateStateHelper st cs ops False (+ 1)

@@ -84,7 +84,7 @@ module Text.Gigaparsec (
 import Text.Gigaparsec.Internal (Parsec(Parsec), emptyState, manyr, somer)
 import Text.Gigaparsec.Internal qualified as Internal (State(..), useHints, expectedErr)
 import Text.Gigaparsec.Internal.Errors qualified as Internal (Error, ExpectItem(ExpectEndOfInput), fromError)
-import Text.Gigaparsec.Internal.Input qualified as Internal (Input, InputStream, stringInput, isEmptyInput)
+import Text.Gigaparsec.Internal.Input qualified as Internal (Input, stringInput, isEmptyInput)
 
 import Text.Gigaparsec.Errors.ErrorBuilder (ErrorBuilder)
 import Text.Gigaparsec.Errors.Combinator (filterSWith, mapMaybeSWith)

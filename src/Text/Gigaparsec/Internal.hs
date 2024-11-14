@@ -24,7 +24,7 @@ import Text.Gigaparsec.Internal.Errors qualified as Errors (
     emptyErr, expectedErr, specialisedErr, mergeErr, unexpectedErr,
     isExpectedEmpty, presentationOffset, useHints, DefuncHints(Blank), addError,
   )
-import Text.Gigaparsec.Internal.Input (Input, inputToString, stringInput, unconsInput, InputStream)
+import Text.Gigaparsec.Internal.Input (Input, inputToString, stringInput, unconsInput, InputOps)
 import Text.Gigaparsec.Internal.Input qualified as Input
 
 import Control.Applicative (Applicative(liftA2), Alternative(empty, (<|>), many, some)) -- liftA2 required until 9.6
@@ -211,7 +211,7 @@ data State = ∀ s . State {
     -- inputStreamConstraint :: InputStream s,
     -- | the input string, in future this may be generalised
     input :: !s,
-    inputOps :: {-# UNPACK #-} !(Input.InputStream s),
+    inputOps :: {-# UNPACK #-} !(InputOps s),
     -- | has the parser consumed input since the last relevant handler?
     consumed :: {-# UNPACK #-} !Word,
     -- | the current line number (incremented by \n)
@@ -231,7 +231,7 @@ useInput (State {input, inputOps}) f = f (Input.Input input inputOps)
 
 
 useState :: State 
-  -> (∀ s . s -> InputStream s -> Word -> Word -> Word -> Word -> Hints -> Int -> r) -> r
+  -> (∀ s . s -> InputOps s -> Word -> Word -> Word -> Word -> Hints -> Int -> r) -> r
 useState (State {..}) f = f input inputOps consumed line col hintsValidOffset hints debugLevel
 stInputToString :: State -> String
 stInputToString st = useInput st $ \inp -> Input.inputToString inp
