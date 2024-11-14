@@ -7,6 +7,7 @@ module Text.Gigaparsec.Internal.Test where
 import Test.Tasty.HUnit
 
 import Text.Gigaparsec.Internal.TestError
+import Text.Gigaparsec.Internal.Input (Input(..))
 
 import Text.Gigaparsec
 import Text.Gigaparsec.Internal
@@ -113,15 +114,17 @@ deriving anyclass instance (NFData e, NFData a) => NFData (Result e a)
 -- don't @ me
 instance Eq LiftedState where
   (==) :: LiftedState -> LiftedState -> Bool
-  Lifted (State input1 consumed1 line1 col1 _hintValidOffset1 _hints1 _debugLevel1) ==
-    Lifted (State input2 consumed2 line2 col2 _hintValidOffset2 _hints2 _debugLevel2) =
-       consumed1 == consumed2 && line1 == line2 && col1 == col2 && input1 == input2
+  Lifted (State input1 ops1 consumed1 line1 col1 _hintValidOffset1 _hints1 _debugLevel1) ==
+    Lifted (State input2 ops2 consumed2 line2 col2 _hintValidOffset2 _hints2 _debugLevel2) =
+      consumed1 == consumed2 && line1 == line2 && col1 == col2
+      -- Maybe there is a more efficient test here? 
+      && (inputToString (Input input1 ops1)) == (inputToString (Input input2 ops2))
     -- this throws off a whole bunch of tests, understandably
     -- && hintValidOffset1 == hintValidOffset2 && hints1 == hints2
 instance Show LiftedState where
   showsPrec :: Int -> LiftedState -> ShowS
   showsPrec p (Lifted State{..}) = showParen (p > 10) $ showString "State { input = "
-                                                      . shows input
+                                                      . showString (inputToString (Input input inputOps))
                                                       . showString ", consumed = "
                                                       . shows consumed
                                                       . showString ", line = "

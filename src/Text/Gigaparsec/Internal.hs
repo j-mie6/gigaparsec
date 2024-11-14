@@ -16,7 +16,7 @@ own risk.
 
 @since 0.1.0.0
 -}
-module Text.Gigaparsec.Internal (module Text.Gigaparsec.Internal, unconsInput, inputToString, stringInput) where
+module Text.Gigaparsec.Internal (module Text.Gigaparsec.Internal, module Input) where
 
 import Control.Monad.RT (RT)
 import Text.Gigaparsec.Internal.Errors (Error, Hints, ExpectItem, CaretWidth)
@@ -24,7 +24,7 @@ import Text.Gigaparsec.Internal.Errors qualified as Errors (
     emptyErr, expectedErr, specialisedErr, mergeErr, unexpectedErr,
     isExpectedEmpty, presentationOffset, useHints, DefuncHints(Blank), addError,
   )
-import Text.Gigaparsec.Internal.Input (Input, inputToString, unconsInput, stringInput)
+import Text.Gigaparsec.Internal.Input (Input, inputToString, stringInput, unconsInput, InputStream)
 import Text.Gigaparsec.Internal.Input qualified as Input
 
 import Control.Applicative (Applicative(liftA2), Alternative(empty, (<|>), many, some)) -- liftA2 required until 9.6
@@ -206,11 +206,12 @@ instance Monoid m => Monoid (Parsec m) where
   {-# INLINE mempty #-}
 
 type State :: UnliftedDatatype
-data State = State {
+data State = ∀ s . State {
 
     -- inputStreamConstraint :: InputStream s,
     -- | the input string, in future this may be generalised
-    input :: !Input,
+    input :: !s,
+    inputOps :: {-# UNPACK #-} !(Input.InputStream s),
     -- | has the parser consumed input since the last relevant handler?
     consumed :: {-# UNPACK #-} !Word,
     -- | the current line number (incremented by \n)
@@ -225,8 +226,20 @@ data State = State {
     debugLevel :: {-# UNPACK #-} !Int
   }
 
-emptyState :: Input -> State
-emptyState !str = State { input = str
+useInput :: State -> (∀ s . (Input s -> r)) -> r
+useInput (State {input, inputOps}) f = f (Input.Input input inputOps)
+
+
+useState :: State 
+  -> (∀ s . s -> InputStream s -> Word -> Word -> Word -> Word -> Hints -> Int -> r) -> r
+useState (State {..}) f = f input inputOps consumed line col hintsValidOffset hints debugLevel
+stInputToString :: State -> String
+stInputToString st = useInput st $ \inp -> Input.inputToString inp
+
+emptyState :: (Input s) -> State
+emptyState !(Input.Input str inputStream) = State { 
+                          input = str
+                        , inputOps = inputStream
                         , consumed = 0
                         , line = 1
                         , col = 1

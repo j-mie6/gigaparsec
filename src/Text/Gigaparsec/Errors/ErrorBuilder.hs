@@ -218,7 +218,6 @@ import Text.Gigaparsec.Errors.DefaultErrorBuilder ( StringBuilder, buildDefault
                                                   )
 import {-# SOURCE #-} Text.Gigaparsec.Errors.TokenExtractors (Token(Named, Raw), tillNextWhitespace)
 
-import Text.Gigaparsec.Internal.Input ( Input )
 
 import Data.Char (isSpace)
 import Data.Kind (Constraint)

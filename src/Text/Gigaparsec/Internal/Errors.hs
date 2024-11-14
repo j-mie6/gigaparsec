@@ -42,7 +42,7 @@ replaceHints :: Set String -> Hints -> Hints
 replaceHints = Hints.replace
 
 {-# INLINABLE fromError #-}
-fromError :: forall err. ErrorBuilder err => Maybe FilePath -> Input -> Error -> err
+fromError :: forall err s. ErrorBuilder err => Maybe FilePath -> Input s -> Error -> err
 fromError fp inp err = fromParseError fp inp (asParseError inp err)
 
 {-# INLINE emptyErr #-}

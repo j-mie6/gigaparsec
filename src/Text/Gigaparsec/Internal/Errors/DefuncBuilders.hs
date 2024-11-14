@@ -35,7 +35,7 @@ import Data.List.NonEmpty (nonEmpty)
 
 CPP_import_PortableUnlifted
 
-asParseError :: Input -> DefuncError -> ParseError
+asParseError :: forall s . Input s -> DefuncError -> ParseError
 asParseError !input e@DefuncError{..} = case errKind of
   IsVanilla -> case makeVanilla 0 0 Set.empty (NoItem 0) Set.empty True errTy of
     (# line, col, exs, unex, reasons #) ->
@@ -150,7 +150,7 @@ addLabels False exs _     = exs
 
 -- | Convert a 'BuilderUnexpectItem' into an 'UnexpectItem',
 -- Or ??? if it is a 'NoItem' error.
-toErrorItem :: Input -> Word -> BuilderUnexpectItem -> Either Word UnexpectItem
+toErrorItem :: forall s . Input s -> Word -> BuilderUnexpectItem -> Either Word UnexpectItem
 toErrorItem !_ !_ (NoItem w) = Left w
 toErrorItem _ _ (NamedItem item cw) = Right (UnexpectNamed item cw)
 toErrorItem _ _ EndOfInput = Right UnexpectEndOfInput

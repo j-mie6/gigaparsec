@@ -186,11 +186,11 @@ parseFromFile p f =
 --TODO: parseFromHandle?
 
 {-# INLINE _parse #-}
-_parse :: forall err a . 
+_parse :: forall err a s. 
           (ErrorBuilder err) 
        => Maybe FilePath 
        -> Parsec a 
-       -> Internal.Input
+       -> (Internal.Input s)
        -> RT (Result err a)
 _parse file (Parsec p) inp = p (emptyState inp) good bad
   where good :: a -> Internal.State -> RT (Result err a)
@@ -279,8 +279,8 @@ Success ()
 @since 0.1.0.0
 -}
 eof :: Parsec ()
-eof = Parsec $ \st good bad ->
-  if Internal.isEmptyInput (Internal.input st) 
+eof = Parsec $ \st@Internal.State{Internal.input = input, Internal.inputOps = ops} good bad ->
+  if Internal.isEmptyInput input ops
     then good () st
     else Internal.useHints bad
              (Internal.expectedErr st (Set.singleton Internal.ExpectEndOfInput) 1) st
