@@ -10,6 +10,7 @@ module Text.Gigaparsec.Internal.Input where
 
 import Data.Kind (Constraint)
 import Data.List (uncons)
+import Control.Arrow (second)
 
 -- TODO: add a NonEmptyInputStream subclass of InputStream
 type InputStream :: * -> Constraint
@@ -23,6 +24,9 @@ class (Eq s, Show s) => InputStream s where
   toStringInputStream :: s -> String
 
   unconsInputStream :: s -> Maybe (Char, s)
+
+  -- -- | It is best this is directly implemented
+  -- satisfyInput :: s -> Parsec Char
 
 type Input :: *
 data Input = ∀ s . InputStream s => Input !s
@@ -39,11 +43,11 @@ instance Eq Input where
 isEmptyInput :: Input -> Bool
 isEmptyInput (Input x) = isEmptyInputStream x
 
-{-# INLINE readInput #-}
 {-| Read input from a file.
 
 Note: Requires a type application for the 'InputStream' type
 -}
+{-# INLINE readInput #-}
 readInput :: ∀ s . InputStream s => FilePath -> IO Input
 readInput = (Input @s <$>) . readInputStream @s
 
@@ -55,9 +59,10 @@ inputToString (Input x) = toStringInputStream x
 -- Could just use Control.Arrow.second, but idk if this has the right strictness properties
 {-# INLINABLE unconsInput #-}
 unconsInput :: Input -> Maybe (Char, Input)
-unconsInput (Input x) = case unconsInputStream x of
-  Just (!c, !x') -> Just (c, Input x')
-  Nothing -> Nothing
+unconsInput (Input x) = (second Input) <$> unconsInputStream x
+  -- case unconsInputStream x of
+  -- Just (!c, !x') -> Just (c, Input x')
+  -- Nothing -> Nothing
 
 instance InputStream String where
   {-# INLINE isEmptyInputStream #-}
