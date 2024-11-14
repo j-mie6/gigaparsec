@@ -1,0 +1,5 @@
+#!/bin/sh
+# Define the macro __HADDOCK__ to be used *only* during haddock generation
+# This lets us, e.g. override the documentation for re-exports by wrapping them in 
+# a `#ifdef __HADDOCK__` cpp macro.
+cabal haddock --haddock-options="--optghc=-cpp --optghc=-D__HADDOCK__"
