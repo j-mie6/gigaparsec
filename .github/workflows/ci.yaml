@@ -30,7 +30,7 @@ jobs:
       # Define the `__HADDOCK__` C macro only for the documentation generation.
       # This is used when generating the type-specialised docs, but allows
       # the actual haskell library to export the non-specialised versions.
-      CONFIG_DOCS: "--haddock-options=\"optghc=-cpp --optghc=-D__HADDOCK__\""
+      CONFIG_DOCS: '--haddock-options="optghc=-cpp --optghc=-D__HADDOCK__"'
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
