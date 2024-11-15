@@ -102,7 +102,7 @@ import Text.Gigaparsec.Errors.ErrorGen (vanillaGen)
 --  *only* for the haddock generation.
 #ifdef __HADDOCK__
 {-# LANGUAGE NoImplicitPrelude #-}
-import Prelude hiding ((<$>), (<$), (<*>), (*>), (<*), pure)
+import Prelude hiding ((<$>), (<$), (<*>), (*>), (<*), pure, liftA2)
 import Prelude qualified
 import Control.Applicative qualified as Applicative (liftA2, (<|>), empty, many, some, (<**>), (<*>), (*>), (<*), pure) 
 import Control.Applicative (Alternative)
