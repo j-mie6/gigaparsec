@@ -13,6 +13,7 @@ within!
 @since 0.1.0.0
 -}
 module Text.Gigaparsec (
+  -- * The 'Parsec' type
     Parsec, Result(..), result, parse, parseFromFile, parseRepl,
   -- * Primitive Combinators
   -- | These combinators are specific to parser combinators. In one way or another, they influence
@@ -26,13 +27,11 @@ module Text.Gigaparsec (
   -- however, reasonably useful; in particular, `pure` and `unit` can be put to good use in
   -- injecting results into a parser without needing to consume anything, or mapping another parser.
     unit,
-  -- *** Re-exported from "Control.Applicative"
     pure, empty,
   -- * Result Changing Combinators
   -- | These combinators change the result of the parser they are called on into a value of a
   -- different type. This new result value may or may not be derived from the previous result.
     ($>),
-  -- *** Re-exported from "Data.Functor"
     (<$>), (<$), void,
   -- * Sequencing Combinators
   -- | These combinators all combine two parsers in sequence. The first argument of the combinator
@@ -40,7 +39,6 @@ module Text.Gigaparsec (
   -- combined in some way (depending on the individual combinator). If one of the parsers fails, the
   -- combinator as a whole fails.
     (<~>), (<:>),
-  -- *** Re-exported from "Control.Applicative"
     (<*>), liftA2, (*>), (<*), (<**>),
   -- * Branching Combinators
   -- | These combinators allow for parsing one alternative or another. All of these combinators are
@@ -48,14 +46,11 @@ module Text.Gigaparsec (
   -- right-hand side of the combinator will only be tried when the left-hand one failed (and did not
   -- consume input in the process).
     (<+>),
-  -- *** Re-exported from "Control.Applicative"
     (<|>), 
   -- * Selective Combinators
   -- | These combinators will decide which branch to take next based on the result of another parser.
   -- This differs from combinators like `(<|>)` which make decisions based on the success/failure of
   -- a parser: here the result of a /successful/ parse will direct which option is done.
-
-  -- *** Re-exported from "Control.Selective"
     select, branch,
 
   -- * Filtering Combinators
@@ -65,13 +60,26 @@ module Text.Gigaparsec (
     filterS, mapMaybeS,
 
   -- * Folding Combinators
-  -- | These combinators repeatedly execute a parser (at least zero or one times depending on the
+  {-| These combinators repeatedly execute a parser (at least zero or one times depending on the
   -- specific combinator) until it fails. The results of the successes are then combined together
   -- using a folding function. An initial value for the accumulation may be given (for the folds),
   -- or the first successful result is the initial accumulator (for the reduces). These are
   -- implemented efficiently and do not need to construct any intermediate list with which to store
   -- the results.
-    many, some, manyl, manyr, somel, somer, manyMap, someMap,-- TODO: these need to be properly categorised
+  -}
+  -- ** The 'many' Combinators
+  {-|
+    The 'many' combinators will repeatedly parse a given parser zero or more times, and collect each result in a list.
+  -}
+  many, manyl, manyr, manyMap,
+  -- ** The 'some' Combinators
+  {-|
+    The 'some' combinators will repeatedly parse a given parser one or more times, and collect each result in a list.
+    If successful, the list returned by these combinators is always non-empty.
+    
+    /See also:/ "Text.Gigaparsec.Combinator.NonEmpty" for variants of these combinators that return a 'Data.List.NonEmpty.NonEmpty' list.
+  -}
+    some, somel, somer, someMap,-- TODO: these need to be properly categorised
   ) where
 
 -- NOTE:
@@ -451,6 +459,8 @@ If @p@ fails at any point having consumed input, this combinator fails.
 
 ==== __Examples__
 > natural = somel (\x d -> x * 10 + digitToInt d) 0 digit
+
+@since 0.3.0.0
 -}
 somel :: (b -> a -> b) -- ^ @f@, the function to apply to each value produced by @p@, starting from the left.
       -> b             -- ^ @k@, the initial value to feed into the reduction.
@@ -576,7 +586,10 @@ If @p@ was never successful, the empty 'List' is returned.
 
 /Note:/ This is a re-export of [Control.Applicative.many]("Control.Applicative").
 If you use 'many' from this module, it actually has the more general type as found in [Control.Applicative.many]("Control.Applicative")
-(it works for any 'Control.Applicative.Applicative' @p@, rather than just @Parsec@).
+(it works for any 'Control.Applicative.Applicative' @p@, rather than just 'Parsec').
+
+/For Gigaparsec Developers:/ Do not import this, use [Control.Applicative.some]("Control.Applicative"), 
+as this has the more general type.
 
 @since 0.1.0.0
 -}
@@ -599,7 +612,10 @@ returns a 'Data.List.NonEmpty' list of results.
 
 /Note:/ This is a re-export of [Control.Applicative.some]("Control.Applicative").
 If you use 'some' from this module, it actually has the more general type as found in [Control.Applicative.some]("Control.Applicative")
-(it works for any 'Control.Applicative.Applicative' @p@, rather than just @Parsec@).
+(it works for any 'Control.Applicative.Applicative' @p@, rather than just 'Parsec').
+
+/For Gigaparsec Developers:/ Do not import this, use [Control.Applicative.some]("Control.Applicative"), 
+as this has the more general type.
 
 @since 0.1.0.0
 -}
@@ -624,8 +640,11 @@ This combinator is /associative/, meaning that:
 prop> (p <|> q) <|> r = p <|> (q <|> r)
 
 /Note:/ This is a re-export of [Control.Applicative.<|>]("Control.Applicative").
+If you use '<|>' from this module, it actually has the more general type as found in [Control.Applicative.<|>]("Control.Applicative")
+(it works for any 'Control.Applicative.Applicative' @p@, rather than just 'Parsec').
 
-/For Gigaparsec Developers:/ Do not import this, use [Control.Applicative.<|>]("Control.Applicative"), as this has the more general type.
+/For Gigaparsec Developers:/ Do not import this, use [Control.Applicative.<|>]("Control.Applicative"), 
+as this has the more general type.
 
 @since 0.1.0.0
 -}
@@ -652,9 +671,12 @@ but the result of that factored prefix may be required to help generate the resu
 In this case, the branches can return functions that, when given the factored result, 
 can produce the original results from before the factoring.
 
-/Note:/ This is a re-export of [Control.Applicative.<**>]("Control.Applicative").
-If you use '<**>' from this module, it actually has the more general type as found in [Control.Applicative.<**>]("Control.Applicative").
-(it works for any 'Control.Applicative.Applicative' @p@, rather than just @Parsec@).
+/Note:/ This is a re-export of [Control.Applicative.\<**\>]("Control.Applicative").
+If you use '<**>' from this module, it actually has the more general type as found in [Control.Applicative.\<**\>]("Control.Applicative")
+(it works for any 'Control.Applicative.Applicative' @p@, rather than just 'Parsec').
+
+/For Gigaparsec Developers:/ Do not import this, use [Control.Applicative.\<**\>]("Control.Applicative"), 
+as this has the more general type.
 
 @since 0.1.0.0
 -}
@@ -674,8 +696,11 @@ This is the \'zero\' or \'identity\' of '<|>':
 prop> p <|> empty = empty <|> p = p
 
 /Note:/ This is a re-export of [Control.Applicative.empty]("Control.Applicative").
-If you use 'empty' from this module, it actually has the more general type as found in [Control.Applicative.empty]("Control.Applicative").
-(it works for any 'Control.Applicative.Applicative' @p@, rather than just @Parsec@).
+If you use 'empty' from this module, it actually has the more general type as found in [Control.Applicative.empty]("Control.Applicative")
+(it works for any 'Control.Applicative.Applicative' @p@, rather than just 'Parsec').
+
+/For Gigaparsec Developers:/ Do not import this, use [Control.Applicative.empty]("Control.Applicative"), 
+as this has the more general type.
 
 @since 0.1.0.0
 -}
@@ -690,8 +715,11 @@ If both parsers succeed, this combinator succeeds, returning the application of 
 If either @p@ or @q@ fails, this combinator fails.
 
 /Note:/ This is a re-export of [Control.Applicative.liftA2]("Control.Applicative").
-If you use 'liftA2' from this module, it actually has the more general type as found in [Control.Applicative.liftA2]("Control.Applicative").
-(it works for any 'Control.Applicative.Applicative' @p@, rather than just @Parsec@).
+If you use 'liftA2' from this module, it actually has the more general type as found in [Control.Applicative.liftA2]("Control.Applicative")
+(it works for any 'Control.Applicative.Applicative' @p@, rather than just 'Parsec').
+
+/For Gigaparsec Developers:/ Do not import this, use [Control.Applicative.liftA2]("Control.Applicative"), 
+as this has the more general type.
 
 @since 0.1.0.0
 -}
@@ -713,8 +741,11 @@ If either @p@ or @q@ fails, the entire combinator fails.
 This is a special case of 'branch' where the right branch is @pure id@.
 
 /Note:/ This is a re-export of [Control.Selective.select]("Control.Selective").
-If you use 'select' from this module, it actually has the more general type as found in [Control.Selective.select]("Control.Selective").
-(it works for any 'Control.Selective.Selective' @p@, rather than just @Parsec@).
+If you use 'select' from this module, it actually has the more general type as found in [Control.Selective.select]("Control.Selective")
+(it works for any 'Control.Selective.Selective' @p@, rather than just 'Parsec').
+
+/For Gigaparsec Developers:/ Do not import this, use [Control.Selective.select]("Control.Selective"), 
+as this has the more general type.
 
 @since 0.1.0.0
 -}
@@ -736,8 +767,11 @@ First, parses @either@, which, if successful, produces either a @Left x@ or a @R
 If either of the two executed parsers fail, the entire combinator fails.
 
 /Note:/ This is a re-export of [Control.Selective.branch]("Control.Selective").
-If you use 'branch' from this module, it actually has the more general type as found in [Control.Selective.branch]("Control.Selective").
-(it works for any 'Control.Selective.Selective' @p@, rather than just @Parsec@).
+If you use 'branch' from this module, it actually has the more general type as found in [Control.Selective.branch]("Control.Selective")
+(it works for any 'Control.Selective.Selective' @p@, rather than just 'Parsec').
+
+/For Gigaparsec Developers:/ Do not import this, use [Control.Selective.branch]("Control.Selective"), 
+as this has the more general type.
 
 @since 0.1.0.0
 -}
@@ -755,6 +789,13 @@ When @p@ succeeds with value @x@, return @f x@.
 This can be used to build more complex results from parsers, 
 instead of just characters or strings.
 
+/Note:/ This is a re-export of [Data.Functor.\<$\>]("Data.Functor").
+If you use '<$>' from this module, it actually has the more general type as found in [Data.Functor.\<$\>]("Data.Functor")
+(it works for any 'Functor' @f@, rather than just 'Parsec').
+
+/For Gigaparsec Developers:/ Do not import this, use [Data.Functor.\<$\>]("Data.Functor") (or the 'Prelude'), 
+as this has the more general type.
+
 @since 0.1.0.0
 -}
 infixl 4 <$>
@@ -771,6 +812,13 @@ This may be defined in terms of '<$>':
 
 prop> x <$ p = const x <$> p
 
+/Note:/ This is a re-export of [Data.Functor.<$]("Data.Functor").
+If you use '<$' from this module, it actually has the more general type as found in [Data.Functor.<$]("Data.Functor")
+(it works for any 'Functor' @f@, rather than just 'Parsec').
+
+/For Gigaparsec Developers:/ Do not import this, use [Data.Functor.<$]("Data.Functor") (or the 'Prelude'), 
+as this has the more general type.
+
 @since 0.1.0.0
 -}
 infixl 4 <$
@@ -786,7 +834,12 @@ When this combinator is run, no input is required, nor consumed,
 and the given value will always be successfully returned. 
 It has no other effect on the state of the parser.
 
-/For Gigaparsec Developers:/ Do not import this, use [Control.Applicative.pure]("Control.Applicative"), as this has the more general type.
+/Note:/ This is a re-export of [Control.Applicative.pure]("Control.Applicative").
+If you use 'pure' from this module, it actually has the more general type as found in [Control.Applicative.pure]("Control.Applicative")
+(it works for any 'Control.Applicative.Applicative' @p@, rather than just 'Parsec').
+
+/For Gigaparsec Developers:/ Do not import this, use [Control.Applicative.pure]("Control.Applicative"), 
+as this has the more general type.
 
 @since 0.1.0.0
 -}
@@ -804,6 +857,13 @@ First, runs @p@, yielding a function @f@ on success, then runs @q@, yielding a v
 If both @p@ and @q@ are successful, then returns @f x@. 
 If either fail then the entire combinator fails.
 
+/Note:/ This is a re-export of [Control.Applicative.\<*\>]("Control.Applicative").
+If you use '<*>' from this module, it actually has the more general type as found in [Control.Applicative.\<*\>]("Control.Applicative")
+(it works for any 'Control.Applicative.Applicative' @p@, rather than just 'Parsec').
+
+/For Gigaparsec Developers:/ Do not import this, use [Control.Applicative.\<*\>]("Control.Applicative"), 
+as this has the more general type.
+
 @since 0.1.0.0
 -}
 infixl 4 <*>
@@ -819,6 +879,13 @@ if both @p@ and @q@ succeed then the result of @q@ is returned.
 First, runs @p@, yielding @x@ on success, then runs @q@, yielding @y@ on success. 
 If both @p@ and @q@ are successful then returns @y@ and ignores @x@ 
 If either fail then the entire combinator fails.
+
+/Note:/ This is a re-export of [Control.Applicative.*>]("Control.Applicative").
+If you use '*>' from this module, it actually has the more general type as found in [Control.Applicative.*>]("Control.Applicative")
+(it works for any 'Control.Applicative.Applicative' @p@, rather than just 'Parsec').
+
+/For Gigaparsec Developers:/ Do not import this, use [Control.Applicative.*>]("Control.Applicative"), 
+as this has the more general type.
 
 @since 0.1.0.0
 -}
@@ -836,6 +903,13 @@ First, runs @p@, yielding @x@ on success, then runs @q@, yielding @y@ on success
 If both @p@ and @q@ are successful then returns @x@ and ignores @y@. 
 If either fail then the entire combinator fails.
 
+/Note:/ This is a re-export of [Control.Applicative.<*]("Control.Applicative").
+If you use '<*' from this module, it actually has the more general type as found in [Control.Applicative.<*]("Control.Applicative")
+(it works for any 'Control.Applicative.Applicative' @p@, rather than just 'Parsec').
+
+/For Gigaparsec Developers:/ Do not import this, use [Control.Applicative.<*]("Control.Applicative"), 
+as this has the more general type.
+
 @since 0.1.0.0
 -}
 infixl 4 <*
@@ -848,6 +922,13 @@ infixl 4 <*
 Run the given parser @p@, then discard its result.
 
 This combinator is useful when @p@ should be run, but its result is not required.
+
+/Note:/ This is a re-export of [Data.Functor.void]("Data.Functor").
+If you use 'void' from this module, it actually has the more general type as found in [Data.Functor.void]("Data.Functor")
+(it works for any 'Control.Applicative.Applicative' @p@, rather than just 'Parsec').
+
+/For Gigaparsec Developers:/ Do not import this, use [Data.Functor.void]("Data.Functor"), 
+as this has the more general type.
 
 @since 0.1.0.0
 -}
