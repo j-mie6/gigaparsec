@@ -121,9 +121,25 @@ import GHC.Generics (Generic)
 Similar to @Either@, this type represents whether a parser has failed or not.
 
 This is chosen instead of @Either@ to be more specific about the naming.
+
+@since 0.1.0.0
+-}
+{- 
+TODO: could we instead just use
+> type Result = Either
+and pattern synonyms,
+> pattern Success :: a -> Result e a
+> pattern Success x = Right x
+> pattern Failure :: e -> Result e a
+> pattern Failure err = Left err
 -}
 type Result :: * -> * -> *
-data Result e a = Success a | Failure e deriving stock (Show, Eq, Generic) -- TODO: monad?
+data Result e a = 
+  -- | The parser succeeded with a result of type @a@.
+    Success a 
+  -- | The parser failed with an error of type @e@.
+  | Failure e deriving stock (Show, Eq, Generic) 
+  -- TODO: monad?
 
 {-|
 A fold for the 'Result' type.
@@ -132,7 +148,11 @@ This functions like the 'either' function does for 'Either'.
 
 @since 0.2.0.0
 -}
-result :: (e -> b) -> (a -> b) -> Result e a -> b
+result :: (e -> b)   -- ^ @failure@, the function that handles the failure case.
+       -> (a -> b)   -- ^ @success@, the function that handles the successful case.
+       -> Result e a -- ^ @result@, the parse result to process.
+       -> b          -- ^ applies either @failure@ or @success@ to the @result@, depending on
+                     -- whether or not it is successful.
 result _ success (Success x) = success x
 result failure _ (Failure err) = failure err
 
@@ -145,6 +165,8 @@ successful result or an error. Note that the @err@ type parameter is first,
 which allows for @parse \@String@ to make use of the defaultly formated @String@
 error messages. This may not be required if it is clear from context. To make
 this process nicer within GHCi, consider using 'parseRepl'.
+
+@since 0.2.0.0
 -}
 {-# SPECIALISE parse :: Parsec a -> String -> Result String a #-}
 {-# INLINABLE parse #-}
@@ -165,9 +187,10 @@ for playing around with parsers in GHCi, seeing the results more clearly.
 @since 0.2.0.0
 -}
 parseRepl :: Show a
-          => Parsec a -- ^ the parser to execute
-          -> String   -- ^ the input to parse
-          -> IO ()
+          => Parsec a -- ^ @p@, the parser to execute.
+          -> String   -- ^ @input@, the input to parse.
+          -> IO ()    -- ^ An 'IO' action which parses @input@ with @p@, 
+                      -- and prints the result to the terminal.
 parseRepl p inp =
   do res <- rtToIO $ _parse Nothing p inp
      result putStrLn print res
@@ -305,11 +328,12 @@ unit :: Parsec ()
 unit = pure ()
 
 {-|
-This combinator, pronounced "zip", first parses this parser then parses @q@: if both succeed the result of this
-parser is paired with the result of @q@.
+This combinator, pronounced "zip", first parses @p@ then parses @q@: 
+if both succeed the result of @p@ is paired with that of @q@.
 
-First, this parser is ran, yielding @x@ on success, then @q@ is ran, yielding @y@ on success. If both
-are successful then @(x, y)@ is returned. If either fail then the entire combinator fails.
+First, runs @p@, yielding @x@ on success, then runs @q@, yielding @y@ on success. 
+If both are successful then @(x, y)@ is returned. 
+If either fail then the entire combinator fails.
 
 ==== __Examples__
 >>> p = char 'a' <~> char 'b'
@@ -319,9 +343,13 @@ Success ('a', 'b')
 Failure ..
 >>> parse p "a"
 Failure ..
+
+@since 0.1.0.0
 -}
 infixl 4 <~>
-(<~>) :: Parsec a -> Parsec b -> Parsec (a, b)
+(<~>) :: Parsec a      -- ^ @p@, the first parser to run.
+      -> Parsec b      -- ^ @q@, the second parser to run.
+      -> Parsec (a, b) -- ^ a parser that runs @p@ and then @q@, and pairs their results.
 (<~>) = liftA2 (,)
 
 {-|
@@ -331,28 +359,38 @@ Similar to @(<$>)@, except the old result of the given parser is not required to
 compute the new result. This is useful when the result is a constant value (or function!).
 Functionally the same as @p *> pure x@ or @const x <$> p@.
 
-/In [@parsley@](https://j-mie6.github.io/parsley/), this combinator is known as @#>@ or @as@/.
+/In [scala parsley](https:\/\/j-mie6.github.io\/parsley\/), this combinator is known as /@#>@/ or /'@as@'.
 
 ==== __Examples__
 >>> parse (string "true" $> true) "true"
 Success true
+
+@since 0.1.0.0
 -}
 infixl 4 $>
-($>) :: Parsec a -> b -> Parsec b
+($>) :: Parsec a -- ^ @p@, the parser to run, whose result is ignored.
+     -> b        -- ^ @x@, the value to return
+     -> Parsec b -- ^ a parser that runs @p@, but returns the value @x@.
 ($>) = flip (<$)
 
 {-|
-This combinator, pronounced "cons", first parses this parser then parses @ps@: if both succeed the result of this
+This combinator, pronounced "cons", first parses @p@ and then @ps@: if both succeed the result of this
 parser is prepended onto the result of @ps@.
 
-First, this parser is ran, yielding @x@ on success, then @ps@ is ran, yielding @xs@ on success. If both
-are successful then @x : xs@ is returned. If either fail then the entire combinator fails.
+First, runs @p@, yielding @x@ on success, then runs @ps@, yielding @xs@ on success. 
+If both are successful then @x : xs@ is returned. 
+If either fail then the entire combinator fails.
 
 ==== __Examples__
 > some p = p <:> many(p)
+
+@since 0.1.0.0
 -}
 infixl 4 <:>
-(<:>) :: Parsec a -> Parsec [a] -> Parsec [a]
+(<:>) :: Parsec a   -- ^ @p@, the first parser to run
+      -> Parsec [a] -- ^ @q@, the second parser to run
+      -> Parsec [a] -- ^ a parser that runs @p@ and then @q@, 
+                    -- and prepends the result of the former onto that of the latter.
 (<:>) = liftA2 (:)
 
 infixl 3 <+>
@@ -377,22 +415,30 @@ Success (Left "abc")
 Success (Right "xyz")
 >>> parse p "ab"
 Failure .. -- first parser consumed an 'a'!
+
+@since 0.1.0.0
 -}
-(<+>) :: Parsec a -> Parsec b -> Parsec (Either a b)
+(<+>) :: Parsec a            -- ^ @p@, the first parser to run
+      -> Parsec b            -- ^ @q@, the parser to run if @p@ fails without consuming input
+      -> Parsec (Either a b) -- ^ a parser which either parses @p@, or @q@, projecting their 
+                             -- results into an 'Either'.
 p <+> q = Left <$> p <|> Right <$> q
 
 {-|
 This combinator will parse the given parser __zero__ or more times combining the results with the function @f@ and base value @k@ from the left.
 
-The given parser will continue to be parsed until it fails having __not consumed__ input.
+The given parser @p@ will continue to be parsed until it fails having __not consumed__ input.
 All of the results generated by the successful parses are then combined in a left-to-right
 fashion using the function @f@: the left-most value provided to @f@ is the value @k@.
-If this parser does fail at any point having consumed input, this combinator will fail.
+
+If @p@ does fail at any point having consumed input, this combinator will fail.
+
+@since 0.3.0.0
 -}
-manyl :: (b -> a -> b) -- ^ function to apply to each value produced by this parser, starting at the left.
-      -> b             -- ^  the initial value to feed into the reduction
-      -> Parsec a
-      -> Parsec b      -- ^ a parser which parses this parser many times and folds the results together with @f@ and @k@ left-associatively.
+manyl :: (b -> a -> b) -- ^ @f@, function to apply to each value produced by @p@ starting at the left.
+      -> b             -- ^ @k@, the initial value to feed into the reduction
+      -> Parsec a      -- ^ @p@, the parser to repeatedly run zero or more times.
+      -> Parsec b      -- ^ a parser which parses @p@ many times and folds the results together with @f@ and @k@ left-associatively.
 manyl f k = _repl f (pure k)
 
 {-|
@@ -406,10 +452,10 @@ If @p@ fails at any point having consumed input, this combinator fails.
 ==== __Examples__
 > natural = somel (\x d -> x * 10 + digitToInt d) 0 digit
 -}
-somel :: (b -> a -> b) -- ^ function to apply to each value produced by this parser, starting at the left.
-      -> b             -- ^  the initial value to feed into the reduction
-      -> Parsec a
-      -> Parsec b      -- ^ a parser which parses this parser some times and folds the results together with @f@ and @k@ left-associatively.
+somel :: (b -> a -> b) -- ^ @f@, the function to apply to each value produced by @p@, starting from the left.
+      -> b             -- ^ @k@, the initial value to feed into the reduction.
+      -> Parsec a      -- ^ @p@ the parser to run at least once.
+      -> Parsec b      -- ^ a parser which parses @p@ at least once, and folds the results together with @f@ and @k@ left-associatively.
 somel f k p = _repl f (f k <$> p) p
 
 {-|
@@ -428,9 +474,10 @@ Success (Set.fromList ['a', 'b'])
 @since 0.2.2.0
 -}
 manyMap :: Monoid m
-        => (a -> m) -- injection function for parser results into a monoid
-        -> Parsec a -- parser to execute multiple times
-        -> Parsec m
+        => (a -> m) -- ^ @f@, injection function for parser results into a monoid
+        -> Parsec a -- ^ @p@, parser to execute multiple times
+        -> Parsec m -- ^ a parser that repeatedly parses @p@, converting each result to an @s@ with @f@,
+                    -- ^ collecting the results together using '<>'.
 manyMap f = manyr (<>) mempty . fmap f
 
 {-|
@@ -450,9 +497,10 @@ Success (Max 'b')
 @since 0.2.2.0
 -}
 someMap :: Semigroup s
-        => (a -> s) -- injection function for parser results into a monoid
-        -> Parsec a -- parser to execute multiple times
-        -> Parsec s
+        => (a -> s) -- ^ @f@, the injection function for parser results into a monoid
+        -> Parsec a -- ^ @p@, the parser to execute multiple times
+        -> Parsec s -- ^ a parser that parses @p@ at least once, converting each result to an @s@ with @f@,
+                    -- ^ collecting the results together using '<>'.
 someMap f p = _repl (<>) (f <$> p) (f <$> p) -- is there a better implementation, it's tricky!
 
 _repl :: (b -> a -> b) -> Parsec b -> Parsec a -> Parsec b
@@ -460,10 +508,13 @@ _repl f k p = k <**> manyr (\x next !acc -> next (f acc x)) id p
 
 -- should these be implemented with branch? probably not.
 {-|
-This combinator filters the result of this parser using a given predicate, succeeding only if the predicate returns @True@.
+This combinator filters the result of the given parser @p@ using the given predicate, 
+succeeding only if the predicate returns @True@.
 
-First, parse this parser. If it succeeds then take its result @x@ and apply it to the predicate @pred@. If @pred x@ is
-true, then return @x@. Otherwise, the combinator fails.
+First, parse @p@. 
+If it succeeds then take its result @x@ and apply it to the predicate @pred@. 
+If @pred x@ is true, then return @x@. 
+Otherwise, the combinator fails.
 
 ==== __Examples__
 >>> keywords = Set.fromList ["if", "then", "else"]
@@ -482,11 +533,11 @@ filterS = filterSWith vanillaGen
 
 -- this is called mapFilter in Scala... there is no collect counterpart
 {-|
-This combinator applies a function @f@ to the result of this parser: if it returns a
-@Just y@, @y@ is returned, otherwise the parser fails.
+This combinator applies a function @f@ to the result of the given parser @p@: 
+if it returns a @Just y@, @y@ is returned, otherwise this combinator fails.
 
-First, parse this parser. If it succeeds, apply the function @f@ to the result @x@. If
-@f x@ returns @Just y@, return @y@. If @f x@ returns @Nothing@, or this parser failed
+First, parse @p@. If it succeeds, apply the function @f@ to the result @x@. If
+@f x@ returns @Just y@, return @y@. If @f x@ returns @Nothing@, or @p@ failed
 then this combinator fails. Is a more efficient way of performing a @filterS@ and @fmap@
 at the same time.
 
@@ -500,7 +551,7 @@ Success 5
 
 @since 0.2.2.0
 -}
-mapMaybeS :: (a -> Maybe b) -- ^ the function used to both filter the result of this parser and transform it.
+mapMaybeS :: (a -> Maybe b) -- ^ the function used to both filter the result of @p@ and transform it.
           -> Parsec a       -- ^ the parser to filter, @p@.
           -> Parsec b       -- ^ a parser that returns the result of @p@ applied to @f@, if it yields a value.
 mapMaybeS = mapMaybeSWith vanillaGen
@@ -526,6 +577,8 @@ If @p@ was never successful, the empty 'List' is returned.
 /Note:/ This is a re-export of [Control.Applicative.many]("Control.Applicative").
 If you use 'many' from this module, it actually has the more general type as found in [Control.Applicative.many]("Control.Applicative")
 (it works for any 'Control.Applicative.Applicative' @p@, rather than just @Parsec@).
+
+@since 0.1.0.0
 -}
 many :: Parsec a   -- ^ @p@, the parser to execute multiple times.
      -> Parsec [a] -- ^ a parser that parses @p@ until it fails, 
@@ -547,6 +600,8 @@ returns a 'Data.List.NonEmpty' list of results.
 /Note:/ This is a re-export of [Control.Applicative.some]("Control.Applicative").
 If you use 'some' from this module, it actually has the more general type as found in [Control.Applicative.some]("Control.Applicative")
 (it works for any 'Control.Applicative.Applicative' @p@, rather than just @Parsec@).
+
+@since 0.1.0.0
 -}
 some :: Parsec a   -- ^ @p@, the parser to execute multiple times.
      -> Parsec [a] -- ^ a parser that parses @p@ until it fails, 
@@ -569,12 +624,17 @@ This combinator is /associative/, meaning that:
 prop> (p <|> q) <|> r = p <|> (q <|> r)
 
 /Note:/ This is a re-export of [Control.Applicative.<|>]("Control.Applicative").
+
+/For Gigaparsec Developers:/ Do not import this, use [Control.Applicative.<|>]("Control.Applicative"), as this has the more general type.
+
+@since 0.1.0.0
 -}
+-- TODO: re-structure gigaparsec (perhaps a Gigaparsec.Gigaparsec module) that is used throughout the library (as it has the more general type),
+-- and only expose '<|>' in this top level module so that it has nice user-facing docs.
 infixl 3 <|>
-(<|>) :: Alternative parser -- ^ this is usually 'Parsec'
-      => parser a -- ^ @p@ the first parser to run
-      -> parser a -- ^ @q@ the second parser to run if @p@ fails without consuming input.
-      -> parser a -- ^ a parser which parses either @p@ or @q@.
+(<|>) :: Parsec a -- ^ @p@ the first parser to run
+      -> Parsec a -- ^ @q@ the second parser to run if @p@ fails without consuming input.
+      -> Parsec a -- ^ a parser which parses either @p@ or @q@.
 (<|>) = (Applicative.<|>)
 
 
@@ -595,11 +655,13 @@ can produce the original results from before the factoring.
 /Note:/ This is a re-export of [Control.Applicative.<**>]("Control.Applicative").
 If you use '<**>' from this module, it actually has the more general type as found in [Control.Applicative.<**>]("Control.Applicative").
 (it works for any 'Control.Applicative.Applicative' @p@, rather than just @Parsec@).
+
+@since 0.1.0.0
 -}
 infixl 4 <**>
-(<**>) :: Parsec a 
-       -> Parsec (a -> b)
-       -> Parsec b
+(<**>) :: Parsec a        -- ^ @p@, the first parser to run
+       -> Parsec (a -> b) -- ^ @q@, the second parser to run
+       -> Parsec b        -- ^ a parser that runs @p@ and then @q@, and applies the result of @q@ to that of @p@
 (<**>) = (Applicative.<**>)
 
 {-|
@@ -614,6 +676,8 @@ prop> p <|> empty = empty <|> p = p
 /Note:/ This is a re-export of [Control.Applicative.empty]("Control.Applicative").
 If you use 'empty' from this module, it actually has the more general type as found in [Control.Applicative.empty]("Control.Applicative").
 (it works for any 'Control.Applicative.Applicative' @p@, rather than just @Parsec@).
+
+@since 0.1.0.0
 -}
 empty :: Parsec a -- ^ a parser that immediately fails.
 empty = Applicative.empty
@@ -628,6 +692,8 @@ If either @p@ or @q@ fails, this combinator fails.
 /Note:/ This is a re-export of [Control.Applicative.liftA2]("Control.Applicative").
 If you use 'liftA2' from this module, it actually has the more general type as found in [Control.Applicative.liftA2]("Control.Applicative").
 (it works for any 'Control.Applicative.Applicative' @p@, rather than just @Parsec@).
+
+@since 0.1.0.0
 -}
 liftA2 :: (a -> b -> c) -- ^ @f@, a function to apply to the results of the parsers @p@ and @q@ 
        -> Parsec a -- ^ @p@, the first parser to run
@@ -649,6 +715,8 @@ This is a special case of 'branch' where the right branch is @pure id@.
 /Note:/ This is a re-export of [Control.Selective.select]("Control.Selective").
 If you use 'select' from this module, it actually has the more general type as found in [Control.Selective.select]("Control.Selective").
 (it works for any 'Control.Selective.Selective' @p@, rather than just @Parsec@).
+
+@since 0.1.0.0
 -}
 select :: Parsec (Either a b) -- ^ @p@, the first parser to execute
        -> Parsec (a -> b)     -- ^ @q@, the parser to to execute when @p@ returns a @Left@
@@ -670,6 +738,8 @@ If either of the two executed parsers fail, the entire combinator fails.
 /Note:/ This is a re-export of [Control.Selective.branch]("Control.Selective").
 If you use 'branch' from this module, it actually has the more general type as found in [Control.Selective.branch]("Control.Selective").
 (it works for any 'Control.Selective.Selective' @p@, rather than just @Parsec@).
+
+@since 0.1.0.0
 -}
 branch :: Parsec (Either a b) -- ^ @either@, the first parser to run; its result decides which parser to execute next.
        -> Parsec (a -> c)     -- ^ @left@, the parser to run if @either@ returns a @Left@.
@@ -678,30 +748,35 @@ branch :: Parsec (Either a b) -- ^ @either@, the first parser to run; its result
 branch = Applicative.branch
 
 {-|
-This combinator allows the result of this parser to be changed using a given function.
+This combinator applies a function @f@ to the result of a parser @p@.
 
-When this parser succeeds, map(f) will adjust its result using the function f, 
-which can potentially change its type. 
+When @p@ succeeds with value @x@, return @f x@.
 
 This can be used to build more complex results from parsers, 
 instead of just characters or strings.
+
+@since 0.1.0.0
 -}
 infixl 4 <$>
 (<$>) :: (a -> b) -- ^ @f@, the function to apply to the result of the parser @p@
-      -> Parsec a -- ^ @p@
-      -> Parsec b -- ^ a new parser that behaves the same as this parser, but with the given function f applied to its result.
+      -> Parsec a -- ^ @p@, the parser whose result on which to apply @f@.
+      -> Parsec b -- ^ a new parser that behaves the same as @p@, but with the given function @f@ applied to its result.
 (<$>) = (Prelude.<$>)
 
 {-|
-This parser runs the given parser @p@, and ignores its results, instead returning the given value @x@.
+This combinator runs the given parser @p@, and ignores its results, instead returning the given value @x@.
 
 Similar to '<$>', except the result of @p@ is not required to compute the result.
 This may be defined in terms of '<$>':
 
 prop> x <$ p = const x <$> p
+
+@since 0.1.0.0
 -}
 infixl 4 <$
-(<$) :: a -> Parsec b -> Parsec a
+(<$) :: a -- ^ @x@, the value to return after parsing @p@.
+     -> Parsec b -- ^ @p@, the parser to run and then discard its results.
+     -> Parsec a -- ^ a parser that parses @p@, discards its results, and returns @x@.
 (<$) = (Prelude.<$)
 
 {-|
@@ -710,57 +785,71 @@ This combinator produces a value without having any other effect.
 When this combinator is run, no input is required, nor consumed, 
 and the given value will always be successfully returned. 
 It has no other effect on the state of the parser.
+
+/For Gigaparsec Developers:/ Do not import this, use [Control.Applicative.pure]("Control.Applicative"), as this has the more general type.
+
+@since 0.1.0.0
 -}
-pure :: Applicative parser -- ^ this is usually 'Parsec'
-     => a        -- ^ @x@ the value to be returned.
-     -> parser a -- ^ a parser which consumes no input and produces the value @x@.
+-- TODO: re-structure gigaparsec (perhaps a Gigaparsec.Gigaparsec module) that is used throughout the library (as it has the more general type),
+-- and only expose 'pure' in this top level module so that it has nice user-facing docs.
+pure :: a        -- ^ @x@ the value to be returned.
+     -> Parsec a -- ^ a parser which consumes no input and produces the value @x@.
 pure = (Applicative.pure)
 
 {-|
-This combinator, pronounced "ap", first parses this parser then parses px: 
-if both succeed then the function returned by this parser is applied to the value returned by px.
+This combinator, pronounced "ap", first parses @p@ then parses @q@: 
+if both succeed then the function @p@ returns is applied to the value returned by @q@.
 
-The implicit (compiler-provided) evidence proves that this parser really has type Parsley[B => C]. 
-First, this parser is ran, yielding a function f on success, then px is ran, yielding a value x on success. 
-If both are successful, then f(x) is returned. 
+First, runs @p@, yielding a function @f@ on success, then runs @q@, yielding a value @x@ on success. 
+If both @p@ and @q@ are successful, then returns @f x@. 
 If either fail then the entire combinator fails.
+
+@since 0.1.0.0
 -}
 infixl 4 <*>
 (<*>) :: Parsec (a -> b) -- ^ @p@, a parser that produces a function @f@.
       -> Parsec a -- ^ @q@, the parser to run second, which returns a value applicable to @p@'s result. 
-      -> Parsec b -- ^ a parser that sequences this parser with px and combines their results with function application.
+      -> Parsec b -- ^ a parser that runs @p@ and then @q@ and combines their results with function application.
 (<*>) = (Applicative.<*>)
 
 {-|
-This combinator, pronounced "then", first parses this parser then parses q: if both succeed then the result of q is returned.
+This combinator, pronounced "then", first parses @p@ then parses @q@: 
+if both @p@ and @q@ succeed then the result of @q@ is returned.
 
-First, this parser is ran, yielding x on success, then q is ran, yielding y on success. 
-If both are successful then y is returned and x is ignored. 
+First, runs @p@, yielding @x@ on success, then runs @q@, yielding @y@ on success. 
+If both @p@ and @q@ are successful then returns @y@ and ignores @x@ 
 If either fail then the entire combinator fails.
+
+@since 0.1.0.0
 -}
 infixl 4 *>
-(*>) :: Parsec a 
-     -> Parsec b -- ^ the parser to run second, which returns the result of this combinator.
-     -> Parsec b -- ^ a parser that sequences this parser with q and returns q's result.
+(*>) :: Parsec a -- ^ @p@, the first parser to run, whose result is discarded.
+     -> Parsec b -- ^ @q@, the second parser to run, which returns the result of this combinator.
+     -> Parsec b -- ^ a parser that runs @p@ then @q@ and returns @q@'s result.
 (*>) = (Applicative.*>)
 
 {-|
-This combinator, pronounced "then discard", first parses this parser then parses q: if both succeed then the result of this parser is returned.
+This combinator, pronounced "then discard", first parses @p@ then parses @q@: 
+if both succeed then the result of @p@ is returned.
 
-First, this parser is ran, yielding x on success, then q is ran, yielding y on success. 
-If both are successful then x is returned and y is ignored. 
+First, runs @p@, yielding @x@ on success, then runs @q@, yielding @y@ on success. 
+If both @p@ and @q@ are successful then returns @x@ and ignores @y@. 
 If either fail then the entire combinator fails.
+
+@since 0.1.0.0
 -}
 infixl 4 <*
-(<*) :: Parsec a 
-     -> Parsec b -- ^ the parser to run second, whose result is discarded.
-     -> Parsec a -- ^ a parser that sequences this parser with q and returns this parser's result.
+(<*) :: Parsec a -- ^ @p@, the first parser to run, which returns the result of this combinator.
+     -> Parsec b -- ^ @q@, the second parser to run, whose result is discarded.
+     -> Parsec a -- ^ a parser that runs @p@ then @q@ and returns @p@'s result.
 (<*) = (Applicative.<*)
 
 {-|
 Run the given parser @p@, then discard its result.
 
-This combinator is useful when the parser should be run, but its result is not required.
+This combinator is useful when @p@ should be run, but its result is not required.
+
+@since 0.1.0.0
 -}
 void :: Parsec a  -- ^ @p@, the parser we wish to run, but whose results are unwanted.
      -> Parsec () -- ^ a parser that behaves the same as @p@, but returns '()' on success.
