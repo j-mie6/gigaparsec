@@ -32,7 +32,7 @@ import Control.Selective (Selective(select))
 
 import Data.Set (Set)
 
-import GHC.Exts (TYPE, RuntimeRep(BoxedRep), Levity(Unlifted), Constraint)
+CPP_import_PortableUnlifted
 
 {-
 Notes:
