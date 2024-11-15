@@ -64,7 +64,6 @@ import Data.Set qualified as Set (empty, member, size, findMin, findMax, mapMono
 import Data.Map (Map)
 import Data.Map qualified as Map (fromSet, toAscList, member)
 
-import Unsafe.Coerce qualified as Unsafe (unsafeCoerceUnlifted)
 -------------------------------------------------
 -- Primitives
 -------------------------------------------------
