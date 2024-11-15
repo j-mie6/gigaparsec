@@ -52,6 +52,8 @@ Values of this type are constructed using the library's combinators, to build
 up a final 'Parsec' value that can be passed to 'Text.Gigaparsec.parse' or one
 of the similar functions. This is implemented internally similar to other
 libraries like @parsec@ and @gigaparsec@.
+
+@since 0.1.0.0
 -}
 type Parsec :: * -> *
 newtype Parsec a = Parsec {
@@ -61,8 +63,10 @@ newtype Parsec a = Parsec {
              -> RT r
   }
 
+-- | @since 0.1.0.0
 deriving stock instance Functor Parsec -- not clear if there is a point to implementing this
 
+-- | @since 0.1.0.0
 instance Applicative Parsec where
   pure :: a -> Parsec a
   pure x = Parsec $ \st ok _ -> ok x st
@@ -86,6 +90,7 @@ instance Applicative Parsec where
   {-# INLINE (<*) #-}
   {-# INLINE (*>) #-}
 
+-- | @since 0.1.0.0
 instance Selective Parsec where
   select :: Parsec (Either a b) -> Parsec (a -> b) -> Parsec b
   select p q = _branch p q (pure id)
@@ -108,6 +113,7 @@ _branch (Parsec p) (Parsec q1) (Parsec q2) = Parsec $ \st ok err ->
         -- feed a/b to the function of the good continuation
   in  p st ok' err
 
+-- | @since 0.1.0.0
 instance Monad Parsec where
   return :: a -> Parsec a
   return = pure
@@ -128,6 +134,7 @@ instance Monad Parsec where
 raise :: (State -> Error) -> Parsec a
 raise mkErr = Parsec $ \st _ bad -> useHints bad (mkErr st) st
 
+-- | @since 0.1.0.0
 instance Alternative Parsec where
   empty :: Parsec a
   empty = raise (`emptyErr` 0)
@@ -165,6 +172,8 @@ If this parser does fail at any point having consumed input, this combinator wil
 
 ==== __Examples__
 > many = manyr (:) []
+
+@since 0.3.0.0
 -}
 {-# INLINE manyr #-}
 manyr :: (a -> b -> b) -- ^ @f@, function to apply to each value produced by @p@ starting at the right.
@@ -184,6 +193,8 @@ If this parser does fail at any point having consumed input, this combinator wil
 
 ==== __Examples__
 > some = somer (:) []
+
+@since 0.3.0.0
 -}
 {-# INLINE somer #-}
 somer :: (a -> b -> b) -- ^ function to apply to each value produced by this parser, starting at the right.
@@ -192,18 +203,25 @@ somer :: (a -> b -> b) -- ^ function to apply to each value produced by this par
       -> Parsec b      -- ^ a parser which parses @p@ some times and folds the results together with @f@ and @k@ right-associatively.
 somer f k p = liftA2 f p (manyr f k p)
 
+-- | @since 0.1.0.0
 instance Semigroup m => Semigroup (Parsec m) where
   (<>) :: Parsec m -> Parsec m -> Parsec m
   (<>) = liftA2 (<>)
 
   {-# INLINE (<>) #-}
 
+-- | @since 0.1.0.0
 instance Monoid m => Monoid (Parsec m) where
   mempty :: Parsec m
   mempty = pure mempty
 
   {-# INLINE mempty #-}
 
+{-|
+The 'State' of the parser, containing position information, the input being parsed, and more.
+
+@since 0.1.0.0
+-}
 type State :: UnliftedDatatype
 data State = State {
     -- | the input string, in future this may be generalised
