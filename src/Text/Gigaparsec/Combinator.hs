@@ -54,6 +54,7 @@ module Text.Gigaparsec.Combinator (
 
 import Text.Gigaparsec (Parsec, many, some, (<|>), ($>), (<:>), select,
                         branch, empty, unit, manyl, somel, notFollowedBy, liftA2, void)
+                  
 import Data.Foldable (asum, sequenceA_)
 
 {-|

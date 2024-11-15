@@ -45,13 +45,15 @@ module Text.Gigaparsec.Char (
     spaces, whitespaces,
   ) where
 
-import Text.Gigaparsec (Parsec, atomic, empty, some, many, (<|>))
+import Text.Gigaparsec (Parsec, atomic, empty, some, many)
 import Text.Gigaparsec.Combinator (skipMany)
 import Text.Gigaparsec.Errors.Combinator ((<?>))
 -- We want to use this to make the docs point to the right definition for users.
 import Text.Gigaparsec.Internal qualified as Internal (Parsec(Parsec, unParsec), State(..), expectedErr, useHints)
 import Text.Gigaparsec.Internal.Errors qualified as Internal (ExpectItem(ExpectRaw), Error)
 import Text.Gigaparsec.Internal.Require (require)
+
+import Control.Applicative ((<|>))
 
 import Data.Bits (Bits((.&.), (.|.)))
 import Data.Char (ord)
