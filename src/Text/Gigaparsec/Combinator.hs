@@ -1,4 +1,4 @@
-{-# LANGUAGE Safe #-}
+{-# LANGUAGE Trustworthy #-}
 {-|
 Module      : Text.Gigaparsec.Combinator
 Description : This module contains a huge number of pre-made combinators that are
@@ -52,9 +52,10 @@ module Text.Gigaparsec.Combinator (
     ifS, whenS, guardS, whileS,
   ) where
 
-import Text.Gigaparsec (Parsec, many, some, (<|>), ($>), (<:>), select,
-                        branch, empty, unit, manyl, somel, notFollowedBy, liftA2, void)
-                  
+import Text.Gigaparsec (Parsec, ($>), (<:>), unit, manyl, somel, notFollowedBy)
+import Control.Applicative ((<|>), empty, liftA2, many, some)
+import Control.Selective (select, branch)
+import Data.Functor (void)
 import Data.Foldable (asum, sequenceA_)
 
 {-|
