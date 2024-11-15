@@ -4,7 +4,7 @@
 {-# OPTIONS_HADDOCK hide #-}
 module Text.Gigaparsec.Internal.Token.Text (module Text.Gigaparsec.Internal.Token.Text) where
 
-import Text.Gigaparsec (Parsec, void, (<|>), empty, somel, (<~>), ($>), atomic, some)
+import Text.Gigaparsec (Parsec, void, somel, (<~>), ($>), atomic)
 import Text.Gigaparsec.Char (char, digit, hexDigit, octDigit, bit, satisfy, trie, string)
 import Text.Gigaparsec.Token.Descriptions (
     TextDesc(TextDesc, characterLiteralEnd, graphicCharacter),
@@ -35,6 +35,9 @@ import Text.Gigaparsec.Internal.Token.Errors (
 import Text.Gigaparsec.Internal.Token.Generic (
     GenericNumeric(zeroAllowedDecimal, zeroAllowedHexadecimal, zeroAllowedOctal, zeroAllowedBinary)
   )
+
+import Control.Applicative (liftA3, (<|>), empty, some)
+
 import Data.Char (isSpace, chr, ord, digitToInt, isAscii, isLatin1)
 import Data.Map qualified as Map (insert, map)
 import Data.Set (Set)
@@ -42,7 +45,6 @@ import Data.Set qualified as Set (toList)
 import Data.List.NonEmpty (NonEmpty((:|)), sort)
 import Text.Gigaparsec.State (Ref, make, unsafeMake, gets, update, set, get)
 import Text.Gigaparsec.Combinator (guardS, choice, manyTill)
-import Control.Applicative (liftA3)
 import Data.Maybe (catMaybes)
 
 -- TODO: is it possible to /actually/ support Text/Bytestring in future?

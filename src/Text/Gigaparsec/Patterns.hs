@@ -20,10 +20,12 @@ module Text.Gigaparsec.Patterns (deriveLiftedConstructors, deriveDeferredConstru
 import Prelude (
     Bool(True, False), String, Int, Maybe(Just, Nothing), Eq((==), (/=)),
     fmap, map, concat, (.), traverse, sequence, foldr1, length, (-), return, (++),
-    fail, ($), unwords, maybe, otherwise, id, reverse, show, flip, takeWhile, (+)
+    fail, ($), unwords, maybe, otherwise, id, reverse, show, flip, takeWhile, (+),
+    -- use Prelude's pure instead of that from Gigaparsec so the latter can have type-specialised haddock documentation.
+    pure 
   )
 
-import Text.Gigaparsec (Parsec, (<**>), (<*>), pure)
+import Text.Gigaparsec (Parsec, (<**>), (<*>))
 import Text.Gigaparsec.Position (Pos, pos)
 import Control.Monad (replicateM)
 import Data.List (foldl')
