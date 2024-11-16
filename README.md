@@ -16,19 +16,19 @@ To achieve these aims, some departures have been made
 from many of the classic `parsec`-style implementations:
 
 * `gigaparsec`'s `Parsec` type is simple: only one type-parameter. There are a few consequences of this:
-    - `Parsec` does not have a `ParsecT` variant: occasionally, people may wish to thread other monads through a parser, however, most of the practical use-cases of this can be captured using `gigaparsec`'s *registers*. The exception here is `IO`
+    - `Parsec` does not have a `ParsecT` variant: occasionally, people may wish to thread other monads through a parser, however, most of the practical use-cases of this can be captured using `gigaparsec`'s *state* and *references*, implemented with [`reference-threads`](https://github.com/j-mie6/reference-threads). The exception here is `IO`
     operations.
     - `Parsec` cannot generate the type of the input stream: currently, the input is assumed to be `String`. In future, however, it may be possible to specify an implementation for the input without resorting to noise in the type-signatures.
     - `Parsec` cannot specify a custom error type to be carried through parsing. In practice, a rich typeclass-driven API can be used to format error messages in the desired way, as well as change their types at the point of calling `parse`.
 * The common `try` combinator has been more appropriately
-  named as the `atomic` combinator: this is consistent with the `parsley` naming, and we believe that this name is more true to the combinators purpose.
-* Creating new primitive combinators is not endorsed by the libary: while the capacities to make them have been exposed, they are not made part of the public API to allow freedom for the maintainers to continue to innovate and improve the internals -- this includes continued optimisation.
+  named as the `atomic` combinator: this is consistent with the `parsley` naming, and we believe that this name better embodies the combinator's purpose.
+* Creating new primitive combinators is not endorsed by the library: while the capacities to make them have been exposed, they are not made part of the public API to allow freedom for the maintainers to continue to innovate and improve the internals -- this includes continued optimisation.
 
 Current `HEAD` documentation can be found [here][Link-Haddock]: for
 stable documentation please consult Hackage directly.
 
 ## Library Evolution ![Semantic Versioning: pvp][Badge-PVP]
-`gigaparsec` adheres strictly to Haskell PVP, with the following `early-semver`esque caveat:
+`gigaparsec` adheres strictly to Haskell PVP, with the following `early-semver`-esque caveat:
 
 * Versions `0.M.m.p` are to be treated as pre-release, with high-volatility. While the major
   component `M` will still be bumped for every major change, it is likely that there will be high

@@ -547,7 +547,7 @@ data EscapeDesc = EscapeDesc
                                         -- the string but can be used to disambiguate other escape sequences: in Haskell this would be \&
   , gapsSupported :: !Bool              -- ^ specifies whether or not string gaps are supported:
                                         -- this is where whitespace can be injected between two escBegin characters and this will all be ignored in the final string,
-                                        -- such that "hello \ \world" is "hello world"
+                                        -- such that @"hello \ \world"@ is "hello world"
   }
 
 {-|
