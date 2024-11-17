@@ -13,9 +13,10 @@ These allow for stronger guarantees of parsed results to be baked into their typ
 -}
 module Text.Gigaparsec.Combinator.NonEmpty (some, someTill, sepBy1, sepEndBy1, endBy1) where
 
-import Text.Gigaparsec (Parsec, liftA2, many, notFollowedBy)
+import Text.Gigaparsec (Parsec, notFollowedBy)
 import Text.Gigaparsec.Combinator qualified as Combinator (manyTill, sepEndBy1)
 
+import Control.Applicative (liftA2, many)
 import Data.List.NonEmpty as NonEmpty (NonEmpty((:|)), fromList)
 
 infixl 4 <:|>
