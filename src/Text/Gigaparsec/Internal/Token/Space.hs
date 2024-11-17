@@ -33,8 +33,8 @@ import Text.Gigaparsec.Internal.Require (require)
 
 
 import Data.List (isPrefixOf, partition)
-import Data.HashMap.Strict (HashMap)
-import Data.HashMap.Strict qualified as Map
+import Data.Map.Strict (Map)
+import Data.Map.Strict qualified as Map
 
 
 import Data.IORef (newIORef, IORef, readIORef, atomicModifyIORef, atomicModifyIORef')
@@ -139,8 +139,6 @@ data Space = Space {
 newtype WkThreadId = WkThreadId (Weak ThreadId)
 
 
-type Map = HashMap
-
 type MapRef :: * -> * -> *
 type MapRef k v = IORef (Map k v)
 
@@ -170,23 +168,6 @@ data ERef a = forall r . ERef {-# UNPACK #-} !(Ref r a)
 -- | A map of `Word64` to its associated @`Weak` `ThreadId`@.
 -- The `Word64` will be given by the thread's `ThreadId`.
 type WkThreadMap = IORef [StrictWTWord]
-
--- copied from
--- https://hackage.haskell.org/package/ghc-9.10.1/docs/GHC-Utils-Monad.html#v:partitionM
-{-| Monadic version of @partition@
-
-The 'partitionM' function takes a monadic predicate and a list, and returns
-the pair of lists of elements which do and do not satisfy the
-predicate, respectively; i.e.,
-
-> partitionM p xs == (filterM p xs, filterM (notM . p) xs)
--}
-partitionM :: Monad m => (a -> m Bool) -> [a] -> m ([a], [a])
-partitionM _ [] = pure ([], [])
-partitionM f (x:xs) = do
-    res <- f x
-    (as,bs) <- partitionM f xs
-    pure ([x | res] ++ as, [x | not res] ++ bs)
 
 {-
 Generalised from:
@@ -238,7 +219,6 @@ atomically replace the WkThreadMap with `aliveThreads` (given by partition).
 However, if we are pre-empted, and wake up later, `aliveThreads` may contain a thread that died while
 we were asleep. In this case, we will have mistakenly added a dead thread back into the list.
 -}
-
 updateThreadMaps :: WkThreadMap -> RefMap Word64 v -> v -> RT ()
 updateThreadMaps rList rMap ws = newRef ws $ \ref -> unsafeIOToRT $ do
   xs <- readIORef rList
@@ -251,7 +231,7 @@ updateThreadMaps rList rMap ws = newRef ws $ \ref -> unsafeIOToRT $ do
   where
     -- How to update the (TID -> Ref) map.
     -- This removes all dead threads, and inserts this thread with the given ref.
-    refMapUpdate :: [Word64] -> Word64 -> ERef v -> HashMap Word64 (ERef v) -> ((HashMap Word64 (ERef v)), ())
+    refMapUpdate :: [Word64] -> Word64 -> ERef v -> Map Word64 (ERef v) -> ((Map Word64 (ERef v)), ())
     refMapUpdate deadThreads thisThreadHash thisThreadRef mp = (
         let removedDeads = foldl (flip Map.delete) mp deadThreads
         in  Map.insert thisThreadHash thisThreadRef removedDeads
@@ -266,7 +246,7 @@ updateThreadMaps rList rMap ws = newRef ws $ \ref -> unsafeIOToRT $ do
     
 
 -- | An `IORef` to a (strict) map of (strict) @k@s to (strict) `ERef`s of @v@s  
-type RefMap k v = IORef (HashMap k (ERef v))
+type RefMap k v = IORef (Map k (ERef v))
 
 {-| 
 Get the whitespace parser for this thread.

@@ -129,7 +129,6 @@ library
 
     -- this can probably be loosened?
     build-depends:    containers            >= 0.6   && < 0.8,
-                      unordered-containers  >= 0.2   && < 0.3,
                       selective             >= 0.6   && < 0.8,
                       pretty-terminal       >= 0.1.0 && < 0.2,
                       template-haskell      >= 2.16  && < 3,
