@@ -91,98 +91,99 @@ data Space = Space {
 ---------------------------------------------------------------------------------------------------
 -- Whitespace parsers setup
 
-{-|
-A global ref to the mapping from threads to their corresponding whitespace parsers.
-
-Implemented in terms of `unsafePerformIO` -- use with caution!
--}
--- TODO: use a HashMap instead of a Map?
-{-# NOINLINE wsImplMap #-}
-wsImplMap :: IORef (Map ThreadId (Parsec ()))
-wsImplMap = unsafePerformIO (newIORef Map.empty)
-
-
-{-| 
-Get the whitespace parser for this thread.
-
-This parser consumes no input and always succeeds.
-Throws a ghc `error` if the whitespace parser has not been initialised in `wsImplMap`
--}
-getWs :: Parsec (Parsec ())
-getWs = Parsec $ \st good _ ->
-  do  ws <- unsafeIOToRT (Map.lookup <$> myThreadId <*> readIORef wsImplMap)
-      case ws of
-        Just p  -> good p st
-        Nothing -> error "Gigaparsec.Internal.Token.Lexer.getWs: whitespace parser not initialised."
-
-{-|
-Atomically replace the whitespace parser for this thread.
-
-This parser consumes no input and always succeeds.
--}
-setWs :: Parsec () -- ^ @ws@, the new whitespace parser for this thread
-      -> Parsec () -- ^ 
-setWs ws = Parsec $ \st good _ ->
-  do  unsafeIOToRT (
-        do  tid <- myThreadId
-            atomicModifyIORef wsImplMap (\m -> (Map.insert tid ws m, ())))
-      good () st
-
-{-|
-Run a parser and, if it fails __without consuming input__, undo its modifications to the 
-current thread's whitespace parser.
-
-This parser consumes input only if @p@ does also; 
-it fails if and only if @p@ fails __having consumed input__.
--}
-rollbackWs  :: Parsec a -- ^ @p@, the parser to run
-            -> Parsec a -- ^ a parser that runs @p@, and restores the original value of this 
-                        -- thread's whitespace parser if @p@ fails without consuming input.
-rollbackWs p = do
-  ws <- getWs
-  p <|> (setWs ws *> empty)
-
-{-|
-Run the given parser @p@ with a new whitespace parser, and then reset this value if @p@
-succeeds.
-
-Behaves like 'set', except the scope of the update of the whitespace parser is limited just to the 
-given parser @p@, assuming that @p@ succeeds.
-This parser consumes input and fails if and only if the given parser @p@ does also.
--}
-setWsDuring :: Parsec () -- ^ @ws@, the new temporary whitespace parser
-            -> Parsec a  -- ^ @p@, the parser to run with the modified whitespace parser
-            -> Parsec a  -- ^ a parser which runs @p@ with the new whitespace parser, 
-                         -- and resets the old whitespace parser if @p@ succeeds.
-setWsDuring ws p = do
-  oldWs <- getWs
-  setWs ws
-  p <* setWs oldWs
-
 mkSpace :: Desc.SpaceDesc -> ErrorConfig -> Space
 mkSpace desc@Desc.SpaceDesc{..} !errConfig = Space {..}
-  where -- don't think we can trust doing initialisation here, it'll happen in some random order
+  where 
+  -- don't think we can trust doing initialisation here, it'll happen in some random order
+  -- This is the global ref which holds the whitespace implementation for parsers where 
+  -- 'Text.Gigaparsec.Token.Descriptions.whiteSpaceIsContextDependent' is true.
+  {-|
+  A per-lexer ref to the mapping from threads to their corresponding whitespace parsers.
 
-        -- This is the global ref which holds the whitespace implementation for parsers where 
-        -- 'Text.Gigaparsec.Token.Descriptions.whiteSpaceIsContextDependent' is true.
-        !wsMap = wsImplMap
-        comment = commentParser desc -- do not make this strict
-        implOf
-          | supportsComments desc = hide . maybe skipComments (skipMany . (<|> comment errConfig) . void . satisfy)
-          | otherwise             = hide . maybe empty (skipMany . satisfy)
-        !configuredWhitespace = implOf space
-        !whiteSpace
-          | whitespaceIsContextDependent = join getWs
-          | otherwise                    = configuredWhitespace
-        !skipComments = skipMany (comment errConfig)
-        alter p
-          | whitespaceIsContextDependent = rollbackWs . setWsDuring (implOf p)
-          | otherwise                    = throw (UnsupportedOperation badAlter)
-        initSpace -- Initialise the whitespace implementation
-          | whitespaceIsContextDependent = setWs configuredWhitespace
-          | otherwise                    = throw (UnsupportedOperation badInit)
-        badInit = "whitespace cannot be initialised unless `spaceDesc.whitespaceIsContextDependent` is True"
-        badAlter = "whitespace cannot be altered unless `spaceDesc.whitespaceIsContextDependent` is True"
+  Implemented in terms of `unsafePerformIO` -- use with caution!
+  -}
+  -- TODO: use a HashMap instead of a Map?
+  {-# NOINLINE wsImplMap #-}
+  wsImplMap :: IORef (Map ThreadId (Parsec ()))
+  wsImplMap = unsafePerformIO (newIORef Map.empty)
+
+
+  {-| 
+  Get the whitespace parser for this thread.
+
+  This parser consumes no input and always succeeds.
+  Throws a ghc `error` if the whitespace parser has not been initialised in `wsImplMap`
+  -}
+  getWs :: Parsec (Parsec ())
+  getWs = Parsec $ \st good _ ->
+    do  ws <- unsafeIOToRT (Map.lookup <$> myThreadId <*> readIORef wsImplMap)
+        case ws of
+          Just p  -> good p st
+          Nothing -> error "Gigaparsec.Internal.Token.Lexer.getWs: whitespace parser not initialised."
+
+  {-|
+  Atomically replace the whitespace parser for this thread.
+
+  This parser consumes no input and always succeeds.
+  -}
+  setWs :: Parsec () -- ^ @ws@, the new whitespace parser for this thread
+        -> Parsec () -- ^ 
+  setWs ws = Parsec $ \st good _ ->
+    do  unsafeIOToRT (
+          do  tid <- myThreadId
+              atomicModifyIORef wsImplMap (\m -> (Map.insert tid ws m, ())))
+        good () st
+
+  {-|
+  Run a parser and, if it fails __without consuming input__, undo its modifications to the 
+  current thread's whitespace parser.
+
+  This parser consumes input only if @p@ does also; 
+  it fails if and only if @p@ fails __having consumed input__.
+  -}
+  rollbackWs  :: Parsec a -- ^ @p@, the parser to run
+              -> Parsec a -- ^ a parser that runs @p@, and restores the original value of this 
+                          -- thread's whitespace parser if @p@ fails without consuming input.
+  rollbackWs p = do
+    ws <- getWs
+    p <|> (setWs ws *> empty)
+
+  {-|
+  Run the given parser @p@ with a new whitespace parser, and then reset this value if @p@
+  succeeds.
+
+  Behaves like 'set', except the scope of the update of the whitespace parser is limited just to the 
+  given parser @p@, assuming that @p@ succeeds.
+  This parser consumes input and fails if and only if the given parser @p@ does also.
+  -}
+  setWsDuring :: Parsec () -- ^ @ws@, the new temporary whitespace parser
+              -> Parsec a  -- ^ @p@, the parser to run with the modified whitespace parser
+              -> Parsec a  -- ^ a parser which runs @p@ with the new whitespace parser, 
+                          -- and resets the old whitespace parser if @p@ succeeds.
+  setWsDuring ws p = do
+    oldWs <- getWs
+    setWs ws
+    p <* setWs oldWs
+
+
+  !wsMap = wsImplMap
+  comment = commentParser desc -- do not make this strict
+  implOf
+    | supportsComments desc = hide . maybe skipComments (skipMany . (<|> comment errConfig) . void . satisfy)
+    | otherwise             = hide . maybe empty (skipMany . satisfy)
+  !configuredWhitespace = implOf space
+  !whiteSpace
+    | whitespaceIsContextDependent = join getWs
+    | otherwise                    = configuredWhitespace
+  !skipComments = skipMany (comment errConfig)
+  alter p
+    | whitespaceIsContextDependent = rollbackWs . setWsDuring (implOf p)
+    | otherwise                    = throw (UnsupportedOperation badAlter)
+  initSpace -- Initialise the whitespace implementation
+    | whitespaceIsContextDependent = setWs configuredWhitespace
+    | otherwise                    = throw (UnsupportedOperation badInit)
+  badInit = "whitespace cannot be initialised unless `spaceDesc.whitespaceIsContextDependent` is True"
+  badAlter = "whitespace cannot be altered unless `spaceDesc.whitespaceIsContextDependent` is True"
 
 ---------------------------------------------------------------------------------------------------
 -- Comment Parsing
