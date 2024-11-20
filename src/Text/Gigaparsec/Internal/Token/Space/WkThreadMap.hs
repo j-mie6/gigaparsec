@@ -49,13 +49,10 @@ data WkThreadMap =
     -- Empty WkThreadMap
     Nil
   | WkThread
-      -- | The raw `ThreadId` value.
       {-# UNPACK #-}
-      !Word64
-      -- | Weak pointer to the thread with the given id.
-      {-# UNPACK #-} !(Weak ThreadId)
-      -- | The rest of the map.
-      !WkThreadMap
+      !Word64 -- ^ The raw `ThreadId` value.
+      {-# UNPACK #-} !(Weak ThreadId) -- ^ Weak pointer to the thread with the given id.
+      !WkThreadMap -- ^ The rest of the map.
 
 -- | Add a thread to the `WkThreadMap`.
 -- Strict in all arguments.
