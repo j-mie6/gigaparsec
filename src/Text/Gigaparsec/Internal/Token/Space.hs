@@ -69,7 +69,7 @@ import GHC.Conc (ThreadId(ThreadId))
 -- `fromThreadID` is only available in base ≥ 4.19
 #if __GLASGOW_HASKELL__ >= 908
 -- GHC >= 9.8
-import GHC.Conc.Sync (fromThreadID)
+import GHC.Conc.Sync (fromThreadId)
 
 #elif __GLASGOW_HASKELL__ >= 902 
 -- GHC >= 9.2.1
