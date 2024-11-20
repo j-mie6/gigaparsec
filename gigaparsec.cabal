@@ -125,6 +125,7 @@ library
                       Text.Gigaparsec.Internal.Token.Numeric,
                       Text.Gigaparsec.Internal.Token.Symbol,
                       Text.Gigaparsec.Internal.Token.Space,
+                      Text.Gigaparsec.Internal.Token.Space.WkThreadMap,
                       Text.Gigaparsec.Internal.Token.Text,
 
     -- this can probably be loosened?
@@ -132,8 +133,7 @@ library
                       selective             >= 0.6   && < 0.8,
                       pretty-terminal       >= 0.1.0 && < 0.2,
                       template-haskell      >= 2.16  && < 3,
-                      rt                    >= 0.1   && < 0.2,
-                      ghc-prim              >= 0.4   && < 0.12
+                      rt                    >= 0.1   && < 0.2
 
     -- Modules included in this library but not exported.
     -- other-modules:

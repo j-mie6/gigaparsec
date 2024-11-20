@@ -30,9 +30,12 @@ import Text.Gigaparsec.Internal ( Parsec(Parsec) )
 import Text.Gigaparsec.Internal.Token.Errors (annotate)
 
 import Text.Gigaparsec.Internal.Require (require)
+import Text.Gigaparsec.Internal.Token.Space.WkThreadMap (WkThreadMap)
+import Text.Gigaparsec.Internal.Token.Space.WkThreadMap qualified as WkThreadMap
+    ( empty, insert, partitionThreads, partitionThreadsThenAdd )
 
 
-import Data.List (isPrefixOf, partition)
+import Data.List (isPrefixOf)
 import Data.Map.Strict (Map)
 import Data.Map.Strict qualified as Map
 
@@ -45,7 +48,7 @@ import System.IO.Unsafe (unsafePerformIO)
 import Control.Monad.RT.Unsafe (unsafeIOToRT)
 import Control.Exception (Exception)
 import GHC.Weak (Weak, deRefWeak)
-import GHC.Exts (Word64#, ThreadId#)
+import GHC.Exts (Word64#, ThreadId#, unsafeCoerce#)
 
 CPP_import_PortableUnlifted
 import Data.Word (Word64)
@@ -57,26 +60,47 @@ import Control.Arrow (Arrow(second))
 import Data.Traversable (for)
 import GHC.Conc (ThreadId(ThreadId))
 
+---------------------------------------------------------------------------------------------------
+-- We need a way to generate a hashable value that is unique to each thread.
+-- GHC ≥ 9.8 provides `fromThreadId`.
+-- Lower versions have all the mechanisms to create this function, but they keep these internal.
+-- Thus, we have to do some naughty `foreign import`s :(
+
 -- `fromThreadID` is only available in base ≥ 4.19
 #if __GLASGOW_HASKELL__ >= 908
+-- GHC >= 9.8
 import GHC.Conc (fromThreadID)
-#else
-
-import GHC.Prim(ThreadId#)
+#elseif __GLASGOW_HASKELL__ >= 902 
+-- GHC >= 9.2.1
+-- base 4.17 - 4.18, `getThreadId` returns CULLong
 import Foreign.C (CULLong(CULLong))
 
--- Copied from
--- https://hackage.haskell.org/package/base-4.20.0.1/docs/GHC-Conc-Sync.html#v:fromThreadId
+foreign import ccall unsafe "rts_getThreadId" getThreadId :: ThreadId# -> CULLong
+
 {-|
 Map a thread to an integer identifier which is unique within the
 current process.
 -}
 fromThreadId :: ThreadId -> Word64
-fromThreadId (ThreadId t) = fromIntegral $ getThreadId t
+fromThreadId (ThreadId tid) = fromIntegral (getThreadId tid)
 
-foreign import ccall unsafe "rts_getThreadId" getThreadId :: ThreadId# -> CULLong
+#else
+-- base 4.16 and below, `getThreadId` returns CInt
+import Foreign.C (CInt(CInt))
+
+foreign import ccall unsafe "rts_getThreadId" getThreadId :: ThreadId# -> CInt
+
+{-|
+Map a thread to an integer identifier which is unique within the
+current process.
+-}
+fromThreadId :: ThreadId -> Word64
+fromThreadId (ThreadId tid) = fromIntegral (getThreadId tid)
 
 #endif
+---------------------------------------------------------------------------------------------------
+
+
 
 {-|
 This type is concerned with special treatment of whitespace.
@@ -134,30 +158,154 @@ data Space = Space {
   }
 
 ---------------------------------------------------------------------------------------------------
+-- Comment Parsing
+
+{-|
+We have the following invariances to be checked up front:
+  * at least one kind of comment must be enabled
+  * the starts of line and multiline must not overlap
+
+-- TODO: needs error messages put in (is the hide correct)
+-- TODO: remove guard, configure properly
+-}
+commentParser :: Desc.SpaceDesc -> ErrorConfig -> Parsec ()
+commentParser Desc.SpaceDesc{..} !errConfig =
+  require (multiEnabled || singleEnabled) "skipComments" noComments $
+    require (not (multiEnabled && isPrefixOf multiLineCommentStart lineCommentStart)) "skipComments" noOverlap $
+      hide (multiLine <|> singleLine)
+  where
+    -- can't make these strict until guard is gone
+    openComment = atomic (string multiLineCommentStart)
+    closeComment = annotate (labelSpaceEndOfMultiComment errConfig) (atomic (string multiLineCommentEnd))
+    multiLine = guard multiEnabled *> openComment *> wellNested 1
+    wellNested :: Int -> Parsec ()
+    wellNested 0 = unit
+    wellNested n = closeComment *> wellNested (n - 1)
+               <|> guard multiLineNestedComments *> openComment *> wellNested (n + 1)
+               <|> item *> wellNested n
+    singleLine = guard singleEnabled
+              *> atomic (string lineCommentStart)
+              *> skipManyTill item (annotate (labelSpaceEndOfLineComment errConfig) endOfLineComment)
+
+    endOfLineComment
+      | lineCommentAllowsEOF = void endOfLine <|> eof
+      | otherwise            = void endOfLine
+
+    multiEnabled = not (null multiLineCommentStart || null multiLineCommentEnd)
+    singleEnabled = not (null lineCommentStart)
+    noComments = "one of single- or multi-line comments must be enabled"
+    noOverlap = "single-line comments must not overlap with multi-line comments"
+
+supportsComments :: Desc.SpaceDesc -> Bool
+supportsComments Desc.SpaceDesc{..} = not (null lineCommentStart && null multiLineCommentStart)
+
+{-|
+One should not use `alter` or `initSpace` when white space is not context dependent,
+else throw this error.
+-}
+type UnsupportedOperation :: *
+newtype UnsupportedOperation = UnsupportedOperation String deriving stock Eq
+instance Show UnsupportedOperation where
+  show (UnsupportedOperation msg) = "unsupported operation: " ++ msg
+instance Exception UnsupportedOperation
+
+
+---------------------------------------------------------------------------------------------------
 -- Whitespace parsers setup
 
-newtype WkThreadId = WkThreadId (Weak ThreadId)
+mkSpace :: Desc.SpaceDesc -> ErrorConfig -> Space
+mkSpace desc@Desc.SpaceDesc{..} !errConfig = Space {..}
+  where
+  -- don't think we can trust doing initialisation here, it'll happen in some random order
+  -- This is the global ref which holds the whitespace implementation for parsers where 
+  -- 'Text.Gigaparsec.Token.Descriptions.whiteSpaceIsContextDependent' is true.
+  {-
+  A per-lexer ref to the mapping from thread id hashes to their corresponding whitespace parsers.
+
+  Implemented in terms of `unsafePerformIO` -- use with caution!
+  -}
+  {-# NOINLINE wsImplMap #-}
+  wsImplMap :: RefMap Word64 (Parsec ())
+  !wsImplMap = unsafePerformIO (newIORef Map.empty)
+
+  {-
+  A per-lexer `IORef` to the mapping from thread-id hashes to `Weak` thread ids.
+
+  Implemented in terms of `unsafePerformIO` -- use with caution!
+  -}
+  {-# NOINLINE threadTIDMap #-}
+  threadTIDMap :: IORef WkThreadMap
+  !threadTIDMap = unsafePerformIO (newIORef WkThreadMap.empty)
+
+  ~comment = commentParser desc -- do not make this strict
+  implOf
+    | supportsComments desc = hide . maybe skipComments (skipMany . (<|> comment errConfig) . void . satisfy)
+    | otherwise             = hide . maybe empty (skipMany . satisfy)
+  !configuredWhitespace = implOf space
+  !whiteSpace
+    | whitespaceIsContextDependent = join (getWs wsImplMap)
+    | otherwise                    = configuredWhitespace
+  !skipComments = skipMany (comment errConfig)
+  alter p
+    | whitespaceIsContextDependent = rollbackWs wsImplMap . setWsDuring wsImplMap (implOf p)
+    | otherwise                    = throw (UnsupportedOperation badAlter)
+  initSpace -- Initialise the whitespace implementation
+    | whitespaceIsContextDependent = initWs wsImplMap threadTIDMap configuredWhitespace
+    | otherwise                    = throw (UnsupportedOperation badInit)
+  badInit = "whitespace cannot be initialised unless `spaceDesc.whitespaceIsContextDependent` is True"
+  badAlter = "whitespace cannot be altered unless `spaceDesc.whitespaceIsContextDependent` is True"
 
 
-type MapRef :: * -> * -> *
-type MapRef k v = IORef (Map k v)
+---------------------------------------------------------------------------------------------------
+-- Per-thread whitespace parser maps.
+{-
+To keep the changes to the whitespace parser thread-safe, we need to maintain a map associating
+threads to their whitespace parsers.
 
+Naively doing this with a @Map ThreadId (Parsec ())@ means dead threads cannot be garbage collected,
+as they are still in the map.
+Instead, we have *two* maps, each using a `Word64` key which is unique to each thread. 
+Crucially, this key is not directly linked to the thread (in terms of pointers), 
+meaning the latter can be garbage collected after dying, while still
+having a representative in the map.
+
+The unique `Word64` is generated by a naughty call to `fromThreadId`, which provides
+a unique identifier for the thread.
+We call this the 'raw thread id'.
+
+1. `WkThreadMap`: 
+  A mapping from the raw thread id to a *weak* pointer to the thread.
+  The weak pointer means we are able to access the thread, but it does not prevent the thread from being
+  garbage collected upon death.
+
+  This does, however, mean we need to manually clean up the entries for dead threads in this map.
+  We can query the weak pointer to determine if the thread is still alive, and remove it otherwise.
+
+2. `RefMap Word64 (Ref Parsec())`:
+  A mapping from raw thread ids to their current whitespace parsers.
+
+  The whitespace parsers are implemented with a `Ref` which should only be accessed by the associated thread.
+  We use a `Ref` so that the entry in the map does not need to be modified when the whitespace parser is updated,
+  instead we mutate the value of the `Ref`.
+
+  As with the `WkThreadMap`, we need to manually clean up entries of dead threads, using a similar method.
+-}
+
+{-|
+Get a weak pointer to the current thread.
+Used in `WkThreadMap` and `RefMap`.
+-}
 {-# INLINE myWeakThreadId #-}
 myWeakThreadId :: IO (Weak ThreadId)
 myWeakThreadId = mkWeakThreadId =<< myThreadId
 
+{-|
+Get a unique key of the current thread.
+This provides the 'raw thread id' (see above).
+-}
 myThreadIDKey :: IO Word64
 myThreadIDKey = fromThreadId <$>  myThreadId
 
-
-
--- | A strict pair of `Word64` and @`Weak` `ThreadId`@s.
-type StrictWTWord :: *
-data StrictWTWord = 
-  WTW 
-    { unTID      :: {-# UNPACK #-} !Word64,
-      unWkThread :: {-# UNPACK #-} !(Weak ThreadId)
-    }
 
 -- | Existential of a 'Ref' and its lifetime.
 -- 
@@ -165,24 +313,8 @@ data StrictWTWord =
 -- > @`ERef` a = Σ (r : *) . `Ref` r a@
 data ERef a = forall r . ERef {-# UNPACK #-} !(Ref r a)
 
--- | A map of `Word64` to its associated @`Weak` `ThreadId`@.
--- The `Word64` will be given by the thread's `ThreadId`.
-type WkThreadMap = IORef [StrictWTWord]
-
-{-
-Generalised from:
-https://hackage.haskell.org/package/ghc-internal-9.1001.0/docs/src/GHC.Internal.Data.OldList.html#deleteBy
--}
-deleteBy                :: (b -> a -> Bool) -> b -> [a] -> [a]
-deleteBy _  _ []        = []
-deleteBy eq x (y:ys)    = if x `eq` y then ys else y : deleteBy eq x ys
-
-{-
-Generalised from:
-https://hackage.haskell.org/package/ghc-internal-9.1001.0/docs/src/GHC.Internal.Data.OldList.html#deleteFirstsBy
--}
-deleteFirstsBy          :: (b -> a -> Bool) -> [a] -> [b] -> [a]
-deleteFirstsBy eq       =  foldl (flip (deleteBy eq))
+-- | An `IORef` to a (strict) map of (strict) @k@s to (strict) `ERef`s of @v@s  
+type RefMap k v = IORef (Map k (ERef v))
 
 {-|
 This function both:
@@ -210,22 +342,17 @@ The case:
     However, not all tids in deadThreads need be in rMap anymore.
     But this is fine, as calling delete on a key not present is just ignored.
 
-
-### Why not use partition
-Notice we traverse the `WkThreadMap` twice; once to find `deadThreads`,
-and the second in the `WkThreadMap` update, removing all dead threads.
-If we were to use partition, (or partitionM), then naively we might think to just
-atomically replace the WkThreadMap with `aliveThreads` (given by partition).
-However, if we are pre-empted, and wake up later, `aliveThreads` may contain a thread that died while
-we were asleep. In this case, we will have mistakenly added a dead thread back into the list.
+### Why the expensive `refMapUpdate`
+It is thread-safer to remove a list of dead threads than it is to replace the map with only alive threads.
+That is, there is no harm in removing dead threads that are not in the map,
+but there is harm in clobbering threads that were spawned between the `WkThreadMap` update and
+that of the `RefMap`.
 -}
-updateThreadMaps :: WkThreadMap -> RefMap Word64 v -> v -> RT ()
+updateThreadMaps :: IORef WkThreadMap -> RefMap Word64 v -> v -> RT ()
 updateThreadMaps rList rMap ws = newRef ws $ \ref -> unsafeIOToRT $ do
-  xs <- readIORef rList
-  deadThreads <- map unTID <$> filterM (fmap isJust . deRefWeak . unWkThread) xs
   tid <- myThreadIDKey
   wkRef <- myWeakThreadId
-  atomicModifyIORef' rList (tidMapUpdate deadThreads tid wkRef)
+  deadThreads <- atomicModifyIORef' rList (WkThreadMap.partitionThreadsThenAdd tid wkRef)
   atomicModifyIORef' rMap (refMapUpdate deadThreads tid (ERef ref))
 
   where
@@ -237,16 +364,7 @@ updateThreadMaps rList rMap ws = newRef ws $ \ref -> unsafeIOToRT $ do
         in  Map.insert thisThreadHash thisThreadRef removedDeads
         , ()
       )
-    -- How to update the (TID -> WkThreadId) map.
-    -- this removes all dead threads, and inserts this thread with a weak ref to its Id.
-    tidMapUpdate :: [Word64] -> Word64 -> Weak ThreadId -> [StrictWTWord] -> ([StrictWTWord], ())
-    tidMapUpdate deadThreads tidHash wkRef threads = 
-      (WTW tidHash wkRef : deleteFirstsBy (\x y -> x == unTID y) threads deadThreads, ())
 
-    
-
--- | An `IORef` to a (strict) map of (strict) @k@s to (strict) `ERef`s of @v@s  
-type RefMap k v = IORef (Map k (ERef v))
 
 {-| 
 Get the whitespace parser for this thread.
@@ -311,7 +429,7 @@ This parser consumes no input and always succeeds.
 -}
 {-# INLINE initWs #-}
 initWs :: RefMap Word64 (Parsec ())
-       -> WkThreadMap
+       -> IORef WkThreadMap
        -> Parsec ()
        -> Parsec ()
 initWs wsMap ts ws = Parsec $ \st good _ -> do
@@ -352,93 +470,3 @@ setWsDuring wsMap ws p = do
   oldWs <- getWs wsMap
   setWs wsMap ws
   p <* setWs wsMap oldWs
-
-mkSpace :: Desc.SpaceDesc -> ErrorConfig -> Space
-mkSpace desc@Desc.SpaceDesc{..} !errConfig = Space {..}
-  where
-  -- don't think we can trust doing initialisation here, it'll happen in some random order
-  -- This is the global ref which holds the whitespace implementation for parsers where 
-  -- 'Text.Gigaparsec.Token.Descriptions.whiteSpaceIsContextDependent' is true.
-  {-
-  A per-lexer ref to the mapping from thread id hashes to their corresponding whitespace parsers.
-
-  Implemented in terms of `unsafePerformIO` -- use with caution!
-  -}
-  {-# NOINLINE wsImplMap #-}
-  wsImplMap :: RefMap Word64 (Parsec ())
-  !wsImplMap = unsafePerformIO (newIORef Map.empty)
-
-  {-
-  A per-lexer `IORef` to the mapping from thread-id hashes to `Weak` thread ids.
-
-  Implemented in terms of `unsafePerformIO` -- use with caution!
-  -}
-  {-# NOINLINE threadTIDMap #-}
-  threadTIDMap :: WkThreadMap
-  !threadTIDMap = unsafePerformIO (newIORef [])
-
-  comment = commentParser desc -- do not make this strict
-  implOf
-    | supportsComments desc = hide . maybe skipComments (skipMany . (<|> comment errConfig) . void . satisfy)
-    | otherwise             = hide . maybe empty (skipMany . satisfy)
-  !configuredWhitespace = implOf space
-  !whiteSpace
-    | whitespaceIsContextDependent = join (getWs wsImplMap)
-    | otherwise                    = configuredWhitespace
-  !skipComments = skipMany (comment errConfig)
-  alter p
-    | whitespaceIsContextDependent = rollbackWs wsImplMap . setWsDuring wsImplMap (implOf p)
-    | otherwise                    = throw (UnsupportedOperation badAlter)
-  initSpace -- Initialise the whitespace implementation
-    | whitespaceIsContextDependent = initWs wsImplMap threadTIDMap configuredWhitespace
-    | otherwise                    = throw (UnsupportedOperation badInit)
-  badInit = "whitespace cannot be initialised unless `spaceDesc.whitespaceIsContextDependent` is True"
-  badAlter = "whitespace cannot be altered unless `spaceDesc.whitespaceIsContextDependent` is True"
-
----------------------------------------------------------------------------------------------------
--- Comment Parsing
-
-{-
-We have the following invariances to be checked up front:
-  * at least one kind of comment must be enabled
-  * the starts of line and multiline must not overlap
-
--- TODO: needs error messages put in (is the hide correct)
--- TODO: remove guard, configure properly
--}
-commentParser :: Desc.SpaceDesc -> ErrorConfig -> Parsec ()
-commentParser Desc.SpaceDesc{..} !errConfig =
-  require (multiEnabled || singleEnabled) "skipComments" noComments $
-    require (not (multiEnabled && isPrefixOf multiLineCommentStart lineCommentStart)) "skipComments" noOverlap $
-      hide (multiLine <|> singleLine)
-  where
-    -- can't make these strict until guard is gone
-    openComment = atomic (string multiLineCommentStart)
-    closeComment = annotate (labelSpaceEndOfMultiComment errConfig) (atomic (string multiLineCommentEnd))
-    multiLine = guard multiEnabled *> openComment *> wellNested 1
-    wellNested :: Int -> Parsec ()
-    wellNested 0 = unit
-    wellNested n = closeComment *> wellNested (n - 1)
-               <|> guard multiLineNestedComments *> openComment *> wellNested (n + 1)
-               <|> item *> wellNested n
-    singleLine = guard singleEnabled
-              *> atomic (string lineCommentStart)
-              *> skipManyTill item (annotate (labelSpaceEndOfLineComment errConfig) endOfLineComment)
-
-    endOfLineComment
-      | lineCommentAllowsEOF = void endOfLine <|> eof
-      | otherwise            = void endOfLine
-
-    multiEnabled = not (null multiLineCommentStart || null multiLineCommentEnd)
-    singleEnabled = not (null lineCommentStart)
-    noComments = "one of single- or multi-line comments must be enabled"
-    noOverlap = "single-line comments must not overlap with multi-line comments"
-
-supportsComments :: Desc.SpaceDesc -> Bool
-supportsComments Desc.SpaceDesc{..} = not (null lineCommentStart && null multiLineCommentStart)
-
-type UnsupportedOperation :: *
-newtype UnsupportedOperation = UnsupportedOperation String deriving stock Eq
-instance Show UnsupportedOperation where
-  show (UnsupportedOperation msg) = "unsupported operation: " ++ msg
-instance Exception UnsupportedOperation
