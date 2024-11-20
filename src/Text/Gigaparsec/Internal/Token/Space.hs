@@ -70,7 +70,8 @@ import GHC.Conc (ThreadId(ThreadId))
 #if __GLASGOW_HASKELL__ >= 908
 -- GHC >= 9.8
 import GHC.Conc (fromThreadID)
-#elseif __GLASGOW_HASKELL__ >= 902 
+
+#elif __GLASGOW_HASKELL__ >= 902 
 -- GHC >= 9.2.1
 -- base 4.17 - 4.18, `getThreadId` returns CULLong
 import Foreign.C (CULLong(CULLong))
