@@ -388,8 +388,19 @@ Throws a ghc `error` if the ref is not in the given map.
 -- calling getMapRef, so that this function never fails.
 {-# INLINE getMapRef #-}
 getMapRef :: RefMap Word64 v -> RT (ERef v)
-getMapRef wsMap = unsafeIOToRT 
-  ((Map.!) <$> readIORef wsMap <*> myThreadIDKey)
+getMapRef wsMap = unsafeIOToRT $ do
+  x <- Map.lookup <$> myThreadIDKey <*> readIORef wsMap
+  case x of
+    Nothing -> do
+      tid <- myThreadIDKey 
+      error $ concat [
+          "GigaParsec.Internal.Token.Space.getMapRef: "
+        , "entry in `RefMap` not initialised for thread: "
+        , show tid 
+        ]
+    Just y  -> return y
+
+  -- ((Map.!) <$> readIORef wsMap <*> myThreadIDKey)
 
 {-| 
 Atomically set the `Ref` associated with this thread with value @v@.
