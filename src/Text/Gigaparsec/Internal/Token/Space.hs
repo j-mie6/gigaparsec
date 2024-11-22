@@ -394,7 +394,12 @@ getMapRef wsMap = unsafeIOToRT $ do
     Nothing -> do
       tid <- myThreadIDKey 
       error $ concat [
-          "GigaParsec.Internal.Token.Space.getMapRef: "
+          "\n > Gigaparsec Error: Whitespace parser has not been initialised for this thread."
+        , "\n | This usually occurs if you have not used the `fully` combinator in `Text.Gigaparsec.Token.Lexer`."
+        , "\n | `fully` handles the initialisation of the whitespace parsers given by a lexer description."
+        , "\n | If you use the lexical descriptions, then any 'top-level' parser should be wrapped in the `fully` combinator."
+        , "\n | This includes any parser that is given to, for example, the `parse`, `parseFromFile`, and `parseRepl` functions in `Text.Gigaparsec`"
+        , "\n\n   (Internal Error): Text.Gigaparsec.Internal.Token.Space.getMapRef: "
         , "entry in `RefMap` not initialised for thread: "
         , show tid 
         ]
