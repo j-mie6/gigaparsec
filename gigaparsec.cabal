@@ -125,7 +125,6 @@ library
                       Text.Gigaparsec.Internal.Token.Numeric,
                       Text.Gigaparsec.Internal.Token.Symbol,
                       Text.Gigaparsec.Internal.Token.Space,
-                      Text.Gigaparsec.Internal.Token.Space.WkThreadMap,
                       Text.Gigaparsec.Internal.Token.Text,
 
     -- this can probably be loosened?
@@ -234,4 +233,7 @@ library examples
         containers >= 0.6 && < 0.7
     
     exposed-modules:
-        ExprLang
+        ExprLang,
+        ExprLang.Parser,
+        ExprLang.Lexer,
+        ExprLang.AST
