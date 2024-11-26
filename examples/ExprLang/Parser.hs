@@ -4,7 +4,6 @@ module ExprLang.Parser where
 
 import qualified Text.Gigaparsec.Token.Descriptions  as Desc
 import qualified Text.Gigaparsec.Token.Lexer         as Lexer
-import Text.Gigaparsec.Debug         (debug)
 
 import           Data.Char                           (generalCategory, isAlpha,
                                                       isAlphaNum, isSpace)
@@ -34,7 +33,7 @@ import ExprLang.AST
 import ExprLang.Lexer
 
 exprParen :: Parsec Expr
-exprParen = "(" *> debug "altering" (alter isAnySpace expr) <* ")"
+exprParen = "(" *> alter isAnySpace (whiteSpace *> expr) <* ")"
 
 isAnySpace :: Char -> Bool
 isAnySpace x = x == ' ' || x == '\n'
@@ -47,7 +46,7 @@ atom = ExprAtom <$> (
         (AtomInt <$> integer <?> ["number"])
     <|> (AtomVar <$> identifier <?> ["variable"])
   )
-  <|> debug "exprParen" (exprParen <?> ["parentheses"])
+  <|> exprParen <?> ["parentheses"]
 
 
 expr :: Parsec Expr
