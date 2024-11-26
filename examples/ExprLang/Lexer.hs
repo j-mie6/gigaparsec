@@ -18,7 +18,8 @@ module ExprLang.Lexer (
   integer,
   identifier,
   fully,
-  alter
+  alter,
+  whiteSpace
   ) where
 import qualified Text.Gigaparsec.Token.Descriptions  as Desc
 import qualified Text.Gigaparsec.Token.Lexer         as Lexer
@@ -131,6 +132,7 @@ integer =
 {-| Parses a single \'identifier\' token.
 
 -}
+{-# INLINE identifier #-}
 identifier :: Parsec String
 identifier = Lexer.identifier (Lexer.names lexeme)
 
@@ -139,12 +141,14 @@ identifier = Lexer.identifier (Lexer.names lexeme)
 This *must* be used by any top-level parsers, as 'Lexer.fully' will initialise the
 lexer and its various components before running @p@.
 -}
+{-# INLINE fully #-}
 fully :: Parsec a -> Parsec a
 fully = Lexer.fully lexer
 
 {-| Change how whitespace is parsed while running the given parser @p@.
 The given predicate @pred@ will return 'True' for what characters are considered whitespace.
 -}
+{-# INLINE alter #-}
 alter :: (Char -> Bool) 
       -- ^ @pred@, defines what characters are to be considered whitespace when running @p@.
       -> Parsec a 
@@ -152,3 +156,7 @@ alter :: (Char -> Bool)
       -> Parsec a
       -- ^ a parser that runs @p@ with the changed definition of whitespace.
 alter = Lexer.alter (Lexer.space lexer) . Just
+
+{-# INLINE whiteSpace #-}
+whiteSpace :: Parsec ()
+whiteSpace = Lexer.whiteSpace (Lexer.space lexer)
