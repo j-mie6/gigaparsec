@@ -30,9 +30,6 @@ import Text.Gigaparsec.Internal ( Parsec(Parsec) )
 import Text.Gigaparsec.Internal.Token.Errors (annotate)
 
 import Text.Gigaparsec.Internal.Require (require)
-import Text.Gigaparsec.Internal.Token.Space.WkThreadMap (WkThreadMap)
-import Text.Gigaparsec.Internal.Token.Space.WkThreadMap qualified as WkThreadMap
-    ( empty, insert, partitionThreads, partitionThreadsThenAdd )
 
 
 import Data.List (isPrefixOf)
@@ -221,22 +218,15 @@ mkSpace desc@Desc.SpaceDesc{..} !errConfig = Space {..}
   -- This is the global ref which holds the whitespace implementation for parsers where 
   -- 'Text.Gigaparsec.Token.Descriptions.whiteSpaceIsContextDependent' is true.
   {-
-  A per-lexer ref to the mapping from thread id hashes to their corresponding whitespace parsers.
+  A per-lexer ref to the mapping from raw thread id hashes to their corresponding whitespace parsers 
+  and a weak pointer to the thread.
 
   Implemented in terms of `unsafePerformIO` -- use with caution!
   -}
   {-# NOINLINE wsImplMap #-}
-  wsImplMap :: RefMap Word64 (Parsec ())
+  wsImplMap :: WsMap
   !wsImplMap = unsafePerformIO (newIORef Map.empty)
 
-  {-
-  A per-lexer `IORef` to the mapping from thread-id hashes to `Weak` thread ids.
-
-  Implemented in terms of `unsafePerformIO` -- use with caution!
-  -}
-  {-# NOINLINE threadTIDMap #-}
-  threadTIDMap :: IORef WkThreadMap
-  !threadTIDMap = unsafePerformIO (newIORef WkThreadMap.empty)
 
   ~comment = commentParser desc -- do not make this strict
   implOf
@@ -251,7 +241,7 @@ mkSpace desc@Desc.SpaceDesc{..} !errConfig = Space {..}
     | whitespaceIsContextDependent = rollbackWs wsImplMap . setWsDuring wsImplMap (implOf p)
     | otherwise                    = throw (UnsupportedOperation badAlter)
   initSpace -- Initialise the whitespace implementation
-    | whitespaceIsContextDependent = initWs wsImplMap threadTIDMap configuredWhitespace
+    | whitespaceIsContextDependent = initWs wsImplMap configuredWhitespace
     | otherwise                    = throw (UnsupportedOperation badInit)
   badInit = "whitespace cannot be initialised unless `spaceDesc.whitespaceIsContextDependent` is True"
   badAlter = "whitespace cannot be altered unless `spaceDesc.whitespaceIsContextDependent` is True"
@@ -292,42 +282,64 @@ We call this the 'raw thread id'.
   As with the `WkThreadMap`, we need to manually clean up entries of dead threads, using a similar method.
 -}
 
+{-| The 'raw' value of a `ThreadId`.
+
+Obtained using `fromThreadId`.
+-}
+type RawThreadId = Word64
+
+-- | A whitespace parser
+type WsParser = Parsec ()
+
+{-| Existential of a 'Ref' and its lifetime.
+
+Essentially, 
+> @`ERef` a = Σ (r : *) . `Ref` r a@
+-}
+data ERef a = forall r . ERef {-# UNPACK #-} !(Ref r a)
+
+{-|
+A pair of a weak pointer to a 'ThreadId', and a ref to the current whitespace parser for that thread.
+-}
+data WsPair = 
+  WsPair 
+    {-# UNPACK #-} !(Weak ThreadId)
+    !(ERef WsParser) -- Can't unpack this as it is an existential.
+
+{-| An `IORef` to a strict map of 'RawThreadId's to 'WsPair's. 
+
+The 'WsPair' entries  consist of the whitespace parser for the associated thread
+and a weak pointer to the thread's 'ThreadId'
+-}
+type WsMap = IORef (Map RawThreadId WsPair)
+
+
 {-|
 Get a weak pointer to the current thread.
-Used in `WkThreadMap` and `RefMap`.
+
+Used in the `WsMap`.
 -}
 {-# INLINE myWeakThreadId #-}
 myWeakThreadId :: IO (Weak ThreadId)
 myWeakThreadId = mkWeakThreadId =<< myThreadId
 
 {-|
-Get a unique key of the current thread.
+Get a unique key (the `RawThreadId`) of the current thread.
 This provides the 'raw thread id' (see above).
 -}
-myThreadIDKey :: IO Word64
-myThreadIDKey = fromThreadId <$>  myThreadId
+{-# INLINE myRawThreadId #-}
+myRawThreadId :: IO RawThreadId
+myRawThreadId = fromThreadId <$>  myThreadId
 
 
--- | Existential of a 'Ref' and its lifetime.
--- 
--- Essentially, 
--- > @`ERef` a = Σ (r : *) . `Ref` r a@
-data ERef a = forall r . ERef {-# UNPACK #-} !(Ref r a)
-
--- | An `IORef` to a (strict) map of (strict) @k@s to (strict) `ERef`s of @v@s  
-type RefMap k v = IORef (Map k (ERef v))
 
 {-|
 This function both:
 
-* Removes all dead threads from the `WkThreadMap` and `RefMap`, /and/
-* Registers the current thread in the `WkThreadMap` and `RefMap`.
+* Removes all dead threads from the `WsMap`, /and/
+* Inserts the current thread and a whitespace parser in the `WsMap`.
 
-This is achieved in two atomic modifications:
-
-* one atomic modification to remove dead threads and add this thread to the `WkThreadMap`
-* one atomic modification to remove dead threads and add this thread to the `RefMap`
-
+This is achieved in one atomic-modify.
 -}
 {-
 Some Notes:
@@ -349,74 +361,64 @@ That is, there is no harm in removing dead threads that are not in the map,
 but there is harm in clobbering threads that were spawned between the `WkThreadMap` update and
 that of the `RefMap`.
 -}
-updateThreadMaps :: IORef WkThreadMap -> RefMap Word64 v -> v -> RT ()
-updateThreadMaps rList rMap ws = newRef ws $ \ref -> unsafeIOToRT $ do
-  tid <- myThreadIDKey
-  wkRef <- myWeakThreadId
-  deadThreads <- atomicModifyIORef' rList (WkThreadMap.partitionThreadsThenAdd tid wkRef)
-  atomicModifyIORef' rMap (refMapUpdate deadThreads tid (ERef ref))
-
+updateThreadMaps :: WsMap -> WsParser -> RT ()
+updateThreadMaps mp ws = newRef ws $ \ref -> unsafeIOToRT $ do 
+  tid <- myRawThreadId
+  wkTid <- myWeakThreadId
+  atomicModifyIORef' mp (removeDeadsAndAddNewRef tid (WsPair wkTid (ERef ref)))
   where
-    -- How to update the (TID -> Ref) map.
-    -- This removes all dead threads, and inserts this thread with the given ref.
-    refMapUpdate :: [Word64] -> Word64 -> ERef v -> Map Word64 (ERef v) -> ((Map Word64 (ERef v)), ())
-    refMapUpdate deadThreads thisThreadHash thisThreadRef mp = (
-        let removedDeads = foldl (flip Map.delete) mp deadThreads
-        in  Map.insert thisThreadHash thisThreadRef removedDeads
-        , ()
-      )
+    -- Remove all dead threads from the WsMap using `isAlive`,
+    -- then add the new tid/val to the map.
+    removeDeadsAndAddNewRef :: RawThreadId -> WsPair -> Map RawThreadId WsPair -> (Map RawThreadId WsPair, ())
+    removeDeadsAndAddNewRef tid val xs = (Map.insert tid val (Map.filter isAlive xs), ())
+
+    -- Determine if the thread is still alive.
+    -- WARNING: defined with `unsafePerformIO`, use with caution.
+    {-# NOINLINE isAlive #-}
+    isAlive :: WsPair -> Bool
+    isAlive (WsPair wkTid _) = unsafePerformIO $! (isJust <$>) $! deRefWeak wkTid
 
 
 {-| 
 Get the whitespace parser for this thread.
 
 This parser consumes no input and always succeeds.
-Throws a ghc `error` if the whitespace parser has not been initialised in `wsImplMap`
+Throws a ghc `error` if the whitespace parser has not been initialised in the given map.
 -}
 {-# INLINE getWs #-}
-getWs :: RefMap Word64 (Parsec ()) -> Parsec (Parsec ())
+getWs :: WsMap -> Parsec WsParser
 getWs wsMap = Parsec $ \st good _ -> do
   ERef ref <- getMapRef wsMap
   (`good` st) =<< readRef ref
 
 {-| 
-Get the ref to the @v@ for this thread.
+Get the ref to the 'WsParser' for this thread.
 
 Throws a ghc `error` if the ref is not in the given map.
 -}
 -- TODO: It should be an invariant that we have initialised the ref before
 -- calling getMapRef, so that this function never fails.
 {-# INLINE getMapRef #-}
-getMapRef :: RefMap Word64 v -> RT (ERef v)
+getMapRef :: WsMap -> RT (ERef WsParser)
 getMapRef wsMap = unsafeIOToRT $ do
-  x <- Map.lookup <$> myThreadIDKey <*> readIORef wsMap
+  x <- Map.lookup <$> myRawThreadId <*> readIORef wsMap
   case x of
-    Nothing -> do
-      tid <- myThreadIDKey 
-      error $ concat [
-          "\n > Gigaparsec Error: Whitespace parser has not been initialised for this thread."
-        , "\n | This usually occurs if you have not used the `fully` combinator in `Text.Gigaparsec.Token.Lexer`."
-        , "\n | `fully` handles the initialisation of the whitespace parsers given by a lexer description."
-        , "\n | If you use the lexical descriptions, then any 'top-level' parser should be wrapped in the `fully` combinator."
-        , "\n | This includes any parser that is given to, for example, the `parse`, `parseFromFile`, and `parseRepl` functions in `Text.Gigaparsec`"
-        , "\n\n   (Internal Error): Text.Gigaparsec.Internal.Token.Space.getMapRef: "
-        , "entry in `RefMap` not initialised for thread: "
-        , show tid 
-        ]
-    Just y  -> return y
-
-  -- ((Map.!) <$> readIORef wsMap <*> myThreadIDKey)
-
-{-| 
-Atomically set the `Ref` associated with this thread with value @v@.
--}
-setMapRef :: RefMap Word64 v -> v -> RT ()
-setMapRef wsMap ws = newRef ws $ \ref -> unsafeIOToRT $ do
-  tid <- myThreadIDKey
-  atomicModifyIORef' 
-    wsMap 
-    (\mp -> (Map.insert tid (ERef ref) mp , ()))
-
+    Nothing -> error . errMsg <$> myRawThreadId
+    Just (WsPair _ p)  -> return p
+  where
+    -- Error to display when the ref for this thread's wsparser has not been 
+    -- initialised in the wsMap.
+    errMsg :: RawThreadId -> String
+    errMsg tid = concat [
+        "\n > Gigaparsec Error: Whitespace parser has not been initialised for this thread."
+      , "\n | This usually occurs if you have not used the `fully` combinator in `Text.Gigaparsec.Token.Lexer`."
+      , "\n | `fully` handles the initialisation of the whitespace parsers given by a lexer description."
+      , "\n | If you use the lexical descriptions, then any 'top-level' parser should be wrapped in the `fully` combinator."
+      , "\n | This includes any parser that is given to, for example, the `parse`, `parseFromFile`, and `parseRepl` functions in `Text.Gigaparsec`"
+      , "\n\n   (Internal Error): Text.Gigaparsec.Internal.Token.Space.getMapRef: "
+      , "entry in `RefMap` not initialised for thread: "
+      , show tid 
+      ]
 
 {-|
 Replace the whitespace parser for this thread.
@@ -427,11 +429,12 @@ This has no race conditions as:
 * threads only access their own associated `Ref`.
 
 This parser consumes no input and always succeeds.
+Throws a ghc `error` if this thread does not have an associated entry in the given map.
 -}
 {-# INLINE setWs #-}
-setWs :: RefMap Word64 (Parsec ()) -- ^ `IORef` to the map of whitespace parsers
-      -> Parsec () -- ^ @ws@, the new whitespace parser for this thread
-      -> Parsec () -- ^ 
+setWs :: WsMap -- ^ `IORef` to the map of whitespace parsers
+      -> WsParser -- ^ @ws@, the new whitespace parser for this thread
+      -> Parsec () -- ^ parser that updates the wsparser to @ws@
 setWs wsMap ws = Parsec $ \st good _ ->
   do  ERef ref <- getMapRef wsMap
       writeRef ref ws
@@ -440,17 +443,17 @@ setWs wsMap ws = Parsec $ \st good _ ->
 {-|
 Initialise the `Ref` to the whitespace parser for this thread, with the given parser.
 
-This has no race conditions as it uses `setMapRef`, which atomically updates the `RefMap`.
+This has no race conditions as it uses `updateThreadMaps`, which atomically updates the `WsMap`.
 
 This parser consumes no input and always succeeds.
 -}
 {-# INLINE initWs #-}
-initWs :: RefMap Word64 (Parsec ())
-       -> IORef WkThreadMap
-       -> Parsec ()
-       -> Parsec ()
-initWs wsMap ts ws = Parsec $ \st good _ -> do
-  updateThreadMaps ts wsMap ws
+initWs :: WsMap     -- ^ IORef to a map of whitespace parser refs
+       -> WsParser  -- ^ the initial whitespace parser for this thread.
+       -> Parsec () -- ^ a parser that adds the new whitespace parser to the map, 
+                    -- and cleans up any dead entries in the map (see `updateThreadMaps`).
+initWs wsMap ws = Parsec $ \st good _ -> do
+  updateThreadMaps wsMap ws
   good () st
 
 {-|
@@ -461,7 +464,7 @@ This parser consumes input only if @p@ does also;
 it fails if and only if @p@ fails __having consumed input__.
 -}
 {-# INLINE rollbackWs #-}
-rollbackWs  :: RefMap Word64 (Parsec ())
+rollbackWs  :: WsMap
             -> Parsec a -- ^ @p@, the parser to run
             -> Parsec a -- ^ a parser that runs @p@, and restores the original value of this 
                         -- thread's whitespace parser if @p@ fails without consuming input.
@@ -478,10 +481,10 @@ given parser @p@, assuming that @p@ succeeds.
 This parser consumes input and fails if and only if the given parser @p@ does also.
 -}
 {-# INLINE setWsDuring #-}
-setWsDuring :: RefMap Word64 (Parsec ())
-            -> Parsec () -- ^ @ws@, the new temporary whitespace parser
-            -> Parsec a  -- ^ @p@, the parser to run with the modified whitespace parser
-            -> Parsec a  -- ^ a parser which runs @p@ with the new whitespace parser, 
+setWsDuring :: WsMap
+            -> WsParser -- ^ @ws@, the new temporary whitespace parser
+            -> Parsec a -- ^ @p@, the parser to run with the modified whitespace parser
+            -> Parsec a -- ^ a parser which runs @p@ with the new whitespace parser, 
                         -- and resets the old whitespace parser if @p@ succeeds.
 setWsDuring wsMap ws p = do
   oldWs <- getWs wsMap
