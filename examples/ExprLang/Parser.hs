@@ -1,8 +1,10 @@
 {-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE OverloadedLists #-}
 module ExprLang.Parser where
 
 import qualified Text.Gigaparsec.Token.Descriptions  as Desc
 import qualified Text.Gigaparsec.Token.Lexer         as Lexer
+import Text.Gigaparsec.Debug         (debug)
 
 import           Data.Char                           (generalCategory, isAlpha,
                                                       isAlphaNum, isSpace)
@@ -17,6 +19,7 @@ import           Text.Gigaparsec                     (Parsec, Result(..),
                                                       parseFromFile, (<|>), ($>))
 import           Text.Gigaparsec.Char                (newline, string, satisfy)
 import           Text.Gigaparsec.Combinator           (endBy, optional)
+import           Text.Gigaparsec.Errors.Combinator           ((<?>))
 import           Text.Gigaparsec.Expr                (Fixity (InfixL),
                                                       Prec (Atom), precedence,
                                                       sops, (>+))
@@ -31,16 +34,20 @@ import ExprLang.AST
 import ExprLang.Lexer
 
 exprParen :: Parsec Expr
-exprParen = "(" *> alter isSpace expr <* ")"
+exprParen = "(" *> debug "altering" (alter isAnySpace expr) <* ")"
+
+isAnySpace :: Char -> Bool
+isAnySpace x = x == ' ' || x == '\n'
 
 anyWhiteSpace :: Parsec ()
 anyWhiteSpace = satisfy isSpace $> ()
 
 atom :: Parsec Expr
 atom = ExprAtom <$> (
-        AtomInt <$> integer
-    <|> AtomVar <$> identifier)
-  <|> exprParen
+        (AtomInt <$> integer <?> ["number"])
+    <|> (AtomVar <$> identifier <?> ["variable"])
+  )
+  <|> debug "exprParen" (exprParen <?> ["parentheses"])
 
 
 expr :: Parsec Expr
