@@ -229,20 +229,33 @@ mkSpace desc@Desc.SpaceDesc{..} !errConfig = Space {..}
 
 
   ~comment = commentParser desc -- do not make this strict
+
+  -- Generate the whitespace parser described by the given predicate
+  implOf :: Maybe (Char -> Bool) -> WsParser
   implOf
     | supportsComments desc = hide . maybe skipComments (skipMany . (<|> comment errConfig) . void . satisfy)
     | otherwise             = hide . maybe empty (skipMany . satisfy)
+  
+  configuredWhitespace :: WsParser
   !configuredWhitespace = implOf space
+
+  whiteSpace :: WsParser
   !whiteSpace
     | whitespaceIsContextDependent = join (getWs wsImplMap)
     | otherwise                    = configuredWhitespace
+  
+  skipComments :: Parsec ()
   !skipComments = skipMany (comment errConfig)
+  
+  alter :: Maybe (Char -> Bool) -> Parsec a -> Parsec a
   alter p
     | whitespaceIsContextDependent = rollbackWs wsImplMap . setWsDuring wsImplMap (implOf p)
     | otherwise                    = throw (UnsupportedOperation badAlter)
+  initSpace :: Parsec ()
   initSpace -- Initialise the whitespace implementation
     | whitespaceIsContextDependent = initWs wsImplMap configuredWhitespace
     | otherwise                    = throw (UnsupportedOperation badInit)
+
   badInit = "whitespace cannot be initialised unless `spaceDesc.whitespaceIsContextDependent` is True"
   badAlter = "whitespace cannot be altered unless `spaceDesc.whitespaceIsContextDependent` is True"
 
@@ -325,6 +338,7 @@ Used in the `WsMap`.
 myWeakThreadId :: IO (Weak ThreadId)
 myWeakThreadId = mkWeakThreadId =<< myThreadId
 
+
 {-|
 Get a unique key (the `RawThreadId`) of the current thread.
 This provides the 'raw thread id' (see above).
@@ -334,7 +348,6 @@ myRawThreadId :: IO RawThreadId
 myRawThreadId = fromThreadId <$>  myThreadId
 
 
-
 {-|
 This function both:
 
@@ -342,26 +355,6 @@ This function both:
 * Inserts the current thread and a whitespace parser in the `WsMap`.
 
 This is achieved in one atomic-modify.
--}
-{-
-Some Notes:
-
-### Race Cond
-There is a harmless race condition between removing deads from `WkThreadMap` and
-removing them from the `RefMap`.
-The case:
-1. Thread @X@ gets aliveThreads and deadThreads,
-3. @Y@ pre-empts @X@, and gets aliveThreads, deadThreads
-3. @Y@ removes deadThreads from rList, then also from rMap
-4. @X@ wakes back up, and attempts to remove deadThreads from rMap.
-    However, not all tids in deadThreads need be in rMap anymore.
-    But this is fine, as calling delete on a key not present is just ignored.
-
-### Why the expensive `refMapUpdate`
-It is thread-safer to remove a list of dead threads than it is to replace the map with only alive threads.
-That is, there is no harm in removing dead threads that are not in the map,
-but there is harm in clobbering threads that were spawned between the `WkThreadMap` update and
-that of the `RefMap`.
 -}
 updateThreadMaps :: WsMap -> WsParser -> RT ()
 updateThreadMaps mp ws = newRef ws $ \ref -> unsafeIOToRT $ do 
@@ -393,6 +386,7 @@ getWs wsMap = Parsec $ \st good _ -> do
   ERef ref <- getMapRef wsMap
   (`good` st) =<< readRef ref
 
+
 {-| 
 Get the ref to the 'WsParser' for this thread.
 
@@ -422,6 +416,7 @@ getMapRef wsMap = unsafeIOToRT $ do
       , show tid 
       ]
 
+
 {-|
 Replace the whitespace parser for this thread.
 
@@ -442,6 +437,7 @@ setWs wsMap ws = Parsec $ \st good _ ->
       writeRef ref ws
       good () st
 
+
 {-|
 Initialise the `Ref` to the whitespace parser for this thread, with the given parser.
 
@@ -457,6 +453,7 @@ initWs :: WsMap     -- ^ IORef to a map of whitespace parser refs
 initWs wsMap ws = Parsec $ \st good _ -> do
   updateThreadMaps wsMap ws
   good () st
+
 
 {-|
 Run a parser and, if it fails __without consuming input__, undo its modifications to the 
