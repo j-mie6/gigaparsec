@@ -6,14 +6,14 @@ We achieve this with the `__HADDOCK_VERSION__` macro, so we can write things lik
 {-| Some custom docs
 -}
 infixl 3 <|>
-(<|>) :: Parsec a -- ^ @p@ the first parser to run
-      -> Parsec a -- ^ @q@ the second parser to run if @p@ fails without consuming input.
-      -> Parsec a -- ^ a parser which parses either @p@ or @q@.
+(<|>) :: Parsec a -- ^ custom docs.
+      -> Parsec a -- ^ custom docs.
+      -> Parsec a -- ^ custom docs.
 (<|>) = (Applicative.<|>)
 #endif
 ```
 
-If to perform the redefinition for the actual library, then users would have conflicting types between 
+If we were to perform the redefinition for the actual library, then users would have conflicting types between 
 `Text.Gigaparsec.<|>` and the applicative `<|>`.
 Moreover, the haskell compiler will treat these as different, and we may lose some specialisation improvements/optimisations.
 
