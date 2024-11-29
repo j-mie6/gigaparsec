@@ -96,7 +96,7 @@ jobs:
             ${{ runner.os }}-${{ matrix.ghc }}-${{ matrix.cabal }}-
 
       - name: Doc
-        run: cabal haddock gigaparsec --enable-doc --haddock-hyperlink-source --haddock-quickjump --haddock-html-location='https://hackage.haskell.org/package/$pkg-$version/docs' --haddock-options=--optghc=-cpp --haddock-options=--optghc=-D__HADDOCK__
+        run: cabal haddock gigaparsec --enable-doc --haddock-hyperlink-source --haddock-quickjump --haddock-html-location='https://hackage.haskell.org/package/$pkg-$version/docs'
 
       - name: Prepare to upload built htmls
         run: cp -r ./$(find dist-newstyle -path '*/doc/html/gigaparsec') site
