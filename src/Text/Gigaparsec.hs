@@ -100,7 +100,7 @@ import Text.Gigaparsec.Errors.ErrorGen (vanillaGen)
 
 -- We want to improve the docs for Applicative, so we do some trickery with redefinitions 
 --  *only* for the haddock generation.
-#ifdef __HADDOCK__
+#ifdef __HADDOCK_VERSION__
 {-# LANGUAGE NoImplicitPrelude #-}
 import Prelude hiding ((<$>), (<$), (<*>), (*>), (<*), pure, liftA2)
 import Prelude qualified
@@ -574,7 +574,7 @@ We use some C++ macro stuff to only redefine these re-exports for the gigaparsec
 which lets us provide more descriptive (and specialised) documentation for combinators.
 -}
 
-#ifdef __HADDOCK__
+#ifdef __HADDOCK_VERSION__
 {-|
 Repeatedly parse the given parser __zero__ or more times, collecting the results into a list.
 
