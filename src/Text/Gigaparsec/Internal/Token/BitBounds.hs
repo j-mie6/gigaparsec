@@ -46,9 +46,9 @@ data Bits
   -- | 64 bits of data
   | B64
   deriving stock (
-    Show, -- ^ @since 0.4.0.0
-    Eq,   -- ^ @since 0.4.0.0
-    Ord   -- ^ @since 0.4.0.0
+      Show -- ^ @since 0.4.0.0
+    , Eq   -- ^ @since 0.4.0.0
+    , Ord   -- ^ @since 0.4.0.0
     )
 
 type BitWidth :: * -> Bits

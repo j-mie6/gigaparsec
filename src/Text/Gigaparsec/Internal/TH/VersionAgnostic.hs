@@ -70,13 +70,13 @@ module Text.Gigaparsec.Internal.TH.VersionAgnostic (
   -- * Template Haskell select re-exports
   module TH,
   module TH.Lib,
+  TH.pprint,
 #if !(MIN_VERSION_template_haskell(2,17,0))
   Quote(..),
   DocLoc(..),
   pattern MulArrowT,
   getDoc,
   putDoc,
-  TH.pprint
 #endif
   ) where
 
