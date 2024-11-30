@@ -52,11 +52,13 @@ import safe Text.Gigaparsec.Internal.Token.Text (TextParsers)
 import Text.Gigaparsec.Internal.TH.DecUtils (funDsingleClause)
 import Text.Gigaparsec.Internal.TH.TypeUtils (removeUnusedTVars, sanitiseBndrStars, sanitiseTypeStars)
 
-import Language.Haskell.TH.Syntax (Dec, DocLoc (DeclDoc), Exp, Inline (Inline), Phases (AllPhases), Q, Quasi (qRecover), Quote (newName), Type (ForallT), addModFinalizer, getDoc, isInstance, nameBase, putDoc, reifyType)
-
-import Language.Haskell.TH (
+import Text.Gigaparsec.Internal.TH.VersionAgnostic (
+  Dec, DocLoc(DeclDoc), Exp, Inline (Inline), Phases (AllPhases), Q, Quasi (qRecover), 
+  Quote (newName), Type (ForallT), addModFinalizer, getDoc, isInstance, 
+  nameBase, putDoc, reifyType,
   RuleMatch (FunLike),
-  Type (AppT, ArrowT, ForallVisT, MulArrowT),
+  Type (AppT, ArrowT, ForallVisT), 
+  pattern MulArrowT,
   clause,
   funD,
   normalB,
@@ -64,7 +66,7 @@ import Language.Haskell.TH (
   pragInlD,
   sigD,
   varE,
- )
+  )
 
 import Data.Bifunctor (Bifunctor (first))
 import Data.Kind (Constraint)

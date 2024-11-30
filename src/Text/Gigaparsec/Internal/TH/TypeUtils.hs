@@ -115,7 +115,6 @@ getRecordFields :: Info -> Q [(Name, Type)]
 getRecordFields i = case i of
   TyConI (DataD _ _ _ _ cstrs _) -> concat <$> mapM getFieldNames cstrs
   TyConI (NewtypeD _ _ _ _ cstr _) -> getFieldNames cstr
-  TyConI (TypeDataD _ _ _ cstrs) -> concat <$> mapM getFieldNames cstrs
   DataConI _ _ tname -> getRecordFields =<< reify tname
   info -> fail $ concat ["getRecordFields: given info is not for a record: `", pprint info, "`"]
   where

@@ -23,7 +23,8 @@ module Text.Gigaparsec.Internal.Token.Patterns.IntegerParsers (
 import Text.Gigaparsec (Parsec)
 import Text.Gigaparsec.Internal.Token.Lexer (natural, integer)
 
-import Language.Haskell.TH.Syntax (Dec (..), Exp, Inline (Inline), Phases (AllPhases), Q, Quote (newName), Type, nameBase)
+
+
 
 import Control.Monad (forM)
 import Data.Bitraversable (bisequence)
@@ -40,7 +41,7 @@ import Language.Haskell.TH (
   sigD,
   varE,
  )
-import Text.Gigaparsec.Internal.TH.VersionAgnostic (Name)
+import Text.Gigaparsec.Internal.TH.VersionAgnostic (Name, Dec (..), Exp, Inline (Inline), Phases (AllPhases), Q, Quote (newName), Type, nameBase)
 import Text.Gigaparsec.Internal.Token.BitBounds (Bits (..))
 import Text.Gigaparsec.Token.Lexer qualified as Lexer
 
