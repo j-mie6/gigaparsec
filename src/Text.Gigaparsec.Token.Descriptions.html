@@ -744,7 +744,7 @@ This includes character escapes (e.g. tabs, carriage returns), and numeric escap
 </span><span id="line-548"></span><span>  </span><span class="hs-special">,</span><span> </span><span id="gapsSupported"><span class="annot"><span class="annottext">EscapeDesc -&gt; Bool
 </span><a href="Text.Gigaparsec.Token.Descriptions.html#gapsSupported"><span class="hs-identifier hs-var hs-var">gapsSupported</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-glyph">!</span><span class="annot"><span class="hs-identifier hs-type">Bool</span></span><span>              </span><span class="hs-comment">-- ^ specifies whether or not string gaps are supported:</span><span>
 </span><span id="line-549"></span><span>                                        </span><span class="hs-comment">-- this is where whitespace can be injected between two escBegin characters and this will all be ignored in the final string,</span><span>
-</span><span id="line-550"></span><span>                                        </span><span class="hs-comment">-- such that &quot;hello \ \world&quot; is &quot;hello world&quot;</span><span>
+</span><span id="line-550"></span><span>                                        </span><span class="hs-comment">-- such that @&quot;hello \ \world&quot;@ is &quot;hello world&quot;</span><span>
 </span><span id="line-551"></span><span>  </span><span class="hs-special">}</span><span>
 </span><span id="line-552"></span><span>
 </span><span id="line-553"></span><span class="annot"><span class="hs-comment">{-|

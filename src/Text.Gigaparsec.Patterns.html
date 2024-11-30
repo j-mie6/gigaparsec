@@ -148,7 +148,7 @@ forall (m :: * -&gt; *). Quote m =&gt; Name -&gt; m Exp
 This function is used to automatically generate /Deferred Constructors/, which are
 one of the patterns in /&quot;Design Patterns for Parser Combinators/&quot;. It is provided
 with a prefix, which is used to denote an application of the constructor, and
-then a list of &quot;ticked&quot; constructors to generate deferred constructors for. This
+then a list of &quot;ticked&quot; constructors for which to generate deferred constructors. This
 means adding a single @'@ in front of the constructor name. For example:
 
 &gt; {-# LANGUAGE TemplateHaskell #-}

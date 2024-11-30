@@ -100,7 +100,7 @@ within!
 </span><span id="line-100"></span><span>
 </span><span id="line-101"></span><span class="hs-comment">-- We want to improve the docs for Applicative, so we do some trickery with redefinitions </span><span>
 </span><span id="line-102"></span><span class="hs-comment">--  *only* for the haddock generation.</span><span class="hs-cpp">
-#ifdef __HADDOCK__
+#ifdef __HADDOCK_VERSION__
 </span><span class="hs-pragma">{-# LANGUAGE NoImplicitPrelude #-}</span><span>
 </span><span id="line-105"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Prelude</span></span><span> </span><span class="hs-keyword">hiding</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-operator">(&lt;$&gt;)</span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-operator">(&lt;$)</span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-operator">(&lt;*&gt;)</span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-operator">(*&gt;)</span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-operator">(&lt;*)</span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier">pure</span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier">liftA2</span></span><span class="hs-special">)</span><span>
 </span><span id="line-106"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Prelude</span></span><span> </span><span class="hs-keyword">qualified</span><span>
@@ -956,7 +956,7 @@ We use some C++ macro stuff to only redefine these re-exports for the gigaparsec
 which lets us provide more descriptive (and specialised) documentation for combinators.
 -}</span><span class="hs-cpp">
 
-#ifdef __HADDOCK__
+#ifdef __HADDOCK_VERSION__
 </span><span class="annot"><span class="hs-comment">{-|
 Repeatedly parse the given parser __zero__ or more times, collecting the results into a list.
 
