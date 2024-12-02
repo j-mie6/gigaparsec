@@ -30,7 +30,10 @@ type family Assert b c where
 {-| The bit-width of certain data.
 
 This is used to help enforce parsers of bounded precision to only return types
-that can losslessly accomodate that precision.
+that can losslessly accommodate that precision.
+
+@since 0.1.0.0
+
 -}
 type Bits :: *
 data Bits
@@ -42,13 +45,19 @@ data Bits
   | B32
   -- | 64 bits of data
   | B64
+  deriving stock (
+      Show -- ^ @since 0.4.0.0
+    , Eq   -- ^ @since 0.4.0.0
+    , Ord   -- ^ @since 0.4.0.0
+    )
 
 type BitWidth :: * -> Bits
 type family BitWidth t where
   BitWidth Integer = 'B64
-  BitWidth Int     = 'B64
+  BitWidth Int     = 'B64 
   BitWidth Word    = 'B64
   BitWidth Word64  = 'B64
+  BitWidth Int64   = 'B64
   BitWidth Natural = 'B64
   BitWidth Int32   = 'B32
   BitWidth Word32  = 'B32
@@ -68,6 +77,7 @@ type family Signedness t s where
   Signedness Int     'Signed   = ()
   Signedness Word    'Unsigned = ()
   Signedness Word64  'Unsigned = ()
+  Signedness Int64   'Signed   = ()
   Signedness Natural 'Unsigned = ()
   Signedness Int32   'Signed   = ()
   Signedness Word32  'Unsigned = ()
