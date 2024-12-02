@@ -115,24 +115,13 @@ data IntLitBase
   deriving stock (Show, Eq, Ord)
 
 {-|
-The bases (Binary, Octal, ...) of Int literals to be supported.
-
-'IntLitBases' is an instance of `IsList`, so you may use @-XOverloadedLists@ to refer to an 'IntLitBases'.
+Set of all possible `IntLitBase`s.
 
 @since 0.4.0.0
 
 -}
--- TODO: This should just be a `Set IntLitBase`, and `AllBases` is either a constant or a pattern synonym.
-type IntLitBases :: *
-data IntLitBases = 
-    AllBases -- ^ All bases (defined in `IntLitBase`) should be supported.
-  | IntLitBases (Set IntLitBase) -- ^ Only the bases in the given set should be supported.
-
-instance IsList IntLitBases where
-  type Item IntLitBases = IntLitBase
-  fromList = IntLitBases . fromList
-  toList AllBases = intLitBaseList
-  toList (IntLitBases xs) = Set.toList xs
+allBases :: Set IntLitBase
+allBases = Set.fromList [Binary, Octal, Decimal, Hexadecimal]
 
 {-| Determines if the combinators are for 'Signed' or 'Unsigned' int literals.
 
@@ -146,7 +135,7 @@ data SignedOrUnsigned =
     @since 0.4.0.0
     
     -}
-    Signed    -- ^ 
+    Signed 
   | {-|  The literal is unsigned, so is always non-negative.
     
     @since 0.4.0.0
@@ -154,6 +143,12 @@ data SignedOrUnsigned =
     -}
     Unsigned
 
+{-|
+True when `Signed`.
+
+@since 0.4.0.0
+
+-}
 isSigned :: SignedOrUnsigned -> Bool
 isSigned Signed = True
 isSigned Unsigned = False
@@ -190,7 +185,7 @@ data IntegerParserConfig = IntegerParserConfig
     @since 0.4.0.0
 
     -}
-  , bases :: IntLitBases
+  , bases :: Set IntLitBase
     {-|
     When 'True', generate the unbounded integer parsers (e.g. `Text.Gigaparsec.Token.Lexer.decimal`) for each base specified in `bases`.
     
@@ -220,9 +215,8 @@ data IntegerParserConfig = IntegerParserConfig
   , signedOrUnsigned :: SignedOrUnsigned
   }
 
-filterByBase :: IntLitBases -> [(a, IntLitBase)] -> [a]
-filterByBase AllBases = map fst
-filterByBase (IntLitBases bs) = map fst . filter ((`Set.member` bs) . snd)
+filterByBase :: Set IntLitBase -> [(a, IntLitBase)] -> [a]
+filterByBase bs = map fst . filter ((`Set.member` bs) . snd)
 
 filterByWidth :: Bits -> [(Bits, a)] -> [a]
 filterByWidth b = map snd . filter ((== b) . fst)
@@ -339,7 +333,7 @@ emptyIntegerParserConfig =
   IntegerParserConfig
     { prefix = ""
     , widths = Map.empty
-    , bases = IntLitBases Set.empty
+    , bases  = Set.empty
     , includeUnbounded = False
     , signedOrUnsigned = Signed
     , collatedParser = Nothing

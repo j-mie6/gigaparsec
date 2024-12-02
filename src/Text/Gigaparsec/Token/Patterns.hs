@@ -31,7 +31,7 @@ module Text.Gigaparsec.Token.Patterns (
 
   The combinators for numeric literals need their own generation function `generateIntegerParsers`.
   If you try to generate a `Text.Gigaparsec.Token.Lexer.decimal` parser using `lexerCombinators`,
-  you will get an error!
+  you will get an error.
   
   ==== __Examples:__
 
@@ -75,7 +75,7 @@ module Text.Gigaparsec.Token.Patterns (
   emptyUnsignedIntegerParserConfig,
   -- **** Associated Types
   SignedOrUnsigned(..),
-  IntLitBases(..),
+  allBases,
   IntLitBase(..),
   ) where
 
@@ -87,7 +87,7 @@ import safe Text.Gigaparsec.Internal.Token.Patterns.IntegerParsers
     ( IntegerParserConfig(collatedParser, prefix, widths, bases,
                           includeUnbounded, signedOrUnsigned),
       SignedOrUnsigned(..),
-      IntLitBases(..),
+      allBases,
       IntLitBase(..),
       generateIntegerParsers,
       emptyIntegerParserConfig,
