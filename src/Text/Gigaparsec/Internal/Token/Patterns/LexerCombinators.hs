@@ -155,14 +155,10 @@ Constructs the combinator using the given type.
 Calculates the definition of the combinator using a typeclass (if possible).
 -}
 mkLexerCombinatorDec
-  -- | The quoted Lexer
-  :: Q Exp
-  -- | The name of the combinator to generate
-  -> String
-  -- | The quoted name of the original combinator
-  -> Name
-  -- | The return type of the new combinator
-  -> Type
+  :: Q Exp -- ^ The quoted Lexer  
+  -> String -- ^ The name of the combinator to generate
+  -> Name -- ^ The quoted name of the original combinator
+  -> Type -- ^ The return type of the new combinator
   -> Q [Dec]
 mkLexerCombinatorDec lexer nm old tp = do
   newX <- newName nm
@@ -180,18 +176,12 @@ Constructs the combinator using the given type.
 Calculates the definition of the combinator using the `LexerField` typeclass (if possible).
 -}
 mkLexerCombinatorDecWithProj 
-  -- | The quoted Lexer
-  :: Q Exp
-  -- | The name of the combinator to generate
-  -> String
-  -- | @old@, The quoted name of the original combinator
-  -> Name
-  -- | The return type of the new combinator
-  -> Q Type
-  -- | projection to precompose the @old@ combinator with
-  -> Q Exp
-  -- | The name of the new combinator and its declaration
-  -> Q (Name, [Dec]) 
+  :: Q Exp -- ^ The quoted Lexer
+  -> String -- ^ The name of the combinator to generate
+  -> Name -- ^ @old@, The quoted name of the original combinator
+  -> Q Type -- ^ The return type of the new combinator
+  -> Q Exp -- ^ projection to precompose the @old@ combinator with
+  -> Q (Name, [Dec]) -- ^ The name of the new combinator and its declaration
 mkLexerCombinatorDecWithProj lexer nm old tp proj = do
   newX <- newName nm
   oldDocs <- getDoc (DeclDoc old)

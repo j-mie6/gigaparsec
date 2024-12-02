@@ -377,13 +377,10 @@ lexerUnboundedParsers lexer (IntegerParserConfig{signedOrUnsigned = s, prefix, b
         mkLexerCombinatorDecWithProj lexer (prefix ++ nameBase p) p (pure newTp) proj
     )
 
-lexerFixedWidthIntParsers ::
-  -- | The quoted lexer
-  Q Exp ->
-  -- | config
-  IntegerParserConfig ->
-  -- | Name, bitwidth and def of each generated combinator.
-  Q [(Name, Bits, [Dec])]
+lexerFixedWidthIntParsers
+  :: Q Exp -- ^ The quoted lexer
+  -> IntegerParserConfig -- ^ config
+  -> Q [(Name, Bits, [Dec])] -- ^ Name, bitwidth and def of each generated combinator.
 lexerFixedWidthIntParsers
   lexer
   (IntegerParserConfig{signedOrUnsigned = sign, prefix, bases, widths}) =
