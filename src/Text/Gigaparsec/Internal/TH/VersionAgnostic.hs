@@ -1,4 +1,7 @@
 {-# LANGUAGE Trustworthy #-}
+
+{-# OPTIONS_HADDOCK hide #-}
+
 {-# LANGUAGE TemplateHaskell, CPP, PatternSynonyms, LambdaCase #-}
 {-# LANGUAGE TypeFamilies #-}
 {-# LANGUAGE FlexibleInstances #-}

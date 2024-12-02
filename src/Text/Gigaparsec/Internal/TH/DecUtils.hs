@@ -1,4 +1,8 @@
 {-# LANGUAGE Safe #-}
+
+{-# OPTIONS_HADDOCK hide #-}
+
+
 module Text.Gigaparsec.Internal.TH.DecUtils (
   module Text.Gigaparsec.Internal.TH.DecUtils
   ) where

@@ -1,4 +1,7 @@
 {-# LANGUAGE Safe #-}
+
+{-# OPTIONS_HADDOCK hide #-}
+
 {-# LANGUAGE CPP #-}
 {-# LANGUAGE GADTs #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
