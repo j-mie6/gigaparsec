@@ -75,7 +75,11 @@ import Text.Gigaparsec.Internal.TH.VersionAgnostic (Name)
 import Text.Gigaparsec.Token.Lexer qualified as Lexer
 
 {-|
-Generates the specified lexer combinators using the quoted lexer.
+Generates the specified lexer combinators using a quoted `Lexer`, for example, @[|lexer|]@.
+
+The generated combinators will behave like their counterparts in "Text.Gigaparsec.Token.Lexer", 
+except they won't require a lexer (or subcomponents thereof) to be supplied as an argument.
+
 
 ==== __Usage:__
 
@@ -95,15 +99,20 @@ These will behave like their counterparts in "Text.Gigaparsec.Token.Lexer", exce
 a 'Lexer' (or its subcomponents) as an argument.
 
 @since 0.4.0.0
+
 -}
 lexerCombinators
-  :: Q Exp -- The lexer
-  -> [Name] -- The combinators to generate
-  -> Q [Dec]
+  :: Q Exp   -- ^ The quoted 'Lexer'.
+  -> [Name]  -- ^ The combinators to generate.
+  -> Q [Dec] -- ^ Definitions of the generated combinators.
 lexerCombinators lexer ns = lexerCombinatorsWithNames lexer (zip ns (map nameBase ns))
 
 {-|
-Generates the specified lexer combinators with the specified names using the quoted lexer.
+Generates the specified lexer combinators with the given names using a quoted `Lexer`, for example, @[|lexer|]@.
+
+The generated combinators will behave like their counterparts in "Text.Gigaparsec.Token.Lexer", 
+except they won't require a lexer (or subcomponents thereof) to be supplied as an argument.
+
 
 ==== __Usage:__
 
@@ -121,11 +130,12 @@ These will behave like their counterparts in "Text.Gigaparsec.Token.Lexer", exce
 a 'Lexer' (or its subcomponents) as an argument.
 
 @since 0.4.0.0
+
 -}
-lexerCombinatorsWithNames ::
-  Q Exp -> -- The lexer
-  [(Name, String)] -> -- The combinators to generate
-  Q [Dec]
+lexerCombinatorsWithNames 
+  :: Q Exp            -- ^ The quoted `Lexer`.
+  -> [(Name, String)] -- ^ The combinators to generate with the given name.
+  -> Q [Dec]          -- ^ Definitions of the generated combinators.
 lexerCombinatorsWithNames lexer = fmap concat . traverse (uncurry (lexerCombinatorWithName lexer))
 
 {-|
@@ -144,16 +154,16 @@ lexerCombinatorWithName lexer old nm = do
 Constructs the combinator using the given type.
 Calculates the definition of the combinator using a typeclass (if possible).
 -}
-mkLexerCombinatorDec ::
+mkLexerCombinatorDec
   -- | The quoted Lexer
-  Q Exp ->
+  :: Q Exp
   -- | The name of the combinator to generate
-  String ->
+  -> String
   -- | The quoted name of the original combinator
-  Name ->
+  -> Name
   -- | The return type of the new combinator
-  Type ->
-  Q [Dec]
+  -> Type
+  -> Q [Dec]
 mkLexerCombinatorDec lexer nm old tp = do
   newX <- newName nm
   oldDocs <- getDoc (DeclDoc old)
@@ -167,20 +177,21 @@ mkLexerCombinatorDec lexer nm old tp = do
 
 {-| 
 Constructs the combinator using the given type.
-Calculates the definition of the combinator using a typeclass (if possible).
+Calculates the definition of the combinator using the `LexerField` typeclass (if possible).
 -}
-mkLexerCombinatorDecWithProj ::
+mkLexerCombinatorDecWithProj 
   -- | The quoted Lexer
-  Q Exp ->
+  :: Q Exp
   -- | The name of the combinator to generate
-  String ->
+  -> String
   -- | @old@, The quoted name of the original combinator
-  Name ->
+  -> Name
   -- | The return type of the new combinator
-  Q Type ->
+  -> Q Type
   -- | projection to precompose the @old@ combinator with
-  Q Exp ->
-  Q (Name, [Dec]) -- The name of the new combinator and its declaration
+  -> Q Exp
+  -- | The name of the new combinator and its declaration
+  -> Q (Name, [Dec]) 
 mkLexerCombinatorDecWithProj lexer nm old tp proj = do
   newX <- newName nm
   oldDocs <- getDoc (DeclDoc old)

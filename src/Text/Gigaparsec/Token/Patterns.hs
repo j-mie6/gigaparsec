@@ -28,10 +28,9 @@ module Text.Gigaparsec.Token.Patterns (
   
   * 'lexerCombinators' will generate these lexer combinators using the same name as the original combinators.
   * 'lexerCombinatorsWithNames' lets you rename the generated combinator; otherwise it behaves exactly as 'lexerCombinators'.
-
-  The combinators for numeric literals need their own generation function `generateIntegerParsers`.
-  If you try to generate a `Text.Gigaparsec.Token.Lexer.decimal` parser using `lexerCombinators`,
-  you will get an error.
+  * 'generateIntegerParsers' will generate lexer combinators for integer literals.
+    If you try to generate a `Text.Gigaparsec.Token.Lexer.decimal` parser using `lexerCombinators` or `lexerCombinatorsWithNames`,
+    you will get an error.
   
   ==== __Examples:__
 
