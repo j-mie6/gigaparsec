@@ -101,7 +101,7 @@ deriveLiftedConstructors prefix = fmap concat . traverse deriveCon
 This function is used to automatically generate /Deferred Constructors/, which are
 one of the patterns in /"Design Patterns for Parser Combinators/". It is provided
 with a prefix, which is used to denote an application of the constructor, and
-then a list of "ticked" constructors to generate deferred constructors for. This
+then a list of "ticked" constructors for which to generate deferred constructors. This
 means adding a single @'@ in front of the constructor name. For example:
 
 > {-# LANGUAGE TemplateHaskell #-}

@@ -60,10 +60,7 @@ jobs:
           cabal test $CONFIG --test-options="--color always"
 
       - name: Doc
-      # Define the `__HADDOCK__` C macro only for the documentation generation.
-      # This is used when generating the type-specialised docs, but allows
-      # the actual haskell library to export the non-specialised versions.
-        run: cabal haddock gigaparsec --haddock-options=--optghc=-cpp --haddock-options=--optghc=-D__HADDOCK__ $CONFIG
+        run: cabal haddock gigaparsec
 
   deploy:
     name: Deploy Docs
@@ -99,7 +96,7 @@ jobs:
             ${{ runner.os }}-${{ matrix.ghc }}-${{ matrix.cabal }}-
 
       - name: Doc
-        run: cabal haddock gigaparsec --enable-doc --haddock-hyperlink-source --haddock-quickjump --haddock-html-location='https://hackage.haskell.org/package/$pkg-$version/docs' --haddock-options=--optghc=-cpp --haddock-options=--optghc=-D__HADDOCK__
+        run: cabal haddock gigaparsec --enable-doc --haddock-hyperlink-source --haddock-quickjump --haddock-html-location='https://hackage.haskell.org/package/$pkg-$version/docs'
 
       - name: Prepare to upload built htmls
         run: cp -r ./$(find dist-newstyle -path '*/doc/html/gigaparsec') site
