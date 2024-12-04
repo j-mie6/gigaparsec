@@ -28,7 +28,7 @@ Implemented using the patterns found in:
 Willis & Wu - Design patterns for parser combinators (functional pearl)
 https://dl.acm.org/doi/10.1145/3471874.3472984
 -}
-module ExprLang where
+module Main where
 
 import           ExprLang.Parser (program, expr)
 import ExprLang.AST
@@ -37,6 +37,10 @@ import ExprLang.Lexer (fully)
 import           Text.Gigaparsec (Parsec, Result (..), parseFromFile, parse)
 import System.IO.Error (userError)
 import Control.Exception (throwIO)
+
+main :: IO ()
+main = do
+  parseFilePretty =<< readLn
 
 
 parseFile :: FilePath -> IO Program

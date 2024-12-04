@@ -103,6 +103,7 @@ library
                       Text.Gigaparsec.State,
                       Text.Gigaparsec.Token.Descriptions,
                       Text.Gigaparsec.Token.Errors,
+                      Text.Gigaparsec.Token.Indentation,
                       Text.Gigaparsec.Token.Lexer,
                       Text.Gigaparsec.Token.Patterns,
 
@@ -120,6 +121,7 @@ library
                       Text.Gigaparsec.Internal.Token.BitBounds,
                       Text.Gigaparsec.Internal.Token.Errors,
                       Text.Gigaparsec.Internal.Token.Generic,
+                      Text.Gigaparsec.Internal.Token.Indentation,
                       Text.Gigaparsec.Internal.Token.Lexer,
                       Text.Gigaparsec.Internal.Token.Names,
                       Text.Gigaparsec.Internal.Token.Numeric,
@@ -223,17 +225,71 @@ benchmark perf-test
 
     main-is:          Main.hs
 
-library examples
-    import:             warnings, extensions, base
+executable exprlang
+    import:             extensions, base
     default-language:   Haskell2010
-    hs-source-dirs:     examples
+    
+    hs-source-dirs:     
+        examples/
+        examples/ExprLang
 
     build-depends:      
         gigaparsec,
         containers >= 0.6 && < 0.7
     
-    exposed-modules:
-        ExprLang,
+    main-is: 
+        ExprLang.hs
+    other-modules:
         ExprLang.Parser,
         ExprLang.Lexer,
         ExprLang.AST
+
+
+executable small-python
+    
+    import:           extensions, base
+    
+    hs-source-dirs: 
+        examples/
+        examples/SmallPython
+    main-is:
+        SmallPython.hs
+    other-modules:
+        SmallPython.AST,
+        SmallPython.AST.ToPython,
+        SmallPython.Parser,
+        SmallPython.Lexer,
+        SmallPython.Lexer.Description,
+    
+    build-depends:
+        gigaparsec,
+        containers >= 0.6 && < 0.8,
+        mtl >= 2.0 && < 3.0,
+        pretty-simple >= 4.0 && < 5,
+
+    default-language: Haskell2010
+
+executable haskell
+    
+    import:           extensions, base
+    
+    hs-source-dirs: 
+        examples/
+        examples/Haskell
+    main-is:
+        Haskell.hs
+    other-modules:
+        Haskell.AST,
+        Haskell.AST.ToHaskell,
+        Haskell.Parser,
+        Haskell.Lexer,
+        Haskell.Lexer.Description,
+    
+    build-depends:
+        gigaparsec,
+        containers >= 0.6 && < 0.8,
+        mtl >= 2.0 && < 3.0,
+        pretty-simple >= 4.0 && < 5,
+
+    default-language: Haskell2010
+
