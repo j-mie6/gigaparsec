@@ -124,14 +124,15 @@ library
                       Text.Gigaparsec.Internal.Token.Names,
                       Text.Gigaparsec.Internal.Token.Numeric,
                       Text.Gigaparsec.Internal.Token.Symbol,
+                      Text.Gigaparsec.Internal.Token.Space,
                       Text.Gigaparsec.Internal.Token.Text,
 
     -- this can probably be loosened?
-    build-depends:    containers       >= 0.6   && < 0.7,
-                      selective        >= 0.6   && < 0.8,
-                      pretty-terminal  >= 0.1.0 && < 0.2,
-                      template-haskell >= 2.16  && < 3,
-                      rt               >= 0.1   && < 0.2
+    build-depends:    containers            >= 0.6   && < 0.8,
+                      selective             >= 0.6   && < 0.8,
+                      pretty-terminal       >= 0.1.0 && < 0.2,
+                      template-haskell      >= 2.16  && < 3,
+                      rt                    >= 0.1   && < 0.2
 
     -- Modules included in this library but not exported.
     -- other-modules:
@@ -221,3 +222,18 @@ benchmark perf-test
         deepseq >= 1.4 && < 1.6
 
     main-is:          Main.hs
+
+library examples
+    import:             warnings, extensions, base
+    default-language:   Haskell2010
+    hs-source-dirs:     examples
+
+    build-depends:      
+        gigaparsec,
+        containers >= 0.6 && < 0.7
+    
+    exposed-modules:
+        ExprLang,
+        ExprLang.Parser,
+        ExprLang.Lexer,
+        ExprLang.AST
