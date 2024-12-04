@@ -69,6 +69,8 @@ import Text.Gigaparsec.Internal.Token.Indentation qualified as Internal
 import Text.Gigaparsec.Token.Lexer (Space)
 import Text.Gigaparsec.Internal.Token.Lexer (Space, whiteSpace)
 import Text.Gigaparsec.Combinator (skipMany)
+import Text.Gigaparsec.Internal.Token.Space (Space(_indentGuard))
+import Text.Gigaparsec.State (make)
 
 
 {- $lineFolding
@@ -412,18 +414,8 @@ lineFold :: Space -> Parsec a -> Parsec a
 lineFold sp p = do
   let ws = whiteSpace sp
   refLvl <- ws *> indentLevel
-  let ws' =
-        {- If it fails, then it should be treated like endofinput
-        so if the parser can still give a complete object, we are gucci.
-        
-        Failure should be atomic though, so that it doesn't consume input,
-        which will make it interact better with combinators like `some` and `many`.
-        -}
-        -- TODO: add a flag/test to see if ws can parse newlines? 
-        -- cause then we don't need to do this skipMany stuff
-        void $ atomic (indentGuard (ws *> skipMany (newline *> ws)) GT refLvl)
-  -- alter sp ws' p
-  undefined
+  make refLvl $ \ref -> 
+    _indentGuard sp GT ref p <* (newline *> ws)
 
 
 {-| This is similar to `lineFoldMegaparsec`, except the whitespace parser must *not* consume newlines.

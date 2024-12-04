@@ -658,3 +658,9 @@ if @pred :: CharPredicate@ and @pred x = Just True@, then the lexer should accep
 -}
 type CharPredicate :: *
 type CharPredicate = Maybe (Char -> Bool)
+
+amendCharPredicate :: Char -> CharPredicate -> CharPredicate
+amendCharPredicate c Nothing = Just (\x -> c == x)
+amendCharPredicate c (Just f) = Just (\x -> c == x || f x)
+
+

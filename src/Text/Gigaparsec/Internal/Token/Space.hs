@@ -12,11 +12,11 @@
 #include "portable-unlifted.h"
 
 module Text.Gigaparsec.Internal.Token.Space (
-  Space, whiteSpace, skipComments, alter, initSpace, mkSpace
+  Space, whiteSpace, skipComments, alter, initSpace, mkSpace, _indentGuard
   ) where
 
-import Text.Gigaparsec (Parsec, eof, void, empty, (<|>), atomic, unit)
-import Text.Gigaparsec.Char (satisfy, string, item, endOfLine)
+import Text.Gigaparsec (Parsec, eof, void, empty, (<|>), atomic, unit, branch)
+import Text.Gigaparsec.Char (satisfy, string, item, endOfLine, newline)
 
 
 import Text.Gigaparsec.Combinator (skipMany, skipManyTill)
@@ -26,7 +26,7 @@ import Text.Gigaparsec.Token.Descriptions qualified as Desc
 import Text.Gigaparsec.Token.Errors (
       ErrorConfig(labelSpaceEndOfLineComment,
                   labelSpaceEndOfMultiComment) )
-import Text.Gigaparsec.Internal ( Parsec(Parsec) )
+import Text.Gigaparsec.Internal ( Parsec(Parsec), _branch )
 import Text.Gigaparsec.Internal.Token.Errors (annotate)
 
 import Text.Gigaparsec.Internal.Require (require)
@@ -40,7 +40,7 @@ import Data.Map.Strict qualified as Map
 import Data.IORef (newIORef, IORef, readIORef, atomicModifyIORef, atomicModifyIORef')
 import Control.Concurrent (ThreadId, myThreadId, mkWeakThreadId)
 import Control.Exception (throw)
-import Control.Monad (join, guard, foldM, filterM)
+import Control.Monad (join, guard, foldM, filterM, unless)
 import System.IO.Unsafe (unsafePerformIO)
 import Control.Monad.RT.Unsafe (unsafeIOToRT)
 import Control.Exception (Exception)
@@ -56,6 +56,8 @@ import Data.Maybe (isJust)
 import Control.Arrow (Arrow(second))
 import Data.Traversable (for)
 import GHC.Conc (ThreadId(ThreadId))
+
+import Control.Selective (ifS, Selective (select))
 
 ---------------------------------------------------------------------------------------------------
 -- We need a way to generate a hashable value that is unique to each thread.
@@ -85,6 +87,10 @@ fromThreadId (ThreadId tid) = fromIntegral (getThreadId tid)
 #else
 -- base 4.16 and below, `getThreadId` returns CInt
 import Foreign.C (CInt(CInt))
+import Text.Gigaparsec.Position (col)
+import Text.Gigaparsec.Internal.Token.Indentation qualified as Internal
+import Text.Gigaparsec.State (get)
+import Text.Gigaparsec.Token.Descriptions (CharPredicate, amendCharPredicate)
 
 foreign import ccall unsafe "rts_getThreadId" getThreadId :: ThreadId# -> CInt
 
@@ -153,6 +159,7 @@ data Space = Space {
   See 'alter' for how to change whitespace during a parse.
   -}
   , initSpace :: Parsec ()
+  , _indentGuard :: forall a r . Ordering -> Ref r Word -> Parsec a -> Parsec a
   }
 
 ---------------------------------------------------------------------------------------------------
@@ -227,6 +234,20 @@ mkSpace desc@Desc.SpaceDesc{..} !errConfig = Space {..}
   wsImplMap :: WsMap
   !wsImplMap = unsafePerformIO (newIORef Map.empty)
 
+  _indentGuard :: forall a r . Ordering -> Ref r Word -> Parsec a -> Parsec a
+  _indentGuard ord ref p = do
+    WsParserInfo pred ws <- getWs wsImplMap
+    let pred' = amendCharPredicate '\n' pred
+    rollbackWs wsImplMap $ setWsDuring wsImplMap (WsParserInfo pred' (guard' ws)) p
+    where
+      -- Atomic is important here; the only time ws will fail is on the indentation error.
+      -- in this case, we don't want to have consumed input
+      guard' q = atomic $ do
+        refLvl <- get ref
+        actLvl <- q *> col
+        unless (compare actLvl refLvl == ord) $
+          Internal.throwIndentationError (Internal.ErrIndentNotOrd ord refLvl actLvl)
+        
 
   ~comment = commentParser desc -- do not make this strict
 
@@ -241,19 +262,19 @@ mkSpace desc@Desc.SpaceDesc{..} !errConfig = Space {..}
 
   whiteSpace :: WsParser
   !whiteSpace
-    | whitespaceIsContextDependent = join (getWs wsImplMap)
+    | whitespaceIsContextDependent = join (wsParser <$> getWs wsImplMap)
     | otherwise                    = configuredWhitespace
   
   skipComments :: Parsec ()
   !skipComments = skipMany (comment errConfig)
   
   alter :: Maybe (Char -> Bool) -> Parsec a -> Parsec a
-  alter p
-    | whitespaceIsContextDependent = rollbackWs wsImplMap . setWsDuring wsImplMap (implOf p)
+  alter pred
+    | whitespaceIsContextDependent = rollbackWs wsImplMap . setWsDuring wsImplMap (WsParserInfo pred (implOf pred))
     | otherwise                    = throw (UnsupportedOperation badAlter)
   initSpace :: Parsec ()
   initSpace -- Initialise the whitespace implementation
-    | whitespaceIsContextDependent = initWs wsImplMap configuredWhitespace
+    | whitespaceIsContextDependent = initWs wsImplMap (WsParserInfo space configuredWhitespace)
     | otherwise                    = throw (UnsupportedOperation badInit)
 
   badInit = "whitespace cannot be initialised unless `spaceDesc.whitespaceIsContextDependent` is True"
@@ -305,6 +326,7 @@ type RawThreadId = Word64
 
 -- | A whitespace parser
 type WsParser = Parsec ()
+data WsParserInfo = WsParserInfo {wsParserPred :: !CharPredicate, wsParser :: !WsParser}
 
 {-| Existential of a 'Ref' and its lifetime.
 
@@ -316,17 +338,17 @@ data ERef a = forall r . ERef {-# UNPACK #-} !(Ref r a)
 {-|
 A pair of a weak pointer to a 'ThreadId', and a ref to the current whitespace parser for that thread.
 -}
-data WsPair = 
-  WsPair 
+data WsInfo = 
+  WsInfo 
     {-# UNPACK #-} !(Weak ThreadId)
-    !(ERef WsParser) -- Can't unpack this as it is an existential.
+    !(ERef WsParserInfo) -- Can't unpack this as it is an existential.
 
-{-| An `IORef` to a strict map of 'RawThreadId's to 'WsPair's. 
+{-| An `IORef` to a strict map of 'RawThreadId's to 'WsInfo's. 
 
-The 'WsPair' entries  consist of the whitespace parser for the associated thread
+The 'WsInfo' entries  consist of the whitespace parser for the associated thread
 and a weak pointer to the thread's 'ThreadId'
 -}
-type WsMap = IORef (Map RawThreadId WsPair)
+type WsMap = IORef (Map RawThreadId WsInfo)
 
 
 {-|
@@ -356,22 +378,22 @@ This function both:
 
 This is achieved in one atomic-modify.
 -}
-updateThreadMaps :: WsMap -> WsParser -> RT ()
+updateThreadMaps :: WsMap -> WsParserInfo -> RT ()
 updateThreadMaps mp ws = newRef ws $ \ref -> unsafeIOToRT $ do 
   tid <- myRawThreadId
   wkTid <- myWeakThreadId
-  atomicModifyIORef' mp (removeDeadsAndAddNewRef tid (WsPair wkTid (ERef ref)))
+  atomicModifyIORef' mp (removeDeadsAndAddNewRef tid (WsInfo wkTid (ERef ref)))
   where
     -- Remove all dead threads from the WsMap using `isAlive`,
     -- then add the new tid/val to the map.
-    removeDeadsAndAddNewRef :: RawThreadId -> WsPair -> Map RawThreadId WsPair -> (Map RawThreadId WsPair, ())
+    removeDeadsAndAddNewRef :: RawThreadId -> WsInfo -> Map RawThreadId WsInfo -> (Map RawThreadId WsInfo, ())
     removeDeadsAndAddNewRef tid val xs = (Map.insert tid val (Map.filter isAlive xs), ())
 
     -- Determine if the thread is still alive.
     -- WARNING: defined with `unsafePerformIO`, use with caution.
     {-# NOINLINE isAlive #-}
-    isAlive :: WsPair -> Bool
-    isAlive (WsPair wkTid _) = unsafePerformIO $! (isJust <$>) $! deRefWeak wkTid
+    isAlive :: WsInfo -> Bool
+    isAlive (WsInfo wkTid _) = unsafePerformIO $! (isJust <$>) $! deRefWeak wkTid
 
 
 {-| 
@@ -381,7 +403,7 @@ This parser consumes no input and always succeeds.
 Throws a ghc `error` if the whitespace parser has not been initialised in the given map.
 -}
 {-# INLINE getWs #-}
-getWs :: WsMap -> Parsec WsParser
+getWs :: WsMap -> Parsec WsParserInfo
 getWs wsMap = Parsec $ \st good _ -> do
   ERef ref <- getMapRef wsMap
   (`good` st) =<< readRef ref
@@ -395,12 +417,12 @@ Throws a ghc `error` if the ref is not in the given map.
 -- TODO: It should be an invariant that we have initialised the ref before
 -- calling getMapRef, so that this function never fails.
 {-# INLINE getMapRef #-}
-getMapRef :: WsMap -> RT (ERef WsParser)
+getMapRef :: WsMap -> RT (ERef WsParserInfo)
 getMapRef wsMap = unsafeIOToRT $ do
   x <- Map.lookup <$> myRawThreadId <*> readIORef wsMap
   case x of
     Nothing -> error . errMsg <$> myRawThreadId
-    Just (WsPair _ p)  -> return p
+    Just (WsInfo _ p)  -> return p
   where
     -- Error to display when the ref for this thread's wsparser has not been 
     -- initialised in the wsMap.
@@ -430,7 +452,7 @@ Throws a ghc `error` if this thread does not have an associated entry in the giv
 -}
 {-# INLINE setWs #-}
 setWs :: WsMap -- ^ `IORef` to the map of whitespace parsers
-      -> WsParser -- ^ @ws@, the new whitespace parser for this thread
+      -> WsParserInfo -- ^ @ws@, the new whitespace parser for this thread
       -> Parsec () -- ^ parser that updates the wsparser to @ws@
 setWs wsMap ws = Parsec $ \st good _ ->
   do  ERef ref <- getMapRef wsMap
@@ -447,7 +469,7 @@ This parser consumes no input and always succeeds.
 -}
 {-# INLINE initWs #-}
 initWs :: WsMap     -- ^ IORef to a map of whitespace parser refs
-       -> WsParser  -- ^ the initial whitespace parser for this thread.
+       -> WsParserInfo  -- ^ the initial whitespace parser for this thread.
        -> Parsec () -- ^ a parser that adds the new whitespace parser to the map, 
                     -- and cleans up any dead entries in the map (see `updateThreadMaps`).
 initWs wsMap ws = Parsec $ \st good _ -> do
@@ -481,7 +503,7 @@ This parser consumes input and fails if and only if the given parser @p@ does al
 -}
 {-# INLINE setWsDuring #-}
 setWsDuring :: WsMap
-            -> WsParser -- ^ @ws@, the new temporary whitespace parser
+            -> WsParserInfo -- ^ @ws@, the new temporary whitespace parser
             -> Parsec a -- ^ @p@, the parser to run with the modified whitespace parser
             -> Parsec a -- ^ a parser which runs @p@ with the new whitespace parser, 
                         -- and resets the old whitespace parser if @p@ succeeds.
