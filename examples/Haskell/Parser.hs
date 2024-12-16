@@ -9,10 +9,11 @@ import Data.List.NonEmpty (NonEmpty)
 import Text.Gigaparsec hiding (some)
 import Text.Gigaparsec.Combinator
 import Text.Gigaparsec.Errors.Combinator ((<?>))
-import Text.Gigaparsec.Expr ((+<), (>+), sops, precedence, Fixity(InfixL), Prec)
+import Text.Gigaparsec.Expr ((+<), (>+), sops, precedence, Fixity(InfixL), Prec, infixl1)
 import Text.Gigaparsec.Expr qualified as Expr (Prec(..))
 import Text.Gigaparsec.Position (pos)
 import Text.Gigaparsec.Combinator.NonEmpty (some)
+import Text.Gigaparsec.Expr.Chain (chainl1)
 
 atom :: Parsec Atom
 atom = 
@@ -52,15 +53,17 @@ term =
 funApp :: Parsec Expr
 funApp = do
   t <- term
-  (mkExprApp <*> pure t <*> some expr)
-    <|> return t
+  somel _ <$> term <*> term
+  <|> return t
+  -- (mkExprApp <*> pure t <*> some expr)
+  --   <|> return t
 
 
 expr :: Parsec Expr
 expr = precedence $ 
-      sops InfixL [mkExprBin <*> ("+" $> BinOp "+")]
-  +<  sops InfixL [mkExprBin <*> binOp]
-  +<  expr10 
+      expr10
+  >+  sops InfixL [mkExprBin <*> ("+" $> BinOp "+")]
+  >+  sops InfixL [mkExprBin <*> binOp]
   -- Expr.Atom ((mkExprAtom <*> atom) <|> paren expr <|> funApp)
 
 caseClauses :: Parsec [(Pattern, Expr)]

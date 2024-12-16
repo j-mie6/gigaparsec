@@ -18,27 +18,34 @@ including the handling of line-folds and indented blocks.
 -}
 module Text.Gigaparsec.Token.Indentation (
   -- * Indentation-Sensitive Parser Constructors
+  -- ** Getting the Current Indentation
+  IndentLevel,
+  indentLevel,
+  -- ** Indentation Blocks
   nonIndented,
   indentMany,
   indent,
   indentSome,
   indent1,
-  -- ** Fixed Indentation
+  -- *** Fixed Indentation
   indentManyAt,
   indentSomeAt,
 
-  -- ** Indent-After
-  -- *** Many
+  -- *** Indent-After
+  -- **** Many
   indentManyAfter,
   indentAfter,
   thenIndent,
-  -- *** Some
+  -- **** Some
   indentSomeAfter,
   indentAfter1,
   thenIndent1,
-  -- * Line-Folds
+  -- ** Line-Folds
   -- $lineFolding
   lineFold,
+  lineFoldAt,
+  lineFoldAfter,
+  thenLineFold,
   lineFoldWs,
 
   -- * Megaparsec-style Indentation Blocks.
@@ -68,7 +75,7 @@ import Text.Gigaparsec.Internal.Token.Indentation (
 import Text.Gigaparsec.Internal.Token.Indentation qualified as Internal
 import Text.Gigaparsec.Token.Lexer (Space)
 import Text.Gigaparsec.Internal.Token.Lexer (Space, whiteSpace)
-import Text.Gigaparsec.Combinator (skipMany)
+import Text.Gigaparsec.Combinator (skipMany, optional)
 import Text.Gigaparsec.Internal.Token.Space (Space(_indentGuard))
 import Text.Gigaparsec.State (make)
 
@@ -83,9 +90,15 @@ in which each line must be at the *same* indentation.
 
 An example of a language featuring line-folding is Haskell :)
 
-This module provides three combinators for line-folding, use whichever you prefer:
+This module provides some combinators for line-folding, use whichever you prefer:
 
-* 'lineFold'
+* The `Space` line-folds: these assume you are using the `Lexer` type:
+  
+      * 'lineFold'
+      * 'lineFoldAt'
+      * 'lineFoldAfter'
+      * 'thenLineFold'
+
 * 'lineFoldWs'
 * 'lineFoldMegaparsec'
 
@@ -304,7 +317,7 @@ which is greater than that of the first item.
 
 @`indentManyAfter` ws p q@ first consumes any initial whitespace (with @ws@) and newlines,
 and then saves the current indentation level, @lvl@ (this will be the indentation of @p@).
-Then, parses a @p@, and then parses many @q@s, each must be at the indentation @lvl@.
+Then, parses a @p@, and followed by zero or more @q@s, each must be at the indentation @lvl@.
 The results of @p@ and a list of all the results of the @q@s are returned as a pair.
 
 If either the first indentation check or the initial @p@ fails without consuming input, 
@@ -353,7 +366,7 @@ which is greater than that of the first item.
 
 @`indentSomeAfter` ws p q@ first consumes any initial whitespace (with @ws@) and newlines,
 and then saves the current indentation level, @lvl@ (this will be the indentation of @p@).
-Then, parses a @p@, and then parses one or more @q@s, each must be at the indentation @lvl@.
+Then, parses a @p@, followed by one or more @q@s, each must be at the indentation @lvl@.
 The results of @p@ and a list of all the results of the @q@s are returned as a pair.
 
 If either the first indentation check or the initial @p@ fails without consuming input, 
@@ -407,15 +420,76 @@ This parser fails if @p@ does, including if @p@ cannot finish parsing before the
 
 This parser consumes any initial whitespace, and any input if @p@ does also.
 
+/Note:/ During a line-fold, any newlines will be consumed by the whitespace parser.
+
 @since 0.4.0.0
 
 -}
+{-# INLINE lineFold #-}
 lineFold :: Space -> Parsec a -> Parsec a
 lineFold sp p = do
+  refLvl <- whiteSpace sp *> indentLevel
+  lineFoldAt sp refLvl p
+
+
+{-| Run the given parser @p@ as a line-fold, allowing it to be spread across multiple lines,
+as long as each subsequent line is more indented than the given indentation.
+
+This parser fails if @p@ does, including if @p@ cannot finish parsing before the end of the indented items.
+
+This parser consumes any initial whitespace, and any input if @p@ does also.
+
+/Note:/ During a line-fold, any newlines will be consumed by the whitespace parser.
+
+@since 0.4.0.0
+
+-}
+{-
+Note: All the other line-folds are implemented in terms of this combinator.
+-}
+{-# INLINE lineFoldAt #-}
+lineFoldAt :: Space -> IndentLevel -> Parsec a -> Parsec a
+lineFoldAt sp refLvl p = do
+  let ws = whiteSpace sp
+  make refLvl $ \ref ->
+    _indentGuard sp GT ref p <* many (newline *> ws)
+
+
+{-| 
+Get the indentation level of the first parser @p@ and then run it, then run @q@ as a line-fold that must
+have indentation greater than that of @p@.
+
+This parser fails if @p@ or @q@ does, including if @q@ cannot finish parsing before the end of the indented items.
+
+This parser consumes any initial whitespace, and any input if @p@ or @q@ does also.
+
+/Note:/ During a line-fold, any newlines will be consumed by the whitespace parser.
+
+@since 0.4.0.0
+
+-}
+{-# INLINE lineFoldAfter #-}
+lineFoldAfter :: Space -> Parsec a -> Parsec b -> Parsec (a, b)
+lineFoldAfter sp p q = do
   let ws = whiteSpace sp
   refLvl <- ws *> indentLevel
-  make refLvl $ \ref -> 
-    _indentGuard sp GT ref p <* (newline *> ws)
+  (,) <$> p <*> lineFoldAt sp refLvl q
+
+
+{-| 
+Alias for `lineFoldAfter`.
+Most useful as an infix operator:
+
+> p `thenLineFold` q
+
+/Note:/ During a line-fold, any newlines will be consumed by the whitespace parser.
+
+@since 0.4.0.0
+
+-}
+{-# INLINE thenLineFold #-}
+thenLineFold :: Space -> Parsec a -> Parsec b -> Parsec (a, b)
+thenLineFold = lineFoldAfter
 
 
 {-| This is similar to `lineFoldMegaparsec`, except the whitespace parser must *not* consume newlines.
@@ -441,7 +515,7 @@ lineFoldWs
 lineFoldWs ws p = do
   refLvl <- ws *> indentLevel
   -- we only need to check indentation after parsing a newline.
-  let ws' =  void (some (endOfLine *> ws) *> indentGuard unit GT refLvl) <|> ws
+  let ws' =  ws *> optional (some (endOfLine *> ws) *> indentGuard unit GT refLvl)
   p ws'
 
 
@@ -561,7 +635,7 @@ indentBlock ws indentOpt = do
 
 
 {-| This behaves like the megaparsec version; this documentation is adapted from the original 
-[megaparsec](https://hackage.haskell.org/package/megaparsec-9.7.0/docs/src/Text.Megaparsec.Char.Lexer.html#lineFold).
+[megaparsec](https://hackage.haskell.org/package/megaparsec-9.7.0/docs/src/Text.Megaparsec.Char.Lexer.html).
 
 Creates a parser that supports line-folding. 
 

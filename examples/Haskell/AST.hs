@@ -1,4 +1,4 @@
-{-# LANGUAGE TemplateHaskell #-}
+{-# LANGUAGE TemplateHaskell, PatternSynonyms #-}
 module Haskell.AST where
 
 import Data.List.NonEmpty (NonEmpty)
@@ -51,14 +51,15 @@ data Type =
     TypeVar Pos TVar
   | TypeData Pos TName
   | TypeStar Pos 
-  | TypeArr Pos Type Type
-  | TypeForall Pos (NonEmpty TVar) Type
+  | TypeForall Pos (NonEmpty Param) Type
   | TypeApp Pos Type Type
   | TypeBin Pos TBinOp Type Type
   | TypeTuple Pos Type (NonEmpty Type)
   | TypeParen Type
   deriving (Show, Eq)
 
+pattern TypeArr :: Pos -> Type -> Type -> Type
+pattern TypeArr pos a b = TypeBin pos TArr a b
 
 
 data Pattern = 
@@ -69,7 +70,9 @@ data Pattern =
 data Clause = Clause Name [Pattern] Expr
   deriving (Show, Eq)
 
-data Param = Param TVar Type
+data Param =
+    ParamVar TVar 
+  | ParamSig TVar Type
   deriving (Show, Eq)
 
 data CstrDef = CstrDef Cstr [Type]

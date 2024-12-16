@@ -7,6 +7,8 @@ import Haskell.Lexer
 
 import GHC.IO (throwIO)
 
+import Text.Pretty.Simple
+
 import Text.Gigaparsec
 
 main :: IO ()
@@ -32,6 +34,11 @@ parseString p = parse (fully p)
 parsePretty :: ToHaskell a => Parsec a -> String -> IO ()
 parsePretty p x = case parseString p x of
   Success y -> putStrLn $ toHaskell y
+  Failure e -> putStrLn $ "Error: " ++ e
+
+parsePrettySimple :: Show a => Parsec a -> String -> IO ()
+parsePrettySimple p x = case parseString p x of
+  Success y -> pPrint y
   Failure e -> putStrLn $ "Error: " ++ e
 
 -- parseProg :: String -> Result String Program

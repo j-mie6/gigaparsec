@@ -113,6 +113,9 @@ For the vast majority of cases, the functionality within this object shouldn't b
 as whitespace is consistently handled by lexeme and fully. 
 However, for grammars where whitespace is significant (like indentation-sensitive languages), 
 this object provides some more fine-grained control over how whitespace is consumed by the parsers within lexeme.
+  
+@since 0.3.0.0
+
 -}
 type Space :: *
 data Space = Space {
@@ -124,6 +127,9 @@ data Space = Space {
 
   This parser will always use the hide combinator as to not appear as a valid alternative in an error message: 
   it's likely always the case whitespace can be added at any given time, but that doesn't make it a useful suggestion unless it is significant.
+  
+  @since 0.3.0.0
+  
   -}
     whiteSpace :: !(Parsec ())
   {-|
@@ -133,6 +139,9 @@ data Space = Space {
   It will use the hide combinator as to not appear as a valid alternative in an error message: 
   adding a comment is often legal, 
   but not a useful solution for how to make the input syntactically valid.
+
+  @since 0.3.0.0
+
   -}
   , skipComments :: !(Parsec ())
   {-|
@@ -146,6 +155,9 @@ data Space = Space {
   In these cases, 
   @parens (alter withNewLine p)@ 
   would allow unrestricted newlines within parentheses.
+
+  @since 0.3.0.0
+
   -}
   , alter :: forall a. Desc.CharPredicate -> Parsec a -> Parsec a
   {-|
@@ -157,8 +169,22 @@ data Space = Space {
   as the first thing the global parser does or an UnfilledRegisterException will occur.
 
   See 'alter' for how to change whitespace during a parse.
+
+  @since 0.3.0.0
+
   -}
   , initSpace :: Parsec ()
+  {-|
+  This combinator makes lexemes indentation sensitive for the duration of a given parser.
+  In particular, it extends the whitespace parser to parse newlines, and then checks the indentation level
+  at the end of each block of whitespace consumed.
+  
+  When the indentation check fails, this combinator consumes no input (i.e. it is `atomic`).
+
+  /Note:/ This should not be part of the public API.
+
+  @since 0.4.0.0
+  -}
   , _indentGuard :: forall a r . Ordering -> Ref r Word -> Parsec a -> Parsec a
   }
 
@@ -235,16 +261,22 @@ mkSpace desc@Desc.SpaceDesc{..} !errConfig = Space {..}
   !wsImplMap = unsafePerformIO (newIORef Map.empty)
 
   _indentGuard :: forall a r . Ordering -> Ref r Word -> Parsec a -> Parsec a
-  _indentGuard ord ref p = do
-    WsParserInfo pred ws <- getWs wsImplMap
-    let pred' = amendCharPredicate '\n' pred
-    rollbackWs wsImplMap $ setWsDuring wsImplMap (WsParserInfo pred' (guard' ws)) p
-    where
+  _indentGuard ord ref p 
+    | whitespaceIsContextDependent = indentGuard'
+    | otherwise = throw (UnsupportedOperation badIndent)
+    where 
+      indentGuard' = do
+        WsParserInfo pred _ <- getWs wsImplMap
+        let !pred' = amendCharPredicate '\n' pred
+        let ws' = implOf pred'
+        rollbackWs wsImplMap $ setWsDuring wsImplMap (WsParserInfo pred' (guard' ws')) p
+
       -- Atomic is important here; the only time ws will fail is on the indentation error.
       -- in this case, we don't want to have consumed input
-      guard' q = atomic $ do
+      -- Also, ensure this only requires applicative.
+      guard' ws = atomic $ do
         refLvl <- get ref
-        actLvl <- q *> col
+        actLvl <- ws *> col
         unless (compare actLvl refLvl == ord) $
           Internal.throwIndentationError (Internal.ErrIndentNotOrd ord refLvl actLvl)
         
@@ -278,6 +310,7 @@ mkSpace desc@Desc.SpaceDesc{..} !errConfig = Space {..}
     | otherwise                    = throw (UnsupportedOperation badInit)
 
   badInit = "whitespace cannot be initialised unless `spaceDesc.whitespaceIsContextDependent` is True"
+  badIndent = "cannot use indentation-sensitive combinators unless `spaceDesc.whitespaceIsContextDependent` is True"
   badAlter = "whitespace cannot be altered unless `spaceDesc.whitespaceIsContextDependent` is True"
 
 

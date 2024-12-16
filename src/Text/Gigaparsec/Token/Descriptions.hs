@@ -661,6 +661,6 @@ type CharPredicate = Maybe (Char -> Bool)
 
 amendCharPredicate :: Char -> CharPredicate -> CharPredicate
 amendCharPredicate c Nothing = Just (\x -> c == x)
-amendCharPredicate c (Just f) = Just (\x -> c == x || f x)
+amendCharPredicate c (Just f) = if f c then Just f else Just (\x -> c == x || f x)
 
 

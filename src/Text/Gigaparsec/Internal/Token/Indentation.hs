@@ -36,6 +36,7 @@ import Text.Gigaparsec.State (make, set, get, Ref)
 import Control.Applicative (many, Alternative ((<|>)))
 import Control.Monad (unless, void)
 import Text.Gigaparsec.Combinator.NonEmpty (some)
+import Text.Gigaparsec.Combinator (skipMany)
 
 -- | An indentation level is just the column number.
 type IndentLevel = Word
@@ -81,7 +82,7 @@ data ErrorIndentation =
   -- | A non-indented item was actually indented.
     ErrNonIndented
       IndentLevel -- ^ Actual level
-  | 
+  |
   -- | The indentation of the current item did not compare with the reference level as the given ordering.
     ErrIndentNotOrd
       Ordering    -- ^ How the actual level should be compared with the reference level.
@@ -91,20 +92,20 @@ data ErrorIndentation =
 {-# COMPLETE ErrNonIndented, ErrIndentNotEQ, ErrIndentNotGT, ErrIndentNotLT #-}
 
 -- | The indentation of the current item did not match that of the previous items.
-pattern ErrIndentNotEQ 
+pattern ErrIndentNotEQ
   :: IndentLevel -- ^ Reference level
   -> IndentLevel -- ^ Actual level 
   -> ErrorIndentation
 pattern ErrIndentNotEQ ref act = ErrIndentNotOrd EQ ref act
 -- | The new indentation block was not more indented than the reference token.
-  -- | The new indentation block was not less indented than the reference token.
-pattern ErrIndentNotGT 
+pattern ErrIndentNotGT
   :: IndentLevel -- ^ Reference level
   -> IndentLevel -- ^ Actual level 
   -> ErrorIndentation
 pattern ErrIndentNotGT ref act = ErrIndentNotOrd GT ref act
 
-pattern ErrIndentNotLT 
+-- | The new indentation block was not less indented than the reference token.
+pattern ErrIndentNotLT
   :: IndentLevel -- ^ Reference level
   -> IndentLevel -- ^ Actual level 
   -> ErrorIndentation
@@ -174,7 +175,7 @@ indentSome mlvl ws p = indentCommon mlvl ws p some
 Captures the common functionality between indentSome and indentMany.
 
 I guess you could set @q@ to something other than `some` or `many`,
-although I'm not sure what sort of wacky parser you'd get from this!
+although I'm not sure what sort of wacky parser you'd get from this.
 
 @since 0.4.0.0
 -}
@@ -196,7 +197,7 @@ indentCommon mlvl ws p q =
     Checks indentation level first and fails (w/o consuming input) if it is incorrect. 
     -}
     {-# INLINE indentedItem #-}
-    indentedItem :: Ref r IndentConfig ->  Parsec a
+    indentedItem :: Ref r IndentConfig -> Parsec a
     indentedItem indentRef = do
       checkIndentLvl indentRef
       p <* endOfInputOrLine
@@ -204,7 +205,7 @@ indentCommon mlvl ws p q =
     {-# INLINE endOfInputOrLine #-}
     endOfInputOrLine :: Parsec ()
     endOfInputOrLine =
-      (eof <|> void (many (endOfLine *> ws)))
+      (eof <|> (ws *> skipMany (endOfLine *> ws)))
         <?> ["end of indentation block"]
 
     {-| 
@@ -216,7 +217,7 @@ indentCommon mlvl ws p q =
     {-# INLINABLE checkIndentLvl #-}
     checkIndentLvl ref = do
       -- do we need to check `eof` here?
-      newIndentLvl <- indentLevel
+      !newIndentLvl <- indentLevel
       !mExpectedIndentLvl <- get ref
       case mExpectedIndentLvl of
         NewIndent
