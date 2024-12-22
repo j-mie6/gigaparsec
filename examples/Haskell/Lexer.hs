@@ -4,6 +4,7 @@ module Haskell.Lexer where
 import Haskell.Lexer.Description
 
 import Text.Gigaparsec.Token.Lexer qualified as Lexer
+import Text.Gigaparsec.Token.Indentation qualified as Lexer
 import Text.Gigaparsec.Token.Lexer (Lexer, mkLexer)
 import Text.Gigaparsec.Token.Patterns (overloadedStrings)
 import Text.Gigaparsec.Token.Descriptions qualified as Desc
@@ -60,3 +61,12 @@ lambda = "λ" <|> "\\"
 
 arrow :: Parsec ()
 arrow = "->" <|> "→"
+
+indent :: Parsec a -> Parsec [a]
+indent = Lexer.indentMany (Lexer.space lexer)
+
+thenIndent :: Parsec a -> Parsec b -> Parsec (a, [b])
+thenIndent = Lexer.thenIndent (Lexer.space lexer)
+
+lineFoldAfter :: Parsec a -> Parsec b -> Parsec (a, b)
+lineFoldAfter = Lexer.lineFoldAfter (Lexer.space lexer)

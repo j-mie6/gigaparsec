@@ -12,7 +12,7 @@
 #include "portable-unlifted.h"
 
 module Text.Gigaparsec.Internal.Token.Space (
-  Space, whiteSpace, skipComments, alter, initSpace, mkSpace, _indentGuard
+  Space, whiteSpace, skipComments, alter, initSpace, mkSpace, _indentGuard, _whiteSpacePredicate, _implOf
   ) where
 
 import Text.Gigaparsec (Parsec, eof, void, empty, (<|>), atomic, unit, branch)
@@ -132,6 +132,8 @@ data Space = Space {
   
   -}
     whiteSpace :: !(Parsec ())
+
+  , _whiteSpacePredicate :: !(Parsec CharPredicate)
   {-|
   Skips zero or more comments.
 
@@ -186,6 +188,7 @@ data Space = Space {
   @since 0.4.0.0
   -}
   , _indentGuard :: forall a r . Ordering -> Ref r Word -> Parsec a -> Parsec a
+  , _implOf :: CharPredicate -> Parsec ()
   }
 
 ---------------------------------------------------------------------------------------------------
@@ -241,6 +244,7 @@ instance Show UnsupportedOperation where
 instance Exception UnsupportedOperation
 
 
+
 ---------------------------------------------------------------------------------------------------
 -- Whitespace parsers setup
 
@@ -280,8 +284,12 @@ mkSpace desc@Desc.SpaceDesc{..} !errConfig = Space {..}
         unless (compare actLvl refLvl == ord) $
           Internal.throwIndentationError (Internal.ErrIndentNotOrd ord refLvl actLvl)
         
+  _whiteSpacePredicate :: Parsec CharPredicate
+  _whiteSpacePredicate = wsParserPred <$> getWs wsImplMap
 
   ~comment = commentParser desc -- do not make this strict
+
+  _implOf = implOf
 
   -- Generate the whitespace parser described by the given predicate
   implOf :: Maybe (Char -> Bool) -> WsParser

@@ -76,8 +76,10 @@ import Text.Gigaparsec.Internal.Token.Indentation qualified as Internal
 import Text.Gigaparsec.Token.Lexer (Space)
 import Text.Gigaparsec.Internal.Token.Lexer (Space, whiteSpace)
 import Text.Gigaparsec.Combinator (skipMany, optional)
-import Text.Gigaparsec.Internal.Token.Space (Space(_indentGuard))
+import Text.Gigaparsec.Internal.Token.Space (Space(_indentGuard, _whiteSpacePredicate, _implOf))
 import Text.Gigaparsec.State (make)
+import Text.Gigaparsec.Token.Descriptions (amendCharPredicate)
+import Data.Bitraversable (bisequence)
 
 
 {- $lineFolding
@@ -171,6 +173,24 @@ Again, this is lifted from [Karpov](https://markkarpov.com/tutorial/megaparsec.h
 -}
 
 {-|
+Common functionality for indentMany combinators.
+-}
+_indentMany :: forall b
+  .  Maybe IndentLevel
+  -> Space      -- ^ @space@, the whitespace configuration. Does not need to consume newlines.
+  -> Parsec b   -- ^ @p@, the indented items to parse.
+  -> Parsec [b] -- ^ A parser that parses zero or more @p@s, each at the same indentation, 
+                -- collecting their results in a list.
+_indentMany mlvl sp p = do
+  cpred <- _whiteSpacePredicate sp
+  let ws = _implOf sp (amendCharPredicate '\n' cpred)
+  Internal.indentMany mlvl ws p
+
+-- TODO: need specific indentGT and indentEQ combinators methinks.
+-- should probably change Internal.indentCommon to take an IndentConfig rather than assuming
+-- the given indent is always an `OldIndent`.
+
+{-|
 Parse zero or more items, each at the same indentation level as the first item parsed.
 
 @`indentMany` ws p@ first consumes any initial whitespace (with @ws@) and newlines,
@@ -192,11 +212,11 @@ This combinator consumes input iff there are any initial newlines or @ws@, and/o
 {-# INLINE indentMany #-}
 indentMany
   :: forall b
-  .  Parsec ()  -- ^ @ws@, whitespace consumer. Does not need to consume newlines.
+  .  Space       -- ^ @space@, the whitespace configuration. Does not need to consume newlines.
   -> Parsec b   -- ^ @p@, the indented items to parse.
   -> Parsec [b] -- ^ A parser that parses zero or more @p@s, each at the same indentation, 
                 -- collecting their results in a list.
-indentMany = Internal.indentMany Nothing
+indentMany = _indentMany Nothing
 
 {-|
 Parse zero or more items, each at the given indentation level.
@@ -223,12 +243,27 @@ This combinator consumes input iff there are any initial newlines or @ws@, and/o
 indentManyAt
   :: forall b
   .  IndentLevel  -- ^ @lvl@, the reference indentation level.
-  -> Parsec ()    -- ^ @ws@, whitespace consumer. Does not need to consume newlines.
+  -> Space        -- ^ @space@, the whitespace configuration. Does not need to consume newlines.
   -> Parsec b     -- ^ @p@, the indented items to parse.
   -> Parsec [b]   -- ^ A parser that parses zero or more @p@s, each at the indentation @lvl@, 
                   -- collecting their results in a list.
-indentManyAt = Internal.indentMany . Just
+indentManyAt = _indentMany . Just
 
+
+{-|
+Common functionality for indentSome combinators.
+-}
+_indentSome
+  :: forall b
+  .  Maybe IndentLevel   -- ^ @mlvl@, the reference indentation level.
+  -> Space               -- ^ @space@, the whitespace configuration. Does not need to consume newlines.
+  -> Parsec b            -- ^ @p@, the indented items to parse.
+  -> Parsec (NonEmpty b) -- ^ A parser that parses at least one @p@, each at the indentation @lvl@, 
+                         -- collecting their results in a list.
+_indentSome mlvl sp p = do
+  cpred <- _whiteSpacePredicate sp
+  let ws = _implOf sp (amendCharPredicate '\n' cpred)
+  Internal.indentSome mlvl ws p
 
 {-|
 Parse one or more items, each at the same indentation level as the first item parsed.
@@ -252,11 +287,11 @@ This combinator consumes input iff there are any initial newlines or @ws@, and/o
 {-# INLINE indentSome #-}
 indentSome
   :: forall b
-  .  Parsec ()            -- ^ @ws@, whitespace consumer. Does not need to consume newlines.
+  .  Space                -- ^ @space@, the whitespace configuration. Does not need to consume newlines.
   -> Parsec b             -- ^ @p@, the indented items to parse.
   -> Parsec (NonEmpty b)  -- ^ A parser that parses at least one @p@, each at the same indentation, 
                           -- collecting their results in a list.
-indentSome = Internal.indentSome Nothing
+indentSome = _indentSome Nothing
 
 {-|
 Parse one or more items, each at the given indentation level.
@@ -282,11 +317,13 @@ This combinator consumes input iff there are any initial newlines or @ws@, and/o
 indentSomeAt
   :: forall b
   .  IndentLevel         -- ^ @lvl@, the reference indentation level.
-  -> Parsec ()           -- ^ @ws@, whitespace consumer. Does not need to consume newlines.
+  -> Space               -- ^ @space@, the whitespace configuration. Does not need to consume newlines.
   -> Parsec b            -- ^ @p@, the indented items to parse.
   -> Parsec (NonEmpty b) -- ^ A parser that parses at least one @p@, each at the indentation @lvl@, 
                          -- collecting their results in a list.
-indentSomeAt = Internal.indentSome . Just
+indentSomeAt = _indentSome . Just
+
+
 
 {-|
 Alias for `indentMany`.
@@ -295,7 +332,7 @@ Alias for `indentMany`.
 
 -}
 {-# INLINE indent #-}
-indent :: Parsec () -> Parsec b -> Parsec [b]
+indent :: Space -> Parsec b -> Parsec [b]
 indent = indentMany
 
 {-|
@@ -305,7 +342,7 @@ Alias for `indentSome`.
 
 -}
 {-# INLINE indent1 #-}
-indent1 :: Parsec () -> Parsec b -> Parsec (NonEmpty b)
+indent1 :: Space -> Parsec b -> Parsec (NonEmpty b)
 indent1 = indentSome
 
 ---------------------------------------------------------------------------------------------------
@@ -332,10 +369,14 @@ This combinator consumes input iff there are any initial newlines or @ws@, and/o
 
 -}
 {-# INLINE indentManyAfter #-}
-indentManyAfter :: Parsec () -> Parsec a -> Parsec b -> Parsec (a, [b])
-indentManyAfter ws p q = do
-  refLvl <- indentLevel
-  (,) <$> p <*> indentManyAt refLvl ws q
+indentManyAfter 
+  :: Space 
+  -> Parsec a 
+  -> Parsec b 
+  -> Parsec (a, [b])
+indentManyAfter sp p q = do
+  refLvl <- whiteSpace sp *> indentLevel
+  bisequence (p, indentManyAt refLvl sp q)
 
 {-|
 Alias for `indentManyAfter`.
@@ -344,7 +385,11 @@ Alias for `indentManyAfter`.
 
 -}
 {-# INLINE indentAfter #-}
-indentAfter :: Parsec () -> Parsec a -> Parsec b -> Parsec (a, [b])
+indentAfter 
+  :: Space            -- ^ @space@, the whitespace configuration. Does not need to consume newlines.
+  -> Parsec a 
+  -> Parsec b 
+  -> Parsec (a, [b])  --
 indentAfter = indentManyAfter
 
 {-|
@@ -357,7 +402,11 @@ Most useful as an infix operator:
 
 -}
 {-# INLINE thenIndent #-}
-thenIndent :: Parsec () -> Parsec a -> Parsec b -> Parsec (a, [b])
+thenIndent 
+  :: Space 
+  -> Parsec a 
+  -> Parsec b 
+  -> Parsec (a, [b])
 thenIndent = indentManyAfter
 
 {-|
@@ -381,10 +430,14 @@ This combinator consumes input iff there are any initial newlines or @ws@, and/o
 
 -}
 {-# INLINE indentSomeAfter #-}
-indentSomeAfter :: Parsec () -> Parsec a -> Parsec b -> Parsec (a, NonEmpty b)
-indentSomeAfter ws p q = do
+indentSomeAfter 
+  :: Space
+  -> Parsec a 
+  -> Parsec b 
+  -> Parsec (a, NonEmpty b)
+indentSomeAfter sp p q = do
   refLvl <- indentLevel
-  (,) <$> p <*> indentSomeAt refLvl ws q
+  (,) <$> p <*> indentSomeAt refLvl sp q
 
 {-|
 Alias for `indentSomeAfter`.
@@ -393,7 +446,11 @@ Alias for `indentSomeAfter`.
 
 -}
 {-# INLINE indentAfter1 #-}
-indentAfter1 :: Parsec () -> Parsec a -> Parsec b -> Parsec (a, NonEmpty b)
+indentAfter1 
+  :: Space
+  -> Parsec a 
+  -> Parsec b 
+  -> Parsec (a, NonEmpty b)
 indentAfter1 = indentSomeAfter
 
 {-|
@@ -406,7 +463,11 @@ Most useful as an infix operator:
 
 -}
 {-# INLINE thenIndent1 #-}
-thenIndent1 :: Parsec () -> Parsec a -> Parsec b -> Parsec (a, NonEmpty b)
+thenIndent1
+  :: Space
+  -> Parsec a 
+  -> Parsec b 
+  -> Parsec (a, NonEmpty b)
 thenIndent1 = indentSomeAfter
 
 
