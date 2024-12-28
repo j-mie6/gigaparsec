@@ -184,7 +184,7 @@ although I'm not sure what sort of wacky parser you'd get from this.
 indentCommon
   :: forall a b
   .  Maybe IndentLevel -- ^ reference indentation level
-  -> Parsec () -- ^ whitespace consumer, does not need to consume newlines
+  -> Parsec () -- ^ whitespace consumer, must consume newlines
   -> Parsec a  -- ^ the indented items to parse
   -> (Parsec a -> Parsec b) -- ^ @q@, how to collect each item
   -> Parsec b
@@ -205,7 +205,7 @@ indentCommon mlvl ws p q =
     {-# INLINE endOfInputOrLine #-}
     endOfInputOrLine :: Parsec ()
     endOfInputOrLine =
-      (eof <|> (ws *> skipMany (endOfLine *> ws)))
+      (eof <|> ws)
         <?> ["end of indentation block"]
 
     {-| 

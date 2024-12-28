@@ -12,11 +12,11 @@
 #include "portable-unlifted.h"
 
 module Text.Gigaparsec.Internal.Token.Space (
-  Space, whiteSpace, skipComments, alter, initSpace, mkSpace, _indentGuard, _whiteSpacePredicate, _implOf
+  Space, whiteSpace, skipComments, alter, initSpace, mkSpace, _indentGuard, _whiteSpacePredicate
   ) where
 
 import Text.Gigaparsec (Parsec, eof, void, empty, (<|>), atomic, unit, branch)
-import Text.Gigaparsec.Char (satisfy, string, item, endOfLine, newline)
+import Text.Gigaparsec.Char (satisfy, string, item, endOfLine, newline, char)
 
 
 import Text.Gigaparsec.Combinator (skipMany, skipManyTill)
@@ -69,6 +69,9 @@ import Control.Selective (ifS, Selective (select))
 #if __GLASGOW_HASKELL__ >= 908
 -- GHC >= 9.8
 import GHC.Conc.Sync (fromThreadId)
+import Text.Gigaparsec.State (get)
+import Text.Gigaparsec.Position (col)
+import Text.Gigaparsec.Internal.Token.Indentation qualified as Internal
 
 #elif __GLASGOW_HASKELL__ >= 902 
 -- GHC >= 9.2.1
@@ -132,8 +135,6 @@ data Space = Space {
   
   -}
     whiteSpace :: !(Parsec ())
-
-  , _whiteSpacePredicate :: !(Parsec CharPredicate)
   {-|
   Skips zero or more comments.
 
@@ -176,6 +177,8 @@ data Space = Space {
 
   -}
   , initSpace :: Parsec ()
+  -----------------------------------------------------------------------------
+  -- Private fields
   {-|
   This combinator makes lexemes indentation sensitive for the duration of a given parser.
   In particular, it extends the whitespace parser to parse newlines, and then checks the indentation level
@@ -188,7 +191,13 @@ data Space = Space {
   @since 0.4.0.0
   -}
   , _indentGuard :: forall a r . Ordering -> Ref r Word -> Parsec a -> Parsec a
-  , _implOf :: CharPredicate -> Parsec ()
+  {-|
+  Retrieve the predicate used to generate the current whitespace parser.
+
+  @since 0.4.0.0
+  
+  -}
+  , _whiteSpacePredicate :: !(Parsec Desc.CharPredicate)
   }
 
 ---------------------------------------------------------------------------------------------------
@@ -271,7 +280,7 @@ mkSpace desc@Desc.SpaceDesc{..} !errConfig = Space {..}
     where 
       indentGuard' = do
         WsParserInfo pred _ <- getWs wsImplMap
-        let !pred' = amendCharPredicate '\n' pred
+        let !pred' = Desc.amendCharPredicate '\n' pred
         let ws' = implOf pred'
         rollbackWs wsImplMap $ setWsDuring wsImplMap (WsParserInfo pred' (guard' ws')) p
 
@@ -284,18 +293,23 @@ mkSpace desc@Desc.SpaceDesc{..} !errConfig = Space {..}
         unless (compare actLvl refLvl == ord) $
           Internal.throwIndentationError (Internal.ErrIndentNotOrd ord refLvl actLvl)
         
-  _whiteSpacePredicate :: Parsec CharPredicate
+  _whiteSpacePredicate :: Parsec Desc.CharPredicate
   _whiteSpacePredicate = wsParserPred <$> getWs wsImplMap
 
   ~comment = commentParser desc -- do not make this strict
 
-  _implOf = implOf
-
   -- Generate the whitespace parser described by the given predicate
   implOf :: Maybe (Char -> Bool) -> WsParser
   implOf
-    | supportsComments desc = hide . maybe skipComments (skipMany . (<|> comment errConfig) . void . satisfy)
-    | otherwise             = hide . maybe empty (skipMany . satisfy)
+    | supportsComments desc = hide . maybe skipComments (skipMany . (<|> comment errConfig) . void . checkLineCont)
+    | otherwise             = hide . maybe empty (skipMany . checkLineCont)
+      where
+        -- Check if the parser supports line continuation characters
+        checkLineCont :: (Char -> Bool) -> Parsec ()
+        !checkLineCont = case lineContinuationChar of 
+          Nothing -> void . satisfy
+          Just c -> atomic . void . ((char c *> endOfLine) <|>) . satisfy
+
   
   configuredWhitespace :: WsParser
   !configuredWhitespace = implOf space
@@ -320,7 +334,6 @@ mkSpace desc@Desc.SpaceDesc{..} !errConfig = Space {..}
   badInit = "whitespace cannot be initialised unless `spaceDesc.whitespaceIsContextDependent` is True"
   badIndent = "cannot use indentation-sensitive combinators unless `spaceDesc.whitespaceIsContextDependent` is True"
   badAlter = "whitespace cannot be altered unless `spaceDesc.whitespaceIsContextDependent` is True"
-
 
 ---------------------------------------------------------------------------------------------------
 -- Per-thread whitespace parser maps.
@@ -367,7 +380,7 @@ type RawThreadId = Word64
 
 -- | A whitespace parser
 type WsParser = Parsec ()
-data WsParserInfo = WsParserInfo {wsParserPred :: !CharPredicate, wsParser :: !WsParser}
+data WsParserInfo = WsParserInfo {wsParserPred :: !Desc.CharPredicate, wsParser :: !WsParser}
 
 {-| Existential of a 'Ref' and its lifetime.
 

@@ -208,6 +208,7 @@ module Text.Gigaparsec.Token.Descriptions (
       * 'multiLineNestedComments'
       * 'space'
       * 'whitespaceIsContextDependent'
+      * 'lineContinuationChar'
 
   * 'plainSpace'
   * 'CharPredicate'
@@ -621,6 +622,8 @@ data SpaceDesc = SpaceDesc
   , space :: !CharPredicate               -- ^ the characters to be treated as whitespace
   , whitespaceIsContextDependent :: !Bool -- ^ does the context change the definition of whitespace (@True@), or not (@False@)?
                                           --  (e.g. in Python, newlines are valid whitespace within parentheses, but are significant outside of them)
+  , lineContinuationChar :: !(Maybe Char) -- ^ A character that invokes line continuations.
+                                          -- For example, '\' in Python allows the user to split an expression over the next line, ignoring indentation.
   }
 {-|
 This is a blank whitespace description template, which should be extended to form the desired whitespace descriptions.
@@ -636,6 +639,7 @@ plainSpace = SpaceDesc { lineCommentStart = ""
                        , multiLineNestedComments = False
                        , space = Just isSpace
                        , whitespaceIsContextDependent = False
+                       , lineContinuationChar = Nothing
                        }
 
 {-|

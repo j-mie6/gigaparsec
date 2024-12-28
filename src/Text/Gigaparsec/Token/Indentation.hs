@@ -70,13 +70,13 @@ import Text.Gigaparsec.Combinator.NonEmpty (some)
 
 import Text.Gigaparsec.Internal.Token.Indentation (
   indentLevel,
-  nonIndented, IndentLevel
+  IndentLevel
   )
 import Text.Gigaparsec.Internal.Token.Indentation qualified as Internal
 import Text.Gigaparsec.Token.Lexer (Space)
-import Text.Gigaparsec.Internal.Token.Lexer (Space, whiteSpace)
+import Text.Gigaparsec.Internal.Token.Lexer (Space, whiteSpace, alter)
 import Text.Gigaparsec.Combinator (skipMany, optional)
-import Text.Gigaparsec.Internal.Token.Space (Space(_indentGuard, _whiteSpacePredicate, _implOf))
+import Text.Gigaparsec.Internal.Token.Space (Space(_indentGuard, _whiteSpacePredicate))
 import Text.Gigaparsec.State (make)
 import Text.Gigaparsec.Token.Descriptions (amendCharPredicate)
 import Data.Bitraversable (bisequence)
@@ -173,6 +173,23 @@ Again, this is lifted from [Karpov](https://markkarpov.com/tutorial/megaparsec.h
 -}
 
 {-|
+Parse a non-indented item, @p@.
+
+This ensures that there is no indentation before @p@; if there is, this combinator fails.
+This combinator consumes input if there is any whitespace before @p@ and/or if @p@ does also.
+
+@since 0.4.0.0
+
+-}
+{-# INLINE nonIndented #-}
+nonIndented
+  :: Space     -- ^ @space@, the whitespace configuration. Does not need to consume newlines.
+  -> Parsec a  -- ^ @p@, the parser to run
+  -> Parsec a  -- ^ Parses @p@ only if it is not indented, otherwise fails.
+nonIndented sp = 
+  Internal.nonIndented (whiteSpace sp)
+
+{-|
 Common functionality for indentMany combinators.
 -}
 _indentMany :: forall b
@@ -183,9 +200,9 @@ _indentMany :: forall b
                 -- collecting their results in a list.
 _indentMany mlvl sp p = do
   cpred <- _whiteSpacePredicate sp
-  let ws = _implOf sp (amendCharPredicate '\n' cpred)
-  Internal.indentMany mlvl ws p
-
+  alter sp 
+    (amendCharPredicate '\n' cpred) 
+    (Internal.indentMany mlvl (whiteSpace sp) p)
 -- TODO: need specific indentGT and indentEQ combinators methinks.
 -- should probably change Internal.indentCommon to take an IndentConfig rather than assuming
 -- the given indent is always an `OldIndent`.
@@ -262,8 +279,9 @@ _indentSome
                          -- collecting their results in a list.
 _indentSome mlvl sp p = do
   cpred <- _whiteSpacePredicate sp
-  let ws = _implOf sp (amendCharPredicate '\n' cpred)
-  Internal.indentSome mlvl ws p
+  alter sp 
+    (amendCharPredicate '\n' cpred) 
+    (Internal.indentSome mlvl (whiteSpace sp) p)
 
 {-|
 Parse one or more items, each at the same indentation level as the first item parsed.
