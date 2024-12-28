@@ -15,8 +15,8 @@ module Text.Gigaparsec.Internal.Token.Space (
   Space, whiteSpace, skipComments, alter, initSpace, mkSpace, _indentGuard, _whiteSpacePredicate
   ) where
 
-import Text.Gigaparsec (Parsec, eof, void, empty, (<|>), atomic, unit)
-import Text.Gigaparsec.Char (satisfy, string, item, endOfLine, char)
+import Text.Gigaparsec (Parsec, eof, void, empty, (<|>), atomic, unit, branch)
+import Text.Gigaparsec.Char (satisfy, string, item, endOfLine, newline, char)
 
 
 import Text.Gigaparsec.Combinator (skipMany, skipManyTill)
@@ -26,10 +26,14 @@ import Text.Gigaparsec.Token.Descriptions qualified as Desc
 import Text.Gigaparsec.Token.Errors (
       ErrorConfig(labelSpaceEndOfLineComment,
                   labelSpaceEndOfMultiComment) )
-import Text.Gigaparsec.Internal ( Parsec(Parsec) )
+import Text.Gigaparsec.Internal ( Parsec(Parsec), _branch )
 import Text.Gigaparsec.Internal.Token.Errors (annotate)
 
 import Text.Gigaparsec.Internal.Require (require)
+import Text.Gigaparsec.Internal.Token.Indentation qualified as Internal
+
+import Text.Gigaparsec.State (get)
+import Text.Gigaparsec.Position (col)
 
 
 import Data.List (isPrefixOf)
@@ -37,26 +41,27 @@ import Data.Map.Strict (Map)
 import Data.Map.Strict qualified as Map
 
 
-import Data.IORef (newIORef, IORef, readIORef, atomicModifyIORef')
+import Data.IORef (newIORef, IORef, readIORef, atomicModifyIORef, atomicModifyIORef')
 import Control.Concurrent (ThreadId, myThreadId, mkWeakThreadId)
 import Control.Exception (throw)
-import Control.Monad (join, guard, unless)
+import Control.Monad (join, guard, foldM, filterM, unless)
 import System.IO.Unsafe (unsafePerformIO)
 import Control.Monad.RT.Unsafe (unsafeIOToRT)
 import Control.Exception (Exception)
 import GHC.Weak (Weak, deRefWeak)
+import GHC.Exts (Word64#, ThreadId#, unsafeCoerce#)
 
+CPP_import_PortableUnlifted
 import Data.Word (Word64)
 import Data.Ref (Ref, readRef, writeRef, newRef)
+import Control.Monad.RT (rtToIO)
 import Control.Monad.RT (RT)
 import Data.Maybe (isJust)
+import Control.Arrow (Arrow(second))
+import Data.Traversable (for)
+import GHC.Conc (ThreadId(ThreadId))
 
-
-
-import Text.Gigaparsec.Position (col)
-import Text.Gigaparsec.Internal.Token.Indentation qualified as Internal
-import Text.Gigaparsec.State (get)
-
+import Control.Selective (ifS, Selective (select))
 
 ---------------------------------------------------------------------------------------------------
 -- We need a way to generate a hashable value that is unique to each thread.
@@ -68,7 +73,6 @@ import Text.Gigaparsec.State (get)
 #if __GLASGOW_HASKELL__ >= 908
 -- GHC >= 9.8
 import GHC.Conc.Sync (fromThreadId)
-
 #elif __GLASGOW_HASKELL__ >= 902 
 -- GHC >= 9.2.1
 -- base 4.17 - 4.18, `getThreadId` returns CULLong
