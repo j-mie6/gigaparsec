@@ -14,7 +14,9 @@ import SmallPython.AST.ToPython (ToPython(..))
 
 
 main :: IO ()
-main = return ()
+main = do
+  file <- getLine
+  parseFile file
 
 
 parseFile :: FilePath -> IO ()

@@ -47,14 +47,13 @@ import Text.Gigaparsec.State
 import Text.Gigaparsec.Combinator (option)
 import Data.Maybe (isJust)
 import Text.Gigaparsec.Errors.Combinator ((<?>))
-import Text.Gigaparsec.Token.Indentation
 
 -- #define __SMALLPYTHON_DEBUG__
-#define __GIGAPARSEC_DEBUG_INDENT__
+-- #define __GIGAPARSEC_DEBUG_INDENT__
 
 {-# INLINE debug #-}
-#ifdef __SMALLPYTHON_DEBUG__
 debug :: forall a. String -> Parsec a -> Parsec a
+#ifdef __SMALLPYTHON_DEBUG__
 debug = Debug.debug
 #else
 debug _ p = p
@@ -165,12 +164,9 @@ assignOp =
   --     (endOfLine $> NonEmpty.cons)
 
 functionDef :: Parsec Stat
-functionDef = do
-  lvl <- col
-  mkFunctionDef ("def" *> ident) params 
-        (":" *> endOfLine *> 
-          indentSomeAt lvl whiteSpace stat
-        )
+functionDef = deferredFunctionDef <*> 
+  (("def" *> ident) <~> params <* ":") `thenIndent1` stat
+
 
 -- It seems better to just parse the lhs as an expression,
 -- then have a fallible cast into a lhs.
@@ -215,7 +211,7 @@ stat =
   <|> debug "return" (mkReturn ("return" *> expr))
 
 program :: Parsec Program
-program = fully $ many nextLine *> (Program <$> sepEndBy (nonIndented whiteSpace stat) (many nextLine))
+program = fully $ many nextLine *> (Program <$> sepEndBy (nonIndented stat) (many nextLine))
 
 whenM :: Monad m => m Bool -> m () -> m ()
 whenM c f = c >>= \b -> when b f

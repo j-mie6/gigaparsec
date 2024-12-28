@@ -255,7 +255,8 @@ spaceDesc = Desc.plainSpace {
     Desc.multiLineCommentEnd   = "",
     Desc.multiLineNestedComments = False,
     Desc.space = Just isNormalWhiteSpace,
-    Desc.whitespaceIsContextDependent = True
+    Desc.whitespaceIsContextDependent = True,
+    Desc.lineContinuationChar = Just '\\'
   }
 
 {-# inline isNormalWhiteSpace #-}

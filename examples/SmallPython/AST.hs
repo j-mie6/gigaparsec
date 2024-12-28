@@ -53,6 +53,10 @@ type Stats1 = NonEmpty Stat
 mkFunctionDef :: Parsec Name -> Parsec Params -> Parsec Stats1 -> Parsec Stat
 mkFunctionDef f xs body = StatFunctionDef <$> parseInfo <*> f <*> xs <*> body
 
+deferredFunctionDef :: Parsec (((Name, Params), Stats1) -> Stat)
+deferredFunctionDef =
+  (\p ((f, ps), st) -> StatFunctionDef p f ps st) <$> parseInfo
+
 mkStatExp :: Parsec Expr -> Parsec Stat
 mkStatExp expr = StatExp <$> parseInfo <*> expr
 

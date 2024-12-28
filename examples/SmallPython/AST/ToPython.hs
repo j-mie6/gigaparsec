@@ -77,14 +77,58 @@ instance ToPython UnaryOp where
   toPythonStringBuilder :: UnaryOp -> StringBuilder
   toPythonStringBuilder (_, op) = _to op
 
+
+class Precedence a where
+  precedence :: a -> PrecedenceLevel
+
+data PrecedenceLevel = 
+    PrecAdd
+  | PrecMul
+  | PrecExp
+  | PrecAtom
+  deriving (Eq, Ord, Bounded)
+
+instance Precedence UnaryOp where
+  precedence :: UnaryOp -> PrecedenceLevel
+  precedence (_, op) = case op of
+    UnaryPlus  -> PrecAdd
+    UnaryMinus -> PrecAdd
+
+instance Precedence BinOp where
+  precedence :: BinOp -> PrecedenceLevel
+  precedence (_, op) = case op of
+    BinPlus  -> PrecAdd
+    BinMinus -> PrecAdd
+    BinDiv -> PrecMul
+    BinFloorDiv -> PrecMul
+    BinMult -> PrecMul
+    BinExponent -> PrecExp
+
+instance Precedence Expr where
+  precedence :: Expr -> PrecedenceLevel
+  precedence t = case t of
+    ExprAtom {} -> PrecAtom
+    ExprBin _ op _ _ -> precedence op
+    ExprUnary _ op _ -> precedence op
+    ExprFunctionCall {} -> PrecAtom
+
 instance ToPython Expr where
   toPythonStringBuilder :: Expr -> StringBuilder
-  toPythonStringBuilder t = case t of
-    (ExprAtom _ a) -> _to a
-    (ExprBin _ op t u) -> mconcat ["(", _to t, ") ", _to op ," (", _to u, ")"]
-    (ExprUnary _ op t@(ExprBin {})) -> mconcat [_to op ," (", _to t, ")"]
-    (ExprUnary _ op t) -> _to op <> _to t
-    (ExprFunctionCall _ f as) -> _to f <> "(" <> mconcat (intersperse ", " (map _to as)) <> ")"
+  toPythonStringBuilder t = withPrecedence minBound t
+    where
+    withPrecedence :: PrecedenceLevel -> Expr -> StringBuilder
+    withPrecedence outer t = 
+      let inner = precedence t 
+      in  paren outer inner $ case t of
+        (ExprAtom _ a) -> _to a
+        (ExprBin _ op t u) -> 
+          mconcat [withPrecedence inner t, " ", _to op , " ", withPrecedence inner u]
+        (ExprUnary _ op t) -> _to op <> withPrecedence inner t
+        (ExprFunctionCall _ f as) -> _to f <> "(" <> mconcat (intersperse ", " (map _to as)) <> ")"
+
+    paren outer inner x
+      | outer > inner = "(" <> x <> ")"
+      | otherwise     = x
 
 
 instance ToPython Params where

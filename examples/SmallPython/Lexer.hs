@@ -21,7 +21,12 @@ module SmallPython.Lexer (
   isParenWhiteSpace,
   whiteSpace,
   fully,
-  nextLine
+  nextLine,
+  indent1,
+  indent1After,
+  thenIndent1,
+  indent1At,
+  nonIndented,
   ) where
 
 import Prelude hiding (fail)
@@ -31,6 +36,7 @@ import SmallPython.Lexer.Description (pythonDesc, isKeyword, isReservedOperator,
 import Text.Gigaparsec
 
 import Text.Gigaparsec.Token.Lexer qualified as Lexer
+import Text.Gigaparsec.Token.Indentation qualified as Lexer
 import Text.Gigaparsec.Token.Descriptions qualified as Desc
 
 import Text.Gigaparsec.Errors.Combinator (fail)
@@ -45,6 +51,7 @@ import Data.Map qualified as Map
 
 import Data.Set (Set)
 import Data.Set qualified as Set
+import Data.List.NonEmpty (NonEmpty)
 
 instance a ~ () => IsString (Parsec a) where
   fromString :: String -> Parsec a
@@ -119,18 +126,43 @@ integer =
 -- Whitespace
 
 
+{-# inline alter #-}
 alter :: (Char -> Bool) -> Parsec a -> Parsec a
 alter = Lexer.alter pythonSpace . Just
 
+{-# inline pythonSpace #-}
 pythonSpace :: Lexer.Space
 pythonSpace = Lexer.space pythonLexer
 
+{-# inline whiteSpace #-}
 whiteSpace :: Parsec ()
 whiteSpace = Lexer.whiteSpace pythonSpace
 
-
+{-# inline fully #-}
 fully :: Parsec a -> Parsec a
 fully = Lexer.fully pythonLexer
 
+{-# inline nextLine #-}
 nextLine :: Parsec ()
 nextLine = Lexer.apply pythonLexeme (void endOfLine)
+
+{-# inline indent1 #-}
+indent1 :: Parsec b -> Parsec (NonEmpty b)
+indent1 = Lexer.indent1 pythonSpace
+
+{-# inline indent1After #-}
+indent1After :: Parsec a -> Parsec b -> Parsec (a, NonEmpty b)
+indent1After = Lexer.indentAfter1 pythonSpace
+
+{-# inline indent1At #-}
+indent1At :: Lexer.IndentLevel -> Parsec b -> Parsec (NonEmpty b)
+indent1At = (`Lexer.indentSomeAt` pythonSpace)
+
+{-# inline thenIndent1 #-}
+thenIndent1 :: Parsec a -> Parsec b -> Parsec (a, NonEmpty b)
+thenIndent1 = Lexer.thenIndent1 pythonSpace
+
+
+{-# inline nonIndented #-}
+nonIndented :: Parsec a -> Parsec a
+nonIndented = Lexer.nonIndented pythonSpace
