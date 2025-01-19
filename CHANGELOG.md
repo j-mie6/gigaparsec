@@ -1,6 +1,10 @@
 # Revision history for gigaparsec
 
-## 0.3.0.0 -- TBD
+## 0.3.1.0 -- 2025-01-19
+* Added more documentation
+* Added lexical combinator TH generators
+
+## 0.3.0.0 -- 2024-04-08
 * Generalised `deriveLiftedConstructors`/`deriveDeferredConstructors` functionality to also work
   with pattern synonyms and `forall`s in more places.
 * Added line numbering for the line information in the `ErrorBuilder`.
