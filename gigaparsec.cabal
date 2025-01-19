@@ -226,20 +226,20 @@ benchmark perf-test
 
     main-is:          Main.hs
 
-library examples
-    import:             warnings, extensions, base
-    default-language:   Haskell2010
-    hs-source-dirs:     examples
-
-    ghc-options: -ddump-to-file -ddump-simpl -ddump-splices -ddump-file-prefix=Foo
-
-    build-depends:      
-        gigaparsec,
-        containers >= 0.6 && < 0.7
-    
-    exposed-modules:
-        ExprLang,
-        ExprLang.Parser,
-        ExprLang.Lexer,
-        ExprLang.Lexer.IntConfig,
-        ExprLang.AST
+--library examples
+--    import:             warnings, extensions, base
+--    default-language:   Haskell2010
+--    hs-source-dirs:     examples
+--
+--    ghc-options: -ddump-to-file -ddump-simpl -ddump-splices -ddump-file-prefix=Foo
+--
+--    build-depends:
+--        gigaparsec,
+--        containers >= 0.6 && < 0.7
+--
+--    exposed-modules:
+--        ExprLang,
+--        ExprLang.Parser,
+--        ExprLang.Lexer,
+--        ExprLang.Lexer.IntConfig,
+--        ExprLang.AST
