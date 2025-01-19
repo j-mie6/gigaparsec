@@ -30,7 +30,7 @@ that are wider than a single 16-bit character.
 </span><span id="line-30"></span><span>
 </span><span id="line-31"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Text.Gigaparsec.html"><span class="hs-identifier">Text.Gigaparsec</span></a></span><span> </span><span class="hs-special">(</span><span>
 </span><span id="line-32"></span><span>    </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier">Parsec</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Text.Gigaparsec.html#Result"><span class="hs-identifier">Result</span></a></span><span class="hs-special">(</span><span class="annot"><a href="Text.Gigaparsec.html#Success"><span class="hs-identifier">Success</span></a></span><span class="hs-special">)</span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Text.Gigaparsec.html#parse"><span class="hs-identifier">parse</span></a></span><span class="hs-special">,</span><span>
-</span><span id="line-33"></span><span>    </span><span class="annot"><a href="Text.Gigaparsec.html#atomic"><span class="hs-identifier">atomic</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Text.Gigaparsec.html#lookAhead"><span class="hs-identifier">lookAhead</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Text.Gigaparsec.html#notFollowedBy"><span class="hs-identifier">notFollowedBy</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Text.Gigaparsec.html#some"><span class="hs-identifier">some</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Text.Gigaparsec.html#%3C%2B%3E"><span class="hs-operator">(&lt;+&gt;)</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Text.Gigaparsec.html#%3C~%3E"><span class="hs-operator">(&lt;~&gt;)</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Text.Gigaparsec.html#mapMaybeS"><span class="hs-identifier">mapMaybeS</span></a></span><span>
+</span><span id="line-33"></span><span>    </span><span class="annot"><a href="Text.Gigaparsec.html#atomic"><span class="hs-identifier">atomic</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Text.Gigaparsec.html#lookAhead"><span class="hs-identifier">lookAhead</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Text.Gigaparsec.html#notFollowedBy"><span class="hs-identifier">notFollowedBy</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier">some</span></span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Text.Gigaparsec.html#%3C%2B%3E"><span class="hs-operator">(&lt;+&gt;)</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Text.Gigaparsec.html#%3C~%3E"><span class="hs-operator">(&lt;~&gt;)</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Text.Gigaparsec.html#mapMaybeS"><span class="hs-identifier">mapMaybeS</span></a></span><span>
 </span><span id="line-34"></span><span>  </span><span class="hs-special">)</span><span>
 </span><span id="line-35"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Char.html"><span class="hs-identifier">Text.Gigaparsec.Char</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Text.Gigaparsec.Char.html#item"><span class="hs-identifier">item</span></a></span><span class="hs-special">)</span><span>
 </span><span id="line-36"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Combinator.html"><span class="hs-identifier">Text.Gigaparsec.Combinator</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Text.Gigaparsec.Combinator.html#option"><span class="hs-identifier">option</span></a></span><span class="hs-special">)</span><span>
@@ -95,47 +95,47 @@ meaningful name.
 </span><a href="Text.Gigaparsec.Errors.TokenExtractors.html#tillNextWhitespace"><span class="hs-identifier hs-var hs-var">tillNextWhitespace</span></a></span></span><span> </span><span class="annot"><span class="annottext">Bool
 </span><span class="hs-identifier">_</span></span><span> </span><span class="annot"><span class="annottext">Char -&gt; Bool
 </span><span class="hs-identifier">_</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">NonEmpty Char -&gt; Maybe Token
-</span><a href="Text.Gigaparsec.Errors.TokenExtractors.html#whitespaceOrUnprintable"><span class="hs-identifier hs-var">whitespaceOrUnprintable</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Just</span></span><span> </span><span id="local-6989586621679247468"><span class="annot"><span class="annottext">Token
-</span><a href="#local-6989586621679247468"><span class="hs-identifier hs-var">tok</span></a></span></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">Word
+</span><a href="Text.Gigaparsec.Errors.TokenExtractors.html#whitespaceOrUnprintable"><span class="hs-identifier hs-var">whitespaceOrUnprintable</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Just</span></span><span> </span><span id="local-6989586621679249400"><span class="annot"><span class="annottext">Token
+</span><a href="#local-6989586621679249400"><span class="hs-identifier hs-var">tok</span></a></span></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">Word
 </span><span class="hs-identifier">_</span></span><span> </span><span class="annot"><span class="annottext">Bool
 </span><span class="hs-identifier">_</span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Token
-</span><a href="#local-6989586621679247468"><span class="hs-identifier hs-var">tok</span></a></span><span>
-</span><span id="line-95"></span><span class="annot"><a href="Text.Gigaparsec.Errors.TokenExtractors.html#tillNextWhitespace"><span class="hs-identifier hs-var">tillNextWhitespace</span></a></span><span> </span><span id="local-6989586621679247469"><span class="annot"><span class="annottext">Bool
-</span><a href="#local-6989586621679247469"><span class="hs-identifier hs-var">trimToDemand</span></a></span></span><span> </span><span id="local-6989586621679247470"><span class="annot"><span class="annottext">Char -&gt; Bool
-</span><a href="#local-6989586621679247470"><span class="hs-identifier hs-var">isSpace</span></a></span></span><span> </span><span class="hs-special">(</span><span id="local-6989586621679247471"><span class="annot"><span class="annottext">Char
-</span><a href="#local-6989586621679247471"><span class="hs-identifier hs-var">c</span></a></span></span><span> </span><span class="annot"><span class="hs-operator hs-type">:|</span></span><span> </span><span id="local-6989586621679247472"><span class="annot"><span class="annottext">[Char]
-</span><a href="#local-6989586621679247472"><span class="hs-identifier hs-var">cs</span></a></span></span><span class="hs-special">)</span><span> </span><span id="local-6989586621679247473"><span class="annot"><span class="annottext">Word
-</span><a href="#local-6989586621679247473"><span class="hs-identifier hs-var">parserDemanded</span></a></span></span><span> </span><span class="annot"><span class="annottext">Bool
+</span><a href="#local-6989586621679249400"><span class="hs-identifier hs-var">tok</span></a></span><span>
+</span><span id="line-95"></span><span class="annot"><a href="Text.Gigaparsec.Errors.TokenExtractors.html#tillNextWhitespace"><span class="hs-identifier hs-var">tillNextWhitespace</span></a></span><span> </span><span id="local-6989586621679249401"><span class="annot"><span class="annottext">Bool
+</span><a href="#local-6989586621679249401"><span class="hs-identifier hs-var">trimToDemand</span></a></span></span><span> </span><span id="local-6989586621679249402"><span class="annot"><span class="annottext">Char -&gt; Bool
+</span><a href="#local-6989586621679249402"><span class="hs-identifier hs-var">isSpace</span></a></span></span><span> </span><span class="hs-special">(</span><span id="local-6989586621679249403"><span class="annot"><span class="annottext">Char
+</span><a href="#local-6989586621679249403"><span class="hs-identifier hs-var">c</span></a></span></span><span> </span><span class="annot"><span class="hs-operator hs-type">:|</span></span><span> </span><span id="local-6989586621679249404"><span class="annot"><span class="annottext">[Char]
+</span><a href="#local-6989586621679249404"><span class="hs-identifier hs-var">cs</span></a></span></span><span class="hs-special">)</span><span> </span><span id="local-6989586621679249405"><span class="annot"><span class="annottext">Word
+</span><a href="#local-6989586621679249405"><span class="hs-identifier hs-var">parserDemanded</span></a></span></span><span> </span><span class="annot"><span class="annottext">Bool
 </span><span class="hs-identifier">_</span></span><span>
 </span><span id="line-96"></span><span>  </span><span class="hs-glyph">|</span><span> </span><span class="annot"><span class="annottext">Bool
-</span><a href="#local-6989586621679247469"><span class="hs-identifier hs-var">trimToDemand</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">[Char] -&gt; Token
+</span><a href="#local-6989586621679249401"><span class="hs-identifier hs-var">trimToDemand</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">[Char] -&gt; Token
 </span><a href="Text.Gigaparsec.Errors.TokenExtractors.html#Raw"><span class="hs-identifier hs-var">Raw</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Int -&gt; [Char] -&gt; [Char]
 forall a. Int -&gt; [a] -&gt; [a]
 </span><span class="hs-identifier hs-var">take</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Word -&gt; Int
 forall a b. (Integral a, Num b) =&gt; a -&gt; b
 </span><span class="hs-identifier hs-var">fromIntegral</span></span><span> </span><span class="annot"><span class="annottext">Word
-</span><a href="#local-6989586621679247473"><span class="hs-identifier hs-var">parserDemanded</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">[Char] -&gt; [Char]
-</span><a href="#local-6989586621679247475"><span class="hs-identifier hs-var">tillSpace</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Char
-</span><a href="#local-6989586621679247471"><span class="hs-identifier hs-var">c</span></a></span><span class="annot"><span class="annottext">Char -&gt; [Char] -&gt; [Char]
+</span><a href="#local-6989586621679249405"><span class="hs-identifier hs-var">parserDemanded</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">[Char] -&gt; [Char]
+</span><a href="#local-6989586621679249407"><span class="hs-identifier hs-var">tillSpace</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Char
+</span><a href="#local-6989586621679249403"><span class="hs-identifier hs-var">c</span></a></span><span class="annot"><span class="annottext">Char -&gt; [Char] -&gt; [Char]
 forall a. a -&gt; [a] -&gt; [a]
 </span><span class="hs-glyph hs-var">:</span></span><span class="annot"><span class="annottext">[Char]
-</span><a href="#local-6989586621679247472"><span class="hs-identifier hs-var">cs</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><a href="#local-6989586621679249404"><span class="hs-identifier hs-var">cs</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
 </span><span id="line-97"></span><span>  </span><span class="hs-glyph">|</span><span> </span><span class="annot"><span class="annottext">Bool
 </span><span class="hs-identifier hs-var">otherwise</span></span><span>    </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">[Char] -&gt; Token
 </span><a href="Text.Gigaparsec.Errors.TokenExtractors.html#Raw"><span class="hs-identifier hs-var">Raw</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">[Char] -&gt; [Char]
-</span><a href="#local-6989586621679247475"><span class="hs-identifier hs-var">tillSpace</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Char
-</span><a href="#local-6989586621679247471"><span class="hs-identifier hs-var">c</span></a></span><span class="annot"><span class="annottext">Char -&gt; [Char] -&gt; [Char]
+</span><a href="#local-6989586621679249407"><span class="hs-identifier hs-var">tillSpace</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Char
+</span><a href="#local-6989586621679249403"><span class="hs-identifier hs-var">c</span></a></span><span class="annot"><span class="annottext">Char -&gt; [Char] -&gt; [Char]
 forall a. a -&gt; [a] -&gt; [a]
 </span><span class="hs-glyph hs-var">:</span></span><span class="annot"><span class="annottext">[Char]
-</span><a href="#local-6989586621679247472"><span class="hs-identifier hs-var">cs</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
-</span><span id="line-98"></span><span>  </span><span class="hs-keyword">where</span><span> </span><span id="local-6989586621679247475"><span class="annot"><span class="annottext">tillSpace :: [Char] -&gt; [Char]
-</span><a href="#local-6989586621679247475"><span class="hs-identifier hs-var hs-var">tillSpace</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">(Char -&gt; Bool) -&gt; [Char] -&gt; [Char]
+</span><a href="#local-6989586621679249404"><span class="hs-identifier hs-var">cs</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-98"></span><span>  </span><span class="hs-keyword">where</span><span> </span><span id="local-6989586621679249407"><span class="annot"><span class="annottext">tillSpace :: [Char] -&gt; [Char]
+</span><a href="#local-6989586621679249407"><span class="hs-identifier hs-var hs-var">tillSpace</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">(Char -&gt; Bool) -&gt; [Char] -&gt; [Char]
 forall a. (a -&gt; Bool) -&gt; [a] -&gt; [a]
 </span><span class="hs-identifier hs-var">takeWhile</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Bool -&gt; Bool
 </span><span class="hs-identifier hs-var">not</span></span><span> </span><span class="annot"><span class="annottext">(Bool -&gt; Bool) -&gt; (Char -&gt; Bool) -&gt; Char -&gt; Bool
 forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
 </span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">Char -&gt; Bool
-</span><a href="#local-6989586621679247470"><span class="hs-identifier hs-var">isSpace</span></a></span><span class="hs-special">)</span><span>
+</span><a href="#local-6989586621679249402"><span class="hs-identifier hs-var">isSpace</span></a></span><span class="hs-special">)</span><span>
 </span><span id="line-99"></span><span>
 </span><span id="line-100"></span><span class="annot"><span class="hs-comment">{-|
 This extractor provides an implementation for 'Text.Gigaparsec.ErrorBuilder.unexpectedToken':
@@ -150,18 +150,18 @@ a more meaningful name.
 </span><span id="line-110"></span><span class="annot"><a href="Text.Gigaparsec.Errors.TokenExtractors.html#singleChar"><span class="hs-identifier hs-type">singleChar</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Errors.TokenExtractors.html#TokenExtractor"><span class="hs-identifier hs-type">TokenExtractor</span></a></span><span>
 </span><span id="line-111"></span><span id="singleChar"><span class="annot"><span class="annottext">singleChar :: TokenExtractor
 </span><a href="Text.Gigaparsec.Errors.TokenExtractors.html#singleChar"><span class="hs-identifier hs-var hs-var">singleChar</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">NonEmpty Char -&gt; Maybe Token
-</span><a href="Text.Gigaparsec.Errors.TokenExtractors.html#whitespaceOrUnprintable"><span class="hs-identifier hs-var">whitespaceOrUnprintable</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Just</span></span><span> </span><span id="local-6989586621679247479"><span class="annot"><span class="annottext">Token
-</span><a href="#local-6989586621679247479"><span class="hs-identifier hs-var">tok</span></a></span></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">Word
+</span><a href="Text.Gigaparsec.Errors.TokenExtractors.html#whitespaceOrUnprintable"><span class="hs-identifier hs-var">whitespaceOrUnprintable</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Just</span></span><span> </span><span id="local-6989586621679249411"><span class="annot"><span class="annottext">Token
+</span><a href="#local-6989586621679249411"><span class="hs-identifier hs-var">tok</span></a></span></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">Word
 </span><span class="hs-identifier">_</span></span><span> </span><span class="annot"><span class="annottext">Bool
 </span><span class="hs-identifier">_</span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Token
-</span><a href="#local-6989586621679247479"><span class="hs-identifier hs-var">tok</span></a></span><span>
-</span><span id="line-112"></span><span class="annot"><a href="Text.Gigaparsec.Errors.TokenExtractors.html#singleChar"><span class="hs-identifier hs-var">singleChar</span></a></span><span> </span><span class="hs-special">(</span><span id="local-6989586621679247480"><span class="annot"><span class="annottext">Char
-</span><a href="#local-6989586621679247480"><span class="hs-identifier hs-var">c</span></a></span></span><span> </span><span class="annot"><span class="hs-operator hs-type">:|</span></span><span> </span><span class="annot"><span class="annottext">[Char]
+</span><a href="#local-6989586621679249411"><span class="hs-identifier hs-var">tok</span></a></span><span>
+</span><span id="line-112"></span><span class="annot"><a href="Text.Gigaparsec.Errors.TokenExtractors.html#singleChar"><span class="hs-identifier hs-var">singleChar</span></a></span><span> </span><span class="hs-special">(</span><span id="local-6989586621679249412"><span class="annot"><span class="annottext">Char
+</span><a href="#local-6989586621679249412"><span class="hs-identifier hs-var">c</span></a></span></span><span> </span><span class="annot"><span class="hs-operator hs-type">:|</span></span><span> </span><span class="annot"><span class="annottext">[Char]
 </span><span class="hs-identifier">_</span></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">Word
 </span><span class="hs-identifier">_</span></span><span> </span><span class="annot"><span class="annottext">Bool
 </span><span class="hs-identifier">_</span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">[Char] -&gt; Token
 </span><a href="Text.Gigaparsec.Errors.TokenExtractors.html#Raw"><span class="hs-identifier hs-var">Raw</span></a></span><span> </span><span class="hs-special">[</span><span class="annot"><span class="annottext">Char
-</span><a href="#local-6989586621679247480"><span class="hs-identifier hs-var">c</span></a></span><span class="hs-special">]</span><span>
+</span><a href="#local-6989586621679249412"><span class="hs-identifier hs-var">c</span></a></span><span class="hs-special">]</span><span>
 </span><span id="line-113"></span><span>
 </span><span id="line-114"></span><span class="annot"><span class="hs-comment">{-|
 This extractor provides an implementation for 'Text.Gigaparsec.ErrorBuilder.unexpectedToken':
@@ -176,26 +176,26 @@ meaningful name.
 </span><span id="line-124"></span><span class="annot"><a href="Text.Gigaparsec.Errors.TokenExtractors.html#matchParserDemand"><span class="hs-identifier hs-type">matchParserDemand</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Errors.TokenExtractors.html#TokenExtractor"><span class="hs-identifier hs-type">TokenExtractor</span></a></span><span>
 </span><span id="line-125"></span><span id="matchParserDemand"><span class="annot"><span class="annottext">matchParserDemand :: TokenExtractor
 </span><a href="Text.Gigaparsec.Errors.TokenExtractors.html#matchParserDemand"><span class="hs-identifier hs-var hs-var">matchParserDemand</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">NonEmpty Char -&gt; Maybe Token
-</span><a href="Text.Gigaparsec.Errors.TokenExtractors.html#whitespaceOrUnprintable"><span class="hs-identifier hs-var">whitespaceOrUnprintable</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Just</span></span><span> </span><span id="local-6989586621679247481"><span class="annot"><span class="annottext">Token
-</span><a href="#local-6989586621679247481"><span class="hs-identifier hs-var">tok</span></a></span></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">Word
+</span><a href="Text.Gigaparsec.Errors.TokenExtractors.html#whitespaceOrUnprintable"><span class="hs-identifier hs-var">whitespaceOrUnprintable</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Just</span></span><span> </span><span id="local-6989586621679249413"><span class="annot"><span class="annottext">Token
+</span><a href="#local-6989586621679249413"><span class="hs-identifier hs-var">tok</span></a></span></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">Word
 </span><span class="hs-identifier">_</span></span><span> </span><span class="annot"><span class="annottext">Bool
 </span><span class="hs-identifier">_</span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Token
-</span><a href="#local-6989586621679247481"><span class="hs-identifier hs-var">tok</span></a></span><span>
-</span><span id="line-126"></span><span class="annot"><a href="Text.Gigaparsec.Errors.TokenExtractors.html#matchParserDemand"><span class="hs-identifier hs-var">matchParserDemand</span></a></span><span> </span><span class="hs-special">(</span><span id="local-6989586621679247482"><span class="annot"><span class="annottext">Char
-</span><a href="#local-6989586621679247482"><span class="hs-identifier hs-var">c</span></a></span></span><span> </span><span class="annot"><span class="hs-operator hs-type">:|</span></span><span> </span><span id="local-6989586621679247483"><span class="annot"><span class="annottext">[Char]
-</span><a href="#local-6989586621679247483"><span class="hs-identifier hs-var">cs</span></a></span></span><span class="hs-special">)</span><span> </span><span id="local-6989586621679247484"><span class="annot"><span class="annottext">Word
-</span><a href="#local-6989586621679247484"><span class="hs-identifier hs-var">parserDemanded</span></a></span></span><span> </span><span class="annot"><span class="annottext">Bool
+</span><a href="#local-6989586621679249413"><span class="hs-identifier hs-var">tok</span></a></span><span>
+</span><span id="line-126"></span><span class="annot"><a href="Text.Gigaparsec.Errors.TokenExtractors.html#matchParserDemand"><span class="hs-identifier hs-var">matchParserDemand</span></a></span><span> </span><span class="hs-special">(</span><span id="local-6989586621679249414"><span class="annot"><span class="annottext">Char
+</span><a href="#local-6989586621679249414"><span class="hs-identifier hs-var">c</span></a></span></span><span> </span><span class="annot"><span class="hs-operator hs-type">:|</span></span><span> </span><span id="local-6989586621679249415"><span class="annot"><span class="annottext">[Char]
+</span><a href="#local-6989586621679249415"><span class="hs-identifier hs-var">cs</span></a></span></span><span class="hs-special">)</span><span> </span><span id="local-6989586621679249416"><span class="annot"><span class="annottext">Word
+</span><a href="#local-6989586621679249416"><span class="hs-identifier hs-var">parserDemanded</span></a></span></span><span> </span><span class="annot"><span class="annottext">Bool
 </span><span class="hs-identifier">_</span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">[Char] -&gt; Token
 </span><a href="Text.Gigaparsec.Errors.TokenExtractors.html#Raw"><span class="hs-identifier hs-var">Raw</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Int -&gt; [Char] -&gt; [Char]
 forall a. Int -&gt; [a] -&gt; [a]
 </span><span class="hs-identifier hs-var">take</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Word -&gt; Int
 forall a b. (Integral a, Num b) =&gt; a -&gt; b
 </span><span class="hs-identifier hs-var">fromIntegral</span></span><span> </span><span class="annot"><span class="annottext">Word
-</span><a href="#local-6989586621679247484"><span class="hs-identifier hs-var">parserDemanded</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Char
-</span><a href="#local-6989586621679247482"><span class="hs-identifier hs-var">c</span></a></span><span class="annot"><span class="annottext">Char -&gt; [Char] -&gt; [Char]
+</span><a href="#local-6989586621679249416"><span class="hs-identifier hs-var">parserDemanded</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Char
+</span><a href="#local-6989586621679249414"><span class="hs-identifier hs-var">c</span></a></span><span class="annot"><span class="annottext">Char -&gt; [Char] -&gt; [Char]
 forall a. a -&gt; [a] -&gt; [a]
 </span><span class="hs-glyph hs-var">:</span></span><span class="annot"><span class="annottext">[Char]
-</span><a href="#local-6989586621679247483"><span class="hs-identifier hs-var">cs</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><a href="#local-6989586621679249415"><span class="hs-identifier hs-var">cs</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
 </span><span id="line-127"></span><span>
 </span><span id="line-128"></span><span class="hs-pragma">{-# INLINABLE</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Errors.TokenExtractors.html#whitespaceOrUnprintable"><span class="hs-pragma hs-type">whitespaceOrUnprintable</span></a></span><span> </span><span class="hs-pragma">#-}</span><span>
 </span><span id="line-129"></span><span class="annot"><a href="Text.Gigaparsec.Errors.TokenExtractors.html#whitespaceOrUnprintable"><span class="hs-identifier hs-type">whitespaceOrUnprintable</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">NonEmpty</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Char</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Maybe</span></span><span> </span><span class="annot"><a href="Text.Gigaparsec.Errors.TokenExtractors.html#Token"><span class="hs-identifier hs-type">Token</span></a></span><span>
@@ -240,12 +240,12 @@ forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><a href="Text.Gigaparsec.Errors.TokenExtractors.html#Named"><span class="hs-identifier hs-var">Named</span></a></span><span> </span><span class="annot"><span class="annottext">[Char]
 </span><span class="hs-string">&quot;space&quot;</span></span><span> </span><span class="annot"><span class="annottext">Word
 </span><span class="hs-number">1</span></span><span>
-</span><span id="line-134"></span><span class="annot"><a href="Text.Gigaparsec.Errors.TokenExtractors.html#whitespaceOrUnprintable"><span class="hs-identifier hs-var">whitespaceOrUnprintable</span></a></span><span> </span><span class="hs-special">(</span><span id="local-6989586621679247485"><span class="annot"><span class="annottext">Char
-</span><a href="#local-6989586621679247485"><span class="hs-identifier hs-var">c</span></a></span></span><span> </span><span class="annot"><span class="hs-operator hs-type">:|</span></span><span> </span><span class="annot"><span class="annottext">[Char]
+</span><span id="line-134"></span><span class="annot"><a href="Text.Gigaparsec.Errors.TokenExtractors.html#whitespaceOrUnprintable"><span class="hs-identifier hs-var">whitespaceOrUnprintable</span></a></span><span> </span><span class="hs-special">(</span><span id="local-6989586621679249417"><span class="annot"><span class="annottext">Char
+</span><a href="#local-6989586621679249417"><span class="hs-identifier hs-var">c</span></a></span></span><span> </span><span class="annot"><span class="hs-operator hs-type">:|</span></span><span> </span><span class="annot"><span class="annottext">[Char]
 </span><span class="hs-identifier">_</span></span><span class="hs-special">)</span><span>
 </span><span id="line-135"></span><span>  </span><span class="hs-glyph">|</span><span> </span><span class="annot"><span class="annottext">Char -&gt; Bool
 </span><span class="hs-identifier hs-var">Char.isSpace</span></span><span> </span><span class="annot"><span class="annottext">Char
-</span><a href="#local-6989586621679247485"><span class="hs-identifier hs-var">c</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Token -&gt; Maybe Token
+</span><a href="#local-6989586621679249417"><span class="hs-identifier hs-var">c</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Token -&gt; Maybe Token
 forall a. a -&gt; Maybe a
 </span><span class="hs-identifier hs-var">Just</span></span><span> </span><span class="annot"><span class="annottext">(Token -&gt; Maybe Token) -&gt; Token -&gt; Maybe Token
 forall a b. (a -&gt; b) -&gt; a -&gt; b
@@ -256,28 +256,28 @@ forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span id="line-136"></span><span>  </span><span class="hs-glyph">|</span><span> </span><span class="annot"><span class="annottext">Bool
 </span><span class="hs-identifier hs-var">otherwise</span></span><span>      </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">case</span><span> </span><span class="annot"><span class="annottext">Char -&gt; GeneralCategory
 </span><span class="hs-identifier hs-var">generalCategory</span></span><span> </span><span class="annot"><span class="annottext">Char
-</span><a href="#local-6989586621679247485"><span class="hs-identifier hs-var">c</span></a></span><span> </span><span class="hs-keyword">of</span><span>
+</span><a href="#local-6989586621679249417"><span class="hs-identifier hs-var">c</span></a></span><span> </span><span class="hs-keyword">of</span><span>
 </span><span id="line-137"></span><span>    </span><span class="annot"><span class="annottext">GeneralCategory
 </span><span class="hs-identifier hs-var">Format</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Maybe Token
-</span><a href="#local-6989586621679247486"><span class="hs-identifier hs-var">unprintable</span></a></span><span>
+</span><a href="#local-6989586621679249418"><span class="hs-identifier hs-var">unprintable</span></a></span><span>
 </span><span id="line-138"></span><span>    </span><span class="annot"><span class="annottext">GeneralCategory
 </span><span class="hs-identifier hs-var">Surrogate</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Maybe Token
-</span><a href="#local-6989586621679247486"><span class="hs-identifier hs-var">unprintable</span></a></span><span>
+</span><a href="#local-6989586621679249418"><span class="hs-identifier hs-var">unprintable</span></a></span><span>
 </span><span id="line-139"></span><span>    </span><span class="annot"><span class="annottext">GeneralCategory
 </span><span class="hs-identifier hs-var">PrivateUse</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Maybe Token
-</span><a href="#local-6989586621679247486"><span class="hs-identifier hs-var">unprintable</span></a></span><span>
+</span><a href="#local-6989586621679249418"><span class="hs-identifier hs-var">unprintable</span></a></span><span>
 </span><span id="line-140"></span><span>    </span><span class="annot"><span class="annottext">GeneralCategory
 </span><span class="hs-identifier hs-var">NotAssigned</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Maybe Token
-</span><a href="#local-6989586621679247486"><span class="hs-identifier hs-var">unprintable</span></a></span><span>
+</span><a href="#local-6989586621679249418"><span class="hs-identifier hs-var">unprintable</span></a></span><span>
 </span><span id="line-141"></span><span>    </span><span class="annot"><span class="annottext">GeneralCategory
 </span><span class="hs-identifier hs-var">Control</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Maybe Token
-</span><a href="#local-6989586621679247486"><span class="hs-identifier hs-var">unprintable</span></a></span><span>
+</span><a href="#local-6989586621679249418"><span class="hs-identifier hs-var">unprintable</span></a></span><span>
 </span><span id="line-142"></span><span>    </span><span class="annot"><span class="annottext">GeneralCategory
 </span><span class="hs-identifier">_</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Maybe Token
 forall a. Maybe a
 </span><span class="hs-identifier hs-var">Nothing</span></span><span>
-</span><span id="line-143"></span><span>  </span><span class="hs-keyword">where</span><span> </span><span id="local-6989586621679247486"><span class="annot"><span class="annottext">unprintable :: Maybe Token
-</span><a href="#local-6989586621679247486"><span class="hs-identifier hs-var hs-var">unprintable</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Token -&gt; Maybe Token
+</span><span id="line-143"></span><span>  </span><span class="hs-keyword">where</span><span> </span><span id="local-6989586621679249418"><span class="annot"><span class="annottext">unprintable :: Maybe Token
+</span><a href="#local-6989586621679249418"><span class="hs-identifier hs-var hs-var">unprintable</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Token -&gt; Maybe Token
 forall a. a -&gt; Maybe a
 </span><span class="hs-identifier hs-var">Just</span></span><span> </span><span class="annot"><span class="annottext">(Token -&gt; Maybe Token) -&gt; Token -&gt; Maybe Token
 forall a b. (a -&gt; b) -&gt; a -&gt; b
@@ -289,7 +289,7 @@ forall a. [a] -&gt; [a] -&gt; [a]
 forall a. Integral a =&gt; a -&gt; [Char] -&gt; [Char]
 </span><span class="hs-identifier hs-var">showHex</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Char -&gt; Int
 </span><span class="hs-identifier hs-var">ord</span></span><span> </span><span class="annot"><span class="annottext">Char
-</span><a href="#local-6989586621679247485"><span class="hs-identifier hs-var">c</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">[Char]
+</span><a href="#local-6989586621679249417"><span class="hs-identifier hs-var">c</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">[Char]
 </span><span class="hs-string">&quot;)&quot;</span></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">Word
 </span><span class="hs-number">1</span></span><span>
 </span><span id="line-144"></span><span>
@@ -392,37 +392,37 @@ default token.
 </span><span id="line-223"></span><span>                   </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Errors.TokenExtractors.html#TokenExtractor"><span class="hs-identifier hs-type">TokenExtractor</span></a></span><span>
 </span><span id="line-224"></span><span id="lexTokenWithSelect"><span class="annot"><span class="annottext">lexTokenWithSelect :: (NonEmpty ([Char], Word) -&gt; ([Char], Word))
 -&gt; [Parsec [Char]] -&gt; TokenExtractor -&gt; TokenExtractor
-</span><a href="Text.Gigaparsec.Errors.TokenExtractors.html#lexTokenWithSelect"><span class="hs-identifier hs-var hs-var">lexTokenWithSelect</span></a></span></span><span> </span><span id="local-6989586621679247491"><span class="annot"><span class="annottext">NonEmpty ([Char], Word) -&gt; ([Char], Word)
-</span><a href="#local-6989586621679247491"><span class="hs-identifier hs-var">selectToken</span></a></span></span><span> </span><span id="local-6989586621679247492"><span class="annot"><span class="annottext">[Parsec [Char]]
-</span><a href="#local-6989586621679247492"><span class="hs-identifier hs-var">tokens</span></a></span></span><span> </span><span id="local-6989586621679247493"><span class="annot"><span class="annottext">TokenExtractor
-</span><a href="#local-6989586621679247493"><span class="hs-identifier hs-var">extractItem</span></a></span></span><span> </span><span id="local-6989586621679247494"><span class="annot"><span class="annottext">NonEmpty Char
-</span><a href="#local-6989586621679247494"><span class="hs-identifier hs-var">cs</span></a></span></span><span> </span><span id="local-6989586621679247495"><span class="annot"><span class="annottext">Word
-</span><a href="#local-6989586621679247495"><span class="hs-identifier hs-var">parserDemanded</span></a></span></span><span> </span><span id="local-6989586621679247496"><span class="annot"><span class="annottext">Bool
-</span><a href="#local-6989586621679247496"><span class="hs-identifier hs-var">lexical</span></a></span></span><span>
+</span><a href="Text.Gigaparsec.Errors.TokenExtractors.html#lexTokenWithSelect"><span class="hs-identifier hs-var hs-var">lexTokenWithSelect</span></a></span></span><span> </span><span id="local-6989586621679249423"><span class="annot"><span class="annottext">NonEmpty ([Char], Word) -&gt; ([Char], Word)
+</span><a href="#local-6989586621679249423"><span class="hs-identifier hs-var">selectToken</span></a></span></span><span> </span><span id="local-6989586621679249424"><span class="annot"><span class="annottext">[Parsec [Char]]
+</span><a href="#local-6989586621679249424"><span class="hs-identifier hs-var">tokens</span></a></span></span><span> </span><span id="local-6989586621679249425"><span class="annot"><span class="annottext">TokenExtractor
+</span><a href="#local-6989586621679249425"><span class="hs-identifier hs-var">extractItem</span></a></span></span><span> </span><span id="local-6989586621679249426"><span class="annot"><span class="annottext">NonEmpty Char
+</span><a href="#local-6989586621679249426"><span class="hs-identifier hs-var">cs</span></a></span></span><span> </span><span id="local-6989586621679249427"><span class="annot"><span class="annottext">Word
+</span><a href="#local-6989586621679249427"><span class="hs-identifier hs-var">parserDemanded</span></a></span></span><span> </span><span id="local-6989586621679249428"><span class="annot"><span class="annottext">Bool
+</span><a href="#local-6989586621679249428"><span class="hs-identifier hs-var">lexical</span></a></span></span><span>
 </span><span id="line-225"></span><span>  </span><span class="hs-glyph">|</span><span> </span><span class="annot"><span class="annottext">Bool
-</span><a href="#local-6989586621679247496"><span class="hs-identifier hs-var">lexical</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">TokenExtractor
-</span><a href="#local-6989586621679247493"><span class="hs-identifier hs-var">extractItem</span></a></span><span> </span><span class="annot"><span class="annottext">NonEmpty Char
-</span><a href="#local-6989586621679247494"><span class="hs-identifier hs-var">cs</span></a></span><span> </span><span class="annot"><span class="annottext">Word
-</span><a href="#local-6989586621679247495"><span class="hs-identifier hs-var">parserDemanded</span></a></span><span> </span><span class="annot"><span class="annottext">Bool
+</span><a href="#local-6989586621679249428"><span class="hs-identifier hs-var">lexical</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">TokenExtractor
+</span><a href="#local-6989586621679249425"><span class="hs-identifier hs-var">extractItem</span></a></span><span> </span><span class="annot"><span class="annottext">NonEmpty Char
+</span><a href="#local-6989586621679249426"><span class="hs-identifier hs-var">cs</span></a></span><span> </span><span class="annot"><span class="annottext">Word
+</span><a href="#local-6989586621679249427"><span class="hs-identifier hs-var">parserDemanded</span></a></span><span> </span><span class="annot"><span class="annottext">Bool
 </span><span class="hs-identifier hs-var">True</span></span><span>
 </span><span id="line-226"></span><span>  </span><span class="hs-glyph">|</span><span> </span><span class="annot"><span class="annottext">Bool
 </span><span class="hs-identifier hs-var">otherwise</span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">NonEmpty Char -&gt; Token
-</span><a href="#local-6989586621679247497"><span class="hs-identifier hs-var">extractToken</span></a></span><span> </span><span class="annot"><span class="annottext">NonEmpty Char
-</span><a href="#local-6989586621679247494"><span class="hs-identifier hs-var">cs</span></a></span><span>
+</span><a href="#local-6989586621679249429"><span class="hs-identifier hs-var">extractToken</span></a></span><span> </span><span class="annot"><span class="annottext">NonEmpty Char
+</span><a href="#local-6989586621679249426"><span class="hs-identifier hs-var">cs</span></a></span><span>
 </span><span id="line-227"></span><span>  </span><span class="hs-keyword">where</span><span>
-</span><span id="line-228"></span><span>    </span><span class="annot"><a href="#local-6989586621679247497"><span class="hs-identifier hs-type">extractToken</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">NonEmpty</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Char</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Errors.TokenExtractors.html#Token"><span class="hs-identifier hs-type">Token</span></a></span><span>
-</span><span id="line-229"></span><span>    </span><span id="local-6989586621679247497"><span class="annot"><span class="annottext">extractToken :: NonEmpty Char -&gt; Token
-</span><a href="#local-6989586621679247497"><span class="hs-identifier hs-var hs-var">extractToken</span></a></span></span><span> </span><span id="local-6989586621679247498"><span class="annot"><span class="annottext">NonEmpty Char
-</span><a href="#local-6989586621679247498"><span class="hs-identifier hs-var">inp</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
-</span><span id="line-230"></span><span>      </span><span class="hs-keyword">let</span><span> </span><span class="annot"><a href="Text.Gigaparsec.html#Success"><span class="hs-identifier hs-type">Success</span></a></span><span> </span><span id="local-6989586621679247501"><span class="annot"><span class="annottext">Either (NonEmpty ([Char], Word)) [Char]
-</span><a href="#local-6989586621679247501"><span class="hs-identifier hs-var">rawOrToks</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall err a.
+</span><span id="line-228"></span><span>    </span><span class="annot"><a href="#local-6989586621679249429"><span class="hs-identifier hs-type">extractToken</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">NonEmpty</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Char</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Errors.TokenExtractors.html#Token"><span class="hs-identifier hs-type">Token</span></a></span><span>
+</span><span id="line-229"></span><span>    </span><span id="local-6989586621679249429"><span class="annot"><span class="annottext">extractToken :: NonEmpty Char -&gt; Token
+</span><a href="#local-6989586621679249429"><span class="hs-identifier hs-var hs-var">extractToken</span></a></span></span><span> </span><span id="local-6989586621679249430"><span class="annot"><span class="annottext">NonEmpty Char
+</span><a href="#local-6989586621679249430"><span class="hs-identifier hs-var">inp</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
+</span><span id="line-230"></span><span>      </span><span class="hs-keyword">let</span><span> </span><span class="annot"><a href="Text.Gigaparsec.html#Success"><span class="hs-identifier hs-type">Success</span></a></span><span> </span><span id="local-6989586621679249433"><span class="annot"><span class="annottext">Either (NonEmpty ([Char], Word)) [Char]
+</span><a href="#local-6989586621679249433"><span class="hs-identifier hs-var">rawOrToks</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall err a.
 ErrorBuilder err =&gt;
 Parsec a -&gt; [Char] -&gt; Result err a
 </span><a href="Text.Gigaparsec.html#parse"><span class="hs-identifier hs-var">parse</span></a></span><span> </span><span class="hs-glyph">@</span><span class="annot"><span class="hs-identifier hs-type">Void</span></span><span> </span><span class="annot"><span class="annottext">Parsec (Either (NonEmpty ([Char], Word)) [Char])
-</span><a href="#local-6989586621679247502"><span class="hs-identifier hs-var">parser</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">NonEmpty Char -&gt; [Char]
+</span><a href="#local-6989586621679249434"><span class="hs-identifier hs-var">parser</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">NonEmpty Char -&gt; [Char]
 forall a. NonEmpty a -&gt; [a]
 </span><span class="hs-identifier hs-var">NonEmpty.toList</span></span><span> </span><span class="annot"><span class="annottext">NonEmpty Char
-</span><a href="#local-6989586621679247498"><span class="hs-identifier hs-var">inp</span></a></span><span class="hs-special">)</span><span>
+</span><a href="#local-6989586621679249430"><span class="hs-identifier hs-var">inp</span></a></span><span class="hs-special">)</span><span>
 </span><span id="line-231"></span><span>      </span><span class="hs-keyword">in</span><span> </span><span class="annot"><span class="annottext">(NonEmpty ([Char], Word) -&gt; Token)
 -&gt; ([Char] -&gt; Token)
 -&gt; Either (NonEmpty ([Char], Word)) [Char]
@@ -437,15 +437,15 @@ forall a b c. (a -&gt; b -&gt; c) -&gt; (a, b) -&gt; c
 -&gt; Token
 forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
 </span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">NonEmpty ([Char], Word) -&gt; ([Char], Word)
-</span><a href="#local-6989586621679247491"><span class="hs-identifier hs-var">selectToken</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">[Char] -&gt; Token
+</span><a href="#local-6989586621679249423"><span class="hs-identifier hs-var">selectToken</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">[Char] -&gt; Token
 </span><a href="Text.Gigaparsec.Errors.TokenExtractors.html#Raw"><span class="hs-identifier hs-var">Raw</span></a></span><span> </span><span class="annot"><span class="annottext">Either (NonEmpty ([Char], Word)) [Char]
-</span><a href="#local-6989586621679247501"><span class="hs-identifier hs-var">rawOrToks</span></a></span><span>
+</span><a href="#local-6989586621679249433"><span class="hs-identifier hs-var">rawOrToks</span></a></span><span>
 </span><span id="line-232"></span><span>
-</span><span id="line-233"></span><span>    </span><span class="annot"><a href="#local-6989586621679247502"><span class="hs-identifier hs-type">parser</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Either</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">NonEmpty</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Word</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span class="hs-special">)</span><span>
-</span><span id="line-234"></span><span>    </span><span id="local-6989586621679247502"><span class="annot"><span class="annottext">parser :: Parsec (Either (NonEmpty ([Char], Word)) [Char])
-</span><a href="#local-6989586621679247502"><span class="hs-identifier hs-var hs-var">parser</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
-</span><span id="line-235"></span><span>      </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621679247509"><span class="annot"><span class="annottext">toks :: Parsec (NonEmpty ([Char], Word))
-</span><a href="#local-6989586621679247509"><span class="hs-identifier hs-var hs-var">toks</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">([Maybe ([Char], Word)] -&gt; Maybe (NonEmpty ([Char], Word)))
+</span><span id="line-233"></span><span>    </span><span class="annot"><a href="#local-6989586621679249434"><span class="hs-identifier hs-type">parser</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Either</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">NonEmpty</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Word</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span class="hs-special">)</span><span>
+</span><span id="line-234"></span><span>    </span><span id="local-6989586621679249434"><span class="annot"><span class="annottext">parser :: Parsec (Either (NonEmpty ([Char], Word)) [Char])
+</span><a href="#local-6989586621679249434"><span class="hs-identifier hs-var hs-var">parser</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
+</span><span id="line-235"></span><span>      </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621679249441"><span class="annot"><span class="annottext">toks :: Parsec (NonEmpty ([Char], Word))
+</span><a href="#local-6989586621679249441"><span class="hs-identifier hs-var hs-var">toks</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">([Maybe ([Char], Word)] -&gt; Maybe (NonEmpty ([Char], Word)))
 -&gt; Parsec [Maybe ([Char], Word)]
 -&gt; Parsec (NonEmpty ([Char], Word))
 forall a b. (a -&gt; Maybe b) -&gt; Parsec a -&gt; Parsec b
@@ -467,23 +467,24 @@ forall (t :: * -&gt; *) (f :: * -&gt; *) a b.
 forall (f :: * -&gt; *) a b.
 Applicative f =&gt;
 (a -&gt; f b) -&gt; [a] -&gt; f [b]
-</span><span class="hs-identifier hs-var">traverse</span></span><span> </span><span class="hs-special">(</span><span class="hs-glyph">\</span><span id="local-6989586621679247511"><span class="annot"><span class="annottext">Parsec [Char]
-</span><a href="#local-6989586621679247511"><span class="hs-identifier hs-var">t</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Parsec ([Char], Word) -&gt; Parsec (Maybe ([Char], Word))
+</span><span class="hs-identifier hs-var">traverse</span></span><span> </span><span class="hs-special">(</span><span class="hs-glyph">\</span><span id="local-6989586621679249443"><span class="annot"><span class="annottext">Parsec [Char]
+</span><a href="#local-6989586621679249443"><span class="hs-identifier hs-var">t</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Parsec ([Char], Word) -&gt; Parsec (Maybe ([Char], Word))
 forall a. Parsec a -&gt; Parsec (Maybe a)
 </span><a href="Text.Gigaparsec.Combinator.html#option"><span class="hs-identifier hs-var">option</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Parsec ([Char], Word) -&gt; Parsec ([Char], Word)
 forall a. Parsec a -&gt; Parsec a
 </span><a href="Text.Gigaparsec.html#lookAhead"><span class="hs-identifier hs-var">lookAhead</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Parsec [Char] -&gt; Parsec [Char]
 forall a. Parsec a -&gt; Parsec a
 </span><a href="Text.Gigaparsec.html#atomic"><span class="hs-identifier hs-var">atomic</span></a></span><span> </span><span class="annot"><span class="annottext">Parsec [Char]
-</span><a href="#local-6989586621679247511"><span class="hs-identifier hs-var">t</span></a></span><span> </span><span class="annot"><span class="annottext">Parsec [Char] -&gt; Parsec Word -&gt; Parsec ([Char], Word)
+</span><a href="#local-6989586621679249443"><span class="hs-identifier hs-var">t</span></a></span><span> </span><span class="annot"><span class="annottext">Parsec [Char] -&gt; Parsec Word -&gt; Parsec ([Char], Word)
 forall a b. Parsec a -&gt; Parsec b -&gt; Parsec (a, b)
 </span><a href="Text.Gigaparsec.html#%3C~%3E"><span class="hs-operator hs-var">&lt;~&gt;</span></a></span><span> </span><span class="annot"><span class="annottext">Parsec Word
 </span><a href="Text.Gigaparsec.Position.html#offset"><span class="hs-identifier hs-var">offset</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">[Parsec [Char]]
-</span><a href="#local-6989586621679247492"><span class="hs-identifier hs-var">tokens</span></a></span><span class="hs-special">)</span><span>
-</span><span id="line-237"></span><span>          </span><span id="local-6989586621679247515"><span class="annot"><span class="annottext">rawTok :: Parsec [Char]
-</span><a href="#local-6989586621679247515"><span class="hs-identifier hs-var hs-var">rawTok</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Parsec Char -&gt; Parsec [Char]
+</span><a href="#local-6989586621679249424"><span class="hs-identifier hs-var">tokens</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-237"></span><span>          </span><span id="local-6989586621679249449"><span class="annot"><span class="annottext">rawTok :: Parsec [Char]
+</span><a href="#local-6989586621679249449"><span class="hs-identifier hs-var hs-var">rawTok</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Parsec Char -&gt; Parsec [Char]
 forall a. Parsec a -&gt; Parsec [a]
-</span><a href="Text.Gigaparsec.html#some"><span class="hs-identifier hs-var">some</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">(Parsec [Char] -&gt; Parsec ()) -&gt; [Parsec [Char]] -&gt; Parsec [()]
+forall (f :: * -&gt; *) a. Alternative f =&gt; f a -&gt; f [a]
+</span><span class="hs-identifier hs-var">some</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">(Parsec [Char] -&gt; Parsec ()) -&gt; [Parsec [Char]] -&gt; Parsec [()]
 forall (t :: * -&gt; *) (f :: * -&gt; *) a b.
 (Traversable t, Applicative f) =&gt;
 (a -&gt; f b) -&gt; t a -&gt; f (t b)
@@ -493,16 +494,16 @@ Applicative f =&gt;
 </span><span class="hs-identifier hs-var">traverse</span></span><span> </span><span class="annot"><span class="annottext">Parsec [Char] -&gt; Parsec ()
 forall a. Parsec a -&gt; Parsec ()
 </span><a href="Text.Gigaparsec.html#notFollowedBy"><span class="hs-identifier hs-var">notFollowedBy</span></a></span><span> </span><span class="annot"><span class="annottext">[Parsec [Char]]
-</span><a href="#local-6989586621679247492"><span class="hs-identifier hs-var">tokens</span></a></span><span> </span><span class="annot"><span class="annottext">Parsec [()] -&gt; Parsec Char -&gt; Parsec Char
+</span><a href="#local-6989586621679249424"><span class="hs-identifier hs-var">tokens</span></a></span><span> </span><span class="annot"><span class="annottext">Parsec [()] -&gt; Parsec Char -&gt; Parsec Char
 forall a b. Parsec a -&gt; Parsec b -&gt; Parsec b
 forall (f :: * -&gt; *) a b. Applicative f =&gt; f a -&gt; f b -&gt; f b
 </span><span class="hs-operator hs-var">*&gt;</span></span><span> </span><span class="annot"><span class="annottext">Parsec Char
 </span><a href="Text.Gigaparsec.Char.html#item"><span class="hs-identifier hs-var">item</span></a></span><span class="hs-special">)</span><span>
 </span><span id="line-238"></span><span>      </span><span class="hs-keyword">in</span><span> </span><span class="annot"><span class="annottext">Parsec (NonEmpty ([Char], Word))
-</span><a href="#local-6989586621679247509"><span class="hs-identifier hs-var">toks</span></a></span><span> </span><span class="annot"><span class="annottext">Parsec (NonEmpty ([Char], Word))
+</span><a href="#local-6989586621679249441"><span class="hs-identifier hs-var">toks</span></a></span><span> </span><span class="annot"><span class="annottext">Parsec (NonEmpty ([Char], Word))
 -&gt; Parsec [Char]
 -&gt; Parsec (Either (NonEmpty ([Char], Word)) [Char])
 forall a b. Parsec a -&gt; Parsec b -&gt; Parsec (Either a b)
 </span><a href="Text.Gigaparsec.html#%3C%2B%3E"><span class="hs-operator hs-var">&lt;+&gt;</span></a></span><span> </span><span class="annot"><span class="annottext">Parsec [Char]
-</span><a href="#local-6989586621679247515"><span class="hs-identifier hs-var">rawTok</span></a></span><span>
+</span><a href="#local-6989586621679249449"><span class="hs-identifier hs-var">rawTok</span></a></span><span>
 </span><span id="line-239"></span></pre></body></html>

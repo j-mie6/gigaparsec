@@ -1,0 +1,826 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><link rel="stylesheet" type="text/css" href="style.css" /><script type="text/javascript" src="highlight.js"></script></head><body><pre><span class="hs-pragma">{-# LANGUAGE Trustworthy #-}</span><span>
+</span><span id="line-2"></span><span>
+</span><span id="line-3"></span><span class="hs-pragma">{-# OPTIONS_HADDOCK hide #-}</span><span>
+</span><span id="line-4"></span><span>
+</span><span id="line-5"></span><span class="hs-pragma">{-# LANGUAGE CPP #-}</span><span>
+</span><span id="line-6"></span><span class="hs-pragma">{-# LANGUAGE DeriveTraversable #-}</span><span>
+</span><span id="line-7"></span><span class="hs-pragma">{-# LANGUAGE ExistentialQuantification #-}</span><span>
+</span><span id="line-8"></span><span class="hs-pragma">{-# LANGUAGE FlexibleInstances #-}</span><span>
+</span><span id="line-9"></span><span class="hs-pragma">{-# LANGUAGE NamedFieldPuns #-}</span><span>
+</span><span id="line-10"></span><span class="hs-pragma">{-# LANGUAGE PatternSynonyms #-}</span><span>
+</span><span id="line-11"></span><span class="hs-pragma">{-# LANGUAGE TemplateHaskell #-}</span><span>
+</span><span id="line-12"></span><span class="hs-pragma">{-# LANGUAGE TupleSections #-}</span><span>
+</span><span id="line-13"></span><span class="hs-pragma">{-# LANGUAGE TypeFamilies #-}</span><span>
+</span><span id="line-14"></span><span class="hs-pragma">{-# LANGUAGE TypeOperators #-}</span><span>
+</span><span id="line-15"></span><span class="hs-pragma">{-# LANGUAGE UnicodeSyntax #-}</span><span>
+</span><span id="line-16"></span><span class="hs-pragma">{-# LANGUAGE ViewPatterns #-}</span><span>
+</span><span id="line-17"></span><span class="hs-pragma">{-# OPTIONS_GHC -Wno-missing-import-lists #-}</span><span>
+</span><span id="line-18"></span><span>
+</span><span id="line-19"></span><span class="hs-keyword">module</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.Token.Patterns.IntegerParsers.html"><span class="hs-identifier">Text.Gigaparsec.Internal.Token.Patterns.IntegerParsers</span></a></span><span> </span><span class="hs-special">(</span><span>
+</span><span id="line-20"></span><span>  </span><span class="hs-keyword">module</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.Token.Patterns.IntegerParsers.html"><span class="hs-identifier">Text.Gigaparsec.Internal.Token.Patterns.IntegerParsers</span></a></span><span>
+</span><span id="line-21"></span><span class="hs-special">)</span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-22"></span><span>
+</span><span id="line-23"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Text.Gigaparsec.html"><span class="hs-identifier">Text.Gigaparsec</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier">Parsec</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-24"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.Token.Lexer.html"><span class="hs-identifier">Text.Gigaparsec.Internal.Token.Lexer</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Text.Gigaparsec.Internal.Token.Lexer.html#natural"><span class="hs-identifier">natural</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.Token.Lexer.html#integer"><span class="hs-identifier">integer</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-25"></span><span>
+</span><span id="line-26"></span><span>
+</span><span id="line-27"></span><span>
+</span><span id="line-28"></span><span>
+</span><span id="line-29"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Control.Monad</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">forM</span></span><span class="hs-special">)</span><span>
+</span><span id="line-30"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.Bitraversable</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">bisequence</span></span><span class="hs-special">)</span><span>
+</span><span id="line-31"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.Function</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">on</span></span><span class="hs-special">)</span><span>
+</span><span id="line-32"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.List</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">groupBy</span></span><span class="hs-special">)</span><span>
+</span><span id="line-33"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.Map</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Map</span></span><span class="hs-special">)</span><span>
+</span><span id="line-34"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.Map</span></span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="hs-keyword">as</span><span> </span><span class="annot"><span class="hs-identifier">Map</span></span><span>
+</span><span id="line-35"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.Maybe</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">fromJust</span></span><span class="hs-special">)</span><span>
+</span><span id="line-36"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.Set</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Set</span></span><span class="hs-special">)</span><span>
+</span><span id="line-37"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.Set</span></span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="hs-keyword">as</span><span> </span><span class="annot"><span class="hs-identifier">Set</span></span><span>
+</span><span id="line-38"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Language.Haskell.TH</span></span><span> </span><span class="hs-special">(</span><span>
+</span><span id="line-39"></span><span>  </span><span class="annot"><span class="hs-identifier">RuleMatch</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">FunLike</span></span><span class="hs-special">)</span><span class="hs-special">,</span><span>
+</span><span id="line-40"></span><span>  </span><span class="annot"><span class="hs-identifier">pragInlD</span></span><span class="hs-special">,</span><span>
+</span><span id="line-41"></span><span>  </span><span class="annot"><span class="hs-identifier">sigD</span></span><span class="hs-special">,</span><span>
+</span><span id="line-42"></span><span>  </span><span class="annot"><span class="hs-identifier">varE</span></span><span class="hs-special">,</span><span>
+</span><span id="line-43"></span><span> </span><span class="hs-special">)</span><span>
+</span><span id="line-44"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.TH.VersionAgnostic.html"><span class="hs-identifier">Text.Gigaparsec.Internal.TH.VersionAgnostic</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Name</span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier">Dec</span></span><span> </span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier">Exp</span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier">Inline</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Inline</span></span><span class="hs-special">)</span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier">Phases</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">AllPhases</span></span><span class="hs-special">)</span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier">Q</span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier">Quote</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">newName</span></span><span class="hs-special">)</span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier">Type</span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier">nameBase</span></span><span class="hs-special">)</span><span>
+</span><span id="line-45"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.Token.BitBounds.html"><span class="hs-identifier">Text.Gigaparsec.Internal.Token.BitBounds</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Text.Gigaparsec.Internal.Token.BitBounds.html#Bits"><span class="hs-identifier">Bits</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-46"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Token.Lexer.html"><span class="hs-identifier">Text.Gigaparsec.Token.Lexer</span></a></span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="hs-keyword">as</span><span> </span><span class="annot"><span class="hs-identifier">Lexer</span></span><span>
+</span><span id="line-47"></span><span>
+</span><span id="line-48"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Exts</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">IsList</span></span><span> </span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-49"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.TH.DecUtils.html"><span class="hs-identifier">Text.Gigaparsec.Internal.TH.DecUtils</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Text.Gigaparsec.Internal.TH.DecUtils.html#funDsingleClause"><span class="hs-identifier">funDsingleClause</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-50"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.Token.Patterns.LexerCombinators.html"><span class="hs-identifier">Text.Gigaparsec.Internal.Token.Patterns.LexerCombinators</span></a></span><span>
+</span><span id="line-51"></span><span>
+</span><span id="line-52"></span><span class="annot"><a href="Text.Gigaparsec.Internal.Token.Patterns.IntegerParsers.html#intLitBaseList"><span class="hs-identifier hs-type">intLitBaseList</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-special">[</span><span class="annot"><a href="Text.Gigaparsec.Internal.Token.Patterns.IntegerParsers.html#IntLitBase"><span class="hs-identifier hs-type">IntLitBase</span></a></span><span class="hs-special">]</span><span>
+</span><span id="line-53"></span><span id="intLitBaseList"><span class="annot"><span class="annottext">intLitBaseList :: [IntLitBase]
+</span><a href="Text.Gigaparsec.Internal.Token.Patterns.IntegerParsers.html#intLitBaseList"><span class="hs-identifier hs-var hs-var">intLitBaseList</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-special">[</span><span class="annot"><span class="annottext">IntLitBase
+</span><a href="Text.Gigaparsec.Internal.Token.Patterns.IntegerParsers.html#Binary"><span class="hs-identifier hs-var">Binary</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">IntLitBase
+</span><a href="Text.Gigaparsec.Internal.Token.Patterns.IntegerParsers.html#Octal"><span class="hs-identifier hs-var">Octal</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">IntLitBase
+</span><a href="Text.Gigaparsec.Internal.Token.Patterns.IntegerParsers.html#Decimal"><span class="hs-identifier hs-var">Decimal</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">IntLitBase
+</span><a href="Text.Gigaparsec.Internal.Token.Patterns.IntegerParsers.html#Hexadecimal"><span class="hs-identifier hs-var">Hexadecimal</span></a></span><span class="hs-special">]</span><span>
+</span><span id="line-54"></span><span>
+</span><span id="line-55"></span><span class="annot"><span class="hs-comment">-- | Names of the</span></span><span>
+</span><span id="line-56"></span><span class="annot"><a href="Text.Gigaparsec.Internal.Token.Patterns.IntegerParsers.html#integerParsers"><span class="hs-identifier hs-type">integerParsers</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-special">[</span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Name</span></span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.Token.Patterns.IntegerParsers.html#IntLitBase"><span class="hs-identifier hs-type">IntLitBase</span></a></span><span class="hs-special">)</span><span class="hs-special">]</span><span>
+</span><span id="line-57"></span><span id="integerParsers"><span class="annot"><span class="annottext">integerParsers :: [(Name, IntLitBase)]
+</span><a href="Text.Gigaparsec.Internal.Token.Patterns.IntegerParsers.html#integerParsers"><span class="hs-identifier hs-var hs-var">integerParsers</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
+</span><span id="line-58"></span><span>  </span><span class="hs-special">[</span><span> </span><span class="hs-special">'</span><span class="hs-identifier">Lexer.binary</span><span>
+</span><span id="line-59"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="hs-special">'</span><span class="hs-identifier">Lexer.octal</span><span>
+</span><span id="line-60"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="hs-special">'</span><span class="hs-identifier">Lexer.decimal</span><span>
+</span><span id="line-61"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="hs-special">'</span><span class="hs-identifier">Lexer.hexadecimal</span><span>
+</span><span id="line-62"></span><span>  </span><span class="hs-special">]</span><span>
+</span><span id="line-63"></span><span>    </span><span class="annot"><span class="annottext">[Name] -&gt; [IntLitBase] -&gt; [(Name, IntLitBase)]
+forall a b. [a] -&gt; [b] -&gt; [(a, b)]
+</span><span class="hs-operator hs-var">`zip`</span></span><span> </span><span class="annot"><span class="annottext">[IntLitBase]
+</span><a href="Text.Gigaparsec.Internal.Token.Patterns.IntegerParsers.html#intLitBaseList"><span class="hs-identifier hs-var">intLitBaseList</span></a></span><span>
+</span><span id="line-64"></span><span>
+</span><span id="line-65"></span><span class="annot"><a href="Text.Gigaparsec.Internal.Token.Patterns.IntegerParsers.html#intParsers8Bit"><span class="hs-identifier hs-type">intParsers8Bit</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-special">[</span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Name</span></span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.Token.Patterns.IntegerParsers.html#IntLitBase"><span class="hs-identifier hs-type">IntLitBase</span></a></span><span class="hs-special">)</span><span class="hs-special">]</span><span>
+</span><span id="line-66"></span><span id="intParsers8Bit"><span class="annot"><span class="annottext">intParsers8Bit :: [(Name, IntLitBase)]
+</span><a href="Text.Gigaparsec.Internal.Token.Patterns.IntegerParsers.html#intParsers8Bit"><span class="hs-identifier hs-var hs-var">intParsers8Bit</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
+</span><span id="line-67"></span><span>  </span><span class="hs-special">[</span><span> </span><span class="hs-special">'</span><span class="hs-identifier">Lexer.binary8</span><span>
+</span><span id="line-68"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="hs-special">'</span><span class="hs-identifier">Lexer.octal8</span><span>
+</span><span id="line-69"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="hs-special">'</span><span class="hs-identifier">Lexer.decimal8</span><span>
+</span><span id="line-70"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="hs-special">'</span><span class="hs-identifier">Lexer.hexadecimal8</span><span>
+</span><span id="line-71"></span><span>  </span><span class="hs-special">]</span><span>
+</span><span id="line-72"></span><span>    </span><span class="annot"><span class="annottext">[Name] -&gt; [IntLitBase] -&gt; [(Name, IntLitBase)]
+forall a b. [a] -&gt; [b] -&gt; [(a, b)]
+</span><span class="hs-operator hs-var">`zip`</span></span><span> </span><span class="annot"><span class="annottext">[IntLitBase]
+</span><a href="Text.Gigaparsec.Internal.Token.Patterns.IntegerParsers.html#intLitBaseList"><span class="hs-identifier hs-var">intLitBaseList</span></a></span><span>
+</span><span id="line-73"></span><span>
+</span><span id="line-74"></span><span class="annot"><a href="Text.Gigaparsec.Internal.Token.Patterns.IntegerParsers.html#intParsers16Bit"><span class="hs-identifier hs-type">intParsers16Bit</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-special">[</span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Name</span></span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.Token.Patterns.IntegerParsers.html#IntLitBase"><span class="hs-identifier hs-type">IntLitBase</span></a></span><span class="hs-special">)</span><span class="hs-special">]</span><span>
+</span><span id="line-75"></span><span id="intParsers16Bit"><span class="annot"><span class="annottext">intParsers16Bit :: [(Name, IntLitBase)]
+</span><a href="Text.Gigaparsec.Internal.Token.Patterns.IntegerParsers.html#intParsers16Bit"><span class="hs-identifier hs-var hs-var">intParsers16Bit</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
+</span><span id="line-76"></span><span>  </span><span class="hs-special">[</span><span> </span><span class="hs-special">'</span><span class="hs-identifier">Lexer.binary16</span><span>
+</span><span id="line-77"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="hs-special">'</span><span class="hs-identifier">Lexer.octal16</span><span>
+</span><span id="line-78"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="hs-special">'</span><span class="hs-identifier">Lexer.decimal16</span><span>
+</span><span id="line-79"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="hs-special">'</span><span class="hs-identifier">Lexer.hexadecimal16</span><span>
+</span><span id="line-80"></span><span>  </span><span class="hs-special">]</span><span>
+</span><span id="line-81"></span><span>    </span><span class="annot"><span class="annottext">[Name] -&gt; [IntLitBase] -&gt; [(Name, IntLitBase)]
+forall a b. [a] -&gt; [b] -&gt; [(a, b)]
+</span><span class="hs-operator hs-var">`zip`</span></span><span> </span><span class="annot"><span class="annottext">[IntLitBase]
+</span><a href="Text.Gigaparsec.Internal.Token.Patterns.IntegerParsers.html#intLitBaseList"><span class="hs-identifier hs-var">intLitBaseList</span></a></span><span>
+</span><span id="line-82"></span><span>
+</span><span id="line-83"></span><span class="annot"><a href="Text.Gigaparsec.Internal.Token.Patterns.IntegerParsers.html#intParsers32Bit"><span class="hs-identifier hs-type">intParsers32Bit</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-special">[</span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Name</span></span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.Token.Patterns.IntegerParsers.html#IntLitBase"><span class="hs-identifier hs-type">IntLitBase</span></a></span><span class="hs-special">)</span><span class="hs-special">]</span><span>
+</span><span id="line-84"></span><span id="intParsers32Bit"><span class="annot"><span class="annottext">intParsers32Bit :: [(Name, IntLitBase)]
+</span><a href="Text.Gigaparsec.Internal.Token.Patterns.IntegerParsers.html#intParsers32Bit"><span class="hs-identifier hs-var hs-var">intParsers32Bit</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
+</span><span id="line-85"></span><span>  </span><span class="hs-special">[</span><span> </span><span class="hs-special">'</span><span class="hs-identifier">Lexer.binary32</span><span>
+</span><span id="line-86"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="hs-special">'</span><span class="hs-identifier">Lexer.octal32</span><span>
+</span><span id="line-87"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="hs-special">'</span><span class="hs-identifier">Lexer.decimal32</span><span>
+</span><span id="line-88"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="hs-special">'</span><span class="hs-identifier">Lexer.hexadecimal32</span><span>
+</span><span id="line-89"></span><span>  </span><span class="hs-special">]</span><span>
+</span><span id="line-90"></span><span>    </span><span class="annot"><span class="annottext">[Name] -&gt; [IntLitBase] -&gt; [(Name, IntLitBase)]
+forall a b. [a] -&gt; [b] -&gt; [(a, b)]
+</span><span class="hs-operator hs-var">`zip`</span></span><span> </span><span class="annot"><span class="annottext">[IntLitBase]
+</span><a href="Text.Gigaparsec.Internal.Token.Patterns.IntegerParsers.html#intLitBaseList"><span class="hs-identifier hs-var">intLitBaseList</span></a></span><span>
+</span><span id="line-91"></span><span>
+</span><span id="line-92"></span><span class="annot"><a href="Text.Gigaparsec.Internal.Token.Patterns.IntegerParsers.html#intParsers64Bit"><span class="hs-identifier hs-type">intParsers64Bit</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-special">[</span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Name</span></span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.Token.Patterns.IntegerParsers.html#IntLitBase"><span class="hs-identifier hs-type">IntLitBase</span></a></span><span class="hs-special">)</span><span class="hs-special">]</span><span>
+</span><span id="line-93"></span><span id="intParsers64Bit"><span class="annot"><span class="annottext">intParsers64Bit :: [(Name, IntLitBase)]
+</span><a href="Text.Gigaparsec.Internal.Token.Patterns.IntegerParsers.html#intParsers64Bit"><span class="hs-identifier hs-var hs-var">intParsers64Bit</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
+</span><span id="line-94"></span><span>  </span><span class="hs-special">[</span><span> </span><span class="hs-special">'</span><span class="hs-identifier">Lexer.binary64</span><span>
+</span><span id="line-95"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="hs-special">'</span><span class="hs-identifier">Lexer.octal64</span><span>
+</span><span id="line-96"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="hs-special">'</span><span class="hs-identifier">Lexer.decimal64</span><span>
+</span><span id="line-97"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="hs-special">'</span><span class="hs-identifier">Lexer.hexadecimal64</span><span>
+</span><span id="line-98"></span><span>  </span><span class="hs-special">]</span><span>
+</span><span id="line-99"></span><span>    </span><span class="annot"><span class="annottext">[Name] -&gt; [IntLitBase] -&gt; [(Name, IntLitBase)]
+forall a b. [a] -&gt; [b] -&gt; [(a, b)]
+</span><span class="hs-operator hs-var">`zip`</span></span><span> </span><span class="annot"><span class="annottext">[IntLitBase]
+</span><a href="Text.Gigaparsec.Internal.Token.Patterns.IntegerParsers.html#intLitBaseList"><span class="hs-identifier hs-var">intLitBaseList</span></a></span><span>
+</span><span id="line-100"></span><span>
+</span><span id="line-101"></span><span class="annot"><span class="hs-comment">{-|
+The base of a numeric literal.
+
+Used in `IntegerParserConfig` to specify which parsers for which bases should be generated.
+
+@since 0.4.0.0
+
+-}</span></span><span>
+</span><span id="line-109"></span><span class="hs-keyword">type</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.Token.Patterns.IntegerParsers.html#IntLitBase"><span class="hs-identifier hs-type">IntLitBase</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-operator">*</span></span><span>
+</span><span id="line-110"></span><span class="hs-keyword">data</span><span> </span><span id="IntLitBase"><span class="annot"><a href="Text.Gigaparsec.Internal.Token.Patterns.IntegerParsers.html#IntLitBase"><span class="hs-identifier hs-var">IntLitBase</span></a></span></span><span>
+</span><span id="line-111"></span><span>  </span><span class="hs-glyph">=</span><span> </span><span id="Binary"><span class="annot"><a href="Text.Gigaparsec.Internal.Token.Patterns.IntegerParsers.html#Binary"><span class="hs-identifier hs-var">Binary</span></a></span></span><span>
+</span><span id="line-112"></span><span>  </span><span class="hs-glyph">|</span><span> </span><span id="Octal"><span class="annot"><a href="Text.Gigaparsec.Internal.Token.Patterns.IntegerParsers.html#Octal"><span class="hs-identifier hs-var">Octal</span></a></span></span><span>
+</span><span id="line-113"></span><span>  </span><span class="hs-glyph">|</span><span> </span><span id="Decimal"><span class="annot"><a href="Text.Gigaparsec.Internal.Token.Patterns.IntegerParsers.html#Decimal"><span class="hs-identifier hs-var">Decimal</span></a></span></span><span>
+</span><span id="line-114"></span><span>  </span><span class="hs-glyph">|</span><span> </span><span id="Hexadecimal"><span class="annot"><a href="Text.Gigaparsec.Internal.Token.Patterns.IntegerParsers.html#Hexadecimal"><span class="hs-identifier hs-var">Hexadecimal</span></a></span></span><span>
+</span><span id="line-115"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="annot"><span class="hs-keyword">stock</span></span><span> </span><span class="hs-special">(</span><span id="local-6989586621679253701"><span id="local-6989586621679253703"><span id="local-6989586621679253707"><span class="annot"><span class="annottext">Int -&gt; IntLitBase -&gt; ShowS
+[IntLitBase] -&gt; ShowS
+IntLitBase -&gt; String
+(Int -&gt; IntLitBase -&gt; ShowS)
+-&gt; (IntLitBase -&gt; String)
+-&gt; ([IntLitBase] -&gt; ShowS)
+-&gt; Show IntLitBase
+forall a.
+(Int -&gt; a -&gt; ShowS) -&gt; (a -&gt; String) -&gt; ([a] -&gt; ShowS) -&gt; Show a
+$cshowsPrec :: Int -&gt; IntLitBase -&gt; ShowS
+showsPrec :: Int -&gt; IntLitBase -&gt; ShowS
+$cshow :: IntLitBase -&gt; String
+show :: IntLitBase -&gt; String
+$cshowList :: [IntLitBase] -&gt; ShowS
+showList :: [IntLitBase] -&gt; ShowS
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Show</span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679253712"><span id="local-6989586621679253717"><span class="annot"><span class="annottext">IntLitBase -&gt; IntLitBase -&gt; Bool
+(IntLitBase -&gt; IntLitBase -&gt; Bool)
+-&gt; (IntLitBase -&gt; IntLitBase -&gt; Bool) -&gt; Eq IntLitBase
+forall a. (a -&gt; a -&gt; Bool) -&gt; (a -&gt; a -&gt; Bool) -&gt; Eq a
+$c== :: IntLitBase -&gt; IntLitBase -&gt; Bool
+== :: IntLitBase -&gt; IntLitBase -&gt; Bool
+$c/= :: IntLitBase -&gt; IntLitBase -&gt; Bool
+/= :: IntLitBase -&gt; IntLitBase -&gt; Bool
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Eq</span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679253724"><span id="local-6989586621679253728"><span id="local-6989586621679253732"><span id="local-6989586621679253735"><span id="local-6989586621679253738"><span id="local-6989586621679253741"><span id="local-6989586621679253744"><span class="annot"><span class="annottext">Eq IntLitBase
+Eq IntLitBase =&gt;
+(IntLitBase -&gt; IntLitBase -&gt; Ordering)
+-&gt; (IntLitBase -&gt; IntLitBase -&gt; Bool)
+-&gt; (IntLitBase -&gt; IntLitBase -&gt; Bool)
+-&gt; (IntLitBase -&gt; IntLitBase -&gt; Bool)
+-&gt; (IntLitBase -&gt; IntLitBase -&gt; Bool)
+-&gt; (IntLitBase -&gt; IntLitBase -&gt; IntLitBase)
+-&gt; (IntLitBase -&gt; IntLitBase -&gt; IntLitBase)
+-&gt; Ord IntLitBase
+IntLitBase -&gt; IntLitBase -&gt; Bool
+IntLitBase -&gt; IntLitBase -&gt; Ordering
+IntLitBase -&gt; IntLitBase -&gt; IntLitBase
+forall a.
+Eq a =&gt;
+(a -&gt; a -&gt; Ordering)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; Ord a
+$ccompare :: IntLitBase -&gt; IntLitBase -&gt; Ordering
+compare :: IntLitBase -&gt; IntLitBase -&gt; Ordering
+$c&lt; :: IntLitBase -&gt; IntLitBase -&gt; Bool
+&lt; :: IntLitBase -&gt; IntLitBase -&gt; Bool
+$c&lt;= :: IntLitBase -&gt; IntLitBase -&gt; Bool
+&lt;= :: IntLitBase -&gt; IntLitBase -&gt; Bool
+$c&gt; :: IntLitBase -&gt; IntLitBase -&gt; Bool
+&gt; :: IntLitBase -&gt; IntLitBase -&gt; Bool
+$c&gt;= :: IntLitBase -&gt; IntLitBase -&gt; Bool
+&gt;= :: IntLitBase -&gt; IntLitBase -&gt; Bool
+$cmax :: IntLitBase -&gt; IntLitBase -&gt; IntLitBase
+max :: IntLitBase -&gt; IntLitBase -&gt; IntLitBase
+$cmin :: IntLitBase -&gt; IntLitBase -&gt; IntLitBase
+min :: IntLitBase -&gt; IntLitBase -&gt; IntLitBase
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Ord</span></span></span></span></span></span></span></span></span><span class="hs-special">)</span><span>
+</span><span id="line-116"></span><span>
+</span><span id="line-117"></span><span class="annot"><span class="hs-comment">{-|
+Set of all possible `IntLitBase`s.
+
+@since 0.4.0.0
+
+-}</span></span><span>
+</span><span id="line-123"></span><span class="annot"><a href="Text.Gigaparsec.Internal.Token.Patterns.IntegerParsers.html#allBases"><span class="hs-identifier hs-type">allBases</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Set</span></span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.Token.Patterns.IntegerParsers.html#IntLitBase"><span class="hs-identifier hs-type">IntLitBase</span></a></span><span>
+</span><span id="line-124"></span><span id="allBases"><span class="annot"><span class="annottext">allBases :: Set IntLitBase
+</span><a href="Text.Gigaparsec.Internal.Token.Patterns.IntegerParsers.html#allBases"><span class="hs-identifier hs-var hs-var">allBases</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">[IntLitBase] -&gt; Set IntLitBase
+forall a. Ord a =&gt; [a] -&gt; Set a
+</span><span class="hs-identifier hs-var">Set.fromList</span></span><span> </span><span class="hs-special">[</span><span class="annot"><span class="annottext">IntLitBase
+</span><a href="Text.Gigaparsec.Internal.Token.Patterns.IntegerParsers.html#Binary"><span class="hs-identifier hs-var">Binary</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">IntLitBase
+</span><a href="Text.Gigaparsec.Internal.Token.Patterns.IntegerParsers.html#Octal"><span class="hs-identifier hs-var">Octal</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">IntLitBase
+</span><a href="Text.Gigaparsec.Internal.Token.Patterns.IntegerParsers.html#Decimal"><span class="hs-identifier hs-var">Decimal</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">IntLitBase
+</span><a href="Text.Gigaparsec.Internal.Token.Patterns.IntegerParsers.html#Hexadecimal"><span class="hs-identifier hs-var">Hexadecimal</span></a></span><span class="hs-special">]</span><span>
+</span><span id="line-125"></span><span>
+</span><span id="line-126"></span><span class="annot"><span class="hs-comment">{-| Determines if the combinators are for 'Signed' or 'Unsigned' int literals.
+
+@since 0.4.0.0
+
+-}</span></span><span>
+</span><span id="line-131"></span><span class="hs-keyword">type</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.Token.Patterns.IntegerParsers.html#SignedOrUnsigned"><span class="hs-identifier hs-type">SignedOrUnsigned</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-operator">*</span></span><span>
+</span><span id="line-132"></span><span class="hs-keyword">data</span><span> </span><span id="SignedOrUnsigned"><span class="annot"><a href="Text.Gigaparsec.Internal.Token.Patterns.IntegerParsers.html#SignedOrUnsigned"><span class="hs-identifier hs-var">SignedOrUnsigned</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span>
+</span><span id="line-133"></span><span>    </span><span class="annot"><span class="hs-comment">{-| The int literal is signed, so can be negative.
+    
+    @since 0.4.0.0
+    
+    -}</span></span><span>
+</span><span id="line-138"></span><span>    </span><span id="Signed"><span class="annot"><a href="Text.Gigaparsec.Internal.Token.Patterns.IntegerParsers.html#Signed"><span class="hs-identifier hs-var">Signed</span></a></span></span><span> </span><span>
+</span><span id="line-139"></span><span>  </span><span class="hs-glyph">|</span><span> </span><span class="annot"><span class="hs-comment">{-|  The literal is unsigned, so is always non-negative.
+    
+    @since 0.4.0.0
+    
+    -}</span></span><span>
+</span><span id="line-144"></span><span>    </span><span id="Unsigned"><span class="annot"><a href="Text.Gigaparsec.Internal.Token.Patterns.IntegerParsers.html#Unsigned"><span class="hs-identifier hs-var">Unsigned</span></a></span></span><span>
+</span><span id="line-145"></span><span>
+</span><span id="line-146"></span><span class="annot"><span class="hs-comment">{-|
+True when `Signed`.
+
+@since 0.4.0.0
+
+-}</span></span><span>
+</span><span id="line-152"></span><span class="annot"><a href="Text.Gigaparsec.Internal.Token.Patterns.IntegerParsers.html#isSigned"><span class="hs-identifier hs-type">isSigned</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.Token.Patterns.IntegerParsers.html#SignedOrUnsigned"><span class="hs-identifier hs-type">SignedOrUnsigned</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Bool</span></span><span>
+</span><span id="line-153"></span><span id="isSigned"><span class="annot"><span class="annottext">isSigned :: SignedOrUnsigned -&gt; Bool
+</span><a href="Text.Gigaparsec.Internal.Token.Patterns.IntegerParsers.html#isSigned"><span class="hs-identifier hs-var hs-var">isSigned</span></a></span></span><span> </span><span class="annot"><span class="annottext">SignedOrUnsigned
+</span><a href="Text.Gigaparsec.Internal.Token.Patterns.IntegerParsers.html#Signed"><span class="hs-identifier hs-var">Signed</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Bool
+</span><span class="hs-identifier hs-var">True</span></span><span>
+</span><span id="line-154"></span><span class="annot"><a href="Text.Gigaparsec.Internal.Token.Patterns.IntegerParsers.html#isSigned"><span class="hs-identifier hs-var">isSigned</span></a></span><span> </span><span class="annot"><span class="annottext">SignedOrUnsigned
+</span><a href="Text.Gigaparsec.Internal.Token.Patterns.IntegerParsers.html#Unsigned"><span class="hs-identifier hs-var">Unsigned</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Bool
+</span><span class="hs-identifier hs-var">False</span></span><span>
+</span><span id="line-155"></span><span>
+</span><span id="line-156"></span><span>
+</span><span id="line-157"></span><span class="annot"><span class="hs-comment">{-|
+This type describes how to generate numeric parsers with `generateIntegerParsers`.
+This includes configuration for which bases and bitwidths to support, and whether to generate
+parsers that can handle multiple bases. 
+
+See the 'emptyIntegerParserConfig' smart constructor to define a 'IntegerParserConfig'.
+
+@since 0.4.0.0
+
+-}</span></span><span>
+</span><span id="line-167"></span><span class="hs-keyword">type</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.Token.Patterns.IntegerParsers.html#IntegerParserConfig"><span class="hs-identifier hs-type">IntegerParserConfig</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-operator">*</span></span><span>
+</span><span id="line-168"></span><span class="hs-keyword">data</span><span> </span><span id="IntegerParserConfig"><span class="annot"><a href="Text.Gigaparsec.Internal.Token.Patterns.IntegerParsers.html#IntegerParserConfig"><span class="hs-identifier hs-var">IntegerParserConfig</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="IntegerParserConfig"><span class="annot"><a href="Text.Gigaparsec.Internal.Token.Patterns.IntegerParsers.html#IntegerParserConfig"><span class="hs-identifier hs-var">IntegerParserConfig</span></a></span></span><span>
+</span><span id="line-169"></span><span>  </span><span class="hs-special">{</span><span> </span><span class="annot"><span class="hs-comment">{-|
+    The string to prepend to each generated parser's name (except for the `collatedParser`, if specified).
+    
+    @since 0.4.0.0
+
+    -}</span></span><span>
+</span><span id="line-175"></span><span>    </span><span id="prefix"><span class="annot"><span class="annottext">IntegerParserConfig -&gt; String
+</span><a href="Text.Gigaparsec.Internal.Token.Patterns.IntegerParsers.html#prefix"><span class="hs-identifier hs-var hs-var">prefix</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span>
+</span><span id="line-176"></span><span>    </span><span class="annot"><span class="hs-comment">{-| The fixed bit-widths (8-bit, 16-bit, etc/) for which to generate parsers.
+
+    @since 0.4.0.0
+
+    -}</span></span><span>
+</span><span id="line-181"></span><span>  </span><span class="hs-special">,</span><span> </span><span id="widths"><span class="annot"><span class="annottext">IntegerParserConfig -&gt; Map Bits (Q Type)
+</span><a href="Text.Gigaparsec.Internal.Token.Patterns.IntegerParsers.html#widths"><span class="hs-identifier hs-var hs-var">widths</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Map</span></span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.Token.BitBounds.html#Bits"><span class="hs-identifier hs-type">Bits</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Q</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Type</span></span><span class="hs-special">)</span><span>
+</span><span id="line-182"></span><span>    </span><span class="annot"><span class="hs-comment">{-|
+    The numeric bases (binary, octal, etc) for which to generate parsers.
+
+    @since 0.4.0.0
+
+    -}</span></span><span>
+</span><span id="line-188"></span><span>  </span><span class="hs-special">,</span><span> </span><span id="bases"><span class="annot"><span class="annottext">IntegerParserConfig -&gt; Set IntLitBase
+</span><a href="Text.Gigaparsec.Internal.Token.Patterns.IntegerParsers.html#bases"><span class="hs-identifier hs-var hs-var">bases</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Set</span></span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.Token.Patterns.IntegerParsers.html#IntLitBase"><span class="hs-identifier hs-type">IntLitBase</span></a></span><span>
+</span><span id="line-189"></span><span>    </span><span class="annot"><span class="hs-comment">{-|
+    When 'True', generate the unbounded integer parsers (e.g. `Text.Gigaparsec.Token.Lexer.decimal`) for each base specified in `bases`.
+    
+    @since 0.4.0.0
+
+    -}</span></span><span>
+</span><span id="line-195"></span><span>  </span><span class="hs-special">,</span><span> </span><span id="includeUnbounded"><span class="annot"><span class="annottext">IntegerParserConfig -&gt; Bool
+</span><a href="Text.Gigaparsec.Internal.Token.Patterns.IntegerParsers.html#includeUnbounded"><span class="hs-identifier hs-var hs-var">includeUnbounded</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Bool</span></span><span>
+</span><span id="line-196"></span><span>    </span><span class="annot"><span class="hs-comment">{-|
+    Generate a generic integer parser with the given name,
+    at each width (including unbounded) specified by `widths`, that
+    is able to parse each base specified in `bases`.
+  
+    * If 'Nothing', do not generate such a parser.
+    * If @'Just' &quot;&quot;@, then the default name will be @&quot;natural&quot;@  or @&quot;integer&quot;@ when `signedOrUnsigned`
+      is `Unsigned` or `Signed`, respectively.
+
+    @since 0.4.0.0
+
+    -}</span></span><span>
+</span><span id="line-208"></span><span>  </span><span class="hs-special">,</span><span> </span><span id="collatedParser"><span class="annot"><span class="annottext">IntegerParserConfig -&gt; Maybe String
+</span><a href="Text.Gigaparsec.Internal.Token.Patterns.IntegerParsers.html#collatedParser"><span class="hs-identifier hs-var hs-var">collatedParser</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Maybe</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span>
+</span><span id="line-209"></span><span>    </span><span class="annot"><span class="hs-comment">{-|
+    Whether or not the parsers to generate are for 'Signed' or 'Unsigned' integers.
+
+    @since 0.4.0.0
+    
+    -}</span></span><span>
+</span><span id="line-215"></span><span>  </span><span class="hs-special">,</span><span> </span><span id="signedOrUnsigned"><span class="annot"><span class="annottext">IntegerParserConfig -&gt; SignedOrUnsigned
+</span><a href="Text.Gigaparsec.Internal.Token.Patterns.IntegerParsers.html#signedOrUnsigned"><span class="hs-identifier hs-var hs-var">signedOrUnsigned</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.Token.Patterns.IntegerParsers.html#SignedOrUnsigned"><span class="hs-identifier hs-type">SignedOrUnsigned</span></a></span><span>
+</span><span id="line-216"></span><span>  </span><span class="hs-special">}</span><span>
+</span><span id="line-217"></span><span>
+</span><span id="line-218"></span><span id="local-6989586621679253529"><span class="annot"><a href="Text.Gigaparsec.Internal.Token.Patterns.IntegerParsers.html#filterByBase"><span class="hs-identifier hs-type">filterByBase</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Set</span></span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.Token.Patterns.IntegerParsers.html#IntLitBase"><span class="hs-identifier hs-type">IntLitBase</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-special">[</span><span class="hs-special">(</span><span class="annot"><a href="#local-6989586621679253529"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.Token.Patterns.IntegerParsers.html#IntLitBase"><span class="hs-identifier hs-type">IntLitBase</span></a></span><span class="hs-special">)</span><span class="hs-special">]</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-special">[</span><span class="annot"><a href="#local-6989586621679253529"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">]</span></span><span>
+</span><span id="line-219"></span><span id="filterByBase"><span class="annot"><span class="annottext">filterByBase :: forall a. Set IntLitBase -&gt; [(a, IntLitBase)] -&gt; [a]
+</span><a href="Text.Gigaparsec.Internal.Token.Patterns.IntegerParsers.html#filterByBase"><span class="hs-identifier hs-var hs-var">filterByBase</span></a></span></span><span> </span><span id="local-6989586621679253766"><span class="annot"><span class="annottext">Set IntLitBase
+</span><a href="#local-6989586621679253766"><span class="hs-identifier hs-var">bs</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">((a, IntLitBase) -&gt; a) -&gt; [(a, IntLitBase)] -&gt; [a]
+forall a b. (a -&gt; b) -&gt; [a] -&gt; [b]
+</span><span class="hs-identifier hs-var">map</span></span><span> </span><span class="annot"><span class="annottext">(a, IntLitBase) -&gt; a
+forall a b. (a, b) -&gt; a
+</span><span class="hs-identifier hs-var">fst</span></span><span> </span><span class="annot"><span class="annottext">([(a, IntLitBase)] -&gt; [a])
+-&gt; ([(a, IntLitBase)] -&gt; [(a, IntLitBase)])
+-&gt; [(a, IntLitBase)]
+-&gt; [a]
+forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
+</span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">((a, IntLitBase) -&gt; Bool) -&gt; [(a, IntLitBase)] -&gt; [(a, IntLitBase)]
+forall a. (a -&gt; Bool) -&gt; [a] -&gt; [a]
+</span><span class="hs-identifier hs-var">filter</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">IntLitBase -&gt; Set IntLitBase -&gt; Bool
+forall a. Ord a =&gt; a -&gt; Set a -&gt; Bool
+</span><span class="hs-operator hs-var">`Set.member`</span></span><span> </span><span class="annot"><span class="annottext">Set IntLitBase
+</span><a href="#local-6989586621679253766"><span class="hs-identifier hs-var">bs</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">(IntLitBase -&gt; Bool)
+-&gt; ((a, IntLitBase) -&gt; IntLitBase) -&gt; (a, IntLitBase) -&gt; Bool
+forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
+</span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">(a, IntLitBase) -&gt; IntLitBase
+forall a b. (a, b) -&gt; b
+</span><span class="hs-identifier hs-var">snd</span></span><span class="hs-special">)</span><span>
+</span><span id="line-220"></span><span>
+</span><span id="line-221"></span><span id="local-6989586621679253542"><span class="annot"><a href="Text.Gigaparsec.Internal.Token.Patterns.IntegerParsers.html#filterByWidth"><span class="hs-identifier hs-type">filterByWidth</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.Token.BitBounds.html#Bits"><span class="hs-identifier hs-type">Bits</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-special">[</span><span class="hs-special">(</span><span class="annot"><a href="Text.Gigaparsec.Internal.Token.BitBounds.html#Bits"><span class="hs-identifier hs-type">Bits</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><a href="#local-6989586621679253542"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">)</span><span class="hs-special">]</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-special">[</span><span class="annot"><a href="#local-6989586621679253542"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">]</span></span><span>
+</span><span id="line-222"></span><span id="filterByWidth"><span class="annot"><span class="annottext">filterByWidth :: forall a. Bits -&gt; [(Bits, a)] -&gt; [a]
+</span><a href="Text.Gigaparsec.Internal.Token.Patterns.IntegerParsers.html#filterByWidth"><span class="hs-identifier hs-var hs-var">filterByWidth</span></a></span></span><span> </span><span id="local-6989586621679253773"><span class="annot"><span class="annottext">Bits
+</span><a href="#local-6989586621679253773"><span class="hs-identifier hs-var">b</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">((Bits, a) -&gt; a) -&gt; [(Bits, a)] -&gt; [a]
+forall a b. (a -&gt; b) -&gt; [a] -&gt; [b]
+</span><span class="hs-identifier hs-var">map</span></span><span> </span><span class="annot"><span class="annottext">(Bits, a) -&gt; a
+forall a b. (a, b) -&gt; b
+</span><span class="hs-identifier hs-var">snd</span></span><span> </span><span class="annot"><span class="annottext">([(Bits, a)] -&gt; [a])
+-&gt; ([(Bits, a)] -&gt; [(Bits, a)]) -&gt; [(Bits, a)] -&gt; [a]
+forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
+</span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">((Bits, a) -&gt; Bool) -&gt; [(Bits, a)] -&gt; [(Bits, a)]
+forall a. (a -&gt; Bool) -&gt; [a] -&gt; [a]
+</span><span class="hs-identifier hs-var">filter</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Bits -&gt; Bits -&gt; Bool
+forall a. Eq a =&gt; a -&gt; a -&gt; Bool
+</span><span class="hs-operator hs-var">==</span></span><span> </span><span class="annot"><span class="annottext">Bits
+</span><a href="#local-6989586621679253773"><span class="hs-identifier hs-var">b</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">(Bits -&gt; Bool) -&gt; ((Bits, a) -&gt; Bits) -&gt; (Bits, a) -&gt; Bool
+forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
+</span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">(Bits, a) -&gt; Bits
+forall a b. (a, b) -&gt; a
+</span><span class="hs-identifier hs-var">fst</span></span><span class="hs-special">)</span><span>
+</span><span id="line-223"></span><span>
+</span><span id="line-224"></span><span class="annot"><span class="hs-comment">-- | Monoidal when; if false, then return `mempty`</span></span><span>
+</span><span id="line-225"></span><span id="local-6989586621679253544"><span class="annot"><a href="Text.Gigaparsec.Internal.Token.Patterns.IntegerParsers.html#mwhen"><span class="hs-identifier hs-type">mwhen</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Monoid</span></span><span> </span><span class="annot"><a href="#local-6989586621679253544"><span class="hs-identifier hs-type">m</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Bool</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="#local-6989586621679253544"><span class="hs-identifier hs-type">m</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="#local-6989586621679253544"><span class="hs-identifier hs-type">m</span></a></span></span><span>
+</span><span id="line-226"></span><span id="mwhen"><span class="annot"><span class="annottext">mwhen :: forall m. Monoid m =&gt; Bool -&gt; m -&gt; m
+</span><a href="Text.Gigaparsec.Internal.Token.Patterns.IntegerParsers.html#mwhen"><span class="hs-identifier hs-var hs-var">mwhen</span></a></span></span><span> </span><span class="annot"><span class="annottext">Bool
+</span><span class="hs-identifier hs-var">True</span></span><span> </span><span id="local-6989586621679253777"><span class="annot"><span class="annottext">m
+</span><a href="#local-6989586621679253777"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">m
+</span><a href="#local-6989586621679253777"><span class="hs-identifier hs-var">x</span></a></span><span>
+</span><span id="line-227"></span><span class="annot"><a href="Text.Gigaparsec.Internal.Token.Patterns.IntegerParsers.html#mwhen"><span class="hs-identifier hs-var">mwhen</span></a></span><span> </span><span class="annot"><span class="annottext">Bool
+</span><span class="hs-identifier hs-var">False</span></span><span> </span><span class="annot"><span class="annottext">m
+</span><span class="hs-identifier">_</span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">m
+forall a. Monoid a =&gt; a
+</span><span class="hs-identifier hs-var">mempty</span></span><span>
+</span><span id="line-228"></span><span>
+</span><span id="line-229"></span><span class="annot"><a href="Text.Gigaparsec.Internal.Token.Patterns.IntegerParsers.html#groupByBits"><span class="hs-identifier hs-type">groupByBits</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-special">[</span><span class="hs-special">(</span><span class="annot"><a href="Text.Gigaparsec.Internal.Token.BitBounds.html#Bits"><span class="hs-identifier hs-type">Bits</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Name</span></span><span class="hs-special">)</span><span class="hs-special">]</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-special">[</span><span class="hs-special">(</span><span class="annot"><a href="Text.Gigaparsec.Internal.Token.BitBounds.html#Bits"><span class="hs-identifier hs-type">Bits</span></a></span><span class="hs-special">,</span><span> </span><span class="hs-special">[</span><span class="annot"><span class="hs-identifier hs-type">Name</span></span><span class="hs-special">]</span><span class="hs-special">)</span><span class="hs-special">]</span><span>
+</span><span id="line-230"></span><span id="groupByBits"><span class="annot"><span class="annottext">groupByBits :: [(Bits, Name)] -&gt; [(Bits, [Name])]
+</span><a href="Text.Gigaparsec.Internal.Token.Patterns.IntegerParsers.html#groupByBits"><span class="hs-identifier hs-var hs-var">groupByBits</span></a></span></span><span> </span><span class="hs-special">[</span><span class="hs-special">]</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-special">[</span><span class="hs-special">]</span><span> </span><span class="hs-comment">-- So that we may assume xs is nonempty in the second line (so we can use head)</span><span>
+</span><span id="line-231"></span><span class="annot"><a href="Text.Gigaparsec.Internal.Token.Patterns.IntegerParsers.html#groupByBits"><span class="hs-identifier hs-var">groupByBits</span></a></span><span> </span><span id="local-6989586621679253779"><span class="annot"><span class="annottext">[(Bits, Name)]
+</span><a href="#local-6989586621679253779"><span class="hs-identifier hs-var">xs</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">([(Bits, Name)] -&gt; (Bits, [Name]))
+-&gt; [[(Bits, Name)]] -&gt; [(Bits, [Name])]
+forall a b. (a -&gt; b) -&gt; [a] -&gt; [b]
+</span><span class="hs-identifier hs-var">map</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">([(Bits, Name)] -&gt; Bits, [(Bits, Name)] -&gt; [Name])
+-&gt; [(Bits, Name)] -&gt; (Bits, [Name])
+forall (t :: * -&gt; * -&gt; *) (f :: * -&gt; *) a b.
+(Bitraversable t, Applicative f) =&gt;
+t (f a) (f b) -&gt; f (t a b)
+</span><span class="hs-identifier hs-var">bisequence</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">(Bits, Name) -&gt; Bits
+forall a b. (a, b) -&gt; a
+</span><span class="hs-identifier hs-var">fst</span></span><span> </span><span class="annot"><span class="annottext">((Bits, Name) -&gt; Bits)
+-&gt; ([(Bits, Name)] -&gt; (Bits, Name)) -&gt; [(Bits, Name)] -&gt; Bits
+forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
+</span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">[(Bits, Name)] -&gt; (Bits, Name)
+forall a. HasCallStack =&gt; [a] -&gt; a
+</span><span class="hs-identifier hs-var">head</span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">((Bits, Name) -&gt; Name) -&gt; [(Bits, Name)] -&gt; [Name]
+forall a b. (a -&gt; b) -&gt; [a] -&gt; [b]
+</span><span class="hs-identifier hs-var">map</span></span><span> </span><span class="annot"><span class="annottext">(Bits, Name) -&gt; Name
+forall a b. (a, b) -&gt; b
+</span><span class="hs-identifier hs-var">snd</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">([[(Bits, Name)]] -&gt; [(Bits, [Name])])
+-&gt; [[(Bits, Name)]] -&gt; [(Bits, [Name])]
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">((Bits, Name) -&gt; (Bits, Name) -&gt; Bool)
+-&gt; [(Bits, Name)] -&gt; [[(Bits, Name)]]
+forall a. (a -&gt; a -&gt; Bool) -&gt; [a] -&gt; [[a]]
+</span><span class="hs-identifier hs-var">groupBy</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Bits -&gt; Bits -&gt; Bool
+forall a. Eq a =&gt; a -&gt; a -&gt; Bool
+</span><span class="hs-operator hs-var">(==)</span></span><span> </span><span class="annot"><span class="annottext">(Bits -&gt; Bits -&gt; Bool)
+-&gt; ((Bits, Name) -&gt; Bits) -&gt; (Bits, Name) -&gt; (Bits, Name) -&gt; Bool
+forall b c a. (b -&gt; b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; a -&gt; c
+</span><span class="hs-operator hs-var">`on`</span></span><span> </span><span class="annot"><span class="annottext">(Bits, Name) -&gt; Bits
+forall a b. (a, b) -&gt; a
+</span><span class="hs-identifier hs-var">fst</span></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">[(Bits, Name)]
+</span><a href="#local-6989586621679253779"><span class="hs-identifier hs-var">xs</span></a></span><span>
+</span><span id="line-232"></span><span>
+</span><span id="line-233"></span><span class="annot"><span class="hs-comment">{-|
+This function automatically generates lexer combinators for handling signed or unsigned integers.
+
+See 'IntegerParserConfig' for how to configure which combinators are generated.
+
+/Note:/ Due to staging restrictions in Template Haskell, the `IntegerParserConfig` must be
+defined in a separate module to where this function is used.
+Multiple configs can be defined in the same module.
+
+==== __Usage:__
+First, the config must be defined in another module.
+You can define multiple configs in the same module, as long as they are used in a different module.
+
+&gt; {-# LANGUAGE TemplateHaskell, OverloadedLists #-}
+&gt; module IntegerConfigs where
+&gt; &#8230;
+&gt; uIntCfg :: IntegerParserConfig
+&gt; uIntCfg = emptyUnsignedIntegerParserConfig {
+&gt;     prefix = &quot;u&quot;,
+&gt;     widths = [(B8, [t| Word8 |]), (B32, [t| Word32 |])],
+&gt;     bases = [Hexadecimal, Decimal, Binary],
+&gt;     includeUnbounded = False,
+&gt;     signedOrUnsigned = Unsigned,
+&gt;     collatedParser = Just &quot;natural&quot;
+&gt;   }
+
+Then, we can feed this config, along with a quoted lexer, to `generateIntegerParsers`:
+
+&gt; {-# LANGUAGE TemplateHaskell #-}
+&gt; module Lexer where
+&gt; import IntegerConfigs (uIntCfg)
+&gt; &#8230;
+&gt; lexer :: Lexer
+&gt; lexer = &#8230;
+&gt;
+&gt; $(generateIntegerParsers [| lexer |] uIntCfg)
+
+This will generate the following combinators,
+
+&gt;    ubinary8 :: Parsec Word8
+&gt;    udecimal8 :: Parsec Word8
+&gt;    uhexadecimal8 :: Parsec Word8
+&gt;    ubinary32 :: Parsec Word32
+&gt;    udecimal3 :: Parsec Word32
+&gt;    uhexadecimal32 :: Parsec Word32
+&gt;    natural8 :: Parsec Word8
+&gt;    natural32 :: Parsec Word32
+
+@since 0.4.0.0
+
+-}</span></span><span>
+</span><span id="line-284"></span><span class="annot"><a href="Text.Gigaparsec.Internal.Token.Patterns.IntegerParsers.html#generateIntegerParsers"><span class="hs-identifier hs-type">generateIntegerParsers</span></a></span><span> </span><span>
+</span><span id="line-285"></span><span>  </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Q</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Exp</span></span><span>               </span><span class="annot"><span class="hs-comment">-- ^ The quoted 'Text.Gigaparsec.Token.Lexer.Lexer'</span></span><span>
+</span><span id="line-286"></span><span>  </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.Token.Patterns.IntegerParsers.html#IntegerParserConfig"><span class="hs-identifier hs-type">IntegerParserConfig</span></a></span><span> </span><span class="annot"><span class="hs-comment">-- ^ The configuration describing what numeric combinators to produce.</span></span><span>
+</span><span id="line-287"></span><span>  </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Q</span></span><span> </span><span class="hs-special">[</span><span class="annot"><span class="hs-identifier hs-type">Dec</span></span><span class="hs-special">]</span><span>             </span><span class="annot"><span class="hs-comment">-- ^ The declarations of the specified combinators.</span></span><span>
+</span><span id="line-288"></span><span id="generateIntegerParsers"><span class="annot"><span class="annottext">generateIntegerParsers :: Q Exp -&gt; IntegerParserConfig -&gt; Q [Dec]
+</span><a href="Text.Gigaparsec.Internal.Token.Patterns.IntegerParsers.html#generateIntegerParsers"><span class="hs-identifier hs-var hs-var">generateIntegerParsers</span></a></span></span><span> </span><span id="local-6989586621679253781"><span class="annot"><span class="annottext">Q Exp
+</span><a href="#local-6989586621679253781"><span class="hs-identifier hs-var">lexer</span></a></span></span><span> </span><span id="local-6989586621679253782"><span class="annot"><span class="annottext">cfg :: IntegerParserConfig
+</span><a href="#local-6989586621679253782"><span class="hs-identifier hs-var">cfg</span></a></span></span><span class="hs-glyph">@</span><span class="annot"><a href="Text.Gigaparsec.Internal.Token.Patterns.IntegerParsers.html#IntegerParserConfig"><span class="hs-identifier hs-type">IntegerParserConfig</span></a></span><span class="hs-special">{</span><span id="local-6989586621679253783"><span id="local-6989586621679253784"><span id="local-6989586621679253785"><span id="local-6989586621679253786"><span id="local-6989586621679253787"><span id="local-6989586621679253788"><span class="annot"><span class="annottext">Bool
+String
+Maybe String
+Set IntLitBase
+Map Bits (Q Type)
+SignedOrUnsigned
+collatedParser :: IntegerParserConfig -&gt; Maybe String
+prefix :: IntegerParserConfig -&gt; String
+widths :: IntegerParserConfig -&gt; Map Bits (Q Type)
+bases :: IntegerParserConfig -&gt; Set IntLitBase
+includeUnbounded :: IntegerParserConfig -&gt; Bool
+signedOrUnsigned :: IntegerParserConfig -&gt; SignedOrUnsigned
+prefix :: String
+widths :: Map Bits (Q Type)
+bases :: Set IntLitBase
+includeUnbounded :: Bool
+collatedParser :: Maybe String
+signedOrUnsigned :: SignedOrUnsigned
+</span><a href="Text.Gigaparsec.Internal.Token.Patterns.IntegerParsers.html#collatedParser"><span class="hs-glyph hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">..</span></a></span></span></span></span></span></span></span><span class="hs-special">}</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-289"></span><span>  </span><span class="hs-special">(</span><span id="local-6989586621679253789"><span class="annot"><a href="#local-6989586621679253789"><span class="hs-identifier hs-var">ubNames</span></a></span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier hs-type">concat</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span id="local-6989586621679253791"><span class="annot"><a href="#local-6989586621679253791"><span class="hs-identifier hs-var">ubDecs</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">[(Name, [Dec])] -&gt; ([Name], [[Dec]])
+forall a b. [(a, b)] -&gt; ([a], [b])
+</span><span class="hs-identifier hs-var">unzip</span></span><span> </span><span class="annot"><span class="annottext">([(Name, [Dec])] -&gt; ([Name], [[Dec]]))
+-&gt; Q [(Name, [Dec])] -&gt; Q ([Name], [[Dec]])
+forall (f :: * -&gt; *) a b. Functor f =&gt; (a -&gt; b) -&gt; f a -&gt; f b
+</span><span class="hs-operator hs-var">&lt;$&gt;</span></span><span> </span><span class="annot"><span class="annottext">Bool -&gt; Q [(Name, [Dec])] -&gt; Q [(Name, [Dec])]
+forall m. Monoid m =&gt; Bool -&gt; m -&gt; m
+</span><a href="Text.Gigaparsec.Internal.Token.Patterns.IntegerParsers.html#mwhen"><span class="hs-identifier hs-var">mwhen</span></a></span><span> </span><span class="annot"><span class="annottext">Bool
+</span><a href="#local-6989586621679253786"><span class="hs-identifier hs-var">includeUnbounded</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Q Exp -&gt; IntegerParserConfig -&gt; Q [(Name, [Dec])]
+</span><a href="Text.Gigaparsec.Internal.Token.Patterns.IntegerParsers.html#lexerUnboundedParsers"><span class="hs-identifier hs-var">lexerUnboundedParsers</span></a></span><span> </span><span class="annot"><span class="annottext">Q Exp
+</span><a href="#local-6989586621679253781"><span class="hs-identifier hs-var">lexer</span></a></span><span> </span><span class="annot"><span class="annottext">IntegerParserConfig
+</span><a href="#local-6989586621679253782"><span class="hs-identifier hs-var">cfg</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-290"></span><span>  </span><span class="hs-special">(</span><span id="local-6989586621679253795"><span class="annot"><a href="#local-6989586621679253795"><span class="hs-identifier hs-var">fwNames</span></a></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679253796"><span class="annot"><a href="#local-6989586621679253796"><span class="hs-identifier hs-var">fwBits</span></a></span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier hs-type">concat</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span id="local-6989586621679253797"><span class="annot"><a href="#local-6989586621679253797"><span class="hs-identifier hs-var">fwDecs</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="hs-identifier hs-type">unzip3</span></span><span> </span><span class="annot"><span class="hs-operator hs-type">&lt;$&gt;</span></span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.Token.Patterns.IntegerParsers.html#lexerFixedWidthIntParsers"><span class="hs-identifier hs-type">lexerFixedWidthIntParsers</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679253781"><span class="hs-identifier hs-type">lexer</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679253782"><span class="hs-identifier hs-type">cfg</span></a></span><span>
+</span><span id="line-291"></span><span>  </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621679253800"><span class="annot"><a href="#local-6989586621679253800"><span class="hs-identifier hs-var hs-var">fwBitsNames</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">[(Bits, Name)] -&gt; [(Bits, [Name])]
+</span><a href="Text.Gigaparsec.Internal.Token.Patterns.IntegerParsers.html#groupByBits"><span class="hs-identifier hs-var">groupByBits</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">[Bits] -&gt; [Name] -&gt; [(Bits, Name)]
+forall a b. [a] -&gt; [b] -&gt; [(a, b)]
+</span><span class="hs-identifier hs-var">zip</span></span><span> </span><span class="annot"><span class="annottext">[Bits]
+</span><a href="#local-6989586621679253796"><span class="hs-identifier hs-var">fwBits</span></a></span><span> </span><span class="annot"><span class="annottext">[Name]
+</span><a href="#local-6989586621679253795"><span class="hs-identifier hs-var">fwNames</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-292"></span><span>  </span><span id="local-6989586621679253801"><span class="annot"><a href="#local-6989586621679253801"><span class="hs-identifier hs-var">cDecs</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="hs-identifier hs-type">maybe</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">mempty</span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="#local-6989586621679253803"><span class="hs-identifier hs-type">mkCollatedParsers</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679253789"><span class="hs-identifier hs-type">ubNames</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679253800"><span class="hs-identifier hs-type">fwBitsNames</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><a href="#local-6989586621679253787"><span class="hs-identifier hs-type">collatedParser</span></a></span><span>
+</span><span id="line-293"></span><span>  </span><span class="annot"><span class="hs-identifier hs-type">return</span></span><span> </span><span class="annot"><span class="hs-operator hs-type">$</span></span><span> </span><span class="annot"><a href="#local-6989586621679253791"><span class="hs-identifier hs-type">ubDecs</span></a></span><span> </span><span class="annot"><span class="hs-operator hs-type">&lt;&gt;</span></span><span> </span><span class="annot"><a href="#local-6989586621679253797"><span class="hs-identifier hs-type">fwDecs</span></a></span><span> </span><span class="annot"><span class="hs-operator hs-type">&lt;&gt;</span></span><span> </span><span class="annot"><a href="#local-6989586621679253801"><span class="hs-identifier hs-type">cDecs</span></a></span><span>
+</span><span id="line-294"></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-295"></span><span>  </span><span class="annot"><a href="#local-6989586621679253804"><span class="hs-identifier hs-type">mkCollatedParser</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-special">[</span><span class="annot"><span class="hs-identifier hs-type">Name</span></span><span class="hs-special">]</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Q</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Type</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Q</span></span><span> </span><span class="hs-special">[</span><span class="annot"><span class="hs-identifier hs-type">Dec</span></span><span class="hs-special">]</span><span>
+</span><span id="line-296"></span><span>  </span><span id="local-6989586621679253804"><span class="annot"><span class="annottext">mkCollatedParser :: [Name] -&gt; String -&gt; Q Type -&gt; Q [Dec]
+</span><a href="#local-6989586621679253804"><span class="hs-identifier hs-var hs-var">mkCollatedParser</span></a></span></span><span> </span><span class="hs-special">[</span><span class="hs-special">]</span><span> </span><span class="annot"><span class="annottext">String
+</span><span class="hs-identifier">_</span></span><span> </span><span class="annot"><span class="annottext">Q Type
+</span><span class="hs-identifier">_</span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">[Dec] -&gt; Q [Dec]
+forall a. a -&gt; Q a
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="hs-special">[</span><span class="hs-special">]</span><span>
+</span><span id="line-297"></span><span>  </span><span class="annot"><a href="#local-6989586621679253804"><span class="hs-identifier hs-var">mkCollatedParser</span></a></span><span> </span><span class="hs-special">(</span><span id="local-6989586621679253805"><span class="annot"><span class="annottext">Name
+</span><a href="#local-6989586621679253805"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span class="annot"><span class="hs-glyph hs-type">:</span></span><span> </span><span id="local-6989586621679253806"><span class="annot"><span class="annottext">[Name]
+</span><a href="#local-6989586621679253806"><span class="hs-identifier hs-var">xs</span></a></span></span><span class="hs-special">)</span><span> </span><span id="local-6989586621679253807"><span class="annot"><span class="annottext">String
+</span><a href="#local-6989586621679253807"><span class="hs-identifier hs-var">nm</span></a></span></span><span> </span><span id="local-6989586621679253808"><span class="annot"><span class="annottext">Q Type
+</span><a href="#local-6989586621679253808"><span class="hs-identifier hs-var">tp</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-298"></span><span>    </span><span id="local-6989586621679253809"><span class="annot"><a href="#local-6989586621679253809"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">String -&gt; Q Name
+forall (m :: * -&gt; *). Quote m =&gt; String -&gt; m Name
+</span><span class="hs-identifier hs-var">newName</span></span><span> </span><span class="annot"><span class="annottext">String
+</span><a href="#local-6989586621679253807"><span class="hs-identifier hs-var">nm</span></a></span><span>
+</span><span id="line-299"></span><span>    </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621679253810"><span class="annot"><a href="#local-6989586621679253810"><span class="hs-identifier hs-var hs-var">body</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">(Q Exp -&gt; Name -&gt; Q Exp) -&gt; Q Exp -&gt; [Name] -&gt; Q Exp
+forall b a. (b -&gt; a -&gt; b) -&gt; b -&gt; [a] -&gt; b
+forall (t :: * -&gt; *) b a.
+Foldable t =&gt;
+(b -&gt; a -&gt; b) -&gt; b -&gt; t a -&gt; b
+</span><span class="hs-identifier hs-var">foldl</span></span><span> </span><span class="hs-special">(</span><span class="hs-glyph">\</span><span id="local-6989586621679253812"><span class="annot"><span class="annottext">Q Exp
+</span><a href="#local-6989586621679253812"><span class="hs-identifier hs-var">e</span></a></span></span><span> </span><span id="local-6989586621679253813"><span class="annot"><span class="annottext">Name
+</span><a href="#local-6989586621679253813"><span class="hs-identifier hs-var">y</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-special">[|</span><span class="hs-special">$</span><span class="annot"><span class="annottext">Q Exp
+</span><a href="#local-6989586621679253812"><span class="hs-identifier hs-var">e</span></a></span><span> </span><span class="annot"><span class="hs-operator">&lt;|&gt;</span></span><span> </span><span class="hs-special">$</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Name -&gt; Q Exp
+forall (m :: * -&gt; *). Quote m =&gt; Name -&gt; m Exp
+</span><span class="hs-identifier hs-var">varE</span></span><span> </span><span class="annot"><span class="annottext">Name
+</span><a href="#local-6989586621679253813"><span class="hs-identifier hs-var">y</span></a></span><span class="hs-special">)</span><span class="hs-special">|]</span><span class="hs-special">)</span><span> </span><span class="hs-special">[|</span><span class="hs-special">$</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Name -&gt; Q Exp
+forall (m :: * -&gt; *). Quote m =&gt; Name -&gt; m Exp
+</span><span class="hs-identifier hs-var">varE</span></span><span> </span><span class="annot"><span class="annottext">Name
+</span><a href="#local-6989586621679253805"><span class="hs-identifier hs-var">x</span></a></span><span class="hs-special">)</span><span class="hs-special">|]</span><span> </span><span class="annot"><span class="annottext">[Name]
+</span><a href="#local-6989586621679253806"><span class="hs-identifier hs-var">xs</span></a></span><span>
+</span><span id="line-300"></span><span>    </span><span class="annot"><span class="hs-identifier hs-type">sequence</span></span><span>
+</span><span id="line-301"></span><span>      </span><span class="hs-special">[</span><span> </span><span class="annot"><span class="hs-identifier hs-type">pragInlD</span></span><span> </span><span class="annot"><a href="#local-6989586621679253809"><span class="hs-identifier hs-type">f</span></a></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Inline</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">FunLike</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">AllPhases</span></span><span>
+</span><span id="line-302"></span><span>      </span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier hs-type">sigD</span></span><span> </span><span class="annot"><a href="#local-6989586621679253809"><span class="hs-identifier hs-type">f</span></a></span><span> </span><span class="hs-special">[t|</span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="hs-special">$</span><span class="annot"><a href="#local-6989586621679253808"><span class="hs-identifier hs-type">tp</span></a></span><span class="hs-special">|]</span><span>
+</span><span id="line-303"></span><span>      </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.TH.DecUtils.html#funDsingleClause"><span class="hs-identifier hs-type">funDsingleClause</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679253809"><span class="hs-identifier hs-type">f</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679253810"><span class="hs-identifier hs-type">body</span></a></span><span>
+</span><span id="line-304"></span><span>      </span><span class="hs-special">]</span><span>
+</span><span id="line-305"></span><span>  </span><span class="annot"><a href="#local-6989586621679253803"><span class="hs-identifier hs-type">mkCollatedParsers</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-special">[</span><span class="annot"><span class="hs-identifier hs-type">Name</span></span><span class="hs-special">]</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-special">[</span><span class="hs-special">(</span><span class="annot"><a href="Text.Gigaparsec.Internal.Token.BitBounds.html#Bits"><span class="hs-identifier hs-type">Bits</span></a></span><span class="hs-special">,</span><span> </span><span class="hs-special">[</span><span class="annot"><span class="hs-identifier hs-type">Name</span></span><span class="hs-special">]</span><span class="hs-special">)</span><span class="hs-special">]</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Q</span></span><span> </span><span class="hs-special">[</span><span class="annot"><span class="hs-identifier hs-type">Dec</span></span><span class="hs-special">]</span><span>
+</span><span id="line-306"></span><span>  </span><span id="local-6989586621679253803"><span class="annot"><span class="annottext">mkCollatedParsers :: [Name] -&gt; [(Bits, [Name])] -&gt; String -&gt; Q [Dec]
+</span><a href="#local-6989586621679253803"><span class="hs-identifier hs-var hs-var">mkCollatedParsers</span></a></span></span><span> </span><span id="local-6989586621679253815"><span class="annot"><span class="annottext">[Name]
+</span><a href="#local-6989586621679253815"><span class="hs-identifier hs-var">xs</span></a></span></span><span> </span><span id="local-6989586621679253816"><span class="annot"><span class="annottext">[(Bits, [Name])]
+</span><a href="#local-6989586621679253816"><span class="hs-identifier hs-var">bys</span></a></span></span><span> </span><span id="local-6989586621679253817"><span class="annot"><span class="annottext">String
+</span><a href="#local-6989586621679253817"><span class="hs-identifier hs-var">nm</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
+</span><span id="line-307"></span><span>    </span><span class="annot"><span class="annottext">[Name] -&gt; String -&gt; Q Type -&gt; Q [Dec]
+</span><a href="#local-6989586621679253804"><span class="hs-identifier hs-var">mkCollatedParser</span></a></span><span> </span><span class="annot"><span class="annottext">[Name]
+</span><a href="#local-6989586621679253815"><span class="hs-identifier hs-var">xs</span></a></span><span> </span><span class="annot"><span class="annottext">String
+</span><a href="#local-6989586621679253817"><span class="hs-identifier hs-var">nm</span></a></span><span> </span><span class="hs-special">[t|</span><span class="annot"><span class="hs-identifier hs-type">Integer</span></span><span class="hs-special">|]</span><span>
+</span><span id="line-308"></span><span>      </span><span class="annot"><span class="annottext">Q [Dec] -&gt; Q [Dec] -&gt; Q [Dec]
+forall a. Semigroup a =&gt; a -&gt; a -&gt; a
+</span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="hs-special">(</span><span> </span><span class="annot"><span class="annottext">[[Dec]] -&gt; [Dec]
+forall (t :: * -&gt; *) a. Foldable t =&gt; t [a] -&gt; [a]
+</span><span class="hs-identifier hs-var">concat</span></span><span>
+</span><span id="line-309"></span><span>            </span><span class="annot"><span class="annottext">([[Dec]] -&gt; [Dec]) -&gt; Q [[Dec]] -&gt; Q [Dec]
+forall (f :: * -&gt; *) a b. Functor f =&gt; (a -&gt; b) -&gt; f a -&gt; f b
+</span><span class="hs-operator hs-var">&lt;$&gt;</span></span><span> </span><span class="annot"><span class="annottext">[(Bits, [Name])] -&gt; ((Bits, [Name]) -&gt; Q [Dec]) -&gt; Q [[Dec]]
+forall (t :: * -&gt; *) (m :: * -&gt; *) a b.
+(Traversable t, Monad m) =&gt;
+t a -&gt; (a -&gt; m b) -&gt; m (t b)
+</span><span class="hs-identifier hs-var">forM</span></span><span>
+</span><span id="line-310"></span><span>              </span><span class="annot"><span class="annottext">[(Bits, [Name])]
+</span><a href="#local-6989586621679253816"><span class="hs-identifier hs-var">bys</span></a></span><span>
+</span><span id="line-311"></span><span>              </span><span class="hs-special">(</span><span> </span><span class="hs-glyph">\</span><span class="hs-special">(</span><span id="local-6989586621679253818"><span class="annot"><span class="annottext">Bits
+</span><a href="#local-6989586621679253818"><span class="hs-identifier hs-var">b</span></a></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679253819"><span class="annot"><span class="annottext">[Name]
+</span><a href="#local-6989586621679253819"><span class="hs-identifier hs-var">nms</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span>
+</span><span id="line-312"></span><span>                  </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621679253820"><span class="annot"><span class="annottext">tp :: Q Type
+</span><a href="#local-6989586621679253820"><span class="hs-identifier hs-var hs-var">tp</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Maybe (Q Type) -&gt; Q Type
+forall a. HasCallStack =&gt; Maybe a -&gt; a
+</span><span class="hs-identifier hs-var">fromJust</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Bits -&gt; Map Bits (Q Type) -&gt; Maybe (Q Type)
+forall k a. Ord k =&gt; k -&gt; Map k a -&gt; Maybe a
+</span><span class="hs-identifier hs-var">Map.lookup</span></span><span> </span><span class="annot"><span class="annottext">Bits
+</span><a href="#local-6989586621679253818"><span class="hs-identifier hs-var">b</span></a></span><span> </span><span class="annot"><span class="annottext">Map Bits (Q Type)
+</span><a href="#local-6989586621679253784"><span class="hs-identifier hs-var">widths</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-313"></span><span>                   </span><span class="hs-keyword">in</span><span> </span><span class="annot"><span class="annottext">[Name] -&gt; String -&gt; Q Type -&gt; Q [Dec]
+</span><a href="#local-6989586621679253804"><span class="hs-identifier hs-var">mkCollatedParser</span></a></span><span> </span><span class="annot"><span class="annottext">[Name]
+</span><a href="#local-6989586621679253819"><span class="hs-identifier hs-var">nms</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Bits -&gt; ShowS
+</span><a href="Text.Gigaparsec.Internal.Token.Patterns.IntegerParsers.html#bitsSuffix"><span class="hs-identifier hs-var">bitsSuffix</span></a></span><span> </span><span class="annot"><span class="annottext">Bits
+</span><a href="#local-6989586621679253818"><span class="hs-identifier hs-var">b</span></a></span><span> </span><span class="annot"><span class="annottext">String
+</span><a href="#local-6989586621679253817"><span class="hs-identifier hs-var">nm</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">Q Type
+</span><a href="#local-6989586621679253820"><span class="hs-identifier hs-var">tp</span></a></span><span>
+</span><span id="line-314"></span><span>              </span><span class="hs-special">)</span><span>
+</span><span id="line-315"></span><span>         </span><span class="hs-special">)</span><span>
+</span><span id="line-316"></span><span>
+</span><span id="line-317"></span><span class="annot"><a href="Text.Gigaparsec.Internal.Token.Patterns.IntegerParsers.html#bitsSuffix"><span class="hs-identifier hs-type">bitsSuffix</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.Token.BitBounds.html#Bits"><span class="hs-identifier hs-type">Bits</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span>
+</span><span id="line-318"></span><span id="bitsSuffix"><span class="annot"><span class="annottext">bitsSuffix :: Bits -&gt; ShowS
+</span><a href="Text.Gigaparsec.Internal.Token.Patterns.IntegerParsers.html#bitsSuffix"><span class="hs-identifier hs-var hs-var">bitsSuffix</span></a></span></span><span> </span><span class="annot"><span class="annottext">Bits
+</span><a href="Text.Gigaparsec.Internal.Token.BitBounds.html#B8"><span class="hs-identifier hs-var">B8</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">String -&gt; ShowS
+forall a. [a] -&gt; [a] -&gt; [a]
+</span><span class="hs-operator hs-var">++</span></span><span> </span><span class="annot"><span class="annottext">String
+</span><span class="hs-string">&quot;8&quot;</span></span><span class="hs-special">)</span><span>
+</span><span id="line-319"></span><span class="annot"><a href="Text.Gigaparsec.Internal.Token.Patterns.IntegerParsers.html#bitsSuffix"><span class="hs-identifier hs-var">bitsSuffix</span></a></span><span> </span><span class="annot"><span class="annottext">Bits
+</span><a href="Text.Gigaparsec.Internal.Token.BitBounds.html#B16"><span class="hs-identifier hs-var">B16</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">String -&gt; ShowS
+forall a. [a] -&gt; [a] -&gt; [a]
+</span><span class="hs-operator hs-var">++</span></span><span> </span><span class="annot"><span class="annottext">String
+</span><span class="hs-string">&quot;16&quot;</span></span><span class="hs-special">)</span><span>
+</span><span id="line-320"></span><span class="annot"><a href="Text.Gigaparsec.Internal.Token.Patterns.IntegerParsers.html#bitsSuffix"><span class="hs-identifier hs-var">bitsSuffix</span></a></span><span> </span><span class="annot"><span class="annottext">Bits
+</span><a href="Text.Gigaparsec.Internal.Token.BitBounds.html#B32"><span class="hs-identifier hs-var">B32</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">String -&gt; ShowS
+forall a. [a] -&gt; [a] -&gt; [a]
+</span><span class="hs-operator hs-var">++</span></span><span> </span><span class="annot"><span class="annottext">String
+</span><span class="hs-string">&quot;32&quot;</span></span><span class="hs-special">)</span><span>
+</span><span id="line-321"></span><span class="annot"><a href="Text.Gigaparsec.Internal.Token.Patterns.IntegerParsers.html#bitsSuffix"><span class="hs-identifier hs-var">bitsSuffix</span></a></span><span> </span><span class="annot"><span class="annottext">Bits
+</span><a href="Text.Gigaparsec.Internal.Token.BitBounds.html#B64"><span class="hs-identifier hs-var">B64</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">String -&gt; ShowS
+forall a. [a] -&gt; [a] -&gt; [a]
+</span><span class="hs-operator hs-var">++</span></span><span> </span><span class="annot"><span class="annottext">String
+</span><span class="hs-string">&quot;64&quot;</span></span><span class="hs-special">)</span><span>
+</span><span id="line-322"></span><span>
+</span><span id="line-323"></span><span class="annot"><span class="hs-comment">{-| An empty `IntegerParserConfig`, which will generate nothing when given to `generateIntegerParsers`.
+Extend this using record updates, to tailor a config to your liking.
+
+By default, the `prefix` field is the empty string, which will likely cause issues if you do not override this.
+
+@since 0.4.0.0
+
+-}</span></span><span>
+</span><span id="line-331"></span><span class="annot"><a href="Text.Gigaparsec.Internal.Token.Patterns.IntegerParsers.html#emptyIntegerParserConfig"><span class="hs-identifier hs-type">emptyIntegerParserConfig</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.Token.Patterns.IntegerParsers.html#IntegerParserConfig"><span class="hs-identifier hs-type">IntegerParserConfig</span></a></span><span>
+</span><span id="line-332"></span><span id="emptyIntegerParserConfig"><span class="annot"><span class="annottext">emptyIntegerParserConfig :: IntegerParserConfig
+</span><a href="Text.Gigaparsec.Internal.Token.Patterns.IntegerParsers.html#emptyIntegerParserConfig"><span class="hs-identifier hs-var hs-var">emptyIntegerParserConfig</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
+</span><span id="line-333"></span><span>  </span><span class="annot"><a href="Text.Gigaparsec.Internal.Token.Patterns.IntegerParsers.html#IntegerParserConfig"><span class="hs-identifier hs-type">IntegerParserConfig</span></a></span><span>
+</span><span id="line-334"></span><span>    </span><span class="hs-special">{</span><span> </span><span class="annot"><span class="annottext">prefix :: String
+</span><a href="Text.Gigaparsec.Internal.Token.Patterns.IntegerParsers.html#prefix"><span class="hs-identifier hs-var">prefix</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">String
+</span><span class="hs-string">&quot;&quot;</span></span><span>
+</span><span id="line-335"></span><span>    </span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">widths :: Map Bits (Q Type)
+</span><a href="Text.Gigaparsec.Internal.Token.Patterns.IntegerParsers.html#widths"><span class="hs-identifier hs-var">widths</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Map Bits (Q Type)
+forall k a. Map k a
+</span><span class="hs-identifier hs-var">Map.empty</span></span><span>
+</span><span id="line-336"></span><span>    </span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">bases :: Set IntLitBase
+</span><a href="Text.Gigaparsec.Internal.Token.Patterns.IntegerParsers.html#bases"><span class="hs-identifier hs-var">bases</span></a></span><span>  </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Set IntLitBase
+forall a. Set a
+</span><span class="hs-identifier hs-var">Set.empty</span></span><span>
+</span><span id="line-337"></span><span>    </span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">includeUnbounded :: Bool
+</span><a href="Text.Gigaparsec.Internal.Token.Patterns.IntegerParsers.html#includeUnbounded"><span class="hs-identifier hs-var">includeUnbounded</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Bool
+</span><span class="hs-identifier hs-var">False</span></span><span>
+</span><span id="line-338"></span><span>    </span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">signedOrUnsigned :: SignedOrUnsigned
+</span><a href="Text.Gigaparsec.Internal.Token.Patterns.IntegerParsers.html#signedOrUnsigned"><span class="hs-identifier hs-var">signedOrUnsigned</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">SignedOrUnsigned
+</span><a href="Text.Gigaparsec.Internal.Token.Patterns.IntegerParsers.html#Signed"><span class="hs-identifier hs-var">Signed</span></a></span><span>
+</span><span id="line-339"></span><span>    </span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">collatedParser :: Maybe String
+</span><a href="Text.Gigaparsec.Internal.Token.Patterns.IntegerParsers.html#collatedParser"><span class="hs-identifier hs-var">collatedParser</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Maybe String
+forall a. Maybe a
+</span><span class="hs-identifier hs-var">Nothing</span></span><span>
+</span><span id="line-340"></span><span>    </span><span class="hs-special">}</span><span>
+</span><span id="line-341"></span><span>
+</span><span id="line-342"></span><span class="annot"><span class="hs-comment">{-| An empty `IntegerParserConfig` for `Signed` integers, which will generate nothing when given to `generateIntegerParsers`.
+Extend this using record updates, to tailor a config to your liking.
+
+By default, the `prefix` field is the empty string, which will likely cause issues if you do not override this.
+
+@since 0.4.0.0
+
+-}</span></span><span>
+</span><span id="line-350"></span><span class="annot"><a href="Text.Gigaparsec.Internal.Token.Patterns.IntegerParsers.html#emptySignedIntegerParserConfig"><span class="hs-identifier hs-type">emptySignedIntegerParserConfig</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.Token.Patterns.IntegerParsers.html#IntegerParserConfig"><span class="hs-identifier hs-type">IntegerParserConfig</span></a></span><span>
+</span><span id="line-351"></span><span id="emptySignedIntegerParserConfig"><span class="annot"><span class="annottext">emptySignedIntegerParserConfig :: IntegerParserConfig
+</span><a href="Text.Gigaparsec.Internal.Token.Patterns.IntegerParsers.html#emptySignedIntegerParserConfig"><span class="hs-identifier hs-var hs-var">emptySignedIntegerParserConfig</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">IntegerParserConfig
+</span><a href="Text.Gigaparsec.Internal.Token.Patterns.IntegerParsers.html#emptyIntegerParserConfig"><span class="hs-identifier hs-var">emptyIntegerParserConfig</span></a></span><span class="hs-special">{</span><span class="annot"><a href="Text.Gigaparsec.Internal.Token.Patterns.IntegerParsers.html#signedOrUnsigned"><span class="hs-identifier hs-var">signedOrUnsigned</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.Token.Patterns.IntegerParsers.html#Signed"><span class="hs-identifier hs-type">Signed</span></a></span><span class="hs-special">}</span><span>
+</span><span id="line-352"></span><span>
+</span><span id="line-353"></span><span class="annot"><span class="hs-comment">{-| An empty `IntegerParserConfig` for `Unsigned` integers, which will generate nothing when given to `generateIntegerParsers`.
+Extend this using record updates, to tailor a config to your liking.
+
+By default, the `prefix` field is the empty string, which will likely cause issues if you do not override this.
+
+@since 0.4.0.0
+
+-}</span></span><span>
+</span><span id="line-361"></span><span class="annot"><a href="Text.Gigaparsec.Internal.Token.Patterns.IntegerParsers.html#emptyUnsignedIntegerParserConfig"><span class="hs-identifier hs-type">emptyUnsignedIntegerParserConfig</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.Token.Patterns.IntegerParsers.html#IntegerParserConfig"><span class="hs-identifier hs-type">IntegerParserConfig</span></a></span><span>
+</span><span id="line-362"></span><span id="emptyUnsignedIntegerParserConfig"><span class="annot"><span class="annottext">emptyUnsignedIntegerParserConfig :: IntegerParserConfig
+</span><a href="Text.Gigaparsec.Internal.Token.Patterns.IntegerParsers.html#emptyUnsignedIntegerParserConfig"><span class="hs-identifier hs-var hs-var">emptyUnsignedIntegerParserConfig</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">IntegerParserConfig
+</span><a href="Text.Gigaparsec.Internal.Token.Patterns.IntegerParsers.html#emptyIntegerParserConfig"><span class="hs-identifier hs-var">emptyIntegerParserConfig</span></a></span><span class="hs-special">{</span><span class="annot"><a href="Text.Gigaparsec.Internal.Token.Patterns.IntegerParsers.html#signedOrUnsigned"><span class="hs-identifier hs-var">signedOrUnsigned</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.Token.Patterns.IntegerParsers.html#Unsigned"><span class="hs-identifier hs-type">Unsigned</span></a></span><span class="hs-special">}</span><span>
+</span><span id="line-363"></span><span>
+</span><span id="line-364"></span><span class="annot"><a href="Text.Gigaparsec.Internal.Token.Patterns.IntegerParsers.html#lexerUnboundedParsers"><span class="hs-identifier hs-type">lexerUnboundedParsers</span></a></span><span> </span><span class="hs-glyph">::</span><span>
+</span><span id="line-365"></span><span>  </span><span class="annot"><span class="hs-comment">-- | Quoted Lexer</span></span><span>
+</span><span id="line-366"></span><span>  </span><span class="annot"><span class="hs-identifier hs-type">Q</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Exp</span></span><span> </span><span class="hs-glyph">-&gt;</span><span>
+</span><span id="line-367"></span><span>  </span><span class="annot"><a href="Text.Gigaparsec.Internal.Token.Patterns.IntegerParsers.html#IntegerParserConfig"><span class="hs-identifier hs-type">IntegerParserConfig</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span>
+</span><span id="line-368"></span><span>  </span><span class="annot"><span class="hs-comment">-- | The name and definition of each unbounded parsers</span></span><span>
+</span><span id="line-369"></span><span>  </span><span class="annot"><span class="hs-identifier hs-type">Q</span></span><span> </span><span class="hs-special">[</span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Name</span></span><span class="hs-special">,</span><span> </span><span class="hs-special">[</span><span class="annot"><span class="hs-identifier hs-type">Dec</span></span><span class="hs-special">]</span><span class="hs-special">)</span><span class="hs-special">]</span><span>
+</span><span id="line-370"></span><span id="lexerUnboundedParsers"><span class="annot"><span class="annottext">lexerUnboundedParsers :: Q Exp -&gt; IntegerParserConfig -&gt; Q [(Name, [Dec])]
+</span><a href="Text.Gigaparsec.Internal.Token.Patterns.IntegerParsers.html#lexerUnboundedParsers"><span class="hs-identifier hs-var hs-var">lexerUnboundedParsers</span></a></span></span><span> </span><span id="local-6989586621679253831"><span class="annot"><span class="annottext">Q Exp
+</span><a href="#local-6989586621679253831"><span class="hs-identifier hs-var">lexer</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Text.Gigaparsec.Internal.Token.Patterns.IntegerParsers.html#IntegerParserConfig"><span class="hs-identifier hs-type">IntegerParserConfig</span></a></span><span class="hs-special">{</span><span class="annot"><span class="annottext">signedOrUnsigned :: IntegerParserConfig -&gt; SignedOrUnsigned
+</span><a href="Text.Gigaparsec.Internal.Token.Patterns.IntegerParsers.html#signedOrUnsigned"><span class="hs-identifier hs-var">signedOrUnsigned</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="local-6989586621679253832"><span class="annot"><span class="annottext">SignedOrUnsigned
+</span><a href="#local-6989586621679253832"><span class="hs-identifier hs-var">s</span></a></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679253833"><span class="annot"><span class="annottext">String
+prefix :: IntegerParserConfig -&gt; String
+prefix :: String
+</span><a href="Text.Gigaparsec.Internal.Token.Patterns.IntegerParsers.html#prefix"><span class="hs-identifier hs-var hs-var">prefix</span></a></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679253834"><span class="annot"><span class="annottext">Set IntLitBase
+bases :: IntegerParserConfig -&gt; Set IntLitBase
+bases :: Set IntLitBase
+</span><a href="Text.Gigaparsec.Internal.Token.Patterns.IntegerParsers.html#bases"><span class="hs-identifier hs-var hs-var">bases</span></a></span></span><span class="hs-special">}</span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-371"></span><span>  </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621679253835"><span class="annot"><span class="annottext">proj :: Q Exp
+</span><a href="#local-6989586621679253835"><span class="hs-identifier hs-var hs-var hs-var">proj</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">if</span><span> </span><span class="annot"><span class="annottext">SignedOrUnsigned -&gt; Bool
+</span><a href="Text.Gigaparsec.Internal.Token.Patterns.IntegerParsers.html#isSigned"><span class="hs-identifier hs-var">isSigned</span></a></span><span> </span><span class="annot"><span class="annottext">SignedOrUnsigned
+</span><a href="#local-6989586621679253832"><span class="hs-identifier hs-var">s</span></a></span><span> </span><span class="hs-keyword">then</span><span> </span><span class="hs-special">[|</span><span class="annot"><a href="Text.Gigaparsec.Internal.Token.Lexer.html#integer"><span class="hs-identifier hs-var">integer</span></a></span><span class="hs-special">|]</span><span> </span><span class="hs-keyword">else</span><span> </span><span class="hs-special">[|</span><span class="annot"><a href="Text.Gigaparsec.Internal.Token.Lexer.html#natural"><span class="hs-identifier hs-var">natural</span></a></span><span class="hs-special">|]</span><span>
+</span><span id="line-372"></span><span>  </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621679253836"><span class="annot"><span class="annottext">parsers :: [Name]
+</span><a href="#local-6989586621679253836"><span class="hs-identifier hs-var hs-var">parsers</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Set IntLitBase -&gt; [(Name, IntLitBase)] -&gt; [Name]
+forall a. Set IntLitBase -&gt; [(a, IntLitBase)] -&gt; [a]
+</span><a href="Text.Gigaparsec.Internal.Token.Patterns.IntegerParsers.html#filterByBase"><span class="hs-identifier hs-var">filterByBase</span></a></span><span> </span><span class="annot"><span class="annottext">Set IntLitBase
+</span><a href="#local-6989586621679253834"><span class="hs-identifier hs-var">bases</span></a></span><span> </span><span class="annot"><span class="annottext">[(Name, IntLitBase)]
+</span><a href="Text.Gigaparsec.Internal.Token.Patterns.IntegerParsers.html#integerParsers"><span class="hs-identifier hs-var">integerParsers</span></a></span><span>
+</span><span id="line-373"></span><span>  </span><span class="annot"><span class="annottext">[Name] -&gt; (Name -&gt; Q (Name, [Dec])) -&gt; Q [(Name, [Dec])]
+forall (t :: * -&gt; *) (m :: * -&gt; *) a b.
+(Traversable t, Monad m) =&gt;
+t a -&gt; (a -&gt; m b) -&gt; m (t b)
+</span><span class="hs-identifier hs-var">forM</span></span><span>
+</span><span id="line-374"></span><span>    </span><span class="annot"><span class="annottext">[Name]
+</span><a href="#local-6989586621679253836"><span class="hs-identifier hs-var">parsers</span></a></span><span>
+</span><span id="line-375"></span><span>    </span><span class="hs-special">(</span><span> </span><span class="hs-glyph">\</span><span id="local-6989586621679253837"><span class="annot"><span class="annottext">Name
+</span><a href="#local-6989586621679253837"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-376"></span><span>        </span><span id="local-6989586621679253838"><span class="annot"><a href="#local-6989586621679253838"><span class="hs-identifier hs-var">newTp</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Name -&gt; Bool -&gt; Q Type
+</span><a href="Text.Gigaparsec.Internal.Token.Patterns.LexerCombinators.html#getLexerCombinatorType"><span class="hs-identifier hs-var">getLexerCombinatorType</span></a></span><span> </span><span class="annot"><span class="annottext">Name
+</span><a href="#local-6989586621679253837"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Bool
+</span><span class="hs-identifier hs-var">False</span></span><span>
+</span><span id="line-377"></span><span>        </span><span class="annot"><a href="Text.Gigaparsec.Internal.Token.Patterns.LexerCombinators.html#mkLexerCombinatorDecWithProj"><span class="hs-identifier hs-type">mkLexerCombinatorDecWithProj</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679253831"><span class="hs-identifier hs-type">lexer</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="#local-6989586621679253833"><span class="hs-identifier hs-type">prefix</span></a></span><span> </span><span class="annot"><span class="hs-operator hs-type">++</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">nameBase</span></span><span> </span><span class="annot"><a href="#local-6989586621679253837"><span class="hs-identifier hs-type">p</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><a href="#local-6989586621679253837"><span class="hs-identifier hs-type">p</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">pure</span></span><span> </span><span class="annot"><a href="#local-6989586621679253838"><span class="hs-identifier hs-type">newTp</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><a href="#local-6989586621679253835"><span class="hs-identifier hs-type">proj</span></a></span><span>
+</span><span id="line-378"></span><span>    </span><span class="hs-special">)</span><span>
+</span><span id="line-379"></span><span>
+</span><span id="line-380"></span><span class="annot"><a href="Text.Gigaparsec.Internal.Token.Patterns.IntegerParsers.html#lexerFixedWidthIntParsers"><span class="hs-identifier hs-type">lexerFixedWidthIntParsers</span></a></span><span>
+</span><span id="line-381"></span><span>  </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Q</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Exp</span></span><span> </span><span class="annot"><span class="hs-comment">-- ^ The quoted lexer</span></span><span>
+</span><span id="line-382"></span><span>  </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.Token.Patterns.IntegerParsers.html#IntegerParserConfig"><span class="hs-identifier hs-type">IntegerParserConfig</span></a></span><span> </span><span class="annot"><span class="hs-comment">-- ^ config</span></span><span>
+</span><span id="line-383"></span><span>  </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Q</span></span><span> </span><span class="hs-special">[</span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Name</span></span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.Token.BitBounds.html#Bits"><span class="hs-identifier hs-type">Bits</span></a></span><span class="hs-special">,</span><span> </span><span class="hs-special">[</span><span class="annot"><span class="hs-identifier hs-type">Dec</span></span><span class="hs-special">]</span><span class="hs-special">)</span><span class="hs-special">]</span><span> </span><span class="annot"><span class="hs-comment">-- ^ Name, bitwidth and def of each generated combinator.</span></span><span>
+</span><span id="line-384"></span><span id="lexerFixedWidthIntParsers"><span class="annot"><span class="annottext">lexerFixedWidthIntParsers :: Q Exp -&gt; IntegerParserConfig -&gt; Q [(Name, Bits, [Dec])]
+</span><a href="Text.Gigaparsec.Internal.Token.Patterns.IntegerParsers.html#lexerFixedWidthIntParsers"><span class="hs-identifier hs-var hs-var">lexerFixedWidthIntParsers</span></a></span></span><span>
+</span><span id="line-385"></span><span>  </span><span id="local-6989586621679253841"><span class="annot"><span class="annottext">Q Exp
+</span><a href="#local-6989586621679253841"><span class="hs-identifier hs-var">lexer</span></a></span></span><span>
+</span><span id="line-386"></span><span>  </span><span class="hs-special">(</span><span class="annot"><a href="Text.Gigaparsec.Internal.Token.Patterns.IntegerParsers.html#IntegerParserConfig"><span class="hs-identifier hs-type">IntegerParserConfig</span></a></span><span class="hs-special">{</span><span class="annot"><span class="annottext">signedOrUnsigned :: IntegerParserConfig -&gt; SignedOrUnsigned
+</span><a href="Text.Gigaparsec.Internal.Token.Patterns.IntegerParsers.html#signedOrUnsigned"><span class="hs-identifier hs-var">signedOrUnsigned</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="local-6989586621679253842"><span class="annot"><span class="annottext">SignedOrUnsigned
+</span><a href="#local-6989586621679253842"><span class="hs-identifier hs-var">sign</span></a></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679253843"><span class="annot"><span class="annottext">String
+prefix :: IntegerParserConfig -&gt; String
+prefix :: String
+</span><a href="Text.Gigaparsec.Internal.Token.Patterns.IntegerParsers.html#prefix"><span class="hs-identifier hs-var hs-var">prefix</span></a></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679253844"><span class="annot"><span class="annottext">Set IntLitBase
+bases :: IntegerParserConfig -&gt; Set IntLitBase
+bases :: Set IntLitBase
+</span><a href="Text.Gigaparsec.Internal.Token.Patterns.IntegerParsers.html#bases"><span class="hs-identifier hs-var hs-var">bases</span></a></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679253845"><span class="annot"><span class="annottext">Map Bits (Q Type)
+widths :: IntegerParserConfig -&gt; Map Bits (Q Type)
+widths :: Map Bits (Q Type)
+</span><a href="Text.Gigaparsec.Internal.Token.Patterns.IntegerParsers.html#widths"><span class="hs-identifier hs-var hs-var">widths</span></a></span></span><span class="hs-special">}</span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span>
+</span><span id="line-387"></span><span>    </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621679253846"><span class="annot"><span class="annottext">proj :: Q Exp
+</span><a href="#local-6989586621679253846"><span class="hs-identifier hs-var hs-var">proj</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">if</span><span> </span><span class="annot"><span class="annottext">SignedOrUnsigned -&gt; Bool
+</span><a href="Text.Gigaparsec.Internal.Token.Patterns.IntegerParsers.html#isSigned"><span class="hs-identifier hs-var">isSigned</span></a></span><span> </span><span class="annot"><span class="annottext">SignedOrUnsigned
+</span><a href="#local-6989586621679253842"><span class="hs-identifier hs-var">sign</span></a></span><span> </span><span class="hs-keyword">then</span><span> </span><span class="hs-special">[|</span><span class="annot"><a href="Text.Gigaparsec.Internal.Token.Lexer.html#integer"><span class="hs-identifier hs-var">integer</span></a></span><span class="hs-special">|]</span><span> </span><span class="hs-keyword">else</span><span> </span><span class="hs-special">[|</span><span class="annot"><a href="Text.Gigaparsec.Internal.Token.Lexer.html#natural"><span class="hs-identifier hs-var">natural</span></a></span><span class="hs-special">|]</span><span>
+</span><span id="line-388"></span><span>     </span><span class="hs-keyword">in</span><span> </span><span class="annot"><span class="annottext">[(Name, Bits, Q Type)]
+-&gt; ((Name, Bits, Q Type) -&gt; Q (Name, Bits, [Dec]))
+-&gt; Q [(Name, Bits, [Dec])]
+forall (t :: * -&gt; *) (m :: * -&gt; *) a b.
+(Traversable t, Monad m) =&gt;
+t a -&gt; (a -&gt; m b) -&gt; m (t b)
+</span><span class="hs-identifier hs-var">forM</span></span><span>
+</span><span id="line-389"></span><span>          </span><span class="annot"><span class="annottext">[(Name, Bits, Q Type)]
+</span><a href="#local-6989586621679253847"><span class="hs-identifier hs-var">parsersToMake</span></a></span><span>
+</span><span id="line-390"></span><span>          </span><span class="hs-special">(</span><span> </span><span class="hs-glyph">\</span><span class="hs-special">(</span><span id="local-6989586621679253848"><span class="annot"><span class="annottext">Name
+</span><a href="#local-6989586621679253848"><span class="hs-identifier hs-var">old</span></a></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679253849"><span class="annot"><span class="annottext">Bits
+</span><a href="#local-6989586621679253849"><span class="hs-identifier hs-var">bw</span></a></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679253850"><span class="annot"><span class="annottext">Q Type
+</span><a href="#local-6989586621679253850"><span class="hs-identifier hs-var">newTp</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-391"></span><span>              </span><span class="hs-special">(</span><span id="local-6989586621679253851"><span class="annot"><a href="#local-6989586621679253851"><span class="hs-identifier hs-var">nm</span></a></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679253852"><span class="annot"><a href="#local-6989586621679253852"><span class="hs-identifier hs-var">decs</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">&lt;-</span><span>
+</span><span id="line-392"></span><span>                </span><span class="annot"><span class="annottext">Q Exp -&gt; String -&gt; Name -&gt; Q Type -&gt; Q Exp -&gt; Q (Name, [Dec])
+</span><a href="Text.Gigaparsec.Internal.Token.Patterns.LexerCombinators.html#mkLexerCombinatorDecWithProj"><span class="hs-identifier hs-var">mkLexerCombinatorDecWithProj</span></a></span><span>
+</span><span id="line-393"></span><span>                  </span><span class="annot"><span class="annottext">Q Exp
+</span><a href="#local-6989586621679253841"><span class="hs-identifier hs-var">lexer</span></a></span><span>
+</span><span id="line-394"></span><span>                  </span><span class="hs-special">(</span><span class="annot"><span class="annottext">String
+</span><a href="#local-6989586621679253843"><span class="hs-identifier hs-var">prefix</span></a></span><span> </span><span class="annot"><span class="annottext">String -&gt; ShowS
+forall a. [a] -&gt; [a] -&gt; [a]
+</span><span class="hs-operator hs-var">++</span></span><span> </span><span class="annot"><span class="annottext">Name -&gt; String
+</span><span class="hs-identifier hs-var">nameBase</span></span><span> </span><span class="annot"><span class="annottext">Name
+</span><a href="#local-6989586621679253848"><span class="hs-identifier hs-var">old</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-395"></span><span>                  </span><span class="annot"><span class="annottext">Name
+</span><a href="#local-6989586621679253848"><span class="hs-identifier hs-var">old</span></a></span><span>
+</span><span id="line-396"></span><span>                  </span><span class="hs-special">[t|</span><span class="annot"><a href="Text.Gigaparsec.Internal.html#Parsec"><span class="hs-identifier hs-type">Parsec</span></a></span><span> </span><span class="hs-special">$</span><span class="annot"><span class="annottext">Q Type
+</span><a href="#local-6989586621679253850"><span class="hs-identifier hs-var">newTp</span></a></span><span class="hs-special">|]</span><span>
+</span><span id="line-397"></span><span>                  </span><span class="annot"><span class="annottext">Q Exp
+</span><a href="#local-6989586621679253846"><span class="hs-identifier hs-var">proj</span></a></span><span>
+</span><span id="line-398"></span><span>              </span><span class="annot"><span class="hs-identifier hs-type">return</span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="#local-6989586621679253851"><span class="hs-identifier hs-type">nm</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><a href="#local-6989586621679253849"><span class="hs-identifier hs-type">bw</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><a href="#local-6989586621679253852"><span class="hs-identifier hs-type">decs</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-399"></span><span>          </span><span class="hs-special">)</span><span>
+</span><span id="line-400"></span><span>   </span><span class="hs-keyword">where</span><span>
+</span><span id="line-401"></span><span>    </span><span class="annot"><a href="#local-6989586621679253847"><span class="hs-identifier hs-type">parsersToMake</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-special">[</span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Name</span></span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.Token.BitBounds.html#Bits"><span class="hs-identifier hs-type">Bits</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Q</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Type</span></span><span class="hs-special">)</span><span class="hs-special">]</span><span>
+</span><span id="line-402"></span><span>    </span><span id="local-6989586621679253847"><span class="annot"><span class="annottext">parsersToMake :: [(Name, Bits, Q Type)]
+</span><a href="#local-6989586621679253847"><span class="hs-identifier hs-var hs-var">parsersToMake</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
+</span><span id="line-403"></span><span>      </span><span class="annot"><span class="annottext">((Bits, Q Type) -&gt; [(Name, Bits, Q Type)])
+-&gt; [(Bits, Q Type)] -&gt; [(Name, Bits, Q Type)]
+forall (t :: * -&gt; *) a b. Foldable t =&gt; (a -&gt; [b]) -&gt; t a -&gt; [b]
+</span><span class="hs-identifier hs-var">concatMap</span></span><span>
+</span><span id="line-404"></span><span>        </span><span class="hs-special">(</span><span class="hs-glyph">\</span><span class="hs-special">(</span><span id="local-6989586621679253854"><span class="annot"><span class="annottext">Bits
+</span><a href="#local-6989586621679253854"><span class="hs-identifier hs-var">b</span></a></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679253855"><span class="annot"><span class="annottext">Q Type
+</span><a href="#local-6989586621679253855"><span class="hs-identifier hs-var">tp</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">(Name -&gt; (Name, Bits, Q Type)) -&gt; [Name] -&gt; [(Name, Bits, Q Type)]
+forall a b. (a -&gt; b) -&gt; [a] -&gt; [b]
+</span><span class="hs-identifier hs-var">map</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">,</span><span class="annot"><span class="annottext">Bits
+</span><a href="#local-6989586621679253854"><span class="hs-identifier hs-var">b</span></a></span><span class="hs-special">,</span><span class="annot"><span class="annottext">Q Type
+</span><a href="#local-6989586621679253855"><span class="hs-identifier hs-var">tp</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Bits -&gt; [Name]
+</span><a href="#local-6989586621679253856"><span class="hs-identifier hs-var">parsersAtWidth</span></a></span><span> </span><span class="annot"><span class="annottext">Bits
+</span><a href="#local-6989586621679253854"><span class="hs-identifier hs-var">b</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-405"></span><span>        </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Map Bits (Q Type) -&gt; [(Bits, Q Type)]
+forall k a. Map k a -&gt; [(k, a)]
+</span><span class="hs-identifier hs-var">Map.toList</span></span><span> </span><span class="annot"><span class="annottext">Map Bits (Q Type)
+</span><a href="#local-6989586621679253845"><span class="hs-identifier hs-var">widths</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-406"></span><span>    </span><span class="annot"><a href="#local-6989586621679253856"><span class="hs-identifier hs-type">parsersAtWidth</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.Token.BitBounds.html#Bits"><span class="hs-identifier hs-type">Bits</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-special">[</span><span class="annot"><span class="hs-identifier hs-type">Name</span></span><span class="hs-special">]</span><span>
+</span><span id="line-407"></span><span>    </span><span id="local-6989586621679253856"><span class="annot"><span class="annottext">parsersAtWidth :: Bits -&gt; [Name]
+</span><a href="#local-6989586621679253856"><span class="hs-identifier hs-var hs-var">parsersAtWidth</span></a></span></span><span> </span><span id="local-6989586621679253858"><span class="annot"><span class="annottext">Bits
+</span><a href="#local-6989586621679253858"><span class="hs-identifier hs-var">b</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Set IntLitBase -&gt; [(Name, IntLitBase)] -&gt; [Name]
+forall a. Set IntLitBase -&gt; [(a, IntLitBase)] -&gt; [a]
+</span><a href="Text.Gigaparsec.Internal.Token.Patterns.IntegerParsers.html#filterByBase"><span class="hs-identifier hs-var">filterByBase</span></a></span><span> </span><span class="annot"><span class="annottext">Set IntLitBase
+</span><a href="#local-6989586621679253844"><span class="hs-identifier hs-var">bases</span></a></span><span> </span><span class="annot"><span class="annottext">([(Name, IntLitBase)] -&gt; [Name]) -&gt; [(Name, IntLitBase)] -&gt; [Name]
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-keyword">case</span><span> </span><span class="annot"><span class="annottext">Bits
+</span><a href="#local-6989586621679253858"><span class="hs-identifier hs-var">b</span></a></span><span> </span><span class="hs-keyword">of</span><span>
+</span><span id="line-408"></span><span>      </span><span class="annot"><span class="annottext">Bits
+</span><a href="Text.Gigaparsec.Internal.Token.BitBounds.html#B8"><span class="hs-identifier hs-var">B8</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">[(Name, IntLitBase)]
+</span><a href="Text.Gigaparsec.Internal.Token.Patterns.IntegerParsers.html#intParsers8Bit"><span class="hs-identifier hs-var">intParsers8Bit</span></a></span><span>
+</span><span id="line-409"></span><span>      </span><span class="annot"><span class="annottext">Bits
+</span><a href="Text.Gigaparsec.Internal.Token.BitBounds.html#B16"><span class="hs-identifier hs-var">B16</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">[(Name, IntLitBase)]
+</span><a href="Text.Gigaparsec.Internal.Token.Patterns.IntegerParsers.html#intParsers16Bit"><span class="hs-identifier hs-var">intParsers16Bit</span></a></span><span>
+</span><span id="line-410"></span><span>      </span><span class="annot"><span class="annottext">Bits
+</span><a href="Text.Gigaparsec.Internal.Token.BitBounds.html#B32"><span class="hs-identifier hs-var">B32</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">[(Name, IntLitBase)]
+</span><a href="Text.Gigaparsec.Internal.Token.Patterns.IntegerParsers.html#intParsers32Bit"><span class="hs-identifier hs-var">intParsers32Bit</span></a></span><span>
+</span><span id="line-411"></span><span>      </span><span class="annot"><span class="annottext">Bits
+</span><a href="Text.Gigaparsec.Internal.Token.BitBounds.html#B64"><span class="hs-identifier hs-var">B64</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">[(Name, IntLitBase)]
+</span><a href="Text.Gigaparsec.Internal.Token.Patterns.IntegerParsers.html#intParsers64Bit"><span class="hs-identifier hs-var">intParsers64Bit</span></a></span><span>
+</span><span id="line-412"></span></pre></body></html>

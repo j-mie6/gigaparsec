@@ -1,0 +1,27 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><link rel="stylesheet" type="text/css" href="style.css" /><script type="text/javascript" src="highlight.js"></script></head><body><pre><span class="hs-pragma">{-# LANGUAGE Safe #-}</span><span>
+</span><span id="line-2"></span><span>
+</span><span id="line-3"></span><span class="hs-pragma">{-# OPTIONS_HADDOCK hide #-}</span><span>
+</span><span id="line-4"></span><span>
+</span><span id="line-5"></span><span>
+</span><span id="line-6"></span><span class="hs-keyword">module</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.TH.DecUtils.html"><span class="hs-identifier">Text.Gigaparsec.Internal.TH.DecUtils</span></a></span><span> </span><span class="hs-special">(</span><span>
+</span><span id="line-7"></span><span>  </span><span class="hs-keyword">module</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.TH.DecUtils.html"><span class="hs-identifier">Text.Gigaparsec.Internal.TH.DecUtils</span></a></span><span>
+</span><span id="line-8"></span><span>  </span><span class="hs-special">)</span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-9"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.TH.VersionAgnostic.html"><span class="hs-identifier">Text.Gigaparsec.Internal.TH.VersionAgnostic</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Q</span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier">Name</span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier">Exp</span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier">Dec</span></span><span class="hs-special">)</span><span>
+</span><span id="line-10"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Language.Haskell.TH</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">normalB</span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier">clause</span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier">funD</span></span><span class="hs-special">)</span><span>
+</span><span id="line-11"></span><span>    </span><span>
+</span><span id="line-12"></span><span class="annot"><a href="Text.Gigaparsec.Internal.TH.DecUtils.html#funDsingleClause"><span class="hs-identifier hs-type">funDsingleClause</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Name</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Q</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Exp</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Q</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Dec</span></span><span>
+</span><span id="line-13"></span><span id="funDsingleClause"><span class="annot"><span class="annottext">funDsingleClause :: Name -&gt; Q Exp -&gt; Q Dec
+</span><a href="Text.Gigaparsec.Internal.TH.DecUtils.html#funDsingleClause"><span class="hs-identifier hs-var hs-var">funDsingleClause</span></a></span></span><span> </span><span id="local-6989586621679246151"><span class="annot"><span class="annottext">Name
+</span><a href="#local-6989586621679246151"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span id="local-6989586621679246152"><span class="annot"><span class="annottext">Q Exp
+</span><a href="#local-6989586621679246152"><span class="hs-identifier hs-var">body</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Name -&gt; [Q Clause] -&gt; Q Dec
+forall (m :: * -&gt; *). Quote m =&gt; Name -&gt; [m Clause] -&gt; m Dec
+</span><span class="hs-identifier hs-var">funD</span></span><span> </span><span class="annot"><span class="annottext">Name
+</span><a href="#local-6989586621679246151"><span class="hs-identifier hs-var">x</span></a></span><span> </span><span class="hs-special">[</span><span class="annot"><span class="annottext">[Q Pat] -&gt; Q Body -&gt; [Q Dec] -&gt; Q Clause
+forall (m :: * -&gt; *).
+Quote m =&gt;
+[m Pat] -&gt; m Body -&gt; [m Dec] -&gt; m Clause
+</span><span class="hs-identifier hs-var">clause</span></span><span> </span><span class="hs-special">[</span><span class="hs-special">]</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Q Exp -&gt; Q Body
+forall (m :: * -&gt; *). Quote m =&gt; m Exp -&gt; m Body
+</span><span class="hs-identifier hs-var">normalB</span></span><span> </span><span class="annot"><span class="annottext">Q Exp
+</span><a href="#local-6989586621679246152"><span class="hs-identifier hs-var">body</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">[</span><span class="hs-special">]</span><span class="hs-special">]</span><span>
+</span><span id="line-14"></span></pre></body></html>

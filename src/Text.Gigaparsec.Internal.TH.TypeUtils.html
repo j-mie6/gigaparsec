@@ -1,0 +1,571 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><link rel="stylesheet" type="text/css" href="style.css" /><script type="text/javascript" src="highlight.js"></script></head><body><pre><span class="hs-pragma">{-# LANGUAGE Safe #-}</span><span>
+</span><span id="line-2"></span><span>
+</span><span id="line-3"></span><span class="hs-pragma">{-# OPTIONS_HADDOCK hide #-}</span><span>
+</span><span id="line-4"></span><span>
+</span><span id="line-5"></span><span class="hs-pragma">{-# LANGUAGE CPP #-}</span><span>
+</span><span id="line-6"></span><span class="hs-pragma">{-# LANGUAGE GADTs #-}</span><span>
+</span><span id="line-7"></span><span class="hs-pragma">{-# LANGUAGE MultiParamTypeClasses #-}</span><span>
+</span><span id="line-8"></span><span class="hs-pragma">{-# LANGUAGE TupleSections #-}</span><span>
+</span><span id="line-9"></span><span class="hs-pragma">{-# LANGUAGE TypeFamilies #-}</span><span>
+</span><span id="line-10"></span><span>
+</span><span id="line-11"></span><span class="annot"><span class="hs-comment">{- |
+Module      : Text.Gigaparsec.Internal.TH.TypeUtils
+Description : Common Template Haskell Utils
+License     : BSD-3-Clause
+Maintainer  : Jamie Willis, Gigaparsec Maintainers
+Stability   : experimental
+
+Common utils for manipulating Template Haskell Type AST.
+
+@since 0.2.2.0
+-}</span></span><span>
+</span><span id="line-22"></span><span class="hs-keyword">module</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.TH.TypeUtils.html"><span class="hs-identifier">Text.Gigaparsec.Internal.TH.TypeUtils</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-keyword">module</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.TH.TypeUtils.html"><span class="hs-identifier">Text.Gigaparsec.Internal.TH.TypeUtils</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-23"></span><span>
+</span><span id="line-24"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.TH.VersionAgnostic.html"><span class="hs-identifier">Text.Gigaparsec.Internal.TH.VersionAgnostic</span></a></span><span>
+</span><span id="line-25"></span><span>
+</span><span id="line-26"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.Bifunctor</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Bifunctor</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">bimap</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-27"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.Set</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Set</span></span><span class="hs-special">)</span><span>
+</span><span id="line-28"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.Set</span></span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="hs-keyword">as</span><span> </span><span class="annot"><span class="hs-identifier">Set</span></span><span>
+</span><span id="line-29"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Language.Haskell.TH</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">pprint</span></span><span class="hs-special">)</span><span>
+</span><span id="line-30"></span><span>
+</span><span id="line-31"></span><span class="hs-comment">-- When KindSignatures is off, the default (a :: *) that TH generates is broken!</span><span>
+</span><span id="line-32"></span><span id="local-6989586621679245836"><span class="annot"><a href="Text.Gigaparsec.Internal.TH.TypeUtils.html#sanitiseStarT"><span class="hs-identifier hs-type">sanitiseStarT</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.TH.VersionAgnostic.html#TyVarBndr"><span class="hs-identifier hs-type">TyVarBndr</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679245836"><span class="hs-identifier hs-type">flag</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.TH.VersionAgnostic.html#TyVarBndr"><span class="hs-identifier hs-type">TyVarBndr</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679245836"><span class="hs-identifier hs-type">flag</span></a></span></span><span>
+</span><span id="line-33"></span><span id="sanitiseStarT"><span class="annot"><span class="annottext">sanitiseStarT :: forall flag. TyVarBndr flag -&gt; TyVarBndr flag
+</span><a href="Text.Gigaparsec.Internal.TH.TypeUtils.html#sanitiseStarT"><span class="hs-identifier hs-var hs-var">sanitiseStarT</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">(Name -&gt; flag -&gt; TyVarBndr flag)
+-&gt; (Name -&gt; flag -&gt; Kind -&gt; TyVarBndr flag)
+-&gt; TyVarBndr flag
+-&gt; TyVarBndr flag
+forall flag a.
+(Name -&gt; flag -&gt; a)
+-&gt; (Name -&gt; flag -&gt; Kind -&gt; a) -&gt; TyVarBndr flag -&gt; a
+</span><a href="Text.Gigaparsec.Internal.TH.VersionAgnostic.html#recTyVarBndr"><span class="hs-identifier hs-var">recTyVarBndr</span></a></span><span> </span><span class="annot"><span class="annottext">Name -&gt; flag -&gt; TyVarBndr flag
+forall flag. Name -&gt; flag -&gt; TyVarBndr flag
+</span><a href="Text.Gigaparsec.Internal.TH.VersionAgnostic.html#mkPlainTV"><span class="hs-identifier hs-var">mkPlainTV</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-glyph">\</span><span id="local-6989586621679245987"><span class="annot"><span class="annottext">Name
+</span><a href="#local-6989586621679245987"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span id="local-6989586621679245988"><span class="annot"><span class="annottext">flag
+</span><a href="#local-6989586621679245988"><span class="hs-identifier hs-var">y</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">TyVarBndr flag -&gt; Kind -&gt; TyVarBndr flag
+forall a b. a -&gt; b -&gt; a
+</span><span class="hs-identifier hs-var">const</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Name -&gt; flag -&gt; TyVarBndr flag
+forall flag. Name -&gt; flag -&gt; TyVarBndr flag
+</span><a href="Text.Gigaparsec.Internal.TH.VersionAgnostic.html#mkPlainTV"><span class="hs-identifier hs-var">mkPlainTV</span></a></span><span> </span><span class="annot"><span class="annottext">Name
+</span><a href="#local-6989586621679245987"><span class="hs-identifier hs-var">x</span></a></span><span> </span><span class="annot"><span class="annottext">flag
+</span><a href="#local-6989586621679245988"><span class="hs-identifier hs-var">y</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-34"></span><span>
+</span><span id="line-35"></span><span class="annot"><span class="hs-comment">-- | Remove stars from binder annotations when we don't have `KindSignatures` enabled.</span></span><span>
+</span><span id="line-36"></span><span id="local-6989586621679245844"><span class="annot"><a href="Text.Gigaparsec.Internal.TH.TypeUtils.html#sanitiseBndrStars"><span class="hs-identifier hs-type">sanitiseBndrStars</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-special">[</span><span class="annot"><a href="Text.Gigaparsec.Internal.TH.VersionAgnostic.html#TyVarBndr"><span class="hs-identifier hs-type">TyVarBndr</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679245844"><span class="hs-identifier hs-type">flag</span></a></span><span class="hs-special">]</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Q</span></span><span> </span><span class="hs-special">[</span><span class="annot"><a href="Text.Gigaparsec.Internal.TH.VersionAgnostic.html#TyVarBndr"><span class="hs-identifier hs-type">TyVarBndr</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679245844"><span class="hs-identifier hs-type">flag</span></a></span><span class="hs-special">]</span></span><span>
+</span><span id="line-37"></span><span id="sanitiseBndrStars"><span class="annot"><span class="annottext">sanitiseBndrStars :: forall flag. [TyVarBndr flag] -&gt; Q [TyVarBndr flag]
+</span><a href="Text.Gigaparsec.Internal.TH.TypeUtils.html#sanitiseBndrStars"><span class="hs-identifier hs-var hs-var">sanitiseBndrStars</span></a></span></span><span> </span><span id="local-6989586621679245994"><span class="annot"><span class="annottext">[TyVarBndr flag]
+</span><a href="#local-6989586621679245994"><span class="hs-identifier hs-var">bndrs</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-38"></span><span>  </span><span id="local-6989586621679245995"><span class="annot"><a href="#local-6989586621679245995"><span class="hs-identifier hs-var">kindSigs</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Extension -&gt; Q Bool
+</span><span class="hs-identifier hs-var">isExtEnabled</span></span><span> </span><span class="annot"><span class="annottext">Extension
+</span><span class="hs-identifier hs-var">KindSignatures</span></span><span>
+</span><span id="line-39"></span><span>  </span><span class="annot"><span class="hs-identifier hs-type">return</span></span><span> </span><span class="hs-special">(</span><span class="hs-keyword">if</span><span> </span><span class="annot"><a href="#local-6989586621679245995"><span class="hs-identifier hs-type">kindSigs</span></a></span><span> </span><span class="hs-keyword">then</span><span> </span><span class="annot"><a href="#local-6989586621679245994"><span class="hs-identifier hs-type">bndrs</span></a></span><span> </span><span class="hs-keyword">else</span><span> </span><span class="annot"><span class="hs-identifier hs-type">map</span></span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.TH.TypeUtils.html#sanitiseStarT"><span class="hs-identifier hs-type">sanitiseStarT</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679245994"><span class="hs-identifier hs-type">bndrs</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-40"></span><span>
+</span><span id="line-41"></span><span class="annot"><a href="Text.Gigaparsec.Internal.TH.TypeUtils.html#sanitiseTypeStars"><span class="hs-identifier hs-type">sanitiseTypeStars</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Type</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Q</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Type</span></span><span>
+</span><span id="line-42"></span><span id="sanitiseTypeStars"><span class="annot"><span class="annottext">sanitiseTypeStars :: Kind -&gt; Q Kind
+</span><a href="Text.Gigaparsec.Internal.TH.TypeUtils.html#sanitiseTypeStars"><span class="hs-identifier hs-var hs-var">sanitiseTypeStars</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">(TypeF (Q Kind) -&gt; Q Kind) -&gt; Kind -&gt; Q Kind
+forall a. (TypeF a -&gt; a) -&gt; Kind -&gt; a
+</span><a href="Text.Gigaparsec.Internal.TH.VersionAgnostic.html#cataType"><span class="hs-identifier hs-var">cataType</span></a></span><span> </span><span class="annot"><span class="annottext">TypeF (Q Kind) -&gt; Q Kind
+</span><a href="#local-6989586621679245999"><span class="hs-identifier hs-var">go</span></a></span><span>
+</span><span id="line-43"></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-44"></span><span>  </span><span class="annot"><a href="#local-6989586621679245999"><span class="hs-identifier hs-type">go</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.TH.VersionAgnostic.html#TypeF"><span class="hs-identifier hs-type">TypeF</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Q</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Type</span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Q</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Type</span></span><span>
+</span><span id="line-45"></span><span>  </span><span id="local-6989586621679245999"><span class="annot"><span class="annottext">go :: TypeF (Q Kind) -&gt; Q Kind
+</span><a href="#local-6989586621679245999"><span class="hs-identifier hs-var hs-var">go</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Text.Gigaparsec.Internal.TH.VersionAgnostic.html#ForallTF"><span class="hs-identifier hs-type">ForallTF</span></a></span><span> </span><span id="local-6989586621679246001"><span class="annot"><span class="annottext">[TyVarBndrF Specificity (Q Kind)]
+</span><a href="#local-6989586621679246001"><span class="hs-identifier hs-var">bnds</span></a></span></span><span> </span><span id="local-6989586621679246002"><span class="annot"><span class="annottext">[Q Kind]
+</span><a href="#local-6989586621679246002"><span class="hs-identifier hs-var">ctx</span></a></span></span><span> </span><span id="local-6989586621679246003"><span class="annot"><span class="annottext">Q Kind
+</span><a href="#local-6989586621679246003"><span class="hs-identifier hs-var">tp</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span>
+</span><span id="line-46"></span><span>    </span><span class="annot"><span class="annottext">[TyVarBndr Specificity] -&gt; Cxt -&gt; Kind -&gt; Kind
+</span><span class="hs-identifier hs-var">ForallT</span></span><span> </span><span class="annot"><span class="annottext">([TyVarBndr Specificity] -&gt; Cxt -&gt; Kind -&gt; Kind)
+-&gt; Q [TyVarBndr Specificity] -&gt; Q (Cxt -&gt; Kind -&gt; Kind)
+forall (f :: * -&gt; *) a b. Functor f =&gt; (a -&gt; b) -&gt; f a -&gt; f b
+</span><span class="hs-operator hs-var">&lt;$&gt;</span></span><span> </span><span class="annot"><span class="annottext">(TyVarBndrF Specificity (Q Kind) -&gt; Q (TyVarBndr Specificity))
+-&gt; [TyVarBndrF Specificity (Q Kind)] -&gt; Q [TyVarBndr Specificity]
+forall (t :: * -&gt; *) (m :: * -&gt; *) a b.
+(Traversable t, Monad m) =&gt;
+(a -&gt; m b) -&gt; t a -&gt; m (t b)
+forall (m :: * -&gt; *) a b. Monad m =&gt; (a -&gt; m b) -&gt; [a] -&gt; m [b]
+</span><span class="hs-identifier hs-var">mapM</span></span><span> </span><span class="annot"><span class="annottext">TyVarBndrF Specificity (Q Kind) -&gt; Q (TyVarBndr Specificity)
+forall flag. TyVarBndrF flag (Q Kind) -&gt; Q (TyVarBndr flag)
+</span><a href="#local-6989586621679246007"><span class="hs-identifier hs-var">helpBnd</span></a></span><span> </span><span class="annot"><span class="annottext">[TyVarBndrF Specificity (Q Kind)]
+</span><a href="#local-6989586621679246001"><span class="hs-identifier hs-var">bnds</span></a></span><span> </span><span class="annot"><span class="annottext">Q (Cxt -&gt; Kind -&gt; Kind) -&gt; Q Cxt -&gt; Q (Kind -&gt; Kind)
+forall a b. Q (a -&gt; b) -&gt; Q a -&gt; Q b
+forall (f :: * -&gt; *) a b. Applicative f =&gt; f (a -&gt; b) -&gt; f a -&gt; f b
+</span><span class="hs-operator hs-var">&lt;*&gt;</span></span><span> </span><span class="annot"><span class="annottext">[Q Kind] -&gt; Q Cxt
+forall (t :: * -&gt; *) (m :: * -&gt; *) a.
+(Traversable t, Monad m) =&gt;
+t (m a) -&gt; m (t a)
+forall (m :: * -&gt; *) a. Monad m =&gt; [m a] -&gt; m [a]
+</span><span class="hs-identifier hs-var">sequence</span></span><span> </span><span class="annot"><span class="annottext">[Q Kind]
+</span><a href="#local-6989586621679246002"><span class="hs-identifier hs-var">ctx</span></a></span><span> </span><span class="annot"><span class="annottext">Q (Kind -&gt; Kind) -&gt; Q Kind -&gt; Q Kind
+forall a b. Q (a -&gt; b) -&gt; Q a -&gt; Q b
+forall (f :: * -&gt; *) a b. Applicative f =&gt; f (a -&gt; b) -&gt; f a -&gt; f b
+</span><span class="hs-operator hs-var">&lt;*&gt;</span></span><span> </span><span class="annot"><span class="annottext">Q Kind
+</span><a href="#local-6989586621679246003"><span class="hs-identifier hs-var">tp</span></a></span><span>
+</span><span id="line-47"></span><span>  </span><span class="annot"><a href="#local-6989586621679245999"><span class="hs-identifier hs-var">go</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Text.Gigaparsec.Internal.TH.VersionAgnostic.html#ForallVisTF"><span class="hs-identifier hs-type">ForallVisTF</span></a></span><span> </span><span id="local-6989586621679246010"><span class="annot"><span class="annottext">[TyVarBndrF () (Q Kind)]
+</span><a href="#local-6989586621679246010"><span class="hs-identifier hs-var">bnds</span></a></span></span><span> </span><span id="local-6989586621679246011"><span class="annot"><span class="annottext">Q Kind
+</span><a href="#local-6989586621679246011"><span class="hs-identifier hs-var">tp</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">[TyVarBndr ()] -&gt; Kind -&gt; Kind
+</span><a href="Text.Gigaparsec.Internal.TH.VersionAgnostic.html#mkForallVisT"><span class="hs-identifier hs-var">mkForallVisT</span></a></span><span> </span><span class="annot"><span class="annottext">([TyVarBndr ()] -&gt; Kind -&gt; Kind)
+-&gt; Q [TyVarBndr ()] -&gt; Q (Kind -&gt; Kind)
+forall (f :: * -&gt; *) a b. Functor f =&gt; (a -&gt; b) -&gt; f a -&gt; f b
+</span><span class="hs-operator hs-var">&lt;$&gt;</span></span><span> </span><span class="annot"><span class="annottext">(TyVarBndrF () (Q Kind) -&gt; Q (TyVarBndr ()))
+-&gt; [TyVarBndrF () (Q Kind)] -&gt; Q [TyVarBndr ()]
+forall (t :: * -&gt; *) (m :: * -&gt; *) a b.
+(Traversable t, Monad m) =&gt;
+(a -&gt; m b) -&gt; t a -&gt; m (t b)
+forall (m :: * -&gt; *) a b. Monad m =&gt; (a -&gt; m b) -&gt; [a] -&gt; m [b]
+</span><span class="hs-identifier hs-var">mapM</span></span><span> </span><span class="annot"><span class="annottext">TyVarBndrF () (Q Kind) -&gt; Q (TyVarBndr ())
+forall flag. TyVarBndrF flag (Q Kind) -&gt; Q (TyVarBndr flag)
+</span><a href="#local-6989586621679246007"><span class="hs-identifier hs-var">helpBnd</span></a></span><span> </span><span class="annot"><span class="annottext">[TyVarBndrF () (Q Kind)]
+</span><a href="#local-6989586621679246010"><span class="hs-identifier hs-var">bnds</span></a></span><span> </span><span class="annot"><span class="annottext">Q (Kind -&gt; Kind) -&gt; Q Kind -&gt; Q Kind
+forall a b. Q (a -&gt; b) -&gt; Q a -&gt; Q b
+forall (f :: * -&gt; *) a b. Applicative f =&gt; f (a -&gt; b) -&gt; f a -&gt; f b
+</span><span class="hs-operator hs-var">&lt;*&gt;</span></span><span> </span><span class="annot"><span class="annottext">Q Kind
+</span><a href="#local-6989586621679246011"><span class="hs-identifier hs-var">tp</span></a></span><span>
+</span><span id="line-48"></span><span>  </span><span class="annot"><a href="#local-6989586621679245999"><span class="hs-identifier hs-var">go</span></a></span><span> </span><span id="local-6989586621679246013"><span class="annot"><span class="annottext">TypeF (Q Kind)
+</span><a href="#local-6989586621679246013"><span class="hs-identifier hs-var">e</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">TypeF Kind -&gt; Kind
+</span><a href="Text.Gigaparsec.Internal.TH.VersionAgnostic.html#embedType"><span class="hs-identifier hs-var">embedType</span></a></span><span> </span><span class="annot"><span class="annottext">(TypeF Kind -&gt; Kind) -&gt; Q (TypeF Kind) -&gt; Q Kind
+forall (f :: * -&gt; *) a b. Functor f =&gt; (a -&gt; b) -&gt; f a -&gt; f b
+</span><span class="hs-operator hs-var">&lt;$&gt;</span></span><span> </span><span class="annot"><span class="annottext">TypeF (Q Kind) -&gt; Q (TypeF Kind)
+forall (t :: * -&gt; *) (m :: * -&gt; *) a.
+(Traversable t, Monad m) =&gt;
+t (m a) -&gt; m (t a)
+forall (m :: * -&gt; *) a. Monad m =&gt; TypeF (m a) -&gt; m (TypeF a)
+</span><span class="hs-identifier hs-var">sequence</span></span><span> </span><span class="annot"><span class="annottext">TypeF (Q Kind)
+</span><a href="#local-6989586621679246013"><span class="hs-identifier hs-var">e</span></a></span><span>
+</span><span id="line-49"></span><span>
+</span><span id="line-50"></span><span>  </span><span id="local-6989586621679245863"><span class="annot"><a href="#local-6989586621679246007"><span class="hs-identifier hs-type">helpBnd</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.TH.VersionAgnostic.html#TyVarBndrF"><span class="hs-identifier hs-type">TyVarBndrF</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679245863"><span class="hs-identifier hs-type">flag</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Q</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Type</span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Q</span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Text.Gigaparsec.Internal.TH.VersionAgnostic.html#TyVarBndr"><span class="hs-identifier hs-type">TyVarBndr</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679245863"><span class="hs-identifier hs-type">flag</span></a></span><span class="hs-special">)</span></span><span>
+</span><span id="line-51"></span><span>  </span><span id="local-6989586621679246007"><span class="annot"><span class="annottext">helpBnd :: forall flag. TyVarBndrF flag (Q Kind) -&gt; Q (TyVarBndr flag)
+</span><a href="#local-6989586621679246007"><span class="hs-identifier hs-var hs-var">helpBnd</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Text.Gigaparsec.Internal.TH.VersionAgnostic.html#PlainTVF"><span class="hs-identifier hs-type">PlainTVF</span></a></span><span> </span><span id="local-6989586621679246018"><span class="annot"><span class="annottext">Name
+</span><a href="#local-6989586621679246018"><span class="hs-identifier hs-var">n</span></a></span></span><span> </span><span id="local-6989586621679246019"><span class="annot"><span class="annottext">flag
+</span><a href="#local-6989586621679246019"><span class="hs-identifier hs-var">f</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">TyVarBndr flag -&gt; Q (TyVarBndr flag)
+forall a. a -&gt; Q a
+forall (m :: * -&gt; *) a. Monad m =&gt; a -&gt; m a
+</span><span class="hs-identifier hs-var">return</span></span><span> </span><span class="annot"><span class="annottext">(TyVarBndr flag -&gt; Q (TyVarBndr flag))
+-&gt; TyVarBndr flag -&gt; Q (TyVarBndr flag)
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Name -&gt; flag -&gt; TyVarBndr flag
+forall flag. Name -&gt; flag -&gt; TyVarBndr flag
+</span><a href="Text.Gigaparsec.Internal.TH.VersionAgnostic.html#mkPlainTV"><span class="hs-identifier hs-var">mkPlainTV</span></a></span><span> </span><span class="annot"><span class="annottext">Name
+</span><a href="#local-6989586621679246018"><span class="hs-identifier hs-var">n</span></a></span><span> </span><span class="annot"><span class="annottext">flag
+</span><a href="#local-6989586621679246019"><span class="hs-identifier hs-var">f</span></a></span><span>
+</span><span id="line-52"></span><span>  </span><span class="annot"><a href="#local-6989586621679246007"><span class="hs-identifier hs-var">helpBnd</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Text.Gigaparsec.Internal.TH.VersionAgnostic.html#KindedTVF"><span class="hs-identifier hs-type">KindedTVF</span></a></span><span> </span><span id="local-6989586621679246021"><span class="annot"><span class="annottext">Name
+</span><a href="#local-6989586621679246021"><span class="hs-identifier hs-var">n</span></a></span></span><span> </span><span id="local-6989586621679246022"><span class="annot"><span class="annottext">flag
+</span><a href="#local-6989586621679246022"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-glyph">~</span><span class="annot"><span class="annottext">Q Kind
+</span><span class="hs-identifier">_</span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">TyVarBndr flag -&gt; Q (TyVarBndr flag)
+forall a. a -&gt; Q a
+forall (m :: * -&gt; *) a. Monad m =&gt; a -&gt; m a
+</span><span class="hs-identifier hs-var">return</span></span><span> </span><span class="annot"><span class="annottext">(TyVarBndr flag -&gt; Q (TyVarBndr flag))
+-&gt; TyVarBndr flag -&gt; Q (TyVarBndr flag)
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Name -&gt; flag -&gt; TyVarBndr flag
+forall flag. Name -&gt; flag -&gt; TyVarBndr flag
+</span><a href="Text.Gigaparsec.Internal.TH.VersionAgnostic.html#mkPlainTV"><span class="hs-identifier hs-var">mkPlainTV</span></a></span><span> </span><span class="annot"><span class="annottext">Name
+</span><a href="#local-6989586621679246021"><span class="hs-identifier hs-var">n</span></a></span><span> </span><span class="annot"><span class="annottext">flag
+</span><a href="#local-6989586621679246022"><span class="hs-identifier hs-var">f</span></a></span><span>
+</span><span id="line-53"></span><span>
+</span><span id="line-54"></span><span id="local-6989586621679245874"><span id="local-6989586621679245875"><span class="annot"><a href="Text.Gigaparsec.Internal.TH.TypeUtils.html#unTyVarBndrF"><span class="hs-identifier hs-type">unTyVarBndrF</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.TH.VersionAgnostic.html#TyVarBndrF"><span class="hs-identifier hs-type">TyVarBndrF</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679245874"><span class="hs-identifier hs-type">flag</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679245875"><span class="hs-identifier hs-type">k</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Name</span></span><span class="hs-special">,</span><span> </span><span class="annot"><a href="#local-6989586621679245874"><span class="hs-identifier hs-type">flag</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Maybe</span></span><span> </span><span class="annot"><a href="#local-6989586621679245875"><span class="hs-identifier hs-type">k</span></a></span><span class="hs-special">)</span></span></span><span>
+</span><span id="line-55"></span><span id="unTyVarBndrF"><span class="annot"><span class="annottext">unTyVarBndrF :: forall flag k. TyVarBndrF flag k -&gt; (Name, flag, Maybe k)
+</span><a href="Text.Gigaparsec.Internal.TH.TypeUtils.html#unTyVarBndrF"><span class="hs-identifier hs-var hs-var">unTyVarBndrF</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">(Name -&gt; flag -&gt; (Name, flag, Maybe k))
+-&gt; (Name -&gt; flag -&gt; k -&gt; (Name, flag, Maybe k))
+-&gt; TyVarBndrF flag k
+-&gt; (Name, flag, Maybe k)
+forall flag a k.
+(Name -&gt; flag -&gt; a)
+-&gt; (Name -&gt; flag -&gt; k -&gt; a) -&gt; TyVarBndrF flag k -&gt; a
+</span><a href="Text.Gigaparsec.Internal.TH.VersionAgnostic.html#recTyVarBndrF"><span class="hs-identifier hs-var">recTyVarBndrF</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">,</span><span class="hs-special">,</span><span class="annot"><span class="annottext">Maybe k
+forall a. Maybe a
+</span><span class="hs-identifier hs-var">Nothing</span></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="hs-glyph">\</span><span id="local-6989586621679246025"><span class="annot"><span class="annottext">Name
+</span><a href="#local-6989586621679246025"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span id="local-6989586621679246026"><span class="annot"><span class="annottext">flag
+</span><a href="#local-6989586621679246026"><span class="hs-identifier hs-var">y</span></a></span></span><span> </span><span id="local-6989586621679246027"><span class="annot"><span class="annottext">k
+</span><a href="#local-6989586621679246027"><span class="hs-identifier hs-var">z</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Name
+</span><a href="#local-6989586621679246025"><span class="hs-identifier hs-var">x</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">flag
+</span><a href="#local-6989586621679246026"><span class="hs-identifier hs-var">y</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">k -&gt; Maybe k
+forall a. a -&gt; Maybe a
+</span><span class="hs-identifier hs-var">Just</span></span><span> </span><span class="annot"><span class="annottext">k
+</span><a href="#local-6989586621679246027"><span class="hs-identifier hs-var">z</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-56"></span><span>
+</span><span id="line-57"></span><span id="local-6989586621679245882"><span class="annot"><a href="Text.Gigaparsec.Internal.TH.TypeUtils.html#reTyVarBndr"><span class="hs-identifier hs-type">reTyVarBndr</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Name</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="#local-6989586621679245882"><span class="hs-identifier hs-type">flag</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Maybe</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Type</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.TH.VersionAgnostic.html#TyVarBndr"><span class="hs-identifier hs-type">TyVarBndr</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679245882"><span class="hs-identifier hs-type">flag</span></a></span></span><span>
+</span><span id="line-58"></span><span id="reTyVarBndr"><span class="annot"><span class="annottext">reTyVarBndr :: forall flag. Name -&gt; flag -&gt; Maybe Kind -&gt; TyVarBndr flag
+</span><a href="Text.Gigaparsec.Internal.TH.TypeUtils.html#reTyVarBndr"><span class="hs-identifier hs-var hs-var">reTyVarBndr</span></a></span></span><span> </span><span id="local-6989586621679246029"><span class="annot"><span class="annottext">Name
+</span><a href="#local-6989586621679246029"><span class="hs-identifier hs-var">n</span></a></span></span><span> </span><span id="local-6989586621679246030"><span class="annot"><span class="annottext">flag
+</span><a href="#local-6989586621679246030"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span id="local-6989586621679246031"><span class="annot"><span class="annottext">Maybe Kind
+</span><a href="#local-6989586621679246031"><span class="hs-identifier hs-var">mt</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">case</span><span> </span><span class="annot"><span class="annottext">Maybe Kind
+</span><a href="#local-6989586621679246031"><span class="hs-identifier hs-var">mt</span></a></span><span> </span><span class="hs-keyword">of</span><span>
+</span><span id="line-59"></span><span>  </span><span class="annot"><span class="annottext">Maybe Kind
+</span><span class="hs-identifier hs-var">Nothing</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Name -&gt; flag -&gt; TyVarBndr flag
+forall flag. Name -&gt; flag -&gt; TyVarBndr flag
+</span><a href="Text.Gigaparsec.Internal.TH.VersionAgnostic.html#mkPlainTV"><span class="hs-identifier hs-var">mkPlainTV</span></a></span><span> </span><span class="annot"><span class="annottext">Name
+</span><a href="#local-6989586621679246029"><span class="hs-identifier hs-var">n</span></a></span><span> </span><span class="annot"><span class="annottext">flag
+</span><a href="#local-6989586621679246030"><span class="hs-identifier hs-var">f</span></a></span><span>
+</span><span id="line-60"></span><span>  </span><span class="annot"><span class="hs-identifier hs-type">Just</span></span><span> </span><span id="local-6989586621679246032"><span class="annot"><span class="annottext">Kind
+</span><a href="#local-6989586621679246032"><span class="hs-identifier hs-var">t</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Name -&gt; flag -&gt; Kind -&gt; TyVarBndr flag
+forall flag. Name -&gt; flag -&gt; Kind -&gt; TyVarBndr flag
+</span><a href="Text.Gigaparsec.Internal.TH.VersionAgnostic.html#mkKindedTV"><span class="hs-identifier hs-var">mkKindedTV</span></a></span><span> </span><span class="annot"><span class="annottext">Name
+</span><a href="#local-6989586621679246029"><span class="hs-identifier hs-var">n</span></a></span><span> </span><span class="annot"><span class="annottext">flag
+</span><a href="#local-6989586621679246030"><span class="hs-identifier hs-var">f</span></a></span><span> </span><span class="annot"><span class="annottext">Kind
+</span><a href="#local-6989586621679246032"><span class="hs-identifier hs-var">t</span></a></span><span>
+</span><span id="line-61"></span><span>
+</span><span id="line-62"></span><span id="local-6989586621679245885"><span id="local-6989586621679245886"><span class="annot"><a href="Text.Gigaparsec.Internal.TH.TypeUtils.html#getBndrFName"><span class="hs-identifier hs-type">getBndrFName</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.TH.VersionAgnostic.html#TyVarBndrF"><span class="hs-identifier hs-type">TyVarBndrF</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679245885"><span class="hs-identifier hs-type">flag</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679245886"><span class="hs-identifier hs-type">k</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Name</span></span></span></span><span>
+</span><span id="line-63"></span><span id="getBndrFName"><span class="annot"><span class="annottext">getBndrFName :: forall flag k. TyVarBndrF flag k -&gt; Name
+</span><a href="Text.Gigaparsec.Internal.TH.TypeUtils.html#getBndrFName"><span class="hs-identifier hs-var hs-var">getBndrFName</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-special">(</span><span class="hs-glyph">\</span><span class="hs-special">(</span><span id="local-6989586621679246035"><span class="annot"><span class="annottext">Name
+</span><a href="#local-6989586621679246035"><span class="hs-identifier hs-var">a</span></a></span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">flag
+</span><span class="hs-identifier">_</span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">Maybe k
+</span><span class="hs-identifier">_</span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Name
+</span><a href="#local-6989586621679246035"><span class="hs-identifier hs-var">a</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">((Name, flag, Maybe k) -&gt; Name)
+-&gt; (TyVarBndrF flag k -&gt; (Name, flag, Maybe k))
+-&gt; TyVarBndrF flag k
+-&gt; Name
+forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
+</span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">TyVarBndrF flag k -&gt; (Name, flag, Maybe k)
+forall flag k. TyVarBndrF flag k -&gt; (Name, flag, Maybe k)
+</span><a href="Text.Gigaparsec.Internal.TH.TypeUtils.html#unTyVarBndrF"><span class="hs-identifier hs-var">unTyVarBndrF</span></a></span><span>
+</span><span id="line-64"></span><span>
+</span><span id="line-65"></span><span class="annot"><a href="Text.Gigaparsec.Internal.TH.TypeUtils.html#removeUnusedTVars"><span class="hs-identifier hs-type">removeUnusedTVars</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Type</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Type</span></span><span>
+</span><span id="line-66"></span><span id="removeUnusedTVars"><span class="annot"><span class="annottext">removeUnusedTVars :: Kind -&gt; Kind
+</span><a href="Text.Gigaparsec.Internal.TH.TypeUtils.html#removeUnusedTVars"><span class="hs-identifier hs-var hs-var">removeUnusedTVars</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">(TypeF (Set Name) -&gt; Set Name)
+-&gt; (TypeF (Set Name, Kind) -&gt; Kind) -&gt; Kind -&gt; Kind
+forall b a. (TypeF b -&gt; b) -&gt; (TypeF (b, a) -&gt; a) -&gt; Kind -&gt; a
+</span><a href="Text.Gigaparsec.Internal.TH.VersionAgnostic.html#zygoType"><span class="hs-identifier hs-var">zygoType</span></a></span><span> </span><span class="annot"><span class="annottext">TypeF (Set Name) -&gt; Set Name
+</span><a href="Text.Gigaparsec.Internal.TH.TypeUtils.html#typeFreeVarsAlg"><span class="hs-identifier hs-var">typeFreeVarsAlg</span></a></span><span> </span><span class="annot"><span class="annottext">TypeF (Set Name, Kind) -&gt; Kind
+</span><a href="#local-6989586621679246040"><span class="hs-identifier hs-var">go</span></a></span><span>
+</span><span id="line-67"></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-68"></span><span>  </span><span class="annot"><a href="#local-6989586621679246040"><span class="hs-identifier hs-type">go</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.TH.VersionAgnostic.html#TypeF"><span class="hs-identifier hs-type">TypeF</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Set</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Name</span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Type</span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Type</span></span><span>
+</span><span id="line-69"></span><span>  </span><span id="local-6989586621679246040"><span class="annot"><span class="annottext">go :: TypeF (Set Name, Kind) -&gt; Kind
+</span><a href="#local-6989586621679246040"><span class="hs-identifier hs-var hs-var">go</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Text.Gigaparsec.Internal.TH.VersionAgnostic.html#ForallTF"><span class="hs-identifier hs-type">ForallTF</span></a></span><span> </span><span id="local-6989586621679246041"><span class="annot"><span class="annottext">[TyVarBndrF Specificity (Set Name, Kind)]
+</span><a href="#local-6989586621679246041"><span class="hs-identifier hs-var">bnds</span></a></span></span><span> </span><span id="local-6989586621679246042"><span class="annot"><span class="annottext">[(Set Name, Kind)]
+</span><a href="#local-6989586621679246042"><span class="hs-identifier hs-var">ctx</span></a></span></span><span> </span><span class="hs-special">(</span><span id="local-6989586621679246043"><span class="annot"><span class="annottext">Set Name
+</span><a href="#local-6989586621679246043"><span class="hs-identifier hs-var">tpNames</span></a></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679246044"><span class="annot"><span class="annottext">Kind
+</span><a href="#local-6989586621679246044"><span class="hs-identifier hs-var">tp</span></a></span></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span>
+</span><span id="line-70"></span><span>    </span><span class="hs-keyword">let</span><span> </span><span class="hs-special">(</span><span id="local-6989586621679246045"><span class="annot"><span class="annottext">[Set Name]
+</span><a href="#local-6989586621679246045"><span class="hs-identifier hs-var">ctxNames</span></a></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679246046"><span class="annot"><span class="annottext">Cxt
+</span><a href="#local-6989586621679246046"><span class="hs-identifier hs-var">ctx'</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">[(Set Name, Kind)] -&gt; ([Set Name], Cxt)
+forall a b. [(a, b)] -&gt; ([a], [b])
+</span><span class="hs-identifier hs-var">unzip</span></span><span> </span><span class="annot"><span class="annottext">[(Set Name, Kind)]
+</span><a href="#local-6989586621679246042"><span class="hs-identifier hs-var">ctx</span></a></span><span>
+</span><span id="line-71"></span><span>        </span><span class="hs-comment">-- All names that *do* occur in the rest of the type/constraints</span><span>
+</span><span id="line-72"></span><span>        </span><span id="local-6989586621679246048"><span class="annot"><span class="annottext">allFreeNames :: Set Name
+</span><a href="#local-6989586621679246048"><span class="hs-identifier hs-var hs-var">allFreeNames</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">[Set Name] -&gt; Set Name
+forall (f :: * -&gt; *) a. (Foldable f, Ord a) =&gt; f (Set a) -&gt; Set a
+</span><span class="hs-identifier hs-var">Set.unions</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Set Name
+</span><a href="#local-6989586621679246043"><span class="hs-identifier hs-var">tpNames</span></a></span><span> </span><span class="annot"><span class="annottext">Set Name -&gt; [Set Name] -&gt; [Set Name]
+forall a. a -&gt; [a] -&gt; [a]
+</span><span class="hs-glyph hs-var">:</span></span><span> </span><span class="annot"><span class="annottext">[Set Name]
+</span><a href="#local-6989586621679246045"><span class="hs-identifier hs-var">ctxNames</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-73"></span><span>        </span><span class="hs-special">(</span><span id="local-6989586621679246050"><span class="annot"><span class="annottext">[TyVarBndr Specificity]
+</span><a href="#local-6989586621679246050"><span class="hs-identifier hs-var">bnds'</span></a></span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">Set Name
+</span><span class="hs-identifier">_</span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">(TyVarBndrF Specificity (Set Name, Kind)
+ -&gt; ([TyVarBndr Specificity], Set Name)
+ -&gt; ([TyVarBndr Specificity], Set Name))
+-&gt; ([TyVarBndr Specificity], Set Name)
+-&gt; [TyVarBndrF Specificity (Set Name, Kind)]
+-&gt; ([TyVarBndr Specificity], Set Name)
+forall a b. (a -&gt; b -&gt; b) -&gt; b -&gt; [a] -&gt; b
+forall (t :: * -&gt; *) a b.
+Foldable t =&gt;
+(a -&gt; b -&gt; b) -&gt; b -&gt; t a -&gt; b
+</span><span class="hs-identifier hs-var">foldr</span></span><span> </span><span class="annot"><span class="annottext">TyVarBndrF Specificity (Set Name, Kind)
+-&gt; ([TyVarBndr Specificity], Set Name)
+-&gt; ([TyVarBndr Specificity], Set Name)
+forall s.
+TyVarBndrF s (Set Name, Kind)
+-&gt; ([TyVarBndr s], Set Name) -&gt; ([TyVarBndr s], Set Name)
+</span><a href="#local-6989586621679246052"><span class="hs-identifier hs-var">discardUnusedTVars</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">[</span><span class="hs-special">]</span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">Set Name
+</span><a href="#local-6989586621679246048"><span class="hs-identifier hs-var">allFreeNames</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">[TyVarBndrF Specificity (Set Name, Kind)]
+</span><a href="#local-6989586621679246041"><span class="hs-identifier hs-var">bnds</span></a></span><span>
+</span><span id="line-74"></span><span>     </span><span class="hs-keyword">in</span><span> </span><span class="annot"><span class="annottext">[TyVarBndr Specificity] -&gt; Cxt -&gt; Kind -&gt; Kind
+</span><span class="hs-identifier hs-var">ForallT</span></span><span> </span><span class="annot"><span class="annottext">[TyVarBndr Specificity]
+</span><a href="#local-6989586621679246050"><span class="hs-identifier hs-var">bnds'</span></a></span><span> </span><span class="annot"><span class="annottext">Cxt
+</span><a href="#local-6989586621679246046"><span class="hs-identifier hs-var">ctx'</span></a></span><span> </span><span class="annot"><span class="annottext">Kind
+</span><a href="#local-6989586621679246044"><span class="hs-identifier hs-var">tp</span></a></span><span>
+</span><span id="line-75"></span><span>  </span><span class="annot"><a href="#local-6989586621679246040"><span class="hs-identifier hs-var">go</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Text.Gigaparsec.Internal.TH.VersionAgnostic.html#ForallVisTF"><span class="hs-identifier hs-type">ForallVisTF</span></a></span><span> </span><span id="local-6989586621679246053"><span class="annot"><span class="annottext">[TyVarBndrF () (Set Name, Kind)]
+</span><a href="#local-6989586621679246053"><span class="hs-identifier hs-var">bnds</span></a></span></span><span> </span><span class="hs-special">(</span><span id="local-6989586621679246054"><span class="annot"><span class="annottext">Set Name
+</span><a href="#local-6989586621679246054"><span class="hs-identifier hs-var">tpNames</span></a></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679246055"><span class="annot"><span class="annottext">Kind
+</span><a href="#local-6989586621679246055"><span class="hs-identifier hs-var">tp</span></a></span></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span>
+</span><span id="line-76"></span><span>    </span><span class="hs-keyword">let</span><span> </span><span class="hs-special">(</span><span id="local-6989586621679246056"><span class="annot"><span class="annottext">[TyVarBndr ()]
+</span><a href="#local-6989586621679246056"><span class="hs-identifier hs-var">bnds'</span></a></span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">Set Name
+</span><span class="hs-identifier">_</span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">(TyVarBndrF () (Set Name, Kind)
+ -&gt; ([TyVarBndr ()], Set Name) -&gt; ([TyVarBndr ()], Set Name))
+-&gt; ([TyVarBndr ()], Set Name)
+-&gt; [TyVarBndrF () (Set Name, Kind)]
+-&gt; ([TyVarBndr ()], Set Name)
+forall a b. (a -&gt; b -&gt; b) -&gt; b -&gt; [a] -&gt; b
+forall (t :: * -&gt; *) a b.
+Foldable t =&gt;
+(a -&gt; b -&gt; b) -&gt; b -&gt; t a -&gt; b
+</span><span class="hs-identifier hs-var">foldr</span></span><span> </span><span class="annot"><span class="annottext">TyVarBndrF () (Set Name, Kind)
+-&gt; ([TyVarBndr ()], Set Name) -&gt; ([TyVarBndr ()], Set Name)
+forall s.
+TyVarBndrF s (Set Name, Kind)
+-&gt; ([TyVarBndr s], Set Name) -&gt; ([TyVarBndr s], Set Name)
+</span><a href="#local-6989586621679246052"><span class="hs-identifier hs-var">discardUnusedTVars</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">[</span><span class="hs-special">]</span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">Set Name
+</span><a href="#local-6989586621679246054"><span class="hs-identifier hs-var">tpNames</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">[TyVarBndrF () (Set Name, Kind)]
+</span><a href="#local-6989586621679246053"><span class="hs-identifier hs-var">bnds</span></a></span><span>
+</span><span id="line-77"></span><span>     </span><span class="hs-keyword">in</span><span> </span><span class="annot"><span class="annottext">[TyVarBndr ()] -&gt; Kind -&gt; Kind
+</span><span class="hs-identifier hs-var">ForallVisT</span></span><span> </span><span class="annot"><span class="annottext">[TyVarBndr ()]
+</span><a href="#local-6989586621679246056"><span class="hs-identifier hs-var">bnds'</span></a></span><span> </span><span class="annot"><span class="annottext">Kind
+</span><a href="#local-6989586621679246055"><span class="hs-identifier hs-var">tp</span></a></span><span>
+</span><span id="line-78"></span><span>  </span><span class="annot"><a href="#local-6989586621679246040"><span class="hs-identifier hs-var">go</span></a></span><span> </span><span id="local-6989586621679246058"><span class="annot"><span class="annottext">TypeF (Set Name, Kind)
+</span><a href="#local-6989586621679246058"><span class="hs-identifier hs-var">e</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">TypeF Kind -&gt; Kind
+</span><a href="Text.Gigaparsec.Internal.TH.VersionAgnostic.html#embedType"><span class="hs-identifier hs-var">embedType</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">(Set Name, Kind) -&gt; Kind
+forall a b. (a, b) -&gt; b
+</span><span class="hs-identifier hs-var">snd</span></span><span> </span><span class="annot"><span class="annottext">((Set Name, Kind) -&gt; Kind) -&gt; TypeF (Set Name, Kind) -&gt; TypeF Kind
+forall (f :: * -&gt; *) a b. Functor f =&gt; (a -&gt; b) -&gt; f a -&gt; f b
+</span><span class="hs-operator hs-var">&lt;$&gt;</span></span><span> </span><span class="annot"><span class="annottext">TypeF (Set Name, Kind)
+</span><a href="#local-6989586621679246058"><span class="hs-identifier hs-var">e</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-79"></span><span>
+</span><span id="line-80"></span><span>  </span><span id="local-6989586621679245902"><span class="annot"><a href="#local-6989586621679246052"><span class="hs-identifier hs-type">discardUnusedTVars</span></a></span><span> </span><span class="hs-glyph">::</span><span>
+</span><span id="line-81"></span><span>    </span><span class="annot"><a href="Text.Gigaparsec.Internal.TH.VersionAgnostic.html#TyVarBndrF"><span class="hs-identifier hs-type">TyVarBndrF</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679245902"><span class="hs-identifier hs-type">s</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Set</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Name</span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Type</span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span>
+</span><span id="line-82"></span><span>    </span><span class="hs-special">(</span><span class="hs-special">[</span><span class="annot"><a href="Text.Gigaparsec.Internal.TH.VersionAgnostic.html#TyVarBndr"><span class="hs-identifier hs-type">TyVarBndr</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679245902"><span class="hs-identifier hs-type">s</span></a></span><span class="hs-special">]</span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Set</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Name</span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span>
+</span><span id="line-83"></span><span>    </span><span class="hs-special">(</span><span class="hs-special">[</span><span class="annot"><a href="Text.Gigaparsec.Internal.TH.VersionAgnostic.html#TyVarBndr"><span class="hs-identifier hs-type">TyVarBndr</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679245902"><span class="hs-identifier hs-type">s</span></a></span><span class="hs-special">]</span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Set</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Name</span></span><span class="hs-special">)</span></span><span>
+</span><span id="line-84"></span><span>  </span><span id="local-6989586621679246052"><span class="annot"><span class="annottext">discardUnusedTVars :: forall s.
+TyVarBndrF s (Set Name, Kind)
+-&gt; ([TyVarBndr s], Set Name) -&gt; ([TyVarBndr s], Set Name)
+</span><a href="#local-6989586621679246052"><span class="hs-identifier hs-var hs-var">discardUnusedTVars</span></a></span></span><span> </span><span id="local-6989586621679246064"><span class="annot"><span class="annottext">TyVarBndrF s (Set Name, Kind)
+</span><a href="#local-6989586621679246064"><span class="hs-identifier hs-var">bnd</span></a></span></span><span> </span><span class="hs-special">(</span><span id="local-6989586621679246065"><span class="annot"><span class="annottext">[TyVarBndr s]
+</span><a href="#local-6989586621679246065"><span class="hs-identifier hs-var">bnds</span></a></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679246066"><span class="annot"><span class="annottext">Set Name
+</span><a href="#local-6989586621679246066"><span class="hs-identifier hs-var">names</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span>
+</span><span id="line-85"></span><span>    </span><span class="hs-keyword">let</span><span> </span><span class="hs-special">(</span><span id="local-6989586621679246067"><span class="annot"><span class="annottext">Name
+</span><a href="#local-6989586621679246067"><span class="hs-identifier hs-var">n</span></a></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679246068"><span class="annot"><span class="annottext">s
+</span><a href="#local-6989586621679246068"><span class="hs-identifier hs-var">f</span></a></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679246069"><span class="annot"><span class="annottext">Maybe (Set Name, Kind)
+</span><a href="#local-6989586621679246069"><span class="hs-identifier hs-var">mk</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">TyVarBndrF s (Set Name, Kind) -&gt; (Name, s, Maybe (Set Name, Kind))
+forall flag k. TyVarBndrF flag k -&gt; (Name, flag, Maybe k)
+</span><a href="Text.Gigaparsec.Internal.TH.TypeUtils.html#unTyVarBndrF"><span class="hs-identifier hs-var">unTyVarBndrF</span></a></span><span> </span><span class="annot"><span class="annottext">TyVarBndrF s (Set Name, Kind)
+</span><a href="#local-6989586621679246064"><span class="hs-identifier hs-var">bnd</span></a></span><span>
+</span><span id="line-86"></span><span>     </span><span class="hs-keyword">in</span><span> </span><span class="hs-keyword">if</span><span> </span><span class="annot"><span class="annottext">Name
+</span><a href="#local-6989586621679246067"><span class="hs-identifier hs-var">n</span></a></span><span> </span><span class="annot"><span class="annottext">Name -&gt; Set Name -&gt; Bool
+forall a. Ord a =&gt; a -&gt; Set a -&gt; Bool
+</span><span class="hs-operator hs-var">`Set.member`</span></span><span> </span><span class="annot"><span class="annottext">Set Name
+</span><a href="#local-6989586621679246066"><span class="hs-identifier hs-var">names</span></a></span><span>
+</span><span id="line-87"></span><span>          </span><span class="hs-comment">-- We keep n, and add any free vars in its kind (if it has one)</span><span>
+</span><span id="line-88"></span><span>          </span><span class="hs-keyword">then</span><span>
+</span><span id="line-89"></span><span>            </span><span class="hs-special">(</span><span> </span><span class="annot"><span class="annottext">Name -&gt; s -&gt; Maybe Kind -&gt; TyVarBndr s
+forall flag. Name -&gt; flag -&gt; Maybe Kind -&gt; TyVarBndr flag
+</span><a href="Text.Gigaparsec.Internal.TH.TypeUtils.html#reTyVarBndr"><span class="hs-identifier hs-var">reTyVarBndr</span></a></span><span> </span><span class="annot"><span class="annottext">Name
+</span><a href="#local-6989586621679246067"><span class="hs-identifier hs-var">n</span></a></span><span> </span><span class="annot"><span class="annottext">s
+</span><a href="#local-6989586621679246068"><span class="hs-identifier hs-var">f</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">(Set Name, Kind) -&gt; Kind
+forall a b. (a, b) -&gt; b
+</span><span class="hs-identifier hs-var">snd</span></span><span> </span><span class="annot"><span class="annottext">((Set Name, Kind) -&gt; Kind) -&gt; Maybe (Set Name, Kind) -&gt; Maybe Kind
+forall (f :: * -&gt; *) a b. Functor f =&gt; (a -&gt; b) -&gt; f a -&gt; f b
+</span><span class="hs-operator hs-var">&lt;$&gt;</span></span><span> </span><span class="annot"><span class="annottext">Maybe (Set Name, Kind)
+</span><a href="#local-6989586621679246069"><span class="hs-identifier hs-var">mk</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">TyVarBndr s -&gt; [TyVarBndr s] -&gt; [TyVarBndr s]
+forall a. a -&gt; [a] -&gt; [a]
+</span><span class="hs-glyph hs-var">:</span></span><span> </span><span class="annot"><span class="annottext">[TyVarBndr s]
+</span><a href="#local-6989586621679246065"><span class="hs-identifier hs-var">bnds</span></a></span><span>
+</span><span id="line-90"></span><span>            </span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">Set Name -&gt; Set Name -&gt; Set Name
+forall a. Ord a =&gt; Set a -&gt; Set a -&gt; Set a
+</span><span class="hs-identifier hs-var">Set.union</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Set Name
+-&gt; ((Set Name, Kind) -&gt; Set Name)
+-&gt; Maybe (Set Name, Kind)
+-&gt; Set Name
+forall b a. b -&gt; (a -&gt; b) -&gt; Maybe a -&gt; b
+</span><span class="hs-identifier hs-var">maybe</span></span><span> </span><span class="annot"><span class="annottext">Set Name
+forall a. Set a
+</span><span class="hs-identifier hs-var">Set.empty</span></span><span> </span><span class="annot"><span class="annottext">(Set Name, Kind) -&gt; Set Name
+forall a b. (a, b) -&gt; a
+</span><span class="hs-identifier hs-var">fst</span></span><span> </span><span class="annot"><span class="annottext">Maybe (Set Name, Kind)
+</span><a href="#local-6989586621679246069"><span class="hs-identifier hs-var">mk</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">Set Name
+</span><a href="#local-6989586621679246066"><span class="hs-identifier hs-var">names</span></a></span><span>
+</span><span id="line-91"></span><span>            </span><span class="hs-special">)</span><span>
+</span><span id="line-92"></span><span>          </span><span class="hs-comment">-- We discard n as it does not appear in subterms</span><span>
+</span><span id="line-93"></span><span>          </span><span class="hs-keyword">else</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">[TyVarBndr s]
+</span><a href="#local-6989586621679246065"><span class="hs-identifier hs-var">bnds</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">Set Name
+</span><a href="#local-6989586621679246066"><span class="hs-identifier hs-var">names</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-94"></span><span>
+</span><span id="line-95"></span><span class="annot"><a href="Text.Gigaparsec.Internal.TH.TypeUtils.html#typeFreeVarsAlg"><span class="hs-identifier hs-type">typeFreeVarsAlg</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.TH.VersionAgnostic.html#TypeF"><span class="hs-identifier hs-type">TypeF</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Set</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Name</span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Set</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Name</span></span><span>
+</span><span id="line-96"></span><span id="typeFreeVarsAlg"><span class="annot"><span class="annottext">typeFreeVarsAlg :: TypeF (Set Name) -&gt; Set Name
+</span><a href="Text.Gigaparsec.Internal.TH.TypeUtils.html#typeFreeVarsAlg"><span class="hs-identifier hs-var hs-var">typeFreeVarsAlg</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">TypeF (Set Name) -&gt; Set Name
+</span><a href="#local-6989586621679246075"><span class="hs-identifier hs-var">go</span></a></span><span>
+</span><span id="line-97"></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-98"></span><span>  </span><span class="annot"><a href="#local-6989586621679246075"><span class="hs-identifier hs-type">go</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.TH.VersionAgnostic.html#TypeF"><span class="hs-identifier hs-type">TypeF</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Set</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Name</span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Set</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Name</span></span><span>
+</span><span id="line-99"></span><span>  </span><span id="local-6989586621679246075"><span class="annot"><span class="annottext">go :: TypeF (Set Name) -&gt; Set Name
+</span><a href="#local-6989586621679246075"><span class="hs-identifier hs-var hs-var">go</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Text.Gigaparsec.Internal.TH.VersionAgnostic.html#VarTF"><span class="hs-identifier hs-type">VarTF</span></a></span><span> </span><span id="local-6989586621679246077"><span class="annot"><span class="annottext">Name
+</span><a href="#local-6989586621679246077"><span class="hs-identifier hs-var">x</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Name -&gt; Set Name
+forall a. a -&gt; Set a
+</span><span class="hs-identifier hs-var">Set.singleton</span></span><span> </span><span class="annot"><span class="annottext">Name
+</span><a href="#local-6989586621679246077"><span class="hs-identifier hs-var">x</span></a></span><span>
+</span><span id="line-100"></span><span>  </span><span class="annot"><a href="#local-6989586621679246075"><span class="hs-identifier hs-var">go</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Text.Gigaparsec.Internal.TH.VersionAgnostic.html#ForallTF"><span class="hs-identifier hs-type">ForallTF</span></a></span><span> </span><span id="local-6989586621679246079"><span class="annot"><span class="annottext">[TyVarBndrF Specificity (Set Name)]
+</span><a href="#local-6989586621679246079"><span class="hs-identifier hs-var">bnds</span></a></span></span><span> </span><span id="local-6989586621679246080"><span class="annot"><span class="annottext">[Set Name]
+</span><a href="#local-6989586621679246080"><span class="hs-identifier hs-var">ctx</span></a></span></span><span> </span><span id="local-6989586621679246081"><span class="annot"><span class="annottext">Set Name
+</span><a href="#local-6989586621679246081"><span class="hs-identifier hs-var">tp</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">[TyVarBndrF Specificity (Set Name)] -&gt; Set Name -&gt; Set Name
+forall flag. [TyVarBndrF flag (Set Name)] -&gt; Set Name -&gt; Set Name
+</span><a href="#local-6989586621679246082"><span class="hs-identifier hs-var">handleBnds</span></a></span><span> </span><span class="annot"><span class="annottext">[TyVarBndrF Specificity (Set Name)]
+</span><a href="#local-6989586621679246079"><span class="hs-identifier hs-var">bnds</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">[Set Name] -&gt; Set Name
+forall (f :: * -&gt; *) a. (Foldable f, Ord a) =&gt; f (Set a) -&gt; Set a
+</span><span class="hs-identifier hs-var">Set.unions</span></span><span> </span><span class="annot"><span class="annottext">([Set Name] -&gt; Set Name) -&gt; [Set Name] -&gt; Set Name
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Set Name
+</span><a href="#local-6989586621679246081"><span class="hs-identifier hs-var">tp</span></a></span><span> </span><span class="annot"><span class="annottext">Set Name -&gt; [Set Name] -&gt; [Set Name]
+forall a. a -&gt; [a] -&gt; [a]
+</span><span class="hs-glyph hs-var">:</span></span><span> </span><span class="annot"><span class="annottext">[Set Name]
+</span><a href="#local-6989586621679246080"><span class="hs-identifier hs-var">ctx</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-101"></span><span>  </span><span class="annot"><a href="#local-6989586621679246075"><span class="hs-identifier hs-var">go</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Text.Gigaparsec.Internal.TH.VersionAgnostic.html#ForallVisTF"><span class="hs-identifier hs-type">ForallVisTF</span></a></span><span> </span><span id="local-6989586621679246083"><span class="annot"><span class="annottext">[TyVarBndrF () (Set Name)]
+</span><a href="#local-6989586621679246083"><span class="hs-identifier hs-var">bnds</span></a></span></span><span> </span><span id="local-6989586621679246084"><span class="annot"><span class="annottext">Set Name
+</span><a href="#local-6989586621679246084"><span class="hs-identifier hs-var">tp</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">[TyVarBndrF () (Set Name)] -&gt; Set Name -&gt; Set Name
+forall flag. [TyVarBndrF flag (Set Name)] -&gt; Set Name -&gt; Set Name
+</span><a href="#local-6989586621679246082"><span class="hs-identifier hs-var">handleBnds</span></a></span><span> </span><span class="annot"><span class="annottext">[TyVarBndrF () (Set Name)]
+</span><a href="#local-6989586621679246083"><span class="hs-identifier hs-var">bnds</span></a></span><span> </span><span class="annot"><span class="annottext">Set Name
+</span><a href="#local-6989586621679246084"><span class="hs-identifier hs-var">tp</span></a></span><span>
+</span><span id="line-102"></span><span>  </span><span class="annot"><a href="#local-6989586621679246075"><span class="hs-identifier hs-var">go</span></a></span><span> </span><span id="local-6989586621679246085"><span class="annot"><span class="annottext">TypeF (Set Name)
+</span><a href="#local-6989586621679246085"><span class="hs-identifier hs-var">e</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">(Set Name -&gt; Set Name -&gt; Set Name)
+-&gt; Set Name -&gt; TypeF (Set Name) -&gt; Set Name
+forall a b. (a -&gt; b -&gt; b) -&gt; b -&gt; TypeF a -&gt; b
+forall (t :: * -&gt; *) a b.
+Foldable t =&gt;
+(a -&gt; b -&gt; b) -&gt; b -&gt; t a -&gt; b
+</span><span class="hs-identifier hs-var">foldr</span></span><span> </span><span class="annot"><span class="annottext">Set Name -&gt; Set Name -&gt; Set Name
+forall a. Ord a =&gt; Set a -&gt; Set a -&gt; Set a
+</span><span class="hs-identifier hs-var">Set.union</span></span><span> </span><span class="annot"><span class="annottext">Set Name
+forall a. Set a
+</span><span class="hs-identifier hs-var">Set.empty</span></span><span> </span><span class="annot"><span class="annottext">TypeF (Set Name)
+</span><a href="#local-6989586621679246085"><span class="hs-identifier hs-var">e</span></a></span><span>
+</span><span id="line-103"></span><span>
+</span><span id="line-104"></span><span>  </span><span id="local-6989586621679245914"><span class="annot"><a href="#local-6989586621679246082"><span class="hs-identifier hs-type">handleBnds</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-special">[</span><span class="annot"><a href="Text.Gigaparsec.Internal.TH.VersionAgnostic.html#TyVarBndrF"><span class="hs-identifier hs-type">TyVarBndrF</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679245914"><span class="hs-identifier hs-type">flag</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Set</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Name</span></span><span class="hs-special">)</span><span class="hs-special">]</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Set</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Name</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Set</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Name</span></span></span><span>
+</span><span id="line-105"></span><span>  </span><span id="local-6989586621679246082"><span class="annot"><span class="annottext">handleBnds :: forall flag. [TyVarBndrF flag (Set Name)] -&gt; Set Name -&gt; Set Name
+</span><a href="#local-6989586621679246082"><span class="hs-identifier hs-var hs-var">handleBnds</span></a></span></span><span> </span><span id="local-6989586621679246093"><span class="annot"><span class="annottext">[TyVarBndrF flag (Set Name)]
+</span><a href="#local-6989586621679246093"><span class="hs-identifier hs-var">bnds</span></a></span></span><span> </span><span id="local-6989586621679246094"><span class="annot"><span class="annottext">Set Name
+</span><a href="#local-6989586621679246094"><span class="hs-identifier hs-var">ns</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
+</span><span id="line-106"></span><span>    </span><span class="hs-keyword">let</span><span> </span><span class="hs-special">(</span><span id="local-6989586621679246095"><span class="annot"><span class="annottext">Set Name
+</span><a href="#local-6989586621679246095"><span class="hs-keyword hs-var">as</span></a></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679246096"><span class="annot"><span class="annottext">Set Name
+</span><a href="#local-6989586621679246096"><span class="hs-identifier hs-var">ks</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span>
+</span><span id="line-107"></span><span>          </span><span class="annot"><span class="annottext">([Name] -&gt; Set Name)
+-&gt; ([Set Name] -&gt; Set Name)
+-&gt; ([Name], [Set Name])
+-&gt; (Set Name, Set Name)
+forall a b c d. (a -&gt; b) -&gt; (c -&gt; d) -&gt; (a, c) -&gt; (b, d)
+forall (p :: * -&gt; * -&gt; *) a b c d.
+Bifunctor p =&gt;
+(a -&gt; b) -&gt; (c -&gt; d) -&gt; p a c -&gt; p b d
+</span><span class="hs-identifier hs-var">bimap</span></span><span> </span><span class="annot"><span class="annottext">[Name] -&gt; Set Name
+forall a. Ord a =&gt; [a] -&gt; Set a
+</span><span class="hs-identifier hs-var">Set.fromList</span></span><span> </span><span class="annot"><span class="annottext">[Set Name] -&gt; Set Name
+forall (f :: * -&gt; *) a. (Foldable f, Ord a) =&gt; f (Set a) -&gt; Set a
+</span><span class="hs-identifier hs-var">Set.unions</span></span><span> </span><span class="annot"><span class="annottext">(([Name], [Set Name]) -&gt; (Set Name, Set Name))
+-&gt; ([Name], [Set Name]) -&gt; (Set Name, Set Name)
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">[(Name, Set Name)] -&gt; ([Name], [Set Name])
+forall a b. [(a, b)] -&gt; ([a], [b])
+</span><span class="hs-identifier hs-var">unzip</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">(TyVarBndrF flag (Set Name) -&gt; (Name, Set Name))
+-&gt; [TyVarBndrF flag (Set Name)] -&gt; [(Name, Set Name)]
+forall a b. (a -&gt; b) -&gt; [a] -&gt; [b]
+</span><span class="hs-identifier hs-var">map</span></span><span> </span><span class="annot"><span class="annottext">TyVarBndrF flag (Set Name) -&gt; (Name, Set Name)
+forall flag. TyVarBndrF flag (Set Name) -&gt; (Name, Set Name)
+</span><a href="#local-6989586621679246098"><span class="hs-identifier hs-var">bndrFreeAndBoundNames</span></a></span><span> </span><span class="annot"><span class="annottext">[TyVarBndrF flag (Set Name)]
+</span><a href="#local-6989586621679246093"><span class="hs-identifier hs-var">bnds</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-108"></span><span>     </span><span class="hs-keyword">in</span><span> </span><span class="annot"><span class="annottext">Set Name -&gt; Set Name -&gt; Set Name
+forall a. Ord a =&gt; Set a -&gt; Set a -&gt; Set a
+</span><span class="hs-identifier hs-var">Set.difference</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Set Name -&gt; Set Name -&gt; Set Name
+forall a. Ord a =&gt; Set a -&gt; Set a -&gt; Set a
+</span><span class="hs-identifier hs-var">Set.union</span></span><span> </span><span class="annot"><span class="annottext">Set Name
+</span><a href="#local-6989586621679246096"><span class="hs-identifier hs-var">ks</span></a></span><span> </span><span class="annot"><span class="annottext">Set Name
+</span><a href="#local-6989586621679246094"><span class="hs-identifier hs-var">ns</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">Set Name
+</span><a href="#local-6989586621679246095"><span class="hs-keyword hs-var">as</span></a></span><span>
+</span><span id="line-109"></span><span>
+</span><span id="line-110"></span><span>  </span><span id="local-6989586621679245923"><span class="annot"><a href="#local-6989586621679246098"><span class="hs-identifier hs-type">bndrFreeAndBoundNames</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Internal.TH.VersionAgnostic.html#TyVarBndrF"><span class="hs-identifier hs-type">TyVarBndrF</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679245923"><span class="hs-identifier hs-type">flag</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Set</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Name</span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Name</span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Set</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Name</span></span><span class="hs-special">)</span></span><span>
+</span><span id="line-111"></span><span>  </span><span id="local-6989586621679246098"><span class="annot"><span class="annottext">bndrFreeAndBoundNames :: forall flag. TyVarBndrF flag (Set Name) -&gt; (Name, Set Name)
+</span><a href="#local-6989586621679246098"><span class="hs-identifier hs-var hs-var">bndrFreeAndBoundNames</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Text.Gigaparsec.Internal.TH.VersionAgnostic.html#PlainTVF"><span class="hs-identifier hs-type">PlainTVF</span></a></span><span> </span><span id="local-6989586621679246100"><span class="annot"><span class="annottext">Name
+</span><a href="#local-6989586621679246100"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span class="annot"><span class="annottext">flag
+</span><span class="hs-identifier">_</span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Name
+</span><a href="#local-6989586621679246100"><span class="hs-identifier hs-var">x</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">Set Name
+forall a. Set a
+</span><span class="hs-identifier hs-var">Set.empty</span></span><span class="hs-special">)</span><span>
+</span><span id="line-112"></span><span>  </span><span class="annot"><a href="#local-6989586621679246098"><span class="hs-identifier hs-var">bndrFreeAndBoundNames</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Text.Gigaparsec.Internal.TH.VersionAgnostic.html#KindedTVF"><span class="hs-identifier hs-type">KindedTVF</span></a></span><span> </span><span id="local-6989586621679246101"><span class="annot"><span class="annottext">Name
+</span><a href="#local-6989586621679246101"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span class="annot"><span class="annottext">flag
+</span><span class="hs-identifier">_</span></span><span> </span><span id="local-6989586621679246102"><span class="annot"><span class="annottext">Set Name
+</span><a href="#local-6989586621679246102"><span class="hs-identifier hs-var">k</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Name
+</span><a href="#local-6989586621679246101"><span class="hs-identifier hs-var">x</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">Set Name
+</span><a href="#local-6989586621679246102"><span class="hs-identifier hs-var">k</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-113"></span><span>
+</span><span id="line-114"></span><span class="annot"><a href="Text.Gigaparsec.Internal.TH.TypeUtils.html#typeFreeVars"><span class="hs-identifier hs-type">typeFreeVars</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Type</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Set</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Name</span></span><span>
+</span><span id="line-115"></span><span id="typeFreeVars"><span class="annot"><span class="annottext">typeFreeVars :: Kind -&gt; Set Name
+</span><a href="Text.Gigaparsec.Internal.TH.TypeUtils.html#typeFreeVars"><span class="hs-identifier hs-var hs-var">typeFreeVars</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">(TypeF (Set Name) -&gt; Set Name) -&gt; Kind -&gt; Set Name
+forall a. (TypeF a -&gt; a) -&gt; Kind -&gt; a
+</span><a href="Text.Gigaparsec.Internal.TH.VersionAgnostic.html#cataType"><span class="hs-identifier hs-var">cataType</span></a></span><span> </span><span class="annot"><span class="annottext">TypeF (Set Name) -&gt; Set Name
+</span><a href="Text.Gigaparsec.Internal.TH.TypeUtils.html#typeFreeVarsAlg"><span class="hs-identifier hs-var">typeFreeVarsAlg</span></a></span><span>
+</span><span id="line-116"></span><span>
+</span><span id="line-117"></span><span class="annot"><a href="Text.Gigaparsec.Internal.TH.TypeUtils.html#getRecordFields"><span class="hs-identifier hs-type">getRecordFields</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Info</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Q</span></span><span> </span><span class="hs-special">[</span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Name</span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Type</span></span><span class="hs-special">)</span><span class="hs-special">]</span><span>
+</span><span id="line-118"></span><span id="getRecordFields"><span class="annot"><span class="annottext">getRecordFields :: Info -&gt; Q [(Name, Kind)]
+</span><a href="Text.Gigaparsec.Internal.TH.TypeUtils.html#getRecordFields"><span class="hs-identifier hs-var hs-var">getRecordFields</span></a></span></span><span> </span><span id="local-6989586621679246105"><span class="annot"><span class="annottext">Info
+</span><a href="#local-6989586621679246105"><span class="hs-identifier hs-var">i</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">case</span><span> </span><span class="annot"><span class="annottext">Info
+</span><a href="#local-6989586621679246105"><span class="hs-identifier hs-var">i</span></a></span><span> </span><span class="hs-keyword">of</span><span>
+</span><span id="line-119"></span><span>  </span><span class="annot"><span class="hs-identifier hs-type">TyConI</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">DataD</span></span><span> </span><span class="annot"><span class="annottext">Cxt
+</span><span class="hs-identifier">_</span></span><span> </span><span class="annot"><span class="annottext">Name
+</span><span class="hs-identifier">_</span></span><span> </span><span class="annot"><span class="annottext">[TyVarBndr BndrVis]
+</span><span class="hs-identifier">_</span></span><span> </span><span class="annot"><span class="annottext">Maybe Kind
+</span><span class="hs-identifier">_</span></span><span> </span><span id="local-6989586621679246108"><span class="annot"><span class="annottext">[Con]
+</span><a href="#local-6989586621679246108"><span class="hs-identifier hs-var">cstrs</span></a></span></span><span> </span><span class="annot"><span class="annottext">[DerivClause]
+</span><span class="hs-identifier">_</span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">[[(Name, Kind)]] -&gt; [(Name, Kind)]
+forall (t :: * -&gt; *) a. Foldable t =&gt; t [a] -&gt; [a]
+</span><span class="hs-identifier hs-var">concat</span></span><span> </span><span class="annot"><span class="annottext">([[(Name, Kind)]] -&gt; [(Name, Kind)])
+-&gt; Q [[(Name, Kind)]] -&gt; Q [(Name, Kind)]
+forall (f :: * -&gt; *) a b. Functor f =&gt; (a -&gt; b) -&gt; f a -&gt; f b
+</span><span class="hs-operator hs-var">&lt;$&gt;</span></span><span> </span><span class="annot"><span class="annottext">(Con -&gt; Q [(Name, Kind)]) -&gt; [Con] -&gt; Q [[(Name, Kind)]]
+forall (t :: * -&gt; *) (m :: * -&gt; *) a b.
+(Traversable t, Monad m) =&gt;
+(a -&gt; m b) -&gt; t a -&gt; m (t b)
+forall (m :: * -&gt; *) a b. Monad m =&gt; (a -&gt; m b) -&gt; [a] -&gt; m [b]
+</span><span class="hs-identifier hs-var">mapM</span></span><span> </span><span class="annot"><span class="annottext">Con -&gt; Q [(Name, Kind)]
+</span><a href="#local-6989586621679246110"><span class="hs-identifier hs-var">getFieldNames</span></a></span><span> </span><span class="annot"><span class="annottext">[Con]
+</span><a href="#local-6989586621679246108"><span class="hs-identifier hs-var">cstrs</span></a></span><span>
+</span><span id="line-120"></span><span>  </span><span class="annot"><span class="hs-identifier hs-type">TyConI</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">NewtypeD</span></span><span> </span><span class="annot"><span class="annottext">Cxt
+</span><span class="hs-identifier">_</span></span><span> </span><span class="annot"><span class="annottext">Name
+</span><span class="hs-identifier">_</span></span><span> </span><span class="annot"><span class="annottext">[TyVarBndr BndrVis]
+</span><span class="hs-identifier">_</span></span><span> </span><span class="annot"><span class="annottext">Maybe Kind
+</span><span class="hs-identifier">_</span></span><span> </span><span id="local-6989586621679246112"><span class="annot"><span class="annottext">Con
+</span><a href="#local-6989586621679246112"><span class="hs-identifier hs-var">cstr</span></a></span></span><span> </span><span class="annot"><span class="annottext">[DerivClause]
+</span><span class="hs-identifier">_</span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Con -&gt; Q [(Name, Kind)]
+</span><a href="#local-6989586621679246110"><span class="hs-identifier hs-var">getFieldNames</span></a></span><span> </span><span class="annot"><span class="annottext">Con
+</span><a href="#local-6989586621679246112"><span class="hs-identifier hs-var">cstr</span></a></span><span>
+</span><span id="line-121"></span><span>  </span><span class="annot"><span class="hs-identifier hs-type">DataConI</span></span><span> </span><span class="annot"><span class="annottext">Name
+</span><span class="hs-identifier">_</span></span><span> </span><span class="annot"><span class="annottext">Kind
+</span><span class="hs-identifier">_</span></span><span> </span><span id="local-6989586621679246114"><span class="annot"><span class="annottext">Name
+</span><a href="#local-6989586621679246114"><span class="hs-identifier hs-var">tname</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Info -&gt; Q [(Name, Kind)]
+</span><a href="Text.Gigaparsec.Internal.TH.TypeUtils.html#getRecordFields"><span class="hs-identifier hs-var">getRecordFields</span></a></span><span> </span><span class="annot"><span class="annottext">(Info -&gt; Q [(Name, Kind)]) -&gt; Q Info -&gt; Q [(Name, Kind)]
+forall (m :: * -&gt; *) a b. Monad m =&gt; (a -&gt; m b) -&gt; m a -&gt; m b
+</span><span class="hs-operator hs-var">=&lt;&lt;</span></span><span> </span><span class="annot"><span class="annottext">Name -&gt; Q Info
+</span><span class="hs-identifier hs-var">reify</span></span><span> </span><span class="annot"><span class="annottext">Name
+</span><a href="#local-6989586621679246114"><span class="hs-identifier hs-var">tname</span></a></span><span>
+</span><span id="line-122"></span><span>  </span><span id="local-6989586621679246117"><span class="annot"><span class="annottext">Info
+</span><a href="#local-6989586621679246117"><span class="hs-identifier hs-var">info</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">String -&gt; Q [(Name, Kind)]
+forall a. String -&gt; Q a
+forall (m :: * -&gt; *) a. MonadFail m =&gt; String -&gt; m a
+</span><span class="hs-identifier hs-var">fail</span></span><span> </span><span class="annot"><span class="annottext">(String -&gt; Q [(Name, Kind)]) -&gt; String -&gt; Q [(Name, Kind)]
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">[String] -&gt; String
+forall (t :: * -&gt; *) a. Foldable t =&gt; t [a] -&gt; [a]
+</span><span class="hs-identifier hs-var">concat</span></span><span> </span><span class="hs-special">[</span><span class="annot"><span class="annottext">String
+</span><span class="hs-string">&quot;getRecordFields: given info is not for a record: `&quot;</span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">Info -&gt; String
+forall a. Ppr a =&gt; a -&gt; String
+</span><span class="hs-identifier hs-var">pprint</span></span><span> </span><span class="annot"><span class="annottext">Info
+</span><a href="#local-6989586621679246117"><span class="hs-identifier hs-var">info</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">String
+</span><span class="hs-string">&quot;`&quot;</span></span><span class="hs-special">]</span><span>
+</span><span id="line-123"></span><span>  </span><span class="hs-keyword">where</span><span>
+</span><span id="line-124"></span><span>    </span><span class="annot"><a href="#local-6989586621679246110"><span class="hs-identifier hs-type">getFieldNames</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Con</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Q</span></span><span> </span><span class="hs-special">[</span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Name</span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Type</span></span><span class="hs-special">)</span><span class="hs-special">]</span><span>
+</span><span id="line-125"></span><span>    </span><span id="local-6989586621679246110"><span class="annot"><span class="annottext">getFieldNames :: Con -&gt; Q [(Name, Kind)]
+</span><a href="#local-6989586621679246110"><span class="hs-identifier hs-var hs-var">getFieldNames</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">RecC</span></span><span> </span><span class="annot"><span class="annottext">Name
+</span><span class="hs-identifier">_</span></span><span> </span><span id="local-6989586621679246119"><span class="annot"><span class="annottext">[VarBangType]
+</span><a href="#local-6989586621679246119"><span class="hs-identifier hs-var">tps</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">[(Name, Kind)] -&gt; Q [(Name, Kind)]
+forall a. a -&gt; Q a
+forall (m :: * -&gt; *) a. Monad m =&gt; a -&gt; m a
+</span><span class="hs-identifier hs-var">return</span></span><span> </span><span class="annot"><span class="annottext">([(Name, Kind)] -&gt; Q [(Name, Kind)])
+-&gt; [(Name, Kind)] -&gt; Q [(Name, Kind)]
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">(VarBangType -&gt; (Name, Kind)) -&gt; [VarBangType] -&gt; [(Name, Kind)]
+forall a b. (a -&gt; b) -&gt; [a] -&gt; [b]
+</span><span class="hs-identifier hs-var">map</span></span><span> </span><span class="hs-special">(</span><span class="hs-glyph">\</span><span class="hs-special">(</span><span id="local-6989586621679246120"><span class="annot"><span class="annottext">Name
+</span><a href="#local-6989586621679246120"><span class="hs-identifier hs-var">nm</span></a></span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">Bang
+</span><span class="hs-identifier">_</span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679246121"><span class="annot"><span class="annottext">Kind
+</span><a href="#local-6989586621679246121"><span class="hs-identifier hs-var">tp</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Name
+</span><a href="#local-6989586621679246120"><span class="hs-identifier hs-var">nm</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">Kind
+</span><a href="#local-6989586621679246121"><span class="hs-identifier hs-var">tp</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">[VarBangType]
+</span><a href="#local-6989586621679246119"><span class="hs-identifier hs-var">tps</span></a></span><span>
+</span><span id="line-126"></span><span>    </span><span class="annot"><a href="#local-6989586621679246110"><span class="hs-identifier hs-var">getFieldNames</span></a></span><span> </span><span id="local-6989586621679246122"><span class="annot"><span class="annottext">Con
+</span><a href="#local-6989586621679246122"><span class="hs-identifier hs-var">c</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">String -&gt; Q [(Name, Kind)]
+forall a. String -&gt; Q a
+forall (m :: * -&gt; *) a. MonadFail m =&gt; String -&gt; m a
+</span><span class="hs-identifier hs-var">fail</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">String
+</span><span class="hs-string">&quot;getRecordFields: Constructor is not a record: &quot;</span></span><span> </span><span class="annot"><span class="annottext">String -&gt; String -&gt; String
+forall a. [a] -&gt; [a] -&gt; [a]
+</span><span class="hs-operator hs-var">++</span></span><span> </span><span class="annot"><span class="annottext">Con -&gt; String
+forall a. Ppr a =&gt; a -&gt; String
+</span><span class="hs-identifier hs-var">pprint</span></span><span> </span><span class="annot"><span class="annottext">Con
+</span><a href="#local-6989586621679246122"><span class="hs-identifier hs-var">c</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-127"></span></pre></body></html>
