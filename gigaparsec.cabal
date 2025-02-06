@@ -116,6 +116,7 @@ library
                       Text.Gigaparsec.Internal.Errors.DefuncTypes,
                       Text.Gigaparsec.Internal.Errors.ErrorItem,
                       Text.Gigaparsec.Internal.Errors.ParseError,
+                      Text.Gigaparsec.Internal.Input,
                       Text.Gigaparsec.Internal.Require,
                       Text.Gigaparsec.Internal.TH.DecUtils,
                       Text.Gigaparsec.Internal.TH.TypeUtils,

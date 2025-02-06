@@ -133,12 +133,12 @@ doDebug name dir st end DebugConfig{..} = do
   when (shouldBreak dir breakPoint) waitForUser
 
 printInfo :: Handle -> String -> Direction -> Internal.State -> String -> Bool -> [WatchedReg] -> RT ()
-printInfo handle name dir st@Internal.State{input, line, col} end ascii regs = do
+printInfo handle name dir st@Internal.State{input, inputOps, line, col} end ascii regs = do
   let cs = replace "\n" (newline ascii)
          . replace " " (space ascii)
          . replace "\r" (carriageReturn ascii)
          . replace "\t" (tab ascii)
-         $ take (5 + 1) input
+         $ take (5 + 1) (Internal.stInputToString st)
   let cs' = if length cs < (5 + 1) then cs ++ endOfInput ascii else cs
   let prelude = portal dir name ++ " " ++ show (line, col) ++ ": "
   let caret = replicate (length prelude) ' ' ++ blue ascii "^"

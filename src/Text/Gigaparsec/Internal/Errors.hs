@@ -23,7 +23,10 @@ import Text.Gigaparsec.Internal.Errors.ErrorItem (ExpectItem(ExpectNamed, Expect
 import Text.Gigaparsec.Internal.Errors.ParseError (fromParseError)
 import Text.Gigaparsec.Internal.Errors.DefuncBuilders (asParseError)
 
+import Text.Gigaparsec.Internal.Errors.DefuncBuilders (asParseError)
+
 CPP_import_PortableUnlifted
+import Text.Gigaparsec.Internal.Input (Input)
 
 type Error :: UnliftedDatatype
 type Error = DefuncError
@@ -39,7 +42,7 @@ replaceHints :: Set String -> Hints -> Hints
 replaceHints = Hints.replace
 
 {-# INLINABLE fromError #-}
-fromError :: forall err. ErrorBuilder err => Maybe FilePath -> String -> Error -> err
+fromError :: forall err s. ErrorBuilder err => Maybe FilePath -> Input s -> Error -> err
 fromError fp inp err = fromParseError fp inp (asParseError inp err)
 
 {-# INLINE emptyErr #-}
@@ -47,7 +50,7 @@ emptyErr :: Word -> Word -> Word -> Word -> Error
 emptyErr = Error.emptyError
 
 {-# INLINE expectedErr #-}
-expectedErr :: String -> Word -> Word -> Word -> Set ExpectItem -> Word -> Error
+expectedErr :: s -> Word -> Word -> Word -> Set ExpectItem -> Word -> Error
 expectedErr _ = Error.expectedError
 
 {-# INLINE specialisedErr #-}
