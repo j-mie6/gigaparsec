@@ -146,9 +146,10 @@ import Text.Gigaparsec.Internal.Token.Errors (
     LabelWithExplainConfig(LELabelAndReason, LELabel, LEHidden, LEReason, LENotConfigured),
     LabelConfig(LLabel, LHidden, LNotConfigured), ExplainConfig(EReason, ENotConfigured),
     FilterConfig(VSBecause, VSUnexpected, VSUnexpectedBecause, VSBasicFilter, VSSpecializedFilter),
+    PreventDotIsZeroConfig(ZeroDotReason),
     SpecializedFilterConfig(SSpecializedFilter, SBasicFilter),
     VanillaFilterConfig(VBecause, VUnexpected, VUnexpectedBecause, VBasicFilter),
-    VerifiedBadChars(BadCharsUnverified, BadCharsFail, BadCharsReason)
+    VerifiedBadChars(BadCharsUnverified, BadCharsFail, BadCharsReason),
   )
 
 {-|
@@ -200,6 +201,24 @@ data ErrorConfig =
   , labelIntegerBinaryEnd :: LabelConfig
   -- | How the fact that the end of a generic integer literal is expected should be referred to within an error.
   , labelIntegerNumberEnd :: LabelConfig
+  -- | How decimal reals should be referred to or explained within an error.
+  , labelRealDecimal :: LabelConfig
+  -- | How the fact that the end of a hexadecimal real literal is expected should be referred to within an error.
+  , labelRealHexadecimalEnd :: LabelConfig
+  -- | How the fact that the end of an octal real literal is expected should be referred to within an error.
+  , labelRealOctalEnd :: LabelConfig
+  -- | How the fact that the end of a binary real literal is expected should be referred to within an error.
+  , labelRealBinaryEnd :: LabelConfig
+  -- | How the fact that the end of a generic real literal is expected should be referred to within an error.
+  , labelRealNumberEnd :: LabelConfig
+  -- | How the "dot" that separates the integer and fractional part of a real number should be referred to or explained within an error.
+  , labelRealDot :: LabelWithExplainConfig
+  -- | How the trailing exponents of a real number should be referred to or explained within an error.
+  , labelRealExponent :: LabelWithExplainConfig
+  -- | How the fact that the end of an exponent part of a real literal is expected should be referred to within an error.
+  , labelRealExponentEnd :: LabelConfig
+  -- | Even if leading and trailing zeros can be dropped, `.` is not a valid real number: this method specifies how to report that to the user.
+  , preventRealDoubleDroppedZero :: PreventDotIsZeroConfig
   -- | Describes the content of the error when an integer literal is parsed and it is not within the required bit-width.
   --
   -- In @'filterIntegerOutOfBounds' x y r@: 
@@ -384,6 +403,15 @@ defaultErrorConfig = ErrorConfig {..}
         labelIntegerOctalEnd = notConfigured
         labelIntegerBinaryEnd = notConfigured
         labelIntegerNumberEnd = notConfigured
+        labelRealDecimal = notConfigured
+        labelRealHexadecimalEnd = notConfigured
+        labelRealOctalEnd = notConfigured
+        labelRealBinaryEnd = notConfigured
+        labelRealNumberEnd = notConfigured
+        labelRealDot = notConfigured
+        labelRealExponent = notConfigured
+        labelRealExponentEnd = notConfigured
+        preventRealDoubleDroppedZero = ZeroDotReason "a real number cannot drop both a leading and trailing zero"
         filterIntegerOutOfBounds small big nativeRadix = specializedFilter
           (outOfBounds small big nativeRadix)
         labelNameIdentifier = "identifier"
