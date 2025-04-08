@@ -5,7 +5,7 @@ on: [push, pull_request]
 jobs:
   validate:
     name: GHC ${{ matrix.ghc }}, Cabal ${{ matrix.cabal }}
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     strategy:
       fail-fast: false
       matrix:
@@ -43,7 +43,7 @@ jobs:
           cabal freeze $CONFIG
 
       - name: Check Cache
-        uses: actions/cache@v2
+        uses: actions/cache@v4
         with:
           path: |
             ~/.cabal/store
