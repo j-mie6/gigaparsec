@@ -272,6 +272,33 @@ mapMaybeSDefault filt f config g = fmap (fromJust . g) . filt f config (isJust .
 
 
 {-|
+Configures what error is generated when `.` is parsed as a real number.
+-}
+type PreventDotIsZeroConfig :: *
+data PreventDotIsZeroConfig
+  {-|
+  This constructor makes "dot is zero" generate a given unexpected message in a ''vanilla'' error.
+  -}
+  = UnexpectedZeroDot
+    !String -- ^ message for unexpected
+  {-|
+  This constructor makes "dot is zero" generate a given unexpected message with a given reason in a ''vanilla'' error.
+  -}
+  | UnexpectedZeroDotWithReason
+    !String -- ^ message for unexpected
+    !String -- ^ reason
+  {-|
+  This constructor makes "dot is zero" generate a given reason in a ''vanilla'' error.
+  -}
+  | ZeroDotReason
+    !String -- ^ reason
+  {-|
+  This constructor makes "dot is zero" generate a bunch of given messages in a ''specialised'' error.
+  -}
+  | ZeroDotFail
+    ![String] -- ^ messages
+
+{-|
 Configures what error should be generated when illegal characters in a string or character literal are parsable.
 -}
 type VerifiedBadChars :: *
