@@ -1,3 +1,6 @@
+{-|
+Taken from https://github.com/j-mie6/ParsleyHaskell/tree/master.
+-}
 {-# LANGUAGE 
   StandaloneDeriving, 
   DeriveAnyClass, 
