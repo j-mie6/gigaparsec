@@ -12,7 +12,7 @@ Adapted from https://github.com/j-mie6/ParsleyHaskell/tree/master.
       TypeApplications 
 #-}
 module Main where
-import Gauge.Main      (Benchmark, bgroup)
+import Test.Tasty.Bench      (Benchmark, bgroup)
 import Control.DeepSeq (NFData)
 import GHC.Generics    (Generic)
 

@@ -3,10 +3,22 @@
 {-|
 Adapted from https://github.com/j-mie6/ParsleyHaskell/tree/master.
 -}
-module Shared.BenchmarkUtils where
+module Shared.BenchmarkUtils (
+  parsecParse,
+  megaParse,
+  gigaParse,
+  attoParse,
+  string,
+  text,
+  bytestring,
+  lazyBytestring,
+  benchmarkFiles,
+  condensedMain,
+  Benchmark
+) where
 
-import Gauge.Main             (Benchmark, bgroup, bench, nf, defaultMainWith, env)
-import Gauge.Main.Options     (Config(displayMode), defaultConfig, DisplayMode(Condensed))
+import Test.Tasty.Bench         
+
 import Control.DeepSeq        (NFData)
 import Control.Monad.Identity (Identity)
 import Data.Text              (Text)
@@ -33,14 +45,14 @@ gigaParse p xs = Gig.result (const Nothing) Just (Gig.parse @String p xs)
 attoParse :: Attoparsec.Parser a -> Text -> Maybe a
 attoParse p = Attoparsec.maybeResult . Attoparsec.parse p
 
-string          :: FilePath -> IO String
-string          = readFile
-text            :: FilePath -> IO Text
-text            = Data.Text.IO.readFile
-bytestring      :: FilePath -> IO ByteString
-bytestring      = Data.ByteString.readFile
-lazy_bytestring :: FilePath -> IO Data.ByteString.Lazy.ByteString
-lazy_bytestring = Data.ByteString.Lazy.readFile
+string :: FilePath -> IO String
+string = readFile
+text :: FilePath -> IO Text
+text = Data.Text.IO.readFile
+bytestring :: FilePath -> IO ByteString
+bytestring = Data.ByteString.readFile
+lazyBytestring :: FilePath -> IO Data.ByteString.Lazy.ByteString
+lazyBytestring = Data.ByteString.Lazy.readFile
 
 benchmarkFiles :: (NFData a, NFData rep) => [FilePath] -> (FilePath -> IO rep) -> String -> (rep -> Maybe a) -> Benchmark
 benchmarkFiles filenames load lib parser = env (traverse load filenames) (bgroup lib . (tasks filenames))
@@ -48,4 +60,4 @@ benchmarkFiles filenames load lib parser = env (traverse load filenames) (bgroup
     tasks filenames inputs = foldr (\f ts n -> bench f (nf parser (inputs !! n)) : ts (n+1)) (const []) filenames 0
 
 condensedMain :: [Benchmark] -> IO ()
-condensedMain = defaultMainWith (defaultConfig {displayMode = Condensed})
+condensedMain = defaultMain
