@@ -132,11 +132,12 @@ library
                       Text.Gigaparsec.Internal.Token.Text,
 
     -- this can probably be loosened?
-    build-depends:    containers       >= 0.6   && < 0.7,
-                      selective        >= 0.6   && < 0.8,
-                      pretty-terminal  >= 0.1.0 && < 0.2,
-                      template-haskell >= 2.16  && < 3,
-                      rt               >= 0.1   && < 0.2
+    build-depends:    
+        containers       >= 0.6   && < 0.7,
+        selective        >= 0.6   && < 0.8,
+        pretty-terminal  >= 0.1.0 && < 0.2,
+        template-haskell >= 2.16  && < 3,
+        rt               >= 0.1   && < 0.2
 
     -- Modules included in this library but not exported.
     -- other-modules:
@@ -208,10 +209,9 @@ test-suite gigaparsec-test
         knob >=0.1.1 && <0.3,
         rt >= 0.1 && < 0.2,
 
-benchmark perf-test
+common benchmark-common
     import:           warnings, extensions, base
 
-    type:             exitcode-stdio-1.0
 
     default-extensions: OverloadedStrings, TypeOperators, BlockArguments, GADTs
 
@@ -222,9 +222,29 @@ benchmark perf-test
     build-depends:
         gigaparsec,
         gauge >= 0.1 && < 0.3,
-        deepseq >= 1.4 && < 1.6
+        deepseq >= 1.4 && < 1.6,        
+        containers >= 0.6 && < 0.7,
 
-    main-is:          Main.hs
+benchmark perf-test
+    import: 
+        benchmark-common
+    type: 
+        exitcode-stdio-1.0
+    main-is: 
+        Main.hs
+
+benchmark javascript-bench
+    import:
+        benchmark-common
+    type: 
+        exitcode-stdio-1.0
+    main-is: 
+        JavascriptBench/Main.hs
+
+    other-modules:
+        JavascriptBench.Shared,
+        JavascriptBench.Gigaparsec.Parser,
+
 
 --library examples
 --    import:             warnings, extensions, base
