@@ -3,11 +3,13 @@
 {-# OPTIONS_GHC -Wno-orphans #-}
 module Main (main) where
 
-import Gauge (defaultMain, bench, nf)
-import Text.Gigaparsec (Parsec, Result, parse, atomic)
-import Text.Gigaparsec.Char (string)
 import Control.DeepSeq (NFData)
 import Control.Applicative ((<|>))
+
+import Test.Tasty.Bench (defaultMain, bench, nf)
+
+import Text.Gigaparsec (Parsec, Result, parse, atomic)
+import Text.Gigaparsec.Char (string)
 
 p :: Parsec String
 p = atomic (string "hello wold") <|> atomic (string "hi") <|> string "hello world"

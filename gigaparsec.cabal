@@ -266,6 +266,7 @@ benchmark javascript-bench
     other-modules:
         JavascriptBench.Shared,
         JavascriptBench.Gigaparsec.Parser,
+        JavascriptBench.Gigaparsec.ConfiguredParser,
         JavascriptBench.Parsley.Parser, 
         JavascriptBench.Parsec.Parser, 
         JavascriptBench.Megaparsec.Parser,

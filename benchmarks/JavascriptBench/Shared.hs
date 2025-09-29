@@ -14,7 +14,7 @@ module JavascriptBench.Shared where
 import Control.DeepSeq (NFData(..), rwhnf, deepseq)
 import GHC.Generics    (Generic)
 import Data.Char (isAlpha, isAlphaNum, isSpace, isUpper, isDigit, digitToInt)
-import Data.Set (fromList, member)
+import Data.Set (fromList, member, Set)
 
 type JSProgram = [JSElement]
 
@@ -22,12 +22,12 @@ type JSCompoundStm = [JSStm]
 
 type JSExpr = [JSExpr']
 
-data JSElement = 
-    JSFunction !String ![String] !JSCompoundStm 
-  | JSStm !JSStm 
+data JSElement =
+    JSFunction !String ![String] !JSCompoundStm
+  | JSStm !JSStm
   deriving Show
 
-data JSStm = 
+data JSStm =
     JSSemi
   | JSIf !JSExpr !JSStm !(Maybe JSStm)
   | JSWhile !JSExpr !JSStm
@@ -38,13 +38,13 @@ data JSStm =
   | JSWith !JSExpr !JSStm
   | JSReturn !(Maybe JSExpr)
   | JSBlock !JSCompoundStm
-  | JSNaked !(Either [JSVar] JSExpr) 
+  | JSNaked !(Either [JSVar] JSExpr)
   deriving Show
 
-data JSVar = JSVar !String !(Maybe JSExpr') 
+data JSVar = JSVar !String !(Maybe JSExpr')
   deriving Show
 
-data JSExpr' = 
+data JSExpr' =
     JSAsgn   !JSExpr' !JSExpr'
   | JSCond   !JSExpr' !JSExpr' !JSExpr'
   | JSOr     !JSExpr' !JSExpr'
@@ -65,10 +65,10 @@ data JSExpr' =
   | JSMul    !JSExpr' !JSExpr'
   | JSDiv    !JSExpr' !JSExpr'
   | JSMod    !JSExpr' !JSExpr'
-  | JSUnary  !JSUnary 
+  | JSUnary  !JSUnary
   deriving Show
 
-data JSUnary = 
+data JSUnary =
     JSPlus   !JSUnary
   | JSNeg    !JSUnary
   | JSBitNeg !JSUnary
@@ -78,7 +78,7 @@ data JSUnary =
   | JSNew    !JSCons
   | JSDel    !JSMember
   | JSMember !JSMember
-  | JSCons   !JSCons 
+  | JSCons   !JSCons
   deriving Show
 jsPlus (JSUnary u)   = JSUnary (JSPlus u)
 jsNeg (JSUnary u)    = JSUnary (JSNeg u)
@@ -92,17 +92,18 @@ data JSMember = JSPrimExp !JSAtom
               | JSCall    !JSAtom !JSExpr deriving Show
 data JSCons = JSQual !String !JSCons
             | JSConCall !String !JSExpr deriving Show
-data JSAtom = 
+data JSAtom =
     JSParens !JSExpr
   | JSArray  !JSExpr
   | JSId     !String
   | JSInt    !Int
   | JSFloat  !Double
   | JSString !String
+  | JSTemplateLit !String
   | JSTrue
   | JSFalse
   | JSNull
-  | JSThis 
+  | JSThis
   deriving Show
 
 deriving instance Generic JSElement
@@ -135,14 +136,16 @@ jsIdentLetter :: Char -> Bool
 jsIdentLetter c = isAlphaNum c || c == '_'
 
 jsUnreservedName :: String -> Bool
-jsUnreservedName = \s -> not (member s keys)
-  where
-    keys = fromList [
-      "true", "false", "if", "else",
-      "for", "while", "break", "continue",
-      "function", "var", "new", "delete",
-      "this", "null", "return", "with"
-      ]
+jsUnreservedName s = not (member s jsKeywords)
+
+
+jsKeywords :: Set String
+jsKeywords = fromList [
+  "true", "false", "if", "else",
+  "for", "while", "break", "continue", "in",
+  "function", "var", "new", "delete",
+  "this", "null", "return", "with"
+  ]
 
 jsStringLetter :: Char -> Bool
 jsStringLetter c = (c /= '"') && (c /= '\\') && (c > '\026')
