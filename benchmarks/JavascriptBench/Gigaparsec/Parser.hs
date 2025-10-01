@@ -23,9 +23,9 @@ import Text.Gigaparsec
 import Text.Gigaparsec.Char hiding (space, spaces, whitespace)
 import Text.Gigaparsec.Combinator
 import Text.Gigaparsec.Expr.Chain
+import Text.Gigaparsec.Expr
 
 import JavascriptBench.Shared
-import Text.Gigaparsec.Expr
 
 
 javascript :: Parsec JSProgram

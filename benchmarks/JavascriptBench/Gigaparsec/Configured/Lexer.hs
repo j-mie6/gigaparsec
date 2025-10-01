@@ -1,17 +1,39 @@
 {-# LANGUAGE 
       OverloadedLists
+    , TemplateHaskell
 #-}
-module JavascriptBench.Gigaparsec.ConfiguredParser where
+{-# OPTIONS_GHC -Wno-orphans #-}
+module JavascriptBench.Gigaparsec.Configured.Lexer where
 
+import Data.Char (readLitChar, isSpace)
 import Data.Map.Strict (Map)
 import Data.Map.Strict qualified as Map
 import Data.Set (Set)
 
 import Text.Gigaparsec.Token.Descriptions qualified as D
-import Data.Char (readLitChar, isSpace)
+import Text.Gigaparsec.Token.Lexer (Lexer)
+import Text.Gigaparsec.Token.Lexer qualified as L
+
 import JavascriptBench.Shared (jsIdentStart, jsIdentLetter, jsKeywords)
+import Text.Gigaparsec (Parsec, (<|>))
+import Text.Gigaparsec.Internal.TH.VersionAgnostic (Extension(TemplateHaskell))
+import Text.Gigaparsec.Token.Patterns (lexerCombinators, lexerCombinatorsWithNames, overloadedStrings)
 
 
+
+
+lexer :: L.Lexer
+lexer = L.mkLexer lexicalDesc
+
+
+lexicalDesc :: D.LexicalDesc
+lexicalDesc = D.plain {
+    D.nameDesc = nameDesc
+  , D.symbolDesc = symbolDesc
+  , D.numericDesc = numericDesc
+  , D.textDesc = textDesc
+  , D.spaceDesc = spaceDesc
+  }
 
 -------------------------------------------------------------------------------
 -- Name Description
@@ -97,9 +119,6 @@ escapeSingleCharLiterals = [
   , 'v', '\\', '"', '\'', '^'
   ]
 
--- foo :: String -> Char
--- foo 
-
 escapeMultiCharSequenceMap :: Map String Char
 escapeMultiCharSequenceMap = Map.fromList $ zip sequences asLiterals
   where
@@ -113,3 +132,23 @@ escapeMultiCharSequenceMap = Map.fromList $ zip sequences asLiterals
       , "RS" , "SO" , "SOH", "SI" , "SP" , "STX", "SYN", "SUB"
       , "US" , "VT"
       ]
+
+$(lexerCombinators [| lexer |] [
+    'L.fully
+  , 'L.identifier
+  , 'L.stringLiteral
+  , 'L.multiStringLiteral
+  , 'L.charLiteral
+  ])
+
+$(lexerCombinatorsWithNames [| lexer |] [
+    ('L.softKeyword, "keyword")
+  , ('L.softOperator, "operator")
+  , ('L.sym, "symbol")
+  ])
+
+$(overloadedStrings [| lexer |])
+
+string :: Parsec String
+string = L.ascii stringLiteral
+    <|>  L.ascii multiStringLiteral
