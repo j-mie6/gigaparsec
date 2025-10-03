@@ -267,6 +267,7 @@ benchmark javascript-bench
         JavascriptBench.Shared,
         JavascriptBench.Gigaparsec.Parser,
         JavascriptBench.Gigaparsec.Configured.Lexer,
+        JavascriptBench.Gigaparsec.Configured.LexerIntCfg,
         JavascriptBench.Gigaparsec.Configured.Parser,
         JavascriptBench.Parsley.Parser, 
         JavascriptBench.Parsec.Parser, 

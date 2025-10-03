@@ -26,6 +26,7 @@ import JavascriptBench.Attoparsec.Parser qualified
 import JavascriptBench.Happy.Parser qualified
 -- import JavascriptBench.Parsley.Parser qualified
 import JavascriptBench.Gigaparsec.Parser qualified as Gig
+import JavascriptBench.Gigaparsec.Configured.Parser qualified as GigCfg
 
 
 main :: IO ()
@@ -42,14 +43,12 @@ javascript =
         , "benchmarks/inputs/javascript/big.js"
         ]
   in bgroup "Javascript" [
-      --    jsTest text       "Parsley (Text)"       JavascriptBench.Parsley.javascriptParsleyT
-      --  , jsTest string     "Parsley (String)"     JavascriptBench.Parsley.javascriptParsleyS
-      --  , jsTest bytestring "Parsley (ByteString)" JavascriptBench.Parsley.javascriptParsleyB
-         jsTest string     "Gigaparsec (String)"  (gigaParse Gig.javascript)
-       , jsTest text       "Attoparsec"                 (attoParse JavascriptBench.Attoparsec.Parser.javascript)
-       , jsTest string     "Happy"                (JavascriptBench.Happy.Parser.runParser JavascriptBench.Happy.Parser.javascript)
-       , jsTest string     "Parsec (String)"      (parsecParse JavascriptBench.Parsec.Parser.javascript)
-       , jsTest text       "Parsec (Text)"        (parsecParse JavascriptBench.Parsec.Parser.javascript)
-       , jsTest string     "Megaparsec (String)"        (megaParse JavascriptBench.Megaparsec.Parser.javascript)
-       , jsTest text       "Megaparsec (Text)"          (megaParse JavascriptBench.Megaparsec.Parser.javascript)
-       ]
+        jsTest string     "Gigaparsec (String)"  (gigaParse Gig.javascript)
+      , jsTest string     "Gigaparsec Cfgd (String)"  (gigaParse GigCfg.javascript)
+      , jsTest text       "Attoparsec"                 (attoParse JavascriptBench.Attoparsec.Parser.javascript)
+      , jsTest string     "Happy"                (JavascriptBench.Happy.Parser.runParser JavascriptBench.Happy.Parser.javascript)
+      , jsTest string     "Parsec (String)"      (parsecParse JavascriptBench.Parsec.Parser.javascript)
+      , jsTest text       "Parsec (Text)"        (parsecParse JavascriptBench.Parsec.Parser.javascript)
+      , jsTest string     "Megaparsec (String)"        (megaParse JavascriptBench.Megaparsec.Parser.javascript)
+      , jsTest text       "Megaparsec (Text)"          (megaParse JavascriptBench.Megaparsec.Parser.javascript)
+      ]

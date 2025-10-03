@@ -5,19 +5,27 @@
 {-# OPTIONS_GHC -Wno-orphans #-}
 module JavascriptBench.Gigaparsec.Configured.Lexer where
 
-import Data.Char (readLitChar, isSpace)
+import Control.Applicative (Alternative, (<**>))
+import Data.Char (readLitChar, isSpace, digitToInt)
 import Data.Map.Strict (Map)
 import Data.Map.Strict qualified as Map
 import Data.Set (Set)
+import Data.Set qualified as Set
+import Text.Read (readMaybe)
 
+import Text.Gigaparsec (some, somel, empty)
+import Text.Gigaparsec.Char (oneOf, char)
+import Text.Gigaparsec.Combinator (fromMaybeS)
 import Text.Gigaparsec.Token.Descriptions qualified as D
 import Text.Gigaparsec.Token.Lexer (Lexer)
 import Text.Gigaparsec.Token.Lexer qualified as L
 
-import JavascriptBench.Shared (jsIdentStart, jsIdentLetter, jsKeywords)
 import Text.Gigaparsec (Parsec, (<|>))
 import Text.Gigaparsec.Internal.TH.VersionAgnostic (Extension(TemplateHaskell))
-import Text.Gigaparsec.Token.Patterns (lexerCombinators, lexerCombinatorsWithNames, overloadedStrings)
+import Text.Gigaparsec.Token.Patterns (IntegerParserConfig, lexerCombinators, lexerCombinatorsWithNames, overloadedStrings, emptyIntegerParserConfig)
+
+import JavascriptBench.Shared (jsIdentStart, jsIdentLetter, jsKeywords)
+import JavascriptBench.Gigaparsec.Configured.LexerIntCfg (jsIntCfg)
 
 
 
@@ -30,7 +38,6 @@ lexicalDesc :: D.LexicalDesc
 lexicalDesc = D.plain {
     D.nameDesc = nameDesc
   , D.symbolDesc = symbolDesc
-  , D.numericDesc = numericDesc
   , D.textDesc = textDesc
   , D.spaceDesc = spaceDesc
   }
@@ -44,12 +51,6 @@ nameDesc = D.plainName {
   , D.identifierLetter = Just jsIdentLetter
   }
 
-
--------------------------------------------------------------------------------
--- Numeric Description
-
-numericDesc :: D.NumericDesc
-numericDesc = D.plainNumeric
 
 -------------------------------------------------------------------------------
 -- Whitespace Description
@@ -145,6 +146,7 @@ $(lexerCombinatorsWithNames [| lexer |] [
     ('L.softKeyword, "keyword")
   , ('L.softOperator, "operator")
   , ('L.sym, "symbol")
+  , ('L.whiteSpace, "whitespace")
   ])
 
 $(overloadedStrings [| lexer |])
@@ -152,3 +154,62 @@ $(overloadedStrings [| lexer |])
 string :: Parsec String
 string = L.ascii stringLiteral
     <|>  L.ascii multiStringLiteral
+
+
+-------------------------------------------------------------------------------
+-- Numeric Tokens
+-- TODO: actually use the lexerDescription for this
+
+naturalOrFloat :: Parsec (Either Int Double)
+naturalOrFloat = natFloat <* whitespace
+
+natFloat :: Parsec (Either Int Double)
+natFloat = char '0' *> zeroNumFloat <|> decimalFloat
+
+zeroNumFloat :: Parsec (Either Int Double)
+zeroNumFloat = 
+      Left <$> (hexadecimal <|> octal)
+  <|> decimalFloat
+  <|> fromMaybeS empty (fractFloat <*> pure 0)
+  <|> pure (Left 0)
+
+decimalFloat :: Parsec (Either Int Double)
+decimalFloat = fromMaybeS empty (decimal <**> (option' (Just . Left) fractFloat))
+
+fractFloat :: Parsec (Int -> Maybe (Either Int Double))
+fractFloat = f <$> fractExponent
+  where
+    f g x = fmap Right (g x)
+
+fractExponent :: Parsec (Int -> Maybe Double)
+fractExponent = 
+      f <$> fraction <*> option' "" exponent'
+  <|> f <$> pure "" <*> exponent'
+  where
+    f fract exp n = readMaybe (show n ++ fract ++ exp)
+
+fraction :: Parsec [Char]
+fraction = ('.' :) <$> (char '.'
+        *> some (oneOf ['0'..'9']))
+
+exponent' :: Parsec [Char]
+exponent' = 
+  ('e' :) <$> (oneOf (Set.fromList "eE")
+          *> ((((:) <$> oneOf (Set.fromList "+-")) <|> pure id)
+          <*> (show <$> decimal)))
+
+decimal :: Parsec Int
+decimal = number 10 (oneOf ['0'..'9'])
+
+hexadecimal :: Parsec Int
+hexadecimal = oneOf (Set.fromList "xX") *> number 16 (oneOf (['a'..'f'] <> ['A'..'F'] <> ['0'..'9']))
+
+octal :: Parsec Int
+octal = oneOf (Set.fromList "oO") *> number 8 (oneOf ['0'..'7'])
+
+number :: Int -> Parsec Char -> Parsec Int
+number base = somel (\x d -> base * x + digitToInt d) 0
+
+-- | Try @p@, return @x@ if @p@ fails w/o consuming input.
+option' :: Alternative f => a -> f a -> f a
+option' x p = p <|> pure x

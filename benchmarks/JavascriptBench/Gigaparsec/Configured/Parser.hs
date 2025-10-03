@@ -1,5 +1,7 @@
 module JavascriptBench.Gigaparsec.Configured.Parser where
 
+import Control.Applicative (liftA3, Alternative)
+
 
 import Text.Gigaparsec
 import Text.Gigaparsec.Combinator
@@ -9,6 +11,17 @@ import Text.Gigaparsec.Expr
 import JavascriptBench.Shared
 import JavascriptBench.Gigaparsec.Configured.Lexer
 
+
+javascript :: Parsec JSProgram
+javascript = whitespace *> many element <* eof
+
+element :: Parsec JSElement
+element = keyword "function" *> liftA3 JSFunction identifier (parens (sepBy identifier ",")) compound
+      <|> JSStm <$> stmt
+
+
+compound :: Parsec JSCompoundStm
+compound = "{" *> (many stmt) <* "}"
 
 stmt :: Parsec JSStm
 stmt = ";" $> JSSemi
