@@ -172,16 +172,20 @@ fractFloat = f <$> fractExponent
   where
     f g x = fmap Right (g x)
 
+-- Parse the optional float and/or fraction.
+-- The `Int` input is the digits before the decimal point.
 fractExponent :: Parsec (Int -> Maybe Double)
 fractExponent = f <$> fraction <*> option' "" exponent'
             <|> f <$> pure "" <*> exponent'
   where
     f fract exp n = readMaybe (show n ++ fract ++ exp)
 
+-- Parse the stuff after a 'dot' in a float
 fraction :: Parsec [Char]
 fraction = ('.' :) <$> (char '.'
         *> some (oneOf ['0'..'9']))
 
+-- Parse the exponent part of a float
 exponent' :: Parsec [Char]
 exponent' = ('e' :) <$> (oneOf (Set.fromList "eE")
           *> ((((:) <$> oneOf (Set.fromList "+-")) <|> pure id)
