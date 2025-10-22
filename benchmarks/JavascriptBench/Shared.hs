@@ -13,8 +13,10 @@ module JavascriptBench.Shared where
 
 import Control.DeepSeq (NFData(..), rwhnf, deepseq)
 import GHC.Generics    (Generic)
-import Data.Char (isAlpha, isAlphaNum, isSpace, isUpper, isDigit, digitToInt)
+import Data.Char (isAlpha, isAlphaNum, isSpace, isUpper, isDigit, digitToInt, readLitChar)
 import Data.Set (fromList, member, Set)
+import Data.Map (Map)
+import Data.Map qualified as Map
 
 type JSProgram = [JSElement]
 
@@ -149,3 +151,51 @@ jsKeywords = fromList [
 
 jsStringLetter :: Char -> Bool
 jsStringLetter c = (c /= '"') && (c /= '\\') && (c > '\026')
+
+jsEscapeCodes :: Set String
+jsEscapeCodes = fromList [
+    "a", "b", "f", "n", "t", "v", "\\", "\"", "'", "^", "ACK"
+  , "BS", "BEL"
+  , "CR", "CAN"
+  , "DC1", "DC2", "DC3", "DC4", "DEL", "DLE"
+  , "EM", "ETX", "ETB", "ETX", "ESC", "EOT", "ENQ"
+  , "FF", "FS"
+  , "GS", "HT", "LF", "NUL", "NAK", "RS"
+  , "SO", "SOH", "SI", "SP", "STX", "SYN", "SUB"
+  , "US", "VT"
+  ]
+
+jsEscapeSingleCharLiterals :: Set Char
+jsEscapeSingleCharLiterals = fromList [
+    'a', 'b' , 'f', 'n' , 't'
+  , 'v', '\\', '"', '\'', '^'
+  ]
+
+jsEscapeMultiCharSet :: Set String
+jsEscapeMultiCharSet = fromList [
+    "ACK", "BS" , "BEL", "CR" , "CAN", "DC1", "DC2", "DC3"
+  , "DC4", "DEL", "DLE", "EM" , "ETX", "ETB", "ESC", "EOT"
+  , "ENQ", "FF" , "FS" , "GS" , "HT" , "LF" , "NUL", "NAK"
+  , "RS" , "SO" , "SOH", "SI" , "SP" , "STX", "SYN", "SUB"
+  , "US" , "VT"
+  ]
+
+jsEscapeCharFromString :: String -> Char
+jsEscapeCharFromString "^" = '^'
+jsEscapeCharFromString xs = case readLitChar $ ('\\' :) xs of
+  (ec, _): _ -> ec
+  [] -> error $ "jsEscapeCharFromString failed on string" ++ xs
+
+jsEscapeMultiCharSequenceMap :: Map String Char
+jsEscapeMultiCharSequenceMap = Map.fromList $ zip sequences asLiterals
+  where
+    asLiterals = map fst $ concatMap (readLitChar . ('\\' :)) sequences
+
+    sequences :: [String]
+    sequences = [
+        "ACK", "BS" , "BEL", "CR" , "CAN", "DC1", "DC2", "DC3"
+      , "DC4", "DEL", "DLE", "EM" , "ETX", "ETB", "ESC", "EOT"
+      , "ENQ", "FF" , "FS" , "GS" , "HT" , "LF" , "NUL", "NAK"
+      , "RS" , "SO" , "SOH", "SI" , "SP" , "STX", "SYN", "SUB"
+      , "US" , "VT"
+      ]

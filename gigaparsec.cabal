@@ -224,6 +224,7 @@ common benchmark-common
         Shared.BenchmarkUtils, 
         Shared.Attoparsec.Extended, 
         Shared.Megaparsec.Extended, 
+        Shared.FlatParse.Utils, 
         Shared.Parsec.Extended
     build-tool-depends:
         happy:happy
@@ -243,8 +244,9 @@ common benchmark-common
         megaparsec,
         attoparsec,
         parsec,
-        -- parsley won't build against base >= 4.20
-        -- parsley >= 2.0 && < 2.1,
+        -- Necessary for flatparse stuff
+        template-haskell >= 2.16  && < 3,
+        flatparse,
 
 benchmark perf-test
     import: 
@@ -265,6 +267,8 @@ benchmark javascript-bench
 
     other-modules:
         JavascriptBench.Shared,
+        JavascriptBench.FlatParse.Parser,
+        JavascriptBench.FlatParse.TH,
         JavascriptBench.Gigaparsec.Parser,
         JavascriptBench.Gigaparsec.Configured.Lexer,
         JavascriptBench.Gigaparsec.Configured.LexerIntCfg,
