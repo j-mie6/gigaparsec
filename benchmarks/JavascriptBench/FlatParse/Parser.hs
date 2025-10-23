@@ -1,8 +1,8 @@
 {-# LANGUAGE
       TemplateHaskell
+    , LambdaCase
   #-}
 {-# OPTIONS_GHC -Wno-name-shadowing #-}
-{-# LANGUAGE LambdaCase #-}
 {-|
 Many of the parts here are taken from FlatParse.Examples.BasicLambda
 -}
@@ -15,7 +15,7 @@ import FlatParse.Basic hiding (Parser)
 import FlatParse.Basic qualified as FP
 import FlatParse.Common.Parser (PureMode)
 
-import Shared.FlatParse.Utils 
+import Shared.FlatParse.Utils
 
 import JavascriptBench.Shared
 import Language.Haskell.TH (Code, Q, unsafeCodeCoerce)
@@ -24,6 +24,7 @@ import JavascriptBench.FlatParse.TH
 import Data.Maybe (catMaybes, fromMaybe)
 import Data.Char (digitToInt)
 import Text.Read (readMaybe)
+import Control.Applicative ((<**>))
 
 
 javascript :: Parser JSProgram
@@ -39,28 +40,51 @@ compound = undefined
 varsOrExprs :: Parser (Either [JSVar] JSExpr)
 varsOrExprs = undefined
 variable :: Parser JSVar
-variable = undefined
+variable = JSVar <$> identifier <*> optional ($$(symbol '=') *> asgn)
+
+(<~>) :: Parser a -> Parser b -> Parser (a, b)
+(<~>) = liftA2 (,)
+
 
 parensExpr :: Parser JSExpr
-parensExpr = undefined
+parensExpr = parens expr
 optExpr :: Parser (Maybe JSExpr)
-optExpr = undefined
+optExpr = optional expr
 expr :: Parser JSExpr
-expr = undefined
+expr = commaSep1 asgn
 asgn :: Parser JSExpr'
-asgn = undefined
+asgn = chainl1 condExpr ($$(symbol '=') $> JSAsgn)
 condExpr :: Parser JSExpr'
-condExpr = undefined
+condExpr = liftA2 jsCondExprBuild expr' (optional (($$(symbol '?') *> asgn) <~> ($$(symbol ':') *> asgn)))
+
 expr' :: Parser JSExpr'
-expr' = undefined
+expr' = operator
+
+
 memOrCon :: Parser JSUnary
-memOrCon = undefined
+memOrCon = $(switch [|
+  case _ of
+    "delete" -> JSDel <$> member
+    "new"    -> JSCons <$> con
+    _        -> JSMember <$> member
+  |])
+
 con :: Parser JSCons
-con = undefined
+con = liftA2 JSQual ($$(keyword "this") $> "this") (dot *> conCall) <|> conCall
+
 conCall :: Parser JSCons
-conCall = undefined
+conCall = identifier <**> (
+                  (dot *> (flip JSQual <$> conCall))
+              <|> (flip JSConCall <$> parens (commaSep asgn))
+              <|> pure (`JSConCall` [])
+              )
 member :: Parser JSMember
-member = undefined
+member = primaryExpr <**> (
+      (flip JSCall <$> parens (commaSep asgn))
+  <|> (flip JSIndex <$> brackets expr)
+  <|> (dot *> (flip JSAccess <$> member))
+  <|> pure JSPrimExp
+  )
 
 primaryExpr :: Parser JSAtom
 primaryExpr = (JSParens <$> parens expr)
@@ -125,7 +149,7 @@ inRange lo hi = satisfy (\c -> c >= lo && c <= hi)
 exponent' :: Parser [Char]
 exponent' = ('e' :) <$> ($$(tokenChar 'E') <|> $$(tokenChar 'e')
           *> ((
-                  ((:) <$> $$(oneOf2 '+' '-')) 
+                  ((:) <$> $$(oneOf2 '+' '-'))
               <|> pure id
               )
             <*> (show <$> decimal)))
@@ -179,21 +203,14 @@ commaSep p = sepBy p comma
 commaSep1 :: Parser a -> Parser [a]
 commaSep1 p = sepBy1 p comma
 
-sepBy1 :: Parser a -> Parser sep -> Parser [a]
-sepBy1 p sep = (:) <$> p <*> many (sep *> p)
-
-sepBy :: Parser a -> Parser sep -> Parser [a]
-sepBy p sep = 
-  withOption p (\x -> (x:) <$> many (sep *> p)) (pure [])
-
 -------------------------------------------------------------------------------
 -- Strings and Chars
 
 stringLiteral :: Parser String
-stringLiteral = catMaybes 
-  <$> between 
-        $$(tokenChar '\"') 
-        $$(tokenChar '\"') 
+stringLiteral = catMaybes
+  <$> between
+        $$(tokenChar '\"')
+        $$(tokenChar '\"')
         (many stringChar)
   <* whitespace
 
@@ -202,7 +219,7 @@ stringChar :: Parser (Maybe Char)
 stringChar = (Just <$> satisfy jsStringLetter) <|> stringEscape
 
 stringEscape :: Parser (Maybe Char)
-stringEscape = $(switch [| case _ of 
+stringEscape = $(switch [| case _ of
     "\\&" -> pure @Parser Nothing
     "\\ " -> (skipMany space) $> Nothing
     "\\"  -> Just <$> escapeCode
@@ -210,11 +227,11 @@ stringEscape = $(switch [| case _ of
 
 -- Parses any permissible escape code that can appear after a '\'
 escapeCode :: Parser Char
-escapeCode = 
-  $$(switchFromSet 
-      jsEscapeCodes 
-      (\es -> 
-        let y = jsEscapeCharFromString es 
+escapeCode =
+  $$(switchFromSet
+      jsEscapeCodes
+      (\es ->
+        let y = jsEscapeCharFromString es
         in [|| pure @Parser y ||]
       )
   )
