@@ -3,6 +3,7 @@
   #-}
 {-# LANGUAGE LambdaCase #-}
 {-# OPTIONS_GHC -Wno-name-shadowing #-}
+{-# LANGUAGE TupleSections #-}
 module JavascriptBench.FlatParse.TH where
 
 import Data.ByteString qualified as B hiding (unpack)
@@ -46,18 +47,8 @@ identStart = satisfy jsIdentStart
 identLetter :: Parser Char
 identLetter = satisfy jsIdentLetter
 
-expr9 :: Code Q (Parser JSExpr')
-expr9 = [|| chainl1 $$expr8 $$op ||]
-  where
-  op :: Code Q (Parser (JSExpr' -> JSExpr' -> JSExpr'))
-  op = switchTyped [|| case "" of 
-      "*"  -> pure JSMul
-      "/"  -> pure JSDiv
-      "%"  -> pure JSMod
-      ||]
-
-expr8 :: Code Q (Parser JSExpr')
-expr8 = _
+opLetter :: Parser Char
+opLetter = undefined
 
 prefixOp :: Code Q (Parser JSExpr')
 prefixOp = switchTyped [|| case "" of
@@ -70,75 +61,125 @@ prefixOp = switchTyped [|| case "" of
   ||]
 
 postfixOp :: Code Q (Parser JSExpr')
-postfixOp = switchTyped [|| case "" of
-  "--" -> jsDec
-  "++" -> jsInc
-  ||]
+postfixOp = undefined
+-- switchTyped [|| case "" of
+--   "--" -> jsDec
+--   "++" -> jsInc
+  -- ||]
+
+
 
 expr' :: Code Q (Parser JSExpr')
 expr' = [|| 
       $$prefixOp
-  <|> $$(infixOp 9)
+  <|> $$infixOp
   ||]
 
 switchTyped :: Code Q (Parser a) -> Code Q (Parser a)
 switchTyped code = unsafeCodeCoerce (switch (unTypeCode code))
 
-infixOp :: Int -> Code Q (Parser JSUnary) -> Code Q (Parser JSExpr')
-infixOp outer base = 
+jsAtom :: Parser JSUnary
+jsAtom = undefined
+
+infixOp :: Code Q (Parser JSExpr')
+infixOp = 
   let 
-    op2 = switchTyped [|| case "" of 
-      -- catch postfix cases that clash with binops
-      "++" -> $$(infixBinExpr ) 
-      "--" -> _
-
-      "*"  -> $$(infixBinExprTyped 9 base [||JSMul||]) outer
-      "/"  -> $$(infixBinExprTyped 9 base [||JSDiv||]) outer
-      "%"  -> $$(infixBinExprTyped 9 base [||JSMod||]) outer
-      "+"  -> $$(infixBinExprTyped 8 base [||JSAdd||]) outer
-      "-"  -> $$(infixBinExprTyped 8 base [||JSSub||]) outer
-      "<<" -> $$(infixBinExprTyped 7 base [||JSShl||]) outer
-      ">>" -> $$(infixBinExprTyped 7 base [||JSShr||]) outer
-      "<=" -> $$(infixBinExprTyped 6 base [||JSLe||]) outer
-      "<"  -> $$(infixBinExprTyped 6 base [||JSLt||]) outer
-      ">=" -> $$(infixBinExprTyped 6 base [||JSGe||]) outer
-      ">"  -> $$(infixBinExprTyped 6 base [||JSGt||]) outer
-      "==" -> $$(infixBinExprTyped 5 base [||JSEq||]) outer
-      "!=" -> $$(infixBinExprTyped 5 base [||JSNe||]) outer
-      "|"  -> $$(infixBinExprTyped 4 base [||JSBitOr||]) outer
-      "^"  -> $$(infixBinExprTyped 3 base [||JSBitXor||]) outer
-      "&"  -> $$(infixBinExprTyped 2 base [||JSBitAnd||]) outer
-      "&&" -> $$(infixBinExprTyped 1 base [||JSAnd||]) outer
-      "||" -> $$(infixBinExprTyped 0 base [||JSOr||]) outer
-      _    -> base
+    
+    foo :: Code Q (Parser JSExpr')
+    foo = [|| 
+      let go :: Int -> (JSExpr' -> JSExpr') -> Parser JSExpr' = \(prevPrec :: Int) (k :: (JSExpr' -> JSExpr')) -> do
+            (exprₗ :: JSExpr') <- JSUnary <$> jsAtom
+            (op :: Maybe ((Int, JSExpr' -> JSExpr'))) <- 
+              optional ($$op2 <*> pure prevPrec <*> pure k <*> pure exprₗ)
+            case op of
+              Nothing -> pure (k exprₗ)
+              Just (newPrec, k') -> go newPrec k'
+      in go 9 id
       ||]
-  in [|| ((JSUnary <$> $$base) <**> $$op2) <*> pure id ||]
+  in foo -- [|| ((JSUnary <$> $$base) <**> $$op2) <*> pure id ||]
   where
-  postfix 
-    :: Code Q (JSExpr' -> JSExpr') 
-    -> Code Q (Parser (JSExpr' -> (JSExpr' -> JSExpr') -> JSExpr'))
-  postfix f = [|| _ ||]
+  op2 = switchTyped [|| case "" of 
+      "*"  -> pure (infix3 9 JSMul)
+      "/"  -> pure (infix3 9 JSDiv)
+      "%"  -> pure (infix3 9 JSMod)
+      "+"  -> pure (infix3 8 JSAdd)
+      "-"  -> pure (infix3 8 JSSub)
+      "<<" -> pure (infix3 7 JSShl)
+      ">>" -> pure (infix3 7 JSShr)
+      "<=" -> pure (infix3 6 JSLe)
+      "<"  -> pure (infix3 6 JSLt)
+      ">=" -> pure (infix3 6 JSGe)
+      ">"  -> pure (infix3 6 JSGt)
+      "==" -> pure (infix3 5 JSEq)
+      "!=" -> pure (infix3 5 JSNe)
+      "|"  -> pure (infix3 4 JSBitOr)
+      "^"  -> pure (infix3 3 JSBitXor)
+      "&"  -> pure (infix3 2 JSBitAnd)
+      "&&" -> pure (infix3 1 JSAnd)
+      "||" -> pure (infix3 0 JSOr)
+      -- _    -> base
+      ||]
 
-  infixBinExprTyped 
+  infix2 
     :: Int 
-    -> Code Q (Parser JSUnary)
-    -> Code Q (JSExpr' -> JSExpr' -> JSExpr') 
-    -> Code Q (Int -> Parser (JSExpr' -> (JSExpr' -> JSExpr') -> JSExpr'))
-  infixBinExprTyped inner base f = [|| \outer -> 
-    if outer >= inner
-      then (\y x k -> $$f (k x) y) <$> $$(infixOp inner base)
-      else (\y x k -> k ($$f x y)) <$> $$(infixOp inner base)
+    -> (JSExpr' -> JSExpr' -> JSExpr')
+    -> Code Q (
+           Int 
+        -> (JSExpr' -> JSExpr') 
+        -> JSExpr' 
+        -> (Int, JSExpr' -> JSExpr')
+      )
+  infix2 inner f = [|| \outer  ->
+      if outer >= inner 
+        then \k x -> (inner, f (k x))
+        else \k x -> (inner, k . (f x))
     ||]
 
-infixBinExpr :: Int -> Code Q (JSExpr' -> JSExpr' -> JSExpr') -> Q Exp
-infixBinExpr inner f = unTypeCode go
-  where
-  go :: Code Q (Int -> Parser ((JSExpr' -> JSExpr') -> JSExpr' -> JSExpr' -> JSExpr'))
-  go = [|| \outer -> 
-    pure if outer >= inner
-      then (\k x y -> $$f (k x) y)
-      else (\k x y -> k ($$f x y))
-    ||]
+  infix3 
+    :: Int 
+    -> (JSExpr' -> JSExpr' -> JSExpr')
+    -> Int 
+    -> (JSExpr' -> JSExpr') 
+    -> JSExpr' 
+    -> (Int, JSExpr' -> JSExpr')
+  infix3 curPrec f prevPrec k x = 
+    (curPrec,) $
+      if prevPrec >= curPrec 
+        then f (k x)
+        else k . (f x)
+
+
+  
+--   postfix 
+--     :: Code Q (JSExpr' -> JSExpr') 
+--     -> Code Q (Parser (JSExpr' -> (JSExpr' -> JSExpr') -> JSExpr'))
+--   postfix f = [|| pure \x k -> k ($$f x)  ||]
+
+--   postfix2 
+--     :: (JSExpr' -> JSExpr')
+--     -> Parser (JSExpr' -> (JSExpr' -> JSExpr') -> JSExpr')
+--   postfix2 f = pure \x k -> k (f x)
+--   infixE 
+--     :: Int 
+--     -> Code Q (JSExpr' -> JSExpr' -> JSExpr') 
+--     -> Code Q (Int -> Parser (JSExpr' -> (JSExpr' -> JSExpr') -> JSExpr'))
+--   infixE inner f = [|| \outer -> 
+--     let foo = (\x k -> $$f (k x))
+--     in
+--     if outer >= inner
+--       then pure (\x k -> $$f (k x))
+--       else pure (\x k y -> k ($$f x) y)
+--     ||]
+
+-- infixBinExpr :: Int -> Code Q (JSExpr' -> JSExpr' -> JSExpr') -> Q Exp
+-- infixBinExpr inner f = unTypeCode go
+--   where
+--   go :: Code Q (Int -> Parser ((JSExpr' -> JSExpr') -> JSExpr' -> JSExpr' -> JSExpr'))
+--   go = [|| \outer -> 
+--     pure if outer >= inner
+--       then (\k x y -> $$f (k x) y)
+--       else (\k x y -> k ($$f x y))
+--     ||]
 
 -- opLetter :: Parser Char
 -- opLetter = switchFromSet (Set.fromList $ map (: []) "+-*/=<>!~&|.%^") _

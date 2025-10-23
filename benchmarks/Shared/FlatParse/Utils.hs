@@ -52,4 +52,6 @@ chainPre op p = flip (foldr ($)) <$> many op <*> p
 chainPost :: Parser a -> Parser (a -> a) -> Parser a
 chainPost p op = foldl' (flip ($)) <$> p <*> many op
 
+(<~>) :: Parser a -> Parser b -> Parser (a, b)
+(<~>) = liftA2 (,)
 
