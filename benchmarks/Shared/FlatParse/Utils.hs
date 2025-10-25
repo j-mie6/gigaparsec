@@ -1,4 +1,7 @@
 {-# LANGUAGE TemplateHaskell #-}
+{-# OPTIONS_GHC -Wno-unrecognised-pragmas #-}
+{-# HLINT ignore "Redundant lambda" #-}
+{-# HLINT ignore "Use const" #-}
 module Shared.FlatParse.Utils where
 
 import Data.Set (Set)
@@ -13,7 +16,9 @@ import FlatParse.Common.Parser (PureMode)
 import Language.Haskell.TH
 import Language.Haskell.TH (Body(NormalB))
 import Data.Foldable (foldl')
-import Control.Applicative ((<**>))
+import Control.Applicative ((<**>), liftA)
+import Control.Monad ((>=>), (<=<))
+import Control.Applicative qualified as App
 
 type Parser = ParserT PureMode ()
 
@@ -38,12 +43,45 @@ sepBy :: Parser a -> Parser sep -> Parser [a]
 sepBy p sep =
   withOption p (\x -> (x:) <$> many (sep *> p)) (pure [])
 
-chainl1 :: Parser a -> Parser (a -> a -> a) -> Parser a
-chainl1 p op = chainPost p (flip <$> op <*> p)
+chainl1 :: forall a. Parser a -> Parser (a -> a -> a) -> Parser a
+chainl1 p op =
+  let (go :: Parser a) = p <**> ((flip <$> op <*> go) <|> pure id)
+  in  go
+  -- let go k = flip <$> op
+  --   -- p <**> (flip <$> op)
+  -- in _
+  where
+    go2 :: Parser a
+    go2 = do
+      let x = p <**> ((op <*> go2) <|> pure id)
+      _
+    go5 :: Parser ((a -> a) -> a)
+    go5 =
+      let pop expr = ((op <*> expr) <**> go5) <|> expr
+      in  pure _
 
-chainr1 :: Parser a -> Parser (a -> a -> a) -> Parser a
-chainr1 p op = 
-  let go = p <**> ((flip <$> op <*> go) <|> pure id) 
+    go4 :: Parser ((a -> a) -> a)
+    go4 =
+      let pop = (p <**> op)
+      in  pop <**> go4
+
+    go3 :: (a -> a) -> Parser a
+    go3 k = do
+      expr <- p
+      (do f <- op
+          go3 (f expr))
+        <|> pure (k expr)
+
+    go :: a -> (a -> a) -> Parser a
+    go atomL k = do
+      f <- op
+      atomR <- p
+      go atomR (f (k atomL))
+  -- chainPost p (flip <$> op <*> p)
+
+chainr1 :: forall a. Parser a -> Parser (a -> a -> a) -> Parser a
+chainr1 p op =
+  let (go :: Parser a) = p <**> ((flip <$> op <*> go) <|> pure id)
   in  go
 
 chainPre :: Parser (a -> a) -> Parser a -> Parser a

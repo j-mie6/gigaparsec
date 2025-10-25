@@ -70,7 +70,7 @@ postfixOp = undefined
 
 
 expr' :: Code Q (Parser JSExpr')
-expr' = [|| 
+expr' = [||
       $$prefixOp
   <|> $$infixOp
   ||]
@@ -82,14 +82,14 @@ jsAtom :: Parser JSUnary
 jsAtom = undefined
 
 infixOp :: Code Q (Parser JSExpr')
-infixOp = 
-  let 
-    
+infixOp =
+  let
+
     foo :: Code Q (Parser JSExpr')
-    foo = [|| 
+    foo = [||
       let go :: Int -> (JSExpr' -> JSExpr') -> Parser JSExpr' = \(prevPrec :: Int) (k :: (JSExpr' -> JSExpr')) -> do
             (exprₗ :: JSExpr') <- JSUnary <$> jsAtom
-            (op :: Maybe ((Int, JSExpr' -> JSExpr'))) <- 
+            (op :: Maybe ((Int, JSExpr' -> JSExpr'))) <-
               optional ($$op2 <*> pure prevPrec <*> pure k <*> pure exprₗ)
             case op of
               Nothing -> pure (k exprₗ)
@@ -98,58 +98,58 @@ infixOp =
       ||]
   in foo -- [|| ((JSUnary <$> $$base) <**> $$op2) <*> pure id ||]
   where
-  op2 = switchTyped [|| case "" of 
-      "*"  -> pure (infix3 9 JSMul)
-      "/"  -> pure (infix3 9 JSDiv)
-      "%"  -> pure (infix3 9 JSMod)
-      "+"  -> pure (infix3 8 JSAdd)
-      "-"  -> pure (infix3 8 JSSub)
-      "<<" -> pure (infix3 7 JSShl)
-      ">>" -> pure (infix3 7 JSShr)
-      "<=" -> pure (infix3 6 JSLe)
-      "<"  -> pure (infix3 6 JSLt)
-      ">=" -> pure (infix3 6 JSGe)
-      ">"  -> pure (infix3 6 JSGt)
-      "==" -> pure (infix3 5 JSEq)
-      "!=" -> pure (infix3 5 JSNe)
-      "|"  -> pure (infix3 4 JSBitOr)
-      "^"  -> pure (infix3 3 JSBitXor)
-      "&"  -> pure (infix3 2 JSBitAnd)
-      "&&" -> pure (infix3 1 JSAnd)
-      "||" -> pure (infix3 0 JSOr)
+  op2 = switchTyped [|| case "" of
+      "*"  -> pure $$(infix2 9 [||JSMul||])
+      "/"  -> pure $$(infix2 9 [||JSDiv||])
+      "%"  -> pure $$(infix2 9 [||JSMod||])
+      "+"  -> pure $$(infix2 8 [||JSAdd||])
+      "-"  -> pure $$(infix2 8 [||JSSub||])
+      "<<" -> pure $$(infix2 7 [||JSShl||])
+      ">>" -> pure $$(infix2 7 [||JSShr||])
+      "<=" -> pure $$(infix2 6 [||JSLe||])
+      "<"  -> pure $$(infix2 6 [||JSLt||])
+      ">=" -> pure $$(infix2 6 [||JSGe||])
+      ">"  -> pure $$(infix2 6 [||JSGt||])
+      "==" -> pure $$(infix2 5 [||JSEq||])
+      "!=" -> pure $$(infix2 5 [||JSNe||])
+      "|"  -> pure $$(infix2 4 [||JSBitOr||])
+      "^"  -> pure $$(infix2 3 [||JSBitXor||])
+      "&"  -> pure $$(infix2 2 [||JSBitAnd||])
+      "&&" -> pure $$(infix2 1 [||JSAnd||])
+      "||" -> pure $$(infix2 0 [||JSOr||])
       -- _    -> base
       ||]
 
-  infix2 
-    :: Int 
-    -> (JSExpr' -> JSExpr' -> JSExpr')
+  infix2
+    :: Int
+    -> Code Q (JSExpr' -> JSExpr' -> JSExpr')
     -> Code Q (
-           Int 
-        -> (JSExpr' -> JSExpr') 
-        -> JSExpr' 
+           Int
+        -> (JSExpr' -> JSExpr')
+        -> JSExpr'
         -> (Int, JSExpr' -> JSExpr')
       )
   infix2 inner f = [|| \outer  ->
-      if outer >= inner 
-        then \k x -> (inner, f (k x))
-        else \k x -> (inner, k . (f x))
+      if outer >= inner
+        then \k x -> (inner, $$f (k x))
+        else \k x -> (inner, k . $$f x)
     ||]
 
-  infix3 
-    :: Int 
+  infix3
+    :: Int
     -> (JSExpr' -> JSExpr' -> JSExpr')
-    -> Int 
-    -> (JSExpr' -> JSExpr') 
-    -> JSExpr' 
+    -> Int
+    -> (JSExpr' -> JSExpr')
+    -> JSExpr'
     -> (Int, JSExpr' -> JSExpr')
-  infix3 curPrec f prevPrec k x = 
+  infix3 curPrec f prevPrec k x =
     (curPrec,) $
-      if prevPrec >= curPrec 
+      if prevPrec >= curPrec
         then f (k x)
         else k . (f x)
 
 
-  
+
 --   postfix 
 --     :: Code Q (JSExpr' -> JSExpr') 
 --     -> Code Q (Parser (JSExpr' -> (JSExpr' -> JSExpr') -> JSExpr'))
