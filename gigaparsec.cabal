@@ -224,7 +224,7 @@ common benchmark-common
         Shared.BenchmarkUtils, 
         Shared.Attoparsec.Extended, 
         Shared.Megaparsec.Extended, 
-        Shared.FlatParse.Utils, 
+        Shared.FlatParse.Extended, 
         Shared.Parsec.Extended
     build-tool-depends:
         happy:happy
@@ -273,7 +273,6 @@ benchmark javascript-bench
         JavascriptBench.Gigaparsec.Configured.Lexer,
         JavascriptBench.Gigaparsec.Configured.LexerIntCfg,
         JavascriptBench.Gigaparsec.Configured.Parser,
-        JavascriptBench.Parsley.Parser, 
         JavascriptBench.Parsec.Parser, 
         JavascriptBench.Megaparsec.Parser,
         JavascriptBench.Attoparsec.Parser, 

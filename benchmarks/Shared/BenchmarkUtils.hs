@@ -8,6 +8,7 @@ module Shared.BenchmarkUtils (
   megaParse,
   gigaParse,
   attoParse,
+  flatParse,
   string,
   text,
   bytestring,
@@ -27,6 +28,7 @@ import Text.Parsec qualified  as Parsec
 import Text.Megaparsec qualified as Megaparsec
 import Text.Gigaparsec qualified as Gig
 import Data.Attoparsec.Text qualified as Attoparsec 
+import FlatParse.Basic qualified as FlatParse
 import Data.Text.IO qualified
 import Data.ByteString qualified
 import Data.ByteString.Lazy qualified
@@ -44,6 +46,11 @@ gigaParse p xs = Gig.result (const Nothing) Just (Gig.parse @String p xs)
 
 attoParse :: Attoparsec.Parser a -> Text -> Maybe a
 attoParse p = Attoparsec.maybeResult . Attoparsec.parse p
+
+flatParse :: FlatParse.Parser e a -> ByteString -> Maybe a
+flatParse p bs = case FlatParse.runParser p bs of
+  FlatParse.OK x _ -> Just x
+  _ -> Nothing
 
 string :: FilePath -> IO String
 string = readFile

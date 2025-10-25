@@ -15,7 +15,7 @@ import FlatParse.Basic hiding (Parser)
 import FlatParse.Basic qualified as FP
 import FlatParse.Common.Parser (PureMode)
 
-import Shared.FlatParse.Utils
+import Shared.FlatParse.Extended
 
 import JavascriptBench.Shared
 import Language.Haskell.TH (Code, Q, unsafeCodeCoerce)
@@ -24,30 +24,52 @@ import JavascriptBench.FlatParse.TH
 import Data.Maybe (catMaybes, fromMaybe)
 import Data.Char (digitToInt)
 import Text.Read (readMaybe)
-import Control.Applicative ((<**>))
+import Control.Applicative ((<**>), liftA3)
+import Control.Monad ((<$!>))
 
+cutE :: Parser a -> Parser a
+cutE p = p `cut` ()
 
 javascript :: Parser JSProgram
 javascript = whitespace *> many element <* eof
 
 stmt :: Parser JSStm
-stmt = undefined
+stmt = 
+      (semi $> JSSemi)
+  <|> ($$(keyword "if") *> liftA3 JSIf parensExpr stmt (optional ($$(keyword "else" ) *> stmt)))
+  <|> ($$(keyword "while") *> liftA2 JSWhile parensExpr stmt)
+  <|> ($$(keyword "for") *> parens
+          (try (liftA2 JSForIn varsOrExprs ($$(keyword "in" )*> expr))
+      <|> liftA3 JSFor (optional varsOrExprs <* semi) (optExpr <* semi) optExpr)
+      <*> stmt)
+  <|> ($$(keyword "break") $> JSBreak)
+  <|> ($$(keyword "continue") $> JSContinue)
+  <|> ($$(keyword "with") *> liftA2 JSWith parensExpr stmt)
+  <|> ($$(keyword "return") *> (JSReturn <$> optExpr))
+  <|> (JSBlock <$> compound)
+  <|> (JSNaked <$> varsOrExprs)
 element :: Parser JSElement
-element = undefined
+element = 
+      ($$(keyword "function") *> liftA3 JSFunction identifier (parens (commaSep identifier)) compound)
+  <|> (JSStm <$> stmt)
 compound :: Parser JSCompoundStm
-compound = undefined
+compound = braces (many stmt)
 
 varsOrExprs :: Parser (Either [JSVar] JSExpr)
-varsOrExprs = undefined
+varsOrExprs = ($$(keyword "var") *> commaSep1 variable) <+> expr
+
 variable :: Parser JSVar
 variable = JSVar <$> identifier <*> optional ($$(symbol '=') *> asgn)
-
-(<~>) :: Parser a -> Parser b -> Parser (a, b)
-(<~>) = liftA2 (,)
 
 
 parensExpr :: Parser JSExpr
 parensExpr = parens expr
+
+-- Prevent backtracking after successfully parsing the first item
+betweenCut :: Parser a -> Parser c -> Parser b -> Parser b
+betweenCut l r p = l *> (cutE (p <* r))
+
+
 optExpr :: Parser (Maybe JSExpr)
 optExpr = optional expr
 expr :: Parser JSExpr
@@ -58,8 +80,13 @@ condExpr :: Parser JSExpr'
 condExpr = liftA2 jsCondExprBuild expr' (optional (($$(symbol '?') *> asgn) <~> ($$(symbol ':') *> asgn)))
 
 expr' :: Parser JSExpr'
-expr' = operator
+expr' = chainl1Prec exprAtom $$binOp
 
+exprAtom :: Parser JSExpr'
+exprAtom = JSUnary <$> unary
+
+unary :: Parser JSUnary
+unary = chainPre $$prefixOp (unary `chainPost` $$postfixOp)
 
 memOrCon :: Parser JSUnary
 memOrCon = $(switch [|
@@ -188,11 +215,11 @@ comma :: Parser ()
 comma = $$(symbol  ',')
 
 parens :: Parser a -> Parser a
-parens = between $$(symbol '(') $$(symbol ')')
+parens = betweenCut $$(symbol '(') $$(symbol ')')
 brackets :: Parser a -> Parser a
-brackets = between $$(symbol '[') $$(symbol ']')
+brackets = betweenCut $$(symbol '[') $$(symbol ']')
 braces :: Parser a -> Parser a
-braces = between $$(symbol '{') $$(symbol '}')
+braces = betweenCut $$(symbol '{') $$(symbol '}')
 
 between :: Parser a -> Parser c -> Parser b -> Parser b
 between start end middle = start *> middle <* end
