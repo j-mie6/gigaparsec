@@ -64,7 +64,10 @@ lazyBytestring = Data.ByteString.Lazy.readFile
 benchmarkFiles :: (NFData a, NFData rep) => [FilePath] -> (FilePath -> IO rep) -> String -> (rep -> Maybe a) -> Benchmark
 benchmarkFiles filenames load lib parser = env (traverse load filenames) (bgroup lib . (tasks filenames))
   where
-    tasks filenames inputs = foldr (\f ts n -> bench f (nf parser (inputs !! n)) : ts (n+1)) (const []) filenames 0
+    tasks filenames inputs = foldr (\f ts n -> bench f (nf (foo . parser) (inputs !! n)) : ts (n+1)) (const []) filenames 0
+    foo n = case n of
+      Just x -> x
+      Nothing -> error "bench fail"
 
 condensedMain :: [Benchmark] -> IO ()
 condensedMain = defaultMain
