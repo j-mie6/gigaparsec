@@ -34,6 +34,7 @@ import Data.ByteString qualified
 import Data.ByteString.Lazy qualified
 import Shared.Parsec.Extended qualified
 import Shared.Megaparsec.Extended qualified
+import Data.Either (fromRight)
 
 parsecParse :: Parsec.Stream s Identity Char => Shared.Parsec.Extended.Parser s a -> s -> Maybe a
 parsecParse p = either (const Nothing) Just  . Parsec.parse p ""
@@ -45,7 +46,9 @@ gigaParse :: Gig.Parsec a -> String -> Maybe a
 gigaParse p xs = Gig.result (const Nothing) Just (Gig.parse @String p xs)
 
 attoParse :: Attoparsec.Parser a -> Text -> Maybe a
-attoParse p = Attoparsec.maybeResult . Attoparsec.parse p
+attoParse p = rightToMaybe . Attoparsec.parseOnly p
+  where
+    rightToMaybe x = fromRight Nothing (Just <$> x)
 
 flatParse :: FlatParse.Parser e a -> ByteString -> Maybe a
 flatParse p bs = case FlatParse.runParser p bs of

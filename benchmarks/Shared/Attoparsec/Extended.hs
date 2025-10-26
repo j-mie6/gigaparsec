@@ -10,10 +10,22 @@ module Shared.Attoparsec.Extended (
   ) where
 
 import Data.Attoparsec.Text hiding (match, string)
+
+import Data.Text qualified as T
+import Data.Text.IO qualified as T
+
 import Data.Functor (void, ($>))
 import Control.Monad (MonadPlus)
 import Control.Applicative (liftA2, liftA3, empty, Alternative, (<**>), (<|>), many)
 import Data.List (foldl')
+
+runParserString :: Parser a -> String -> (Either String a)
+runParserString p xs = parseOnly p (T.pack xs)
+
+runParserFile :: Parser a -> FilePath -> IO (Either String a)
+runParserFile p file =
+  parseOnly p <$> T.readFile file
+  
 
 string = traverse char
 
