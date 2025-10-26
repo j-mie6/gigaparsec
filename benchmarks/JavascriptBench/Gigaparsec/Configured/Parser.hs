@@ -61,6 +61,8 @@ condExpr = liftA2 jsCondExprBuild expr' (option (("?" *> asgn) <~> (":" *> asgn)
 
 expr' :: Parsec JSExpr'
 expr' = precedence $
+      Atom (JSUnary <$> memOrCon)
+  >+
       ops Prefix [
           "--" $> jsDec
         , "++" $> jsInc
@@ -69,39 +71,38 @@ expr' = precedence $
         , "~" $> jsBitNeg
         , "!" $> jsNot
         ]
-  +<  ops Postfix [
+  >+  ops Postfix [
           "--" $> jsDec
         , "++" $> jsInc
         ]
-  +<  ops InfixL  [
+  >+  ops InfixL  [
           "*" $> JSMul
         , "/" $> JSDiv
         , "%" $> JSMod
         ]
-  +<  ops InfixL  [
+  >+  ops InfixL  [
           "+" $> JSAdd
         , "-" $> JSSub
         ]
-  +<  ops InfixL  [
+  >+  ops InfixL  [
           "<<" $> JSShl
         , ">>" $> JSShr
         ]
-  +<  ops InfixL  [
+  >+  ops InfixL  [
           "<=" $> JSLe
         , "<" $> JSLt
         , ">=" $> JSGe
         , ">" $> JSGt
         ]
-  +<  ops InfixL  [
+  >+  ops InfixL  [
           "==" $> JSEq
         , "!=" $> JSNe
         ]
-  +<  ops InfixL  [ atomic "&" $> JSBitAnd ]
-  +<  ops InfixL  [ "^" $> JSBitXor ]
-  +<  ops InfixL  [ atomic "|" $> JSBitOr ]
-  +<  ops InfixL  [ "&&" $> JSAnd ]
-  +<  ops InfixL  [ "||" $> JSOr ]
-  +<  Atom (JSUnary <$> memOrCon)
+  >+  ops InfixL  [ atomic "&" $> JSBitAnd ]
+  >+  ops InfixL  [ "^" $> JSBitXor ]
+  >+  ops InfixL  [ atomic "|" $> JSBitOr ]
+  >+  ops InfixL  [ "&&" $> JSAnd ]
+  >+  ops InfixL  [ "||" $> JSOr ]
 
 memOrCon :: Parsec JSUnary
 memOrCon =  "delete" *> (JSDel <$> member)
