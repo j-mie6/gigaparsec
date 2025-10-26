@@ -70,6 +70,8 @@ condExpr :: Parsec JSExpr'
 condExpr = liftA2 jsCondExprBuild expr' (option ((symbol '?' *> asgn) <~> (symbol ':' *> asgn)))
 expr' :: Parsec JSExpr'
 expr' = precedence $ 
+      Atom (JSUnary <$> memOrCon)
+  >+
       ops Prefix [
           operator "--" $> jsDec
         , operator "++" $> jsInc
@@ -78,39 +80,39 @@ expr' = precedence $
         , operator "~" $> jsBitNeg
         , operator "!" $> jsNot
         ]
-  +<  ops Postfix [ 
+  >+  ops Postfix [ 
           operator "--" $> jsDec
         , operator "++" $> jsInc 
         ]
-  +<  ops InfixL  [ 
+  >+  ops InfixL  [ 
           operator "*" $> JSMul
         , operator "/" $> JSDiv
         , operator "%" $> JSMod 
         ]
-  +<  ops InfixL  [ 
+  >+  ops InfixL  [ 
           operator "+" $> JSAdd
         , operator "-" $> JSSub 
         ]
-  +<  ops InfixL  [ 
+  >+  ops InfixL  [ 
           operator "<<" $> JSShl
         , operator ">>" $> JSShr 
         ]
-  +<  ops InfixL  [ 
+  >+  ops InfixL  [ 
           operator "<=" $> JSLe
         , operator "<" $> JSLt
         , operator ">=" $> JSGe
         , operator ">" $> JSGt 
         ]
-  +<  ops InfixL  [ 
+  >+  ops InfixL  [ 
           operator "==" $> JSEq
         , operator "!=" $> JSNe 
         ]
-  +<  ops InfixL  [ atomic (operator "&") $> JSBitAnd ]
-  +<  ops InfixL  [ operator "^" $> JSBitXor ]
-  +<  ops InfixL  [ atomic (operator "|") $> JSBitOr ]
-  +<  ops InfixL  [ operator "&&" $> JSAnd ]
-  +<  ops InfixL  [ operator "||" $> JSOr ]
-  +< Atom (JSUnary <$> memOrCon)
+  >+  ops InfixL  [ atomic (operator "&") $> JSBitAnd ]
+  >+  ops InfixL  [ operator "^" $> JSBitXor ]
+  >+  ops InfixL  [ atomic (operator "|") $> JSBitOr ]
+  >+  ops InfixL  [ operator "&&" $> JSAnd ]
+  >+  ops InfixL  [ operator "||" $> JSOr ]
+  
 
 memOrCon :: Parsec JSUnary
 memOrCon = keyword "delete" *> (JSDel <$> member)
@@ -161,7 +163,7 @@ natFloat = char '0' *> zeroNumFloat <|> decimalFloat
 zeroNumFloat :: Parsec (Either Int Double)
 zeroNumFloat = Left <$> (hexadecimal <|> octal)
             <|> decimalFloat
-            <|> fromMaybeS empty (fractFloat <*> pure 0)
+            <|> (fromMaybeS empty (fractFloat <*> pure 0))
             <|> pure (Left 0)
 
 decimalFloat :: Parsec (Either Int Double)
