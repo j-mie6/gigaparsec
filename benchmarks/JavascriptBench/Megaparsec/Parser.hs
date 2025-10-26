@@ -25,9 +25,10 @@ javascript = whitespace *> many element <* eof
     stmt = semi $> JSSemi
        <|> keyword "if" *> liftA3 JSIf parensExpr stmt (maybeP (keyword "else" *> stmt))
        <|> keyword "while" *> liftA2 JSWhile parensExpr stmt
-       <|> (keyword "for" *> parens
-               (try (liftA2 JSForIn varsOrExprs (keyword "in" *> expr))
-            <|> liftA3 JSFor (maybeP varsOrExprs <* semi) (optExpr <* semi) optExpr)
+       <|> (keyword "for" *> parens (
+                try (liftA2 JSForIn varsOrExprs (keyword "in" *> expr))
+            <|> liftA3 JSFor (maybeP varsOrExprs <* semi) (optExpr <* semi) optExpr
+            )
            <*> stmt)
        <|> keyword "break" $> JSBreak
        <|> keyword "continue" $> JSContinue
