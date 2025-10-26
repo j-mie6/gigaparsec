@@ -38,9 +38,10 @@ stmt =
       (semi $> JSSemi)
   <|> ($$(keyword "if") *> liftA3 JSIf parensExpr stmt (optional ($$(keyword "else" ) *> stmt)))
   <|> ($$(keyword "while") *> liftA2 JSWhile parensExpr stmt)
-  <|> ($$(keyword "for") *> parens
-          (try (liftA2 JSForIn varsOrExprs ($$(keyword "in" )*> expr))
-      <|> liftA3 JSFor (optional varsOrExprs <* semi) (optExpr <* semi) optExpr)
+  <|> ($$(keyword "for") *> parens (
+          (try (liftA2 JSForIn varsOrExprs ($$(keyword "in" ) *> expr)))
+      <|> (liftA3 JSFor (optional varsOrExprs <* semi) (optExpr <* semi) optExpr)
+      )
       <*> stmt)
   <|> ($$(keyword "break") $> JSBreak)
   <|> ($$(keyword "continue") $> JSContinue)
@@ -86,15 +87,14 @@ exprAtom :: Parser JSExpr'
 exprAtom = JSUnary <$> unary
 
 unary :: Parser JSUnary
-unary = chainPre $$prefixOp (unary `chainPost` $$postfixOp)
+unary = (chainPre $$prefixOp memOrCon) `chainPost` $$postfixOp
 
 memOrCon :: Parser JSUnary
-memOrCon = $(switch [|
-  case _ of
-    "delete" -> JSDel <$> member
-    "new"    -> JSCons <$> con
+memOrCon = $$(switchTyped [||\case
+    "delete" -> whitespace *> (JSDel <$> member)
+    "new"    -> whitespace *> (JSCons <$> con)
     _        -> JSMember <$> member
-  |])
+  ||])
 
 con :: Parser JSCons
 con = liftA2 JSQual ($$(keyword "this") $> "this") (dot *> conCall) <|> conCall
@@ -126,7 +126,7 @@ primaryExpr = (JSParens <$> parens expr)
 
 identifier :: Parser String
 identifier = B.unpack <$> (byteStringOf $
-  withSpan (identStart *> skipMany identLetter) (\_ -> fails . isKeyword))
+  withSpan (identStart *> skipMany identLetter) (\_ -> fails . isKeyword)) <* whitespace
 
 isKeyword :: Span -> Parser ()
 isKeyword span = inSpan span do
@@ -140,7 +140,7 @@ naturalOrFloat :: Parser (Either Int Double)
 naturalOrFloat = natFloat <* whitespace
 
 natFloat :: Parser (Either Int Double)
-natFloat = $(char '0') *> zeroNumFloat
+natFloat = ($(char '0') *> zeroNumFloat)
   <|> (optional decimal >>= decFloat)
 
 decFloat :: Maybe Int -> Parser (Either Int Double)
@@ -215,11 +215,11 @@ comma :: Parser ()
 comma = $$(symbol  ',')
 
 parens :: Parser a -> Parser a
-parens = betweenCut $$(symbol '(') $$(symbol ')')
+parens = between $$(symbol '(') $$(symbol ')')
 brackets :: Parser a -> Parser a
-brackets = betweenCut $$(symbol '[') $$(symbol ']')
+brackets = between $$(symbol '[') $$(symbol ']')
 braces :: Parser a -> Parser a
-braces = betweenCut $$(symbol '{') $$(symbol '}')
+braces = between $$(symbol '{') $$(symbol '}')
 
 between :: Parser a -> Parser c -> Parser b -> Parser b
 between start end middle = start *> middle <* end

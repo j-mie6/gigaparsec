@@ -11,6 +11,9 @@ import Data.Set qualified as Set
 import Data.ByteString qualified as B hiding (unpack)
 import Data.ByteString.Char8 qualified as B
 
+import Data.Text qualified as T
+import Data.Text.Encoding qualified as T
+
 import FlatParse.Basic hiding (Parser)
 import FlatParse.Basic qualified as FP
 import FlatParse.Common.Parser (PureMode)
@@ -23,6 +26,11 @@ import Control.Applicative qualified as App
 import Data.Kind (Constraint)
 
 type Parser = ParserT PureMode ()
+
+runParserString :: ParserT PureMode e a -> String -> FP.Result e a
+runParserString p xs = 
+  let bs = T.encodeUtf8 (T.pack xs)
+  in  FP.runParser p bs
 
 switchFromSet :: Set String -> (String -> Code Q (Parser a)) -> Code Q (Parser a)
 switchFromSet xs p = unsafeCodeCoerce (FP.switch caseStat)
@@ -143,4 +151,21 @@ p <+> q = (Left <$> p) <|> (Right <$> q)
 --   FP.OK# st' x s -> let !f = runParserT# pf fp eob s st' in (_? f x)
 --   FP.Fail# st' -> _
 --   FP.Err# st' e -> FP.Err# st' e
+
+
+
+switchTyped :: Code Q (String -> Parser a) -> Code Q (Parser a)
+switchTyped = switchTypedMPost Nothing
+
+switchTypedPost :: Code Q (Parser ()) -> Code Q (String -> Parser a) -> Code Q (Parser a)
+switchTypedPost p = switchTypedMPost (Just p)
+
+switchTypedMPost :: Maybe (Code Q (Parser ())) -> Code Q (String -> Parser a) -> Code Q (Parser a)
+switchTypedMPost post code = 
+  bindCode (unTypeCode code) $ \e -> 
+    case e of
+      LamCaseE cases -> 
+        let exp = CaseE (UnboundVarE (mkName "_")) cases
+        in  unsafeCodeCoerce (switchWithPost (unTypeCode <$> post) (pure exp))
+      _ -> liftCode (fail "FlatParse.Utils.switchTyped: expected a `\\case` expression.")
 

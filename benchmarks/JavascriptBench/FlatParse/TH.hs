@@ -38,8 +38,8 @@ oneOf2 c1 c2 = [|| ($$(tokenChar c1) *> pure c1) <|> ($$(tokenChar c2) *> pure c
 keyword :: String -> Code Q (Parser ())
 keyword s = [|| notFollowedBy $$(unsafeCodeCoerce (string s)) identLetter *> whitespace ||]
 
-operator :: String -> Code Q (Parser ())
-operator s = [|| notFollowedBy $$(unsafeCodeCoerce (string s)) opLetter *> whitespace ||]
+-- operator :: String -> Code Q (Parser ())
+-- operator s = [|| notFollowedBy $$(unsafeCodeCoerce (string s)) opLetter *> whitespace ||]
 
 identStart :: Parser Char
 identStart = satisfy jsIdentStart
@@ -51,7 +51,7 @@ opLetter :: Parser Char
 opLetter = undefined
 
 prefixOp :: Code Q (Parser (JSUnary -> JSUnary))
-prefixOp = switchTyped [||\case
+prefixOp = switchTypedPost [||whitespace||] [||\case
   "--" -> pure JSDec
   "++" -> pure JSInc
   "-"  -> pure JSNeg
@@ -61,23 +61,15 @@ prefixOp = switchTyped [||\case
   ||]
 
 postfixOp :: Code Q (Parser (JSUnary -> JSUnary))
-postfixOp = switchTyped [||\case
+postfixOp = switchTypedPost [||whitespace||] [||\case
   "--" -> pure JSDec
   "++" -> pure JSInc
   ||]
 
 
-switchTyped :: Code Q (String -> Parser a) -> Code Q (Parser a)
-switchTyped code = 
-  bindCode (unTypeCode code) $ \e -> 
-    case e of
-      LamCaseE cases -> 
-        let exp = CaseE (UnboundVarE (mkName "_")) cases
-        in  unsafeCodeCoerce (switch (pure exp))
-      _ -> liftCode (fail "FlatParse.Utils.switchTyped: expected a `\\case` expression.")
 
 binOp :: Code Q (Parser (Int, JSExpr' -> JSExpr' -> JSExpr'))
-binOp = switchTyped [||\case
+binOp = switchTypedPost [||whitespace||]  [||\case
   "*"  -> pure (9, JSMul)
   "/"  -> pure (9, JSDiv)
   "%"  -> pure (9, JSMod)
@@ -119,6 +111,16 @@ multilineCommentSuffix = go (1 :: Int) where
     "/*" -> go (n + 1)
     _    -> branch anyWord8 (go n) (pure ()) |])
 
+whitespace1 :: Parser ()
+whitespace1 = $(switch [| case _ of
+    " "  -> whitespace
+    "\n" -> whitespace
+    "\t" -> whitespace
+    "\r" -> whitespace
+    "//" -> lineCommentSuffix
+    "/*" -> multilineCommentSuffix
+  |])
+
 whitespace :: Parser ()
 whitespace = $(switch [| case _ of
     " "  -> whitespace
@@ -127,6 +129,7 @@ whitespace = $(switch [| case _ of
     "\r" -> whitespace
     "//" -> lineCommentSuffix
     "/*" -> multilineCommentSuffix
+    _    -> pure @Parser ()
   |])
 
 spaces :: Parser ()
