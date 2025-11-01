@@ -257,6 +257,25 @@ benchmark perf-test
     main-is: 
         Main.hs
 
+benchmark regression-test
+    import:
+        benchmark-common
+    type:
+        exitcode-stdio-1.0
+
+    main-is:
+        Regression/Main.hs
+
+    build-depends:
+        QuickCheck >= 2 && < 3,
+
+    other-modules:
+        Regression.LexerCombinators
+        Regression.LexerCombinators.Generated
+        Regression.LexerCombinators.HandRolled
+        Regression.LexerCombinators.UsingPatterns
+        Regression.LexerCombinators.Shared
+
 benchmark javascript-bench
     import:
         benchmark-common

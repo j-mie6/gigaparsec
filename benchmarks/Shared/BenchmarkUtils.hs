@@ -15,6 +15,7 @@ module Shared.BenchmarkUtils (
   lazyBytestring,
   benchmarkFiles,
   condensedMain,
+  benchmarkStrings,
   Benchmark
 ) where
 
@@ -63,6 +64,16 @@ bytestring :: FilePath -> IO ByteString
 bytestring = Data.ByteString.readFile
 lazyBytestring :: FilePath -> IO Data.ByteString.Lazy.ByteString
 lazyBytestring = Data.ByteString.Lazy.readFile
+
+benchmarkStrings :: (NFData a) => [(String, IO String)] -> String -> (String -> Maybe a) -> Benchmark
+benchmarkStrings strings parserName parser = 
+  let (stringNames, stringsM) = unzip strings
+  in  env (sequence stringsM) (bgroup parserName . tasks stringNames)
+  where
+    tasks stringName inputs = foldr (\benchName ts n -> bench benchName (nf (foo . parser) (inputs !! n)) : ts (n+1)) (const []) stringName 0
+    foo n = case n of
+      Just x -> x
+      Nothing -> error "bench fail"
 
 benchmarkFiles :: (NFData a, NFData rep) => [FilePath] -> (FilePath -> IO rep) -> String -> (rep -> Maybe a) -> Benchmark
 benchmarkFiles filenames load lib parser = env (traverse load filenames) (bgroup lib . (tasks filenames))
