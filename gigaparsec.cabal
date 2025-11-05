@@ -268,6 +268,7 @@ benchmark regression-test
 
     build-depends:
         QuickCheck >= 2 && < 3,
+        tasty-quickcheck >= 0.11 && < 0.12,
 
     other-modules:
         Regression.LexerCombinators

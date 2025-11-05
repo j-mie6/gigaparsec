@@ -24,7 +24,7 @@ import Text.Gigaparsec (Parsec, (<|>))
 import Text.Gigaparsec.Internal.TH.VersionAgnostic (Extension(TemplateHaskell))
 import Text.Gigaparsec.Token.Patterns (IntegerParserConfig, lexerCombinators, lexerCombinatorsWithNames, overloadedStrings, emptyIntegerParserConfig)
 
-import JavascriptBench.Shared (jsIdentStart, jsIdentLetter, jsKeywords)
+import JavascriptBench.Shared (jsIdentStart, jsIdentLetter, jsKeywords, jsStringLetter)
 import JavascriptBench.Gigaparsec.Configured.LexerIntCfg (jsIntCfg)
 
 
@@ -102,6 +102,7 @@ textDesc = D.plainText {
   , D.stringEnds = [("\"", "\"")]
   -- As of ES6
   , D.multiStringEnds = [("`", "`")]
+  , D.graphicCharacter = Just jsStringLetter
   }
 
 -------------------------------------------------------------------------------

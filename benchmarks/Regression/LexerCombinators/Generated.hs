@@ -1,18 +1,22 @@
 module Regression.LexerCombinators.Generated where
 
-import Data.Char (isAlpha, isAlphaNum, isSpace)
+import Data.Char (isAlpha, isAlphaNum, isSpace, readLitChar)
 
 import Text.Gigaparsec.Token.Descriptions qualified as D
 import Text.Gigaparsec.Token.Lexer qualified as L
-import Text.Gigaparsec (Parsec, many, eof)
+import Text.Gigaparsec (Parsec, many, eof, (<|>))
 
 import Regression.LexerCombinators.Shared 
+import Data.Map (Map)
+import Data.Set (Set)
+import Data.Map qualified as Map
+import Data.Set qualified as Set
 
 -------------------------------------------------------------------------------
 -- Parsers
 
 manyIdents :: Parsec [String]
-manyIdents = many identifier <* eof
+manyIdents = many (identifier <|> string) <* eof
 
 
 -------------------------------------------------------------------------------
@@ -22,6 +26,7 @@ lexicalDesc :: D.LexicalDesc
 lexicalDesc = D.plain {
     D.nameDesc = nameDesc
   , D.spaceDesc = spaceDesc
+  , D.textDesc = textDesc
   }
 
 nameDesc :: D.NameDesc
@@ -41,6 +46,20 @@ spaceDesc = D.plainSpace {
   , D.lineCommentAllowsEOF = True
   }
 
+textDesc :: D.TextDesc
+textDesc = D.plainText {
+    D.escapeSequences = escapeDesc
+  }
+
+escapeDesc :: D.EscapeDesc
+escapeDesc = D.plainEscape {
+    D.escBegin = '\\'
+  , D.literals = escapeLiteralsSet
+  , D.mapping  = escapeSequencesMap
+  }
+
+
+
 lexer :: L.Lexer
 lexer = L.mkLexer lexicalDesc
 
@@ -49,3 +68,6 @@ spaces = L.whiteSpace (L.space lexer)
 
 identifier :: Parsec String
 identifier = L.identifier (L.names (L.lexeme lexer))
+
+string :: Parsec String
+string = L.unicode (L.stringLiteral (L.lexeme lexer))

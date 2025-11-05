@@ -8,7 +8,7 @@ import Data.Char (isAlpha, isAlphaNum, isSpace)
 import Text.Gigaparsec.Token.Descriptions qualified as D
 import Text.Gigaparsec.Token.Lexer qualified as L
 import Text.Gigaparsec.Token.Patterns (lexerCombinators)
-import Text.Gigaparsec (Parsec, many, eof)
+import Text.Gigaparsec (Parsec, many, eof, (<|>))
 
 import Regression.LexerCombinators.Shared 
 
@@ -21,6 +21,10 @@ $(lexerCombinators [| lexer |] [
     'L.identifier
   ])
 
+
+string :: Parsec String
+string = L.unicode (L.stringLiteral (L.lexeme lexer))
+
 manyIdents :: Parsec [String]
-manyIdents = many identifier <* eof
+manyIdents = many (string <|> identifier) <* eof
 
