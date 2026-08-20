@@ -105,6 +105,16 @@ module Text.Gigaparsec.Token.Lexer (
     integer, natural,
     -- **** Fixed-Base Parsers
     decimal, hexadecimal, octal, binary,
+    -- *** Floating-Point Parsers
+    FloatingParsers,
+    floating,
+    -- **** Fixed-Base Floating Parsers
+    decimalFloating, hexadecimalFloating, octalFloating, binaryFloating, numberFloating,
+    -- *** Combined Parsers
+    CombinedParsers,
+    unsignedCombined, signedCombined,
+    -- **** Fixed-Base Combined Parsers
+    decimalCombined, hexadecimalCombined, octalCombined, binaryCombined, numberCombined,
     -- **** Fixed-Width Numeric Tokens
     {-|
     These combinators tokenize numbers that must be within specific bit-widths.
@@ -151,7 +161,8 @@ import Text.Gigaparsec.Internal.Token.Lexer (
     Lexer, mkLexer, mkLexerWithErrorConfig,
     Lexeme (rawMultiStringLiteral), lexeme, nonlexeme, fully, space,
     apply, sym, symbol, names,
-    integer, natural,
+    integer, natural, floating,
+    unsignedCombined, signedCombined,
     stringLiteral, rawStringLiteral, multiStringLiteral, rawMultiStringLiteral,
     charLiteral,
     Space, skipComments, whiteSpace, alter, initSpace
@@ -165,7 +176,11 @@ import Text.Gigaparsec.Internal.Token.Numeric (
     decimal8, decimal16, decimal32, decimal64,
     hexadecimal8, hexadecimal16, hexadecimal32, hexadecimal64,
     octal8, octal16, octal32, octal64,
-    binary8, binary16, binary32, binary64
+    binary8, binary16, binary32, binary64,
+    FloatingParsers,
+    decimalFloating, hexadecimalFloating, octalFloating, binaryFloating, numberFloating,
+    CombinedParsers,
+    decimalCombined, hexadecimalCombined, octalCombined, binaryCombined, numberCombined
   )
 import Text.Gigaparsec.Internal.Token.BitBounds qualified as Internal
 import Text.Gigaparsec.Internal.Token.Text (

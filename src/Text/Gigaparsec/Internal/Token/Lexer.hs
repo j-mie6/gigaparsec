@@ -6,7 +6,8 @@ module Text.Gigaparsec.Internal.Token.Lexer (
     Lexeme, lexeme, nonlexeme, fully, space,
     apply, sym, symbol, names, -- more go here, no numeric and no text
     -- Numeric
-    integer, natural,
+    integer, natural, floating,
+    unsignedCombined, signedCombined,
     -- Text
     stringLiteral, rawStringLiteral, multiStringLiteral, rawMultiStringLiteral,
     charLiteral,
@@ -33,11 +34,11 @@ import Text.Gigaparsec.Internal.Token.Names (Names, mkNames)
 import Text.Gigaparsec.Internal.Token.Names qualified as Names (lexeme)
 import Text.Gigaparsec.Internal.Token.Numeric (
     IntegerParsers, mkSigned, mkUnsigned,
-    --FloatingParsers, mkSignedFloating, mkUnsignedFloating,
-    --CombinedParsers, mkSignedCombined, mkUnsignedCombined,
+    FloatingParsers, mkSignedFloating, mkUnsignedFloating,
+    CombinedParsers, mkSignedCombined, mkUnsignedCombined,
   )
 import Text.Gigaparsec.Internal.Token.BitBounds (CanHoldSigned, CanHoldUnsigned)
-import Text.Gigaparsec.Internal.Token.Numeric qualified as Numeric (lexemeInteger, {-lexemeFloating, lexemeCombined-})
+import Text.Gigaparsec.Internal.Token.Numeric qualified as Numeric (lexemeInteger, lexemeFloating, lexemeCombined)
 import Text.Gigaparsec.Internal.Token.Text (
     TextParsers,
     mkStringParsers, mkCharacterParsers, mkEscape, mkEscapeChar, StringChar(RawChar)
@@ -93,11 +94,11 @@ mkLexerWithErrorConfig Desc.LexicalDesc{..} !errConfig = Lexer {..}
                         , names = Names.lexeme apply (names nonlexeme)
                         , natural = Numeric.lexemeInteger apply naturalNonLexeme
                         , integer = Numeric.lexemeInteger apply (integer nonlexeme)
-                        {-, floating = Numeric.lexemeFloating apply (floating nonlexeme)
+                        , floating = Numeric.lexemeFloating apply (floating nonlexeme)
                         , unsignedCombined =
                             Numeric.lexemeCombined apply (unsignedCombined nonlexeme)
                         , signedCombined =
-                            Numeric.lexemeCombined apply (signedCombined nonlexeme)-}
+                            Numeric.lexemeCombined apply (signedCombined nonlexeme)
                         , stringLiteral = Text.lexeme apply (stringLiteral nonlexeme)
                         , rawStringLiteral = Text.lexeme apply (rawStringLiteral nonlexeme)
                         , multiStringLiteral = Text.lexeme apply (multiStringLiteral nonlexeme)
@@ -109,9 +110,9 @@ mkLexerWithErrorConfig Desc.LexicalDesc{..} !errConfig = Lexer {..}
                               , names = mkNames nameDesc symbolDesc errConfig
                               , natural = naturalNonLexeme
                               , integer = mkSigned numericDesc naturalNonLexeme errConfig
-                              {-, floating = mkSignedFloating numericDesc positiveFloating
+                              , floating = mkSignedFloating numericDesc positiveFloating errConfig
                               , unsignedCombined = mkUnsignedCombined numericDesc naturalNonLexeme positiveFloating
-                              , signedCombined = mkSignedCombined numericDesc (unsignedCombined nonlexeme)-}
+                              , signedCombined = mkSignedCombined numericDesc (unsignedCombined nonlexeme)
                               , stringLiteral = mkStringParsers stringEnds escapeChar graphicCharacter False errConfig
                               , rawStringLiteral = mkStringParsers stringEnds rawChar graphicCharacter False errConfig
                               , multiStringLiteral = mkStringParsers multiStringEnds escapeChar graphicCharacter True errConfig
@@ -120,7 +121,7 @@ mkLexerWithErrorConfig Desc.LexicalDesc{..} !errConfig = Lexer {..}
                               }
         !symbolNonLexeme = mkSymbol symbolDesc nameDesc errConfig
         !naturalNonLexeme = mkUnsigned numericDesc gen errConfig
-        --positiveFloating = mkUnsignedFloating numericDesc naturalNonLexeme gen
+        !positiveFloating = mkUnsignedFloating numericDesc naturalNonLexeme gen errConfig
         !escape = mkEscape (Desc.escapeSequences textDesc) gen errConfig
         graphicCharacter = Desc.graphicCharacter textDesc
         stringEnds = Desc.stringEnds textDesc
@@ -159,10 +160,12 @@ data Lexeme =
       Signed integer literals are an extension of unsigned integer literals which may be prefixed by a sign.
       -}
       , integer :: !(IntegerParsers CanHoldSigned)
-      -- desperate times, desperate measures
-      --, floating :: !FloatingParsers
-      --, unsignedCombined :: !CombinedParsers
-      --, signedCombined :: !CombinedParsers
+      -- | A collection of parsers concerned with handling real number literals.
+      , floating :: !FloatingParsers
+      -- | A collection of parsers that parse a literal as either an integer or a real number.
+      , unsignedCombined :: !CombinedParsers
+      -- | A collection of parsers that parse a signed literal as either an integer or a real number.
+      , signedCombined :: !CombinedParsers
       {-|
       A collection of parsers concerned with handling single-line string literals.
 
@@ -228,10 +231,9 @@ data Lexeme =
       , names :: !Names
       , natural :: !(IntegerParsers CanHoldUnsigned)
       , integer :: !(IntegerParsers CanHoldSigned)
-      -- desperate times, desperate measures
-      --, floating :: !FloatingParsers
-      --, unsignedCombined :: !CombinedParsers
-      --, signedCombined :: !CombinedParsers
+      , floating :: !FloatingParsers
+      , unsignedCombined :: !CombinedParsers
+      , signedCombined :: !CombinedParsers
       , stringLiteral :: !(TextParsers String)
       , rawStringLiteral :: !(TextParsers String)
       , multiStringLiteral :: !(TextParsers String)
