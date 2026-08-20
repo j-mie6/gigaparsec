@@ -29,7 +29,7 @@ The actual 'Text.Gigaparsec.Errors.ErrorBuilder.ErrorBuilder' class instance is 
 </span><span id="line-29"></span><span class="annot"><span class="hs-comment">-- | A string-builder is an efficient way of constructing a string through a series of concatenations.</span></span><span>
 </span><span id="line-30"></span><span class="hs-keyword">type</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Errors.DefaultErrorBuilder.html#StringBuilder"><span class="hs-identifier hs-type">StringBuilder</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-operator">*</span></span><span>
 </span><span id="line-31"></span><span class="hs-keyword">newtype</span><span> </span><span id="StringBuilder"><span class="annot"><a href="Text.Gigaparsec.Errors.DefaultErrorBuilder.html#StringBuilder"><span class="hs-identifier hs-var">StringBuilder</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="StringBuilder"><span class="annot"><a href="Text.Gigaparsec.Errors.DefaultErrorBuilder.html#StringBuilder"><span class="hs-identifier hs-var">StringBuilder</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span class="hs-special">)</span><span>
-</span><span id="line-32"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="hs-special">(</span><span id="local-6989586621679241779"><span id="local-6989586621679241784"><span id="local-6989586621679241788"><span class="annot"><span class="annottext">NonEmpty StringBuilder -&gt; StringBuilder
+</span><span id="line-32"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="hs-special">(</span><span id="local-6989586621679258903"><span id="local-6989586621679258908"><span id="local-6989586621679258912"><span class="annot"><span class="annottext">NonEmpty StringBuilder -&gt; StringBuilder
 StringBuilder -&gt; StringBuilder -&gt; StringBuilder
 (StringBuilder -&gt; StringBuilder -&gt; StringBuilder)
 -&gt; (NonEmpty StringBuilder -&gt; StringBuilder)
@@ -47,7 +47,7 @@ $csconcat :: NonEmpty StringBuilder -&gt; StringBuilder
 sconcat :: NonEmpty StringBuilder -&gt; StringBuilder
 $cstimes :: forall b. Integral b =&gt; b -&gt; StringBuilder -&gt; StringBuilder
 stimes :: forall b. Integral b =&gt; b -&gt; StringBuilder -&gt; StringBuilder
-</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Semigroup</span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679241799"><span id="local-6989586621679241804"><span id="local-6989586621679241808"><span class="annot"><span class="annottext">Semigroup StringBuilder
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Semigroup</span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679258923"><span id="local-6989586621679258928"><span id="local-6989586621679258932"><span class="annot"><span class="annottext">Semigroup StringBuilder
 StringBuilder
 Semigroup StringBuilder =&gt;
 StringBuilder
@@ -70,34 +70,34 @@ mconcat :: [StringBuilder] -&gt; StringBuilder
 </span><span id="line-34"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IsString</span></span><span> </span><span class="annot"><a href="Text.Gigaparsec.Errors.DefaultErrorBuilder.html#StringBuilder"><span class="hs-identifier hs-type">StringBuilder</span></a></span><span> </span><span class="hs-keyword">where</span><span>
 </span><span id="line-35"></span><span>  </span><span class="hs-pragma">{-# INLINE</span><span> </span><span class="annot"><span class="hs-pragma hs-type">fromString</span></span><span> </span><span class="hs-pragma">#-}</span><span>
 </span><span id="line-36"></span><span>  </span><span class="annot"><span class="hs-identifier hs-type">fromString</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Errors.DefaultErrorBuilder.html#StringBuilder"><span class="hs-identifier hs-type">StringBuilder</span></a></span><span>
-</span><span id="line-37"></span><span>  </span><span id="local-6989586621679241814"><span class="annot"><span class="annottext">fromString :: String -&gt; StringBuilder
-</span><span class="hs-identifier hs-var hs-var hs-var">fromString</span></span></span><span> </span><span id="local-6989586621679241815"><span class="annot"><span class="annottext">String
-</span><a href="#local-6989586621679241815"><span class="hs-identifier hs-var">str</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">(String -&gt; String) -&gt; StringBuilder
-</span><a href="Text.Gigaparsec.Errors.DefaultErrorBuilder.html#StringBuilder"><span class="hs-identifier hs-var">StringBuilder</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">String
-</span><a href="#local-6989586621679241815"><span class="hs-identifier hs-var">str</span></a></span><span> </span><span class="annot"><span class="annottext">String -&gt; String -&gt; String
+</span><span id="line-37"></span><span>  </span><span id="local-6989586621679258938"><span class="annot"><span class="annottext">fromString :: [Char] -&gt; StringBuilder
+</span><span class="hs-identifier hs-var hs-var hs-var">fromString</span></span></span><span> </span><span id="local-6989586621679258939"><span class="annot"><span class="annottext">[Char]
+</span><a href="#local-6989586621679258939"><span class="hs-identifier hs-var">str</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">([Char] -&gt; [Char]) -&gt; StringBuilder
+</span><a href="Text.Gigaparsec.Errors.DefaultErrorBuilder.html#StringBuilder"><span class="hs-identifier hs-var">StringBuilder</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">[Char]
+</span><a href="#local-6989586621679258939"><span class="hs-identifier hs-var">str</span></a></span><span> </span><span class="annot"><span class="annottext">[Char] -&gt; [Char] -&gt; [Char]
 forall a. [a] -&gt; [a] -&gt; [a]
 </span><span class="hs-operator hs-var">++</span></span><span class="hs-special">)</span><span>
 </span><span id="line-38"></span><span>
 </span><span id="line-39"></span><span class="hs-pragma">{-# INLINE</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Errors.DefaultErrorBuilder.html#toString"><span class="hs-pragma hs-type">toString</span></a></span><span> </span><span class="hs-pragma">#-}</span><span>
 </span><span id="line-40"></span><span class="annot"><span class="hs-comment">-- | Runs the given string-builder, producing a string.</span></span><span>
 </span><span id="line-41"></span><span class="annot"><a href="Text.Gigaparsec.Errors.DefaultErrorBuilder.html#toString"><span class="hs-identifier hs-type">toString</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Errors.DefaultErrorBuilder.html#StringBuilder"><span class="hs-identifier hs-type">StringBuilder</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span>
-</span><span id="line-42"></span><span id="toString"><span class="annot"><span class="annottext">toString :: StringBuilder -&gt; String
-</span><a href="Text.Gigaparsec.Errors.DefaultErrorBuilder.html#toString"><span class="hs-identifier hs-var hs-var">toString</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Text.Gigaparsec.Errors.DefaultErrorBuilder.html#StringBuilder"><span class="hs-identifier hs-type">StringBuilder</span></a></span><span> </span><span id="local-6989586621679241817"><span class="annot"><span class="annottext">String -&gt; String
-</span><a href="#local-6989586621679241817"><span class="hs-identifier hs-var">build</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">String -&gt; String
-</span><a href="#local-6989586621679241817"><span class="hs-identifier hs-var">build</span></a></span><span> </span><span class="annot"><span class="annottext">String
+</span><span id="line-42"></span><span id="toString"><span class="annot"><span class="annottext">toString :: StringBuilder -&gt; [Char]
+</span><a href="Text.Gigaparsec.Errors.DefaultErrorBuilder.html#toString"><span class="hs-identifier hs-var hs-var">toString</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Text.Gigaparsec.Errors.DefaultErrorBuilder.html#StringBuilder"><span class="hs-identifier hs-type">StringBuilder</span></a></span><span> </span><span id="local-6989586621679258941"><span class="annot"><span class="annottext">[Char] -&gt; [Char]
+</span><a href="#local-6989586621679258941"><span class="hs-identifier hs-var">build</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">[Char] -&gt; [Char]
+</span><a href="#local-6989586621679258941"><span class="hs-identifier hs-var">build</span></a></span><span> </span><span class="annot"><span class="annottext">[Char]
 forall a. Monoid a =&gt; a
 </span><span class="hs-identifier hs-var">mempty</span></span><span>
 </span><span id="line-43"></span><span>
 </span><span id="line-44"></span><span class="hs-pragma">{-# INLINE</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Errors.DefaultErrorBuilder.html#from"><span class="hs-pragma hs-type">from</span></a></span><span> </span><span class="hs-pragma">#-}</span><span>
 </span><span id="line-45"></span><span class="annot"><span class="hs-comment">-- | Create a string-builder which starts with the string representation of the given argument.</span></span><span>
-</span><span id="line-46"></span><span id="local-6989586621679241670"><span class="annot"><a href="Text.Gigaparsec.Errors.DefaultErrorBuilder.html#from"><span class="hs-identifier hs-type">from</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Show</span></span><span> </span><span class="annot"><a href="#local-6989586621679241670"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><a href="#local-6989586621679241670"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Errors.DefaultErrorBuilder.html#StringBuilder"><span class="hs-identifier hs-type">StringBuilder</span></a></span></span><span>
+</span><span id="line-46"></span><span id="local-6989586621679258794"><span class="annot"><a href="Text.Gigaparsec.Errors.DefaultErrorBuilder.html#from"><span class="hs-identifier hs-type">from</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Show</span></span><span> </span><span class="annot"><a href="#local-6989586621679258794"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><a href="#local-6989586621679258794"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Errors.DefaultErrorBuilder.html#StringBuilder"><span class="hs-identifier hs-type">StringBuilder</span></a></span></span><span>
 </span><span id="line-47"></span><span id="from"><span class="annot"><span class="annottext">from :: forall a. Show a =&gt; a -&gt; StringBuilder
-</span><a href="Text.Gigaparsec.Errors.DefaultErrorBuilder.html#from"><span class="hs-identifier hs-var hs-var">from</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">(String -&gt; String) -&gt; StringBuilder
-</span><a href="Text.Gigaparsec.Errors.DefaultErrorBuilder.html#StringBuilder"><span class="hs-identifier hs-var">StringBuilder</span></a></span><span> </span><span class="annot"><span class="annottext">((String -&gt; String) -&gt; StringBuilder)
--&gt; (a -&gt; String -&gt; String) -&gt; a -&gt; StringBuilder
+</span><a href="Text.Gigaparsec.Errors.DefaultErrorBuilder.html#from"><span class="hs-identifier hs-var hs-var">from</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">([Char] -&gt; [Char]) -&gt; StringBuilder
+</span><a href="Text.Gigaparsec.Errors.DefaultErrorBuilder.html#StringBuilder"><span class="hs-identifier hs-var">StringBuilder</span></a></span><span> </span><span class="annot"><span class="annottext">(([Char] -&gt; [Char]) -&gt; StringBuilder)
+-&gt; (a -&gt; [Char] -&gt; [Char]) -&gt; a -&gt; StringBuilder
 forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
-</span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">a -&gt; String -&gt; String
-forall a. Show a =&gt; a -&gt; String -&gt; String
+</span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">a -&gt; [Char] -&gt; [Char]
+forall a. Show a =&gt; a -&gt; [Char] -&gt; [Char]
 </span><span class="hs-identifier hs-var">shows</span></span><span>
 </span><span id="line-48"></span><span>
 </span><span id="line-49"></span><span class="annot"><span class="hs-comment">{-|
@@ -106,44 +106,44 @@ the source file and position into the header.
 -}</span></span><span>
 </span><span id="line-53"></span><span class="hs-pragma">{-# INLINABLE</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Errors.DefaultErrorBuilder.html#buildDefault"><span class="hs-pragma hs-type">buildDefault</span></a></span><span> </span><span class="hs-pragma">#-}</span><span>
 </span><span id="line-54"></span><span class="annot"><a href="Text.Gigaparsec.Errors.DefaultErrorBuilder.html#buildDefault"><span class="hs-identifier hs-type">buildDefault</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Errors.DefaultErrorBuilder.html#StringBuilder"><span class="hs-identifier hs-type">StringBuilder</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Maybe</span></span><span> </span><span class="annot"><a href="Text.Gigaparsec.Errors.DefaultErrorBuilder.html#StringBuilder"><span class="hs-identifier hs-type">StringBuilder</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-special">[</span><span class="annot"><a href="Text.Gigaparsec.Errors.DefaultErrorBuilder.html#StringBuilder"><span class="hs-identifier hs-type">StringBuilder</span></a></span><span class="hs-special">]</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span>
-</span><span id="line-55"></span><span id="buildDefault"><span class="annot"><span class="annottext">buildDefault :: StringBuilder -&gt; Maybe StringBuilder -&gt; [StringBuilder] -&gt; String
-</span><a href="Text.Gigaparsec.Errors.DefaultErrorBuilder.html#buildDefault"><span class="hs-identifier hs-var hs-var">buildDefault</span></a></span></span><span> </span><span id="local-6989586621679241825"><span class="annot"><span class="annottext">StringBuilder
-</span><a href="#local-6989586621679241825"><span class="hs-identifier hs-var">pos</span></a></span></span><span> </span><span id="local-6989586621679241826"><span class="annot"><span class="annottext">Maybe StringBuilder
-</span><a href="#local-6989586621679241826"><span class="hs-identifier hs-var">source</span></a></span></span><span> </span><span id="local-6989586621679241827"><span class="annot"><span class="annottext">[StringBuilder]
-</span><a href="#local-6989586621679241827"><span class="hs-identifier hs-var">lines</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">StringBuilder -&gt; String
+</span><span id="line-55"></span><span id="buildDefault"><span class="annot"><span class="annottext">buildDefault :: StringBuilder -&gt; Maybe StringBuilder -&gt; [StringBuilder] -&gt; [Char]
+</span><a href="Text.Gigaparsec.Errors.DefaultErrorBuilder.html#buildDefault"><span class="hs-identifier hs-var hs-var">buildDefault</span></a></span></span><span> </span><span id="local-6989586621679258949"><span class="annot"><span class="annottext">StringBuilder
+</span><a href="#local-6989586621679258949"><span class="hs-identifier hs-var">pos</span></a></span></span><span> </span><span id="local-6989586621679258950"><span class="annot"><span class="annottext">Maybe StringBuilder
+</span><a href="#local-6989586621679258950"><span class="hs-identifier hs-var">source</span></a></span></span><span> </span><span id="local-6989586621679258951"><span class="annot"><span class="annottext">[StringBuilder]
+</span><a href="#local-6989586621679258951"><span class="hs-identifier hs-var">lines</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">StringBuilder -&gt; [Char]
 </span><a href="Text.Gigaparsec.Errors.DefaultErrorBuilder.html#toString"><span class="hs-identifier hs-var">toString</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">StringBuilder -&gt; [StringBuilder] -&gt; Int -&gt; StringBuilder
 </span><a href="Text.Gigaparsec.Errors.DefaultErrorBuilder.html#blockError"><span class="hs-identifier hs-var">blockError</span></a></span><span> </span><span class="annot"><span class="annottext">StringBuilder
-</span><a href="#local-6989586621679241828"><span class="hs-identifier hs-var">header</span></a></span><span> </span><span class="annot"><span class="annottext">[StringBuilder]
-</span><a href="#local-6989586621679241827"><span class="hs-identifier hs-var">lines</span></a></span><span> </span><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679258952"><span class="hs-identifier hs-var">header</span></a></span><span> </span><span class="annot"><span class="annottext">[StringBuilder]
+</span><a href="#local-6989586621679258951"><span class="hs-identifier hs-var">lines</span></a></span><span> </span><span class="annot"><span class="annottext">Int
 </span><span class="hs-number">2</span></span><span class="hs-special">)</span><span>
-</span><span id="line-56"></span><span>  </span><span class="hs-keyword">where</span><span> </span><span id="local-6989586621679241828"><span class="annot"><span class="annottext">header :: StringBuilder
-</span><a href="#local-6989586621679241828"><span class="hs-identifier hs-var hs-var">header</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">StringBuilder
+</span><span id="line-56"></span><span>  </span><span class="hs-keyword">where</span><span> </span><span id="local-6989586621679258952"><span class="annot"><span class="annottext">header :: StringBuilder
+</span><a href="#local-6989586621679258952"><span class="hs-identifier hs-var hs-var">header</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">StringBuilder
 -&gt; (StringBuilder -&gt; StringBuilder)
 -&gt; Maybe StringBuilder
 -&gt; StringBuilder
 forall b a. b -&gt; (a -&gt; b) -&gt; Maybe a -&gt; b
 </span><span class="hs-identifier hs-var">maybe</span></span><span> </span><span class="annot"><span class="annottext">StringBuilder
 forall a. Monoid a =&gt; a
-</span><span class="hs-identifier hs-var">mempty</span></span><span> </span><span class="hs-special">(</span><span class="hs-glyph">\</span><span id="local-6989586621679241836"><span class="annot"><span class="annottext">StringBuilder
-</span><a href="#local-6989586621679241836"><span class="hs-identifier hs-var">src</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">StringBuilder
+</span><span class="hs-identifier hs-var">mempty</span></span><span> </span><span class="hs-special">(</span><span class="hs-glyph">\</span><span id="local-6989586621679258960"><span class="annot"><span class="annottext">StringBuilder
+</span><a href="#local-6989586621679258960"><span class="hs-identifier hs-var">src</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">StringBuilder
 </span><span class="hs-string">&quot;In &quot;</span></span><span> </span><span class="annot"><span class="annottext">StringBuilder -&gt; StringBuilder -&gt; StringBuilder
 forall a. Semigroup a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">StringBuilder
-</span><a href="#local-6989586621679241836"><span class="hs-identifier hs-var">src</span></a></span><span> </span><span class="annot"><span class="annottext">StringBuilder -&gt; StringBuilder -&gt; StringBuilder
+</span><a href="#local-6989586621679258960"><span class="hs-identifier hs-var">src</span></a></span><span> </span><span class="annot"><span class="annottext">StringBuilder -&gt; StringBuilder -&gt; StringBuilder
 forall a. Semigroup a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">StringBuilder
 </span><span class="hs-string">&quot; &quot;</span></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">Maybe StringBuilder
-</span><a href="#local-6989586621679241826"><span class="hs-identifier hs-var">source</span></a></span><span> </span><span class="annot"><span class="annottext">StringBuilder -&gt; StringBuilder -&gt; StringBuilder
+</span><a href="#local-6989586621679258950"><span class="hs-identifier hs-var">source</span></a></span><span> </span><span class="annot"><span class="annottext">StringBuilder -&gt; StringBuilder -&gt; StringBuilder
 forall a. Semigroup a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">StringBuilder
-</span><a href="#local-6989586621679241825"><span class="hs-identifier hs-var">pos</span></a></span><span>
+</span><a href="#local-6989586621679258949"><span class="hs-identifier hs-var">pos</span></a></span><span>
 </span><span id="line-57"></span><span>
 </span><span id="line-58"></span><span class="annot"><span class="hs-comment">{-|
 Forms a vanilla error by combining all the components in sequence, if there is no information other than the lines,
 &quot;unknown parse error&quot; is used instead.
 -}</span></span><span>
 </span><span id="line-62"></span><span class="hs-pragma">{-# INLINABLE</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Errors.DefaultErrorBuilder.html#vanillaErrorDefault"><span class="hs-pragma hs-type">vanillaErrorDefault</span></a></span><span> </span><span class="hs-pragma">#-}</span><span>
-</span><span id="line-63"></span><span id="local-6989586621679241678"><span class="annot"><a href="Text.Gigaparsec.Errors.DefaultErrorBuilder.html#vanillaErrorDefault"><span class="hs-identifier hs-type">vanillaErrorDefault</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Foldable</span></span><span> </span><span class="annot"><a href="#local-6989586621679241678"><span class="hs-identifier hs-type">t</span></a></span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Maybe</span></span><span> </span><span class="annot"><a href="Text.Gigaparsec.Errors.DefaultErrorBuilder.html#StringBuilder"><span class="hs-identifier hs-type">StringBuilder</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Maybe</span></span><span> </span><span class="annot"><a href="Text.Gigaparsec.Errors.DefaultErrorBuilder.html#StringBuilder"><span class="hs-identifier hs-type">StringBuilder</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="#local-6989586621679241678"><span class="hs-identifier hs-type">t</span></a></span><span> </span><span class="annot"><a href="Text.Gigaparsec.Errors.DefaultErrorBuilder.html#StringBuilder"><span class="hs-identifier hs-type">StringBuilder</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-special">[</span><span class="annot"><a href="Text.Gigaparsec.Errors.DefaultErrorBuilder.html#StringBuilder"><span class="hs-identifier hs-type">StringBuilder</span></a></span><span class="hs-special">]</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-special">[</span><span class="annot"><a href="Text.Gigaparsec.Errors.DefaultErrorBuilder.html#StringBuilder"><span class="hs-identifier hs-type">StringBuilder</span></a></span><span class="hs-special">]</span></span><span>
+</span><span id="line-63"></span><span id="local-6989586621679258802"><span class="annot"><a href="Text.Gigaparsec.Errors.DefaultErrorBuilder.html#vanillaErrorDefault"><span class="hs-identifier hs-type">vanillaErrorDefault</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Foldable</span></span><span> </span><span class="annot"><a href="#local-6989586621679258802"><span class="hs-identifier hs-type">t</span></a></span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Maybe</span></span><span> </span><span class="annot"><a href="Text.Gigaparsec.Errors.DefaultErrorBuilder.html#StringBuilder"><span class="hs-identifier hs-type">StringBuilder</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Maybe</span></span><span> </span><span class="annot"><a href="Text.Gigaparsec.Errors.DefaultErrorBuilder.html#StringBuilder"><span class="hs-identifier hs-type">StringBuilder</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="#local-6989586621679258802"><span class="hs-identifier hs-type">t</span></a></span><span> </span><span class="annot"><a href="Text.Gigaparsec.Errors.DefaultErrorBuilder.html#StringBuilder"><span class="hs-identifier hs-type">StringBuilder</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-special">[</span><span class="annot"><a href="Text.Gigaparsec.Errors.DefaultErrorBuilder.html#StringBuilder"><span class="hs-identifier hs-type">StringBuilder</span></a></span><span class="hs-special">]</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-special">[</span><span class="annot"><a href="Text.Gigaparsec.Errors.DefaultErrorBuilder.html#StringBuilder"><span class="hs-identifier hs-type">StringBuilder</span></a></span><span class="hs-special">]</span></span><span>
 </span><span id="line-64"></span><span id="vanillaErrorDefault"><span class="annot"><span class="annottext">vanillaErrorDefault :: forall (t :: * -&gt; *).
 Foldable t =&gt;
 Maybe StringBuilder
@@ -151,10 +151,10 @@ Maybe StringBuilder
 -&gt; t StringBuilder
 -&gt; [StringBuilder]
 -&gt; [StringBuilder]
-</span><a href="Text.Gigaparsec.Errors.DefaultErrorBuilder.html#vanillaErrorDefault"><span class="hs-identifier hs-var hs-var">vanillaErrorDefault</span></a></span></span><span> </span><span id="local-6989586621679241840"><span class="annot"><span class="annottext">Maybe StringBuilder
-</span><a href="#local-6989586621679241840"><span class="hs-identifier hs-var">unexpected</span></a></span></span><span> </span><span id="local-6989586621679241841"><span class="annot"><span class="annottext">Maybe StringBuilder
-</span><a href="#local-6989586621679241841"><span class="hs-identifier hs-var">expected</span></a></span></span><span> </span><span id="local-6989586621679241842"><span class="annot"><span class="annottext">t StringBuilder
-</span><a href="#local-6989586621679241842"><span class="hs-identifier hs-var">reasons</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
+</span><a href="Text.Gigaparsec.Errors.DefaultErrorBuilder.html#vanillaErrorDefault"><span class="hs-identifier hs-var hs-var">vanillaErrorDefault</span></a></span></span><span> </span><span id="local-6989586621679258964"><span class="annot"><span class="annottext">Maybe StringBuilder
+</span><a href="#local-6989586621679258964"><span class="hs-identifier hs-var">unexpected</span></a></span></span><span> </span><span id="local-6989586621679258965"><span class="annot"><span class="annottext">Maybe StringBuilder
+</span><a href="#local-6989586621679258965"><span class="hs-identifier hs-var">expected</span></a></span></span><span> </span><span id="local-6989586621679258966"><span class="annot"><span class="annottext">t StringBuilder
+</span><a href="#local-6989586621679258966"><span class="hs-identifier hs-var">reasons</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
 </span><span id="line-65"></span><span>  </span><span class="annot"><span class="annottext">[StringBuilder] -&gt; [StringBuilder] -&gt; [StringBuilder]
 </span><a href="Text.Gigaparsec.Errors.DefaultErrorBuilder.html#combineInfoWithLines"><span class="hs-identifier hs-var">combineInfoWithLines</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">([StringBuilder] -&gt; [StringBuilder])
 -&gt; (StringBuilder -&gt; [StringBuilder] -&gt; [StringBuilder])
@@ -165,7 +165,7 @@ forall b a. b -&gt; (a -&gt; b) -&gt; Maybe a -&gt; b
 </span><span class="hs-identifier hs-var">maybe</span></span><span> </span><span class="annot"><span class="annottext">[StringBuilder] -&gt; [StringBuilder]
 forall a. a -&gt; a
 </span><span class="hs-identifier hs-var">id</span></span><span> </span><span class="hs-special">(</span><span class="hs-glyph">:</span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">Maybe StringBuilder
-</span><a href="#local-6989586621679241840"><span class="hs-identifier hs-var">unexpected</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">([StringBuilder] -&gt; [StringBuilder])
+</span><a href="#local-6989586621679258964"><span class="hs-identifier hs-var">unexpected</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">([StringBuilder] -&gt; [StringBuilder])
 -&gt; (StringBuilder -&gt; [StringBuilder] -&gt; [StringBuilder])
 -&gt; Maybe StringBuilder
 -&gt; [StringBuilder]
@@ -174,11 +174,11 @@ forall b a. b -&gt; (a -&gt; b) -&gt; Maybe a -&gt; b
 </span><span class="hs-identifier hs-var">maybe</span></span><span> </span><span class="annot"><span class="annottext">[StringBuilder] -&gt; [StringBuilder]
 forall a. a -&gt; a
 </span><span class="hs-identifier hs-var">id</span></span><span> </span><span class="hs-special">(</span><span class="hs-glyph">:</span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">Maybe StringBuilder
-</span><a href="#local-6989586621679241841"><span class="hs-identifier hs-var">expected</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">t StringBuilder -&gt; [StringBuilder]
+</span><a href="#local-6989586621679258965"><span class="hs-identifier hs-var">expected</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">t StringBuilder -&gt; [StringBuilder]
 forall a. t a -&gt; [a]
 forall (t :: * -&gt; *) a. Foldable t =&gt; t a -&gt; [a]
 </span><span class="hs-identifier hs-var">toList</span></span><span> </span><span class="annot"><span class="annottext">t StringBuilder
-</span><a href="#local-6989586621679241842"><span class="hs-identifier hs-var">reasons</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><a href="#local-6989586621679258966"><span class="hs-identifier hs-var">reasons</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
 </span><span id="line-66"></span><span>
 </span><span id="line-67"></span><span class="annot"><span class="hs-comment">{-|
 Forms a specialized error by combining all components in sequence, if there are no msgs, then &quot;unknown parse error&quot; is used instead.
@@ -195,19 +195,19 @@ Joins together the given sequences: if the first is empty, then &quot;unknown pa
 </span><span id="line-77"></span><span class="hs-pragma">{-# INLINABLE</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Errors.DefaultErrorBuilder.html#combineInfoWithLines"><span class="hs-pragma hs-type">combineInfoWithLines</span></a></span><span> </span><span class="hs-pragma">#-}</span><span>
 </span><span id="line-78"></span><span class="annot"><a href="Text.Gigaparsec.Errors.DefaultErrorBuilder.html#combineInfoWithLines"><span class="hs-identifier hs-type">combineInfoWithLines</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-special">[</span><span class="annot"><a href="Text.Gigaparsec.Errors.DefaultErrorBuilder.html#StringBuilder"><span class="hs-identifier hs-type">StringBuilder</span></a></span><span class="hs-special">]</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-special">[</span><span class="annot"><a href="Text.Gigaparsec.Errors.DefaultErrorBuilder.html#StringBuilder"><span class="hs-identifier hs-type">StringBuilder</span></a></span><span class="hs-special">]</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-special">[</span><span class="annot"><a href="Text.Gigaparsec.Errors.DefaultErrorBuilder.html#StringBuilder"><span class="hs-identifier hs-type">StringBuilder</span></a></span><span class="hs-special">]</span><span>
 </span><span id="line-79"></span><span id="combineInfoWithLines"><span class="annot"><span class="annottext">combineInfoWithLines :: [StringBuilder] -&gt; [StringBuilder] -&gt; [StringBuilder]
-</span><a href="Text.Gigaparsec.Errors.DefaultErrorBuilder.html#combineInfoWithLines"><span class="hs-identifier hs-var hs-var">combineInfoWithLines</span></a></span></span><span> </span><span class="hs-special">[</span><span class="hs-special">]</span><span> </span><span id="local-6989586621679241846"><span class="annot"><span class="annottext">[StringBuilder]
-</span><a href="#local-6989586621679241846"><span class="hs-identifier hs-var">lines</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">StringBuilder
+</span><a href="Text.Gigaparsec.Errors.DefaultErrorBuilder.html#combineInfoWithLines"><span class="hs-identifier hs-var hs-var">combineInfoWithLines</span></a></span></span><span> </span><span class="hs-special">[</span><span class="hs-special">]</span><span> </span><span id="local-6989586621679258970"><span class="annot"><span class="annottext">[StringBuilder]
+</span><a href="#local-6989586621679258970"><span class="hs-identifier hs-var">lines</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">StringBuilder
 </span><span class="hs-string">&quot;unknown parse error&quot;</span></span><span> </span><span class="annot"><span class="annottext">StringBuilder -&gt; [StringBuilder] -&gt; [StringBuilder]
 forall a. a -&gt; [a] -&gt; [a]
 </span><span class="hs-glyph hs-var">:</span></span><span> </span><span class="annot"><span class="annottext">[StringBuilder]
-</span><a href="#local-6989586621679241846"><span class="hs-identifier hs-var">lines</span></a></span><span>
-</span><span id="line-80"></span><span class="annot"><a href="Text.Gigaparsec.Errors.DefaultErrorBuilder.html#combineInfoWithLines"><span class="hs-identifier hs-var">combineInfoWithLines</span></a></span><span> </span><span id="local-6989586621679241847"><span class="annot"><span class="annottext">[StringBuilder]
-</span><a href="#local-6989586621679241847"><span class="hs-identifier hs-var">info</span></a></span></span><span> </span><span id="local-6989586621679241848"><span class="annot"><span class="annottext">[StringBuilder]
-</span><a href="#local-6989586621679241848"><span class="hs-identifier hs-var">lines</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">[StringBuilder]
-</span><a href="#local-6989586621679241847"><span class="hs-identifier hs-var">info</span></a></span><span> </span><span class="annot"><span class="annottext">[StringBuilder] -&gt; [StringBuilder] -&gt; [StringBuilder]
+</span><a href="#local-6989586621679258970"><span class="hs-identifier hs-var">lines</span></a></span><span>
+</span><span id="line-80"></span><span class="annot"><a href="Text.Gigaparsec.Errors.DefaultErrorBuilder.html#combineInfoWithLines"><span class="hs-identifier hs-var">combineInfoWithLines</span></a></span><span> </span><span id="local-6989586621679258971"><span class="annot"><span class="annottext">[StringBuilder]
+</span><a href="#local-6989586621679258971"><span class="hs-identifier hs-var">info</span></a></span></span><span> </span><span id="local-6989586621679258972"><span class="annot"><span class="annottext">[StringBuilder]
+</span><a href="#local-6989586621679258972"><span class="hs-identifier hs-var">lines</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">[StringBuilder]
+</span><a href="#local-6989586621679258971"><span class="hs-identifier hs-var">info</span></a></span><span> </span><span class="annot"><span class="annottext">[StringBuilder] -&gt; [StringBuilder] -&gt; [StringBuilder]
 forall a. [a] -&gt; [a] -&gt; [a]
 </span><span class="hs-operator hs-var">++</span></span><span> </span><span class="annot"><span class="annottext">[StringBuilder]
-</span><a href="#local-6989586621679241848"><span class="hs-identifier hs-var">lines</span></a></span><span>
+</span><a href="#local-6989586621679258972"><span class="hs-identifier hs-var">lines</span></a></span><span>
 </span><span id="line-81"></span><span>
 </span><span id="line-82"></span><span class="annot"><span class="hs-comment">{-|
 Encloses the item in double-quotes.
@@ -219,37 +219,37 @@ a special name is given to it, otherwise the item is enclosed in double-quotes.
 -}</span><span>
 </span><span id="line-90"></span><span class="hs-pragma">{-# INLINABLE</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Errors.DefaultErrorBuilder.html#rawDefault"><span class="hs-pragma hs-type">rawDefault</span></a></span><span> </span><span class="hs-pragma">#-}</span><span>
 </span><span id="line-91"></span><span class="annot"><a href="Text.Gigaparsec.Errors.DefaultErrorBuilder.html#rawDefault"><span class="hs-identifier hs-type">rawDefault</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span>
-</span><span id="line-92"></span><span id="rawDefault"><span class="annot"><span class="annottext">rawDefault :: String -&gt; String
-</span><a href="Text.Gigaparsec.Errors.DefaultErrorBuilder.html#rawDefault"><span class="hs-identifier hs-var hs-var">rawDefault</span></a></span></span><span> </span><span id="local-6989586621679241850"><span class="annot"><span class="annottext">String
-</span><a href="#local-6989586621679241850"><span class="hs-identifier hs-var">n</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">String
-</span><span class="hs-string">&quot;\&quot;&quot;</span></span><span> </span><span class="annot"><span class="annottext">String -&gt; String -&gt; String
+</span><span id="line-92"></span><span id="rawDefault"><span class="annot"><span class="annottext">rawDefault :: [Char] -&gt; [Char]
+</span><a href="Text.Gigaparsec.Errors.DefaultErrorBuilder.html#rawDefault"><span class="hs-identifier hs-var hs-var">rawDefault</span></a></span></span><span> </span><span id="local-6989586621679258974"><span class="annot"><span class="annottext">[Char]
+</span><a href="#local-6989586621679258974"><span class="hs-identifier hs-var">n</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">[Char]
+</span><span class="hs-string">&quot;\&quot;&quot;</span></span><span> </span><span class="annot"><span class="annottext">[Char] -&gt; [Char] -&gt; [Char]
 forall a. Semigroup a =&gt; a -&gt; a -&gt; a
-</span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">String
-</span><a href="#local-6989586621679241850"><span class="hs-identifier hs-var">n</span></a></span><span> </span><span class="annot"><span class="annottext">String -&gt; String -&gt; String
+</span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">[Char]
+</span><a href="#local-6989586621679258974"><span class="hs-identifier hs-var">n</span></a></span><span> </span><span class="annot"><span class="annottext">[Char] -&gt; [Char] -&gt; [Char]
 forall a. Semigroup a =&gt; a -&gt; a -&gt; a
-</span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">String
+</span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">[Char]
 </span><span class="hs-string">&quot;\&quot;&quot;</span></span><span>
 </span><span id="line-93"></span><span>
 </span><span id="line-94"></span><span class="annot"><span class="hs-comment">-- | Returns the given name unchanged.</span></span><span>
 </span><span id="line-95"></span><span class="hs-pragma">{-# INLINABLE</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Errors.DefaultErrorBuilder.html#namedDefault"><span class="hs-pragma hs-type">namedDefault</span></a></span><span> </span><span class="hs-pragma">#-}</span><span>
 </span><span id="line-96"></span><span class="annot"><a href="Text.Gigaparsec.Errors.DefaultErrorBuilder.html#namedDefault"><span class="hs-identifier hs-type">namedDefault</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span>
-</span><span id="line-97"></span><span id="namedDefault"><span class="annot"><span class="annottext">namedDefault :: String -&gt; String
-</span><a href="Text.Gigaparsec.Errors.DefaultErrorBuilder.html#namedDefault"><span class="hs-identifier hs-var hs-var">namedDefault</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">String -&gt; String
+</span><span id="line-97"></span><span id="namedDefault"><span class="annot"><span class="annottext">namedDefault :: [Char] -&gt; [Char]
+</span><a href="Text.Gigaparsec.Errors.DefaultErrorBuilder.html#namedDefault"><span class="hs-identifier hs-var hs-var">namedDefault</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">[Char] -&gt; [Char]
 forall a. a -&gt; a
 </span><span class="hs-identifier hs-var">id</span></span><span>
 </span><span id="line-98"></span><span>
 </span><span id="line-99"></span><span class="annot"><span class="hs-comment">-- | Simply displays &quot;end of input&quot;</span></span><span>
 </span><span id="line-100"></span><span class="hs-pragma">{-# INLINABLE</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Errors.DefaultErrorBuilder.html#endOfInputDefault"><span class="hs-pragma hs-type">endOfInputDefault</span></a></span><span> </span><span class="hs-pragma">#-}</span><span>
 </span><span id="line-101"></span><span class="annot"><a href="Text.Gigaparsec.Errors.DefaultErrorBuilder.html#endOfInputDefault"><span class="hs-identifier hs-type">endOfInputDefault</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span>
-</span><span id="line-102"></span><span id="endOfInputDefault"><span class="annot"><span class="annottext">endOfInputDefault :: String
-</span><a href="Text.Gigaparsec.Errors.DefaultErrorBuilder.html#endOfInputDefault"><span class="hs-identifier hs-var hs-var">endOfInputDefault</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">String
+</span><span id="line-102"></span><span id="endOfInputDefault"><span class="annot"><span class="annottext">endOfInputDefault :: [Char]
+</span><a href="Text.Gigaparsec.Errors.DefaultErrorBuilder.html#endOfInputDefault"><span class="hs-identifier hs-var hs-var">endOfInputDefault</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">[Char]
 </span><span class="hs-string">&quot;end of input&quot;</span></span><span>
 </span><span id="line-103"></span><span>
 </span><span id="line-104"></span><span class="annot"><span class="hs-comment">-- | Returns the given message unchanged.</span></span><span>
 </span><span id="line-105"></span><span class="hs-pragma">{-# INLINABLE</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Errors.DefaultErrorBuilder.html#messageDefault"><span class="hs-pragma hs-type">messageDefault</span></a></span><span> </span><span class="hs-pragma">#-}</span><span>
 </span><span id="line-106"></span><span class="annot"><a href="Text.Gigaparsec.Errors.DefaultErrorBuilder.html#messageDefault"><span class="hs-identifier hs-type">messageDefault</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span>
-</span><span id="line-107"></span><span id="messageDefault"><span class="annot"><span class="annottext">messageDefault :: String -&gt; String
-</span><a href="Text.Gigaparsec.Errors.DefaultErrorBuilder.html#messageDefault"><span class="hs-identifier hs-var hs-var">messageDefault</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">String -&gt; String
+</span><span id="line-107"></span><span id="messageDefault"><span class="annot"><span class="annottext">messageDefault :: [Char] -&gt; [Char]
+</span><a href="Text.Gigaparsec.Errors.DefaultErrorBuilder.html#messageDefault"><span class="hs-identifier hs-var hs-var">messageDefault</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">[Char] -&gt; [Char]
 forall a. a -&gt; a
 </span><span class="hs-identifier hs-var">id</span></span><span>
 </span><span id="line-108"></span><span>
@@ -269,18 +269,18 @@ forall a. Semigroup a =&gt; a -&gt; a -&gt; a
 </span><span id="line-114"></span><span class="annot"><span class="hs-comment">-- | Adds &quot;unexpected &quot; before the unexpected item.</span></span><span>
 </span><span id="line-115"></span><span class="hs-pragma">{-# INLINABLE</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Errors.DefaultErrorBuilder.html#unexpectedDefault"><span class="hs-pragma hs-type">unexpectedDefault</span></a></span><span> </span><span class="hs-pragma">#-}</span><span>
 </span><span id="line-116"></span><span class="annot"><a href="Text.Gigaparsec.Errors.DefaultErrorBuilder.html#unexpectedDefault"><span class="hs-identifier hs-type">unexpectedDefault</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Maybe</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Maybe</span></span><span> </span><span class="annot"><a href="Text.Gigaparsec.Errors.DefaultErrorBuilder.html#StringBuilder"><span class="hs-identifier hs-type">StringBuilder</span></a></span><span>
-</span><span id="line-117"></span><span id="unexpectedDefault"><span class="annot"><span class="annottext">unexpectedDefault :: Maybe String -&gt; Maybe StringBuilder
-</span><a href="Text.Gigaparsec.Errors.DefaultErrorBuilder.html#unexpectedDefault"><span class="hs-identifier hs-var hs-var">unexpectedDefault</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">(String -&gt; StringBuilder) -&gt; Maybe String -&gt; Maybe StringBuilder
+</span><span id="line-117"></span><span id="unexpectedDefault"><span class="annot"><span class="annottext">unexpectedDefault :: Maybe [Char] -&gt; Maybe StringBuilder
+</span><a href="Text.Gigaparsec.Errors.DefaultErrorBuilder.html#unexpectedDefault"><span class="hs-identifier hs-var hs-var">unexpectedDefault</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">([Char] -&gt; StringBuilder) -&gt; Maybe [Char] -&gt; Maybe StringBuilder
 forall a b. (a -&gt; b) -&gt; Maybe a -&gt; Maybe b
 forall (f :: * -&gt; *) a b. Functor f =&gt; (a -&gt; b) -&gt; f a -&gt; f b
 </span><span class="hs-identifier hs-var">fmap</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">StringBuilder
 </span><span class="hs-string">&quot;unexpected &quot;</span></span><span> </span><span class="annot"><span class="annottext">StringBuilder -&gt; StringBuilder -&gt; StringBuilder
 forall a. Semigroup a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">&lt;&gt;</span></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">(StringBuilder -&gt; StringBuilder)
--&gt; (String -&gt; StringBuilder) -&gt; String -&gt; StringBuilder
+-&gt; ([Char] -&gt; StringBuilder) -&gt; [Char] -&gt; StringBuilder
 forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
-</span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">String -&gt; StringBuilder
-forall a. IsString a =&gt; String -&gt; a
+</span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">[Char] -&gt; StringBuilder
+forall a. IsString a =&gt; [Char] -&gt; a
 </span><span class="hs-identifier hs-var">fromString</span></span><span class="hs-special">)</span><span>
 </span><span id="line-118"></span><span>
 </span><span id="line-119"></span><span class="annot"><span class="hs-comment">{-|
@@ -289,13 +289,13 @@ If the elements contain a comma, then semicolon is used as the list separator.
 -}</span></span><span>
 </span><span id="line-123"></span><span class="hs-pragma">{-# INLINABLE</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Errors.DefaultErrorBuilder.html#disjunct"><span class="hs-pragma hs-type">disjunct</span></a></span><span> </span><span class="hs-pragma">#-}</span><span>
 </span><span id="line-124"></span><span class="annot"><a href="Text.Gigaparsec.Errors.DefaultErrorBuilder.html#disjunct"><span class="hs-identifier hs-type">disjunct</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Bool</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-special">[</span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span class="hs-special">]</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Maybe</span></span><span> </span><span class="annot"><a href="Text.Gigaparsec.Errors.DefaultErrorBuilder.html#StringBuilder"><span class="hs-identifier hs-type">StringBuilder</span></a></span><span>
-</span><span id="line-125"></span><span id="disjunct"><span class="annot"><span class="annottext">disjunct :: Bool -&gt; [String] -&gt; Maybe StringBuilder
-</span><a href="Text.Gigaparsec.Errors.DefaultErrorBuilder.html#disjunct"><span class="hs-identifier hs-var hs-var">disjunct</span></a></span></span><span> </span><span id="local-6989586621679241857"><span class="annot"><span class="annottext">Bool
-</span><a href="#local-6989586621679241857"><span class="hs-identifier hs-var">oxford</span></a></span></span><span> </span><span id="local-6989586621679241858"><span class="annot"><span class="annottext">[String]
-</span><a href="#local-6989586621679241858"><span class="hs-identifier hs-var">elems</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Bool -&gt; [String] -&gt; String -&gt; Maybe StringBuilder
+</span><span id="line-125"></span><span id="disjunct"><span class="annot"><span class="annottext">disjunct :: Bool -&gt; [[Char]] -&gt; Maybe StringBuilder
+</span><a href="Text.Gigaparsec.Errors.DefaultErrorBuilder.html#disjunct"><span class="hs-identifier hs-var hs-var">disjunct</span></a></span></span><span> </span><span id="local-6989586621679258981"><span class="annot"><span class="annottext">Bool
+</span><a href="#local-6989586621679258981"><span class="hs-identifier hs-var">oxford</span></a></span></span><span> </span><span id="local-6989586621679258982"><span class="annot"><span class="annottext">[[Char]]
+</span><a href="#local-6989586621679258982"><span class="hs-identifier hs-var">elems</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Bool -&gt; [[Char]] -&gt; [Char] -&gt; Maybe StringBuilder
 </span><a href="Text.Gigaparsec.Errors.DefaultErrorBuilder.html#junct"><span class="hs-identifier hs-var">junct</span></a></span><span> </span><span class="annot"><span class="annottext">Bool
-</span><a href="#local-6989586621679241857"><span class="hs-identifier hs-var">oxford</span></a></span><span> </span><span class="annot"><span class="annottext">[String]
-</span><a href="#local-6989586621679241858"><span class="hs-identifier hs-var">elems</span></a></span><span> </span><span class="annot"><span class="annottext">String
+</span><a href="#local-6989586621679258981"><span class="hs-identifier hs-var">oxford</span></a></span><span> </span><span class="annot"><span class="annottext">[[Char]]
+</span><a href="#local-6989586621679258982"><span class="hs-identifier hs-var">elems</span></a></span><span> </span><span class="annot"><span class="annottext">[Char]
 </span><span class="hs-string">&quot;or&quot;</span></span><span>
 </span><span id="line-126"></span><span>
 </span><span id="line-127"></span><span class="annot"><span class="hs-comment">{-|
@@ -305,172 +305,172 @@ If the elements contain a comma, then semicolon is used as the list separator.
 -}</span></span><span>
 </span><span id="line-132"></span><span class="hs-pragma">{-# INLINABLE</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Errors.DefaultErrorBuilder.html#junct"><span class="hs-pragma hs-type">junct</span></a></span><span> </span><span class="hs-pragma">#-}</span><span>
 </span><span id="line-133"></span><span class="annot"><a href="Text.Gigaparsec.Errors.DefaultErrorBuilder.html#junct"><span class="hs-identifier hs-type">junct</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Bool</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-special">[</span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span class="hs-special">]</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Maybe</span></span><span> </span><span class="annot"><a href="Text.Gigaparsec.Errors.DefaultErrorBuilder.html#StringBuilder"><span class="hs-identifier hs-type">StringBuilder</span></a></span><span>
-</span><span id="line-134"></span><span id="junct"><span class="annot"><span class="annottext">junct :: Bool -&gt; [String] -&gt; String -&gt; Maybe StringBuilder
-</span><a href="Text.Gigaparsec.Errors.DefaultErrorBuilder.html#junct"><span class="hs-identifier hs-var hs-var">junct</span></a></span></span><span> </span><span id="local-6989586621679241860"><span class="annot"><span class="annottext">Bool
-</span><a href="#local-6989586621679241860"><span class="hs-identifier hs-var">oxford</span></a></span></span><span> </span><span id="local-6989586621679241861"><span class="annot"><span class="annottext">[String]
-</span><a href="#local-6989586621679241861"><span class="hs-identifier hs-var">elems</span></a></span></span><span> </span><span id="local-6989586621679241862"><span class="annot"><span class="annottext">String
-</span><a href="#local-6989586621679241862"><span class="hs-identifier hs-var">junction</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">[String] -&gt; Maybe StringBuilder
-</span><a href="#local-6989586621679241863"><span class="hs-identifier hs-var">junct'</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">(String -&gt; String -&gt; Ordering) -&gt; [String] -&gt; [String]
+</span><span id="line-134"></span><span id="junct"><span class="annot"><span class="annottext">junct :: Bool -&gt; [[Char]] -&gt; [Char] -&gt; Maybe StringBuilder
+</span><a href="Text.Gigaparsec.Errors.DefaultErrorBuilder.html#junct"><span class="hs-identifier hs-var hs-var">junct</span></a></span></span><span> </span><span id="local-6989586621679258984"><span class="annot"><span class="annottext">Bool
+</span><a href="#local-6989586621679258984"><span class="hs-identifier hs-var">oxford</span></a></span></span><span> </span><span id="local-6989586621679258985"><span class="annot"><span class="annottext">[[Char]]
+</span><a href="#local-6989586621679258985"><span class="hs-identifier hs-var">elems</span></a></span></span><span> </span><span id="local-6989586621679258986"><span class="annot"><span class="annottext">[Char]
+</span><a href="#local-6989586621679258986"><span class="hs-identifier hs-var">junction</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">[[Char]] -&gt; Maybe StringBuilder
+</span><a href="#local-6989586621679258987"><span class="hs-identifier hs-var">junct'</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">([Char] -&gt; [Char] -&gt; Ordering) -&gt; [[Char]] -&gt; [[Char]]
 forall a. (a -&gt; a -&gt; Ordering) -&gt; [a] -&gt; [a]
-</span><span class="hs-identifier hs-var">sortBy</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">(String -&gt; Down String) -&gt; String -&gt; String -&gt; Ordering
+</span><span class="hs-identifier hs-var">sortBy</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">([Char] -&gt; Down [Char]) -&gt; [Char] -&gt; [Char] -&gt; Ordering
 forall a b. Ord a =&gt; (b -&gt; a) -&gt; b -&gt; b -&gt; Ordering
-</span><span class="hs-identifier hs-var">comparing</span></span><span> </span><span class="annot"><span class="annottext">String -&gt; Down String
+</span><span class="hs-identifier hs-var">comparing</span></span><span> </span><span class="annot"><span class="annottext">[Char] -&gt; Down [Char]
 forall a. a -&gt; Down a
-</span><span class="hs-identifier hs-var">Down</span></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">[String]
-</span><a href="#local-6989586621679241861"><span class="hs-identifier hs-var">elems</span></a></span><span class="hs-special">)</span><span>
+</span><span class="hs-identifier hs-var">Down</span></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">[[Char]]
+</span><a href="#local-6989586621679258985"><span class="hs-identifier hs-var">elems</span></a></span><span class="hs-special">)</span><span>
 </span><span id="line-135"></span><span>  </span><span class="hs-keyword">where</span><span>
-</span><span id="line-136"></span><span>    </span><span class="annot"><a href="#local-6989586621679241864"><span class="hs-identifier hs-type">j</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Errors.DefaultErrorBuilder.html#StringBuilder"><span class="hs-identifier hs-type">StringBuilder</span></a></span><span>
-</span><span id="line-137"></span><span>    </span><span id="local-6989586621679241864"><span class="annot"><span class="annottext">j :: StringBuilder
-</span><a href="#local-6989586621679241864"><span class="hs-identifier hs-var hs-var">j</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">String -&gt; StringBuilder
-forall a. IsString a =&gt; String -&gt; a
-</span><span class="hs-identifier hs-var">fromString</span></span><span> </span><span class="annot"><span class="annottext">String
-</span><a href="#local-6989586621679241862"><span class="hs-identifier hs-var">junction</span></a></span><span>
+</span><span id="line-136"></span><span>    </span><span class="annot"><a href="#local-6989586621679258988"><span class="hs-identifier hs-type">j</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Errors.DefaultErrorBuilder.html#StringBuilder"><span class="hs-identifier hs-type">StringBuilder</span></a></span><span>
+</span><span id="line-137"></span><span>    </span><span id="local-6989586621679258988"><span class="annot"><span class="annottext">j :: StringBuilder
+</span><a href="#local-6989586621679258988"><span class="hs-identifier hs-var hs-var">j</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">[Char] -&gt; StringBuilder
+forall a. IsString a =&gt; [Char] -&gt; a
+</span><span class="hs-identifier hs-var">fromString</span></span><span> </span><span class="annot"><span class="annottext">[Char]
+</span><a href="#local-6989586621679258986"><span class="hs-identifier hs-var">junction</span></a></span><span>
 </span><span id="line-138"></span><span>
-</span><span id="line-139"></span><span>    </span><span id="local-6989586621679241863"><span class="annot"><span class="annottext">junct' :: [String] -&gt; Maybe StringBuilder
-</span><a href="#local-6989586621679241863"><span class="hs-identifier hs-var hs-var">junct'</span></a></span></span><span> </span><span class="hs-special">[</span><span class="hs-special">]</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Maybe StringBuilder
+</span><span id="line-139"></span><span>    </span><span id="local-6989586621679258987"><span class="annot"><span class="annottext">junct' :: [[Char]] -&gt; Maybe StringBuilder
+</span><a href="#local-6989586621679258987"><span class="hs-identifier hs-var hs-var">junct'</span></a></span></span><span> </span><span class="hs-special">[</span><span class="hs-special">]</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Maybe StringBuilder
 forall a. Maybe a
 </span><span class="hs-identifier hs-var">Nothing</span></span><span>
-</span><span id="line-140"></span><span>    </span><span class="annot"><a href="#local-6989586621679241863"><span class="hs-identifier hs-var">junct'</span></a></span><span> </span><span class="hs-special">[</span><span id="local-6989586621679241879"><span class="annot"><span class="annottext">String
-</span><a href="#local-6989586621679241879"><span class="hs-identifier hs-var">alt</span></a></span></span><span class="hs-special">]</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">StringBuilder -&gt; Maybe StringBuilder
+</span><span id="line-140"></span><span>    </span><span class="annot"><a href="#local-6989586621679258987"><span class="hs-identifier hs-var">junct'</span></a></span><span> </span><span class="hs-special">[</span><span id="local-6989586621679259003"><span class="annot"><span class="annottext">[Char]
+</span><a href="#local-6989586621679259003"><span class="hs-identifier hs-var">alt</span></a></span></span><span class="hs-special">]</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">StringBuilder -&gt; Maybe StringBuilder
 forall a. a -&gt; Maybe a
-</span><span class="hs-identifier hs-var">Just</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">String -&gt; StringBuilder
-forall a. IsString a =&gt; String -&gt; a
-</span><span class="hs-identifier hs-var">fromString</span></span><span> </span><span class="annot"><span class="annottext">String
-</span><a href="#local-6989586621679241879"><span class="hs-identifier hs-var">alt</span></a></span><span class="hs-special">)</span><span>
-</span><span id="line-141"></span><span>    </span><span class="annot"><a href="#local-6989586621679241863"><span class="hs-identifier hs-var">junct'</span></a></span><span> </span><span class="hs-special">[</span><span id="local-6989586621679241880"><span class="annot"><span class="annottext">String
-</span><a href="#local-6989586621679241880"><span class="hs-identifier hs-var">alt1</span></a></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679241881"><span class="annot"><span class="annottext">String
-</span><a href="#local-6989586621679241881"><span class="hs-identifier hs-var">alt2</span></a></span></span><span class="hs-special">]</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">StringBuilder -&gt; Maybe StringBuilder
+</span><span class="hs-identifier hs-var">Just</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">[Char] -&gt; StringBuilder
+forall a. IsString a =&gt; [Char] -&gt; a
+</span><span class="hs-identifier hs-var">fromString</span></span><span> </span><span class="annot"><span class="annottext">[Char]
+</span><a href="#local-6989586621679259003"><span class="hs-identifier hs-var">alt</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-141"></span><span>    </span><span class="annot"><a href="#local-6989586621679258987"><span class="hs-identifier hs-var">junct'</span></a></span><span> </span><span class="hs-special">[</span><span id="local-6989586621679259004"><span class="annot"><span class="annottext">[Char]
+</span><a href="#local-6989586621679259004"><span class="hs-identifier hs-var">alt1</span></a></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679259005"><span class="annot"><span class="annottext">[Char]
+</span><a href="#local-6989586621679259005"><span class="hs-identifier hs-var">alt2</span></a></span></span><span class="hs-special">]</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">StringBuilder -&gt; Maybe StringBuilder
 forall a. a -&gt; Maybe a
-</span><span class="hs-identifier hs-var">Just</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">String -&gt; StringBuilder
-forall a. IsString a =&gt; String -&gt; a
-</span><span class="hs-identifier hs-var">fromString</span></span><span> </span><span class="annot"><span class="annottext">String
-</span><a href="#local-6989586621679241881"><span class="hs-identifier hs-var">alt2</span></a></span><span> </span><span class="annot"><span class="annottext">StringBuilder -&gt; StringBuilder -&gt; StringBuilder
+</span><span class="hs-identifier hs-var">Just</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">[Char] -&gt; StringBuilder
+forall a. IsString a =&gt; [Char] -&gt; a
+</span><span class="hs-identifier hs-var">fromString</span></span><span> </span><span class="annot"><span class="annottext">[Char]
+</span><a href="#local-6989586621679259005"><span class="hs-identifier hs-var">alt2</span></a></span><span> </span><span class="annot"><span class="annottext">StringBuilder -&gt; StringBuilder -&gt; StringBuilder
 forall a. Semigroup a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">StringBuilder
 </span><span class="hs-string">&quot; &quot;</span></span><span> </span><span class="annot"><span class="annottext">StringBuilder -&gt; StringBuilder -&gt; StringBuilder
 forall a. Semigroup a =&gt; a -&gt; a -&gt; a
-</span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">String -&gt; StringBuilder
-forall a. IsString a =&gt; String -&gt; a
-</span><span class="hs-identifier hs-var">fromString</span></span><span> </span><span class="annot"><span class="annottext">String
-</span><a href="#local-6989586621679241862"><span class="hs-identifier hs-var">junction</span></a></span><span> </span><span class="annot"><span class="annottext">StringBuilder -&gt; StringBuilder -&gt; StringBuilder
+</span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">[Char] -&gt; StringBuilder
+forall a. IsString a =&gt; [Char] -&gt; a
+</span><span class="hs-identifier hs-var">fromString</span></span><span> </span><span class="annot"><span class="annottext">[Char]
+</span><a href="#local-6989586621679258986"><span class="hs-identifier hs-var">junction</span></a></span><span> </span><span class="annot"><span class="annottext">StringBuilder -&gt; StringBuilder -&gt; StringBuilder
 forall a. Semigroup a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">StringBuilder
 </span><span class="hs-string">&quot; &quot;</span></span><span> </span><span class="annot"><span class="annottext">StringBuilder -&gt; StringBuilder -&gt; StringBuilder
 forall a. Semigroup a =&gt; a -&gt; a -&gt; a
-</span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">String -&gt; StringBuilder
-forall a. IsString a =&gt; String -&gt; a
-</span><span class="hs-identifier hs-var">fromString</span></span><span> </span><span class="annot"><span class="annottext">String
-</span><a href="#local-6989586621679241880"><span class="hs-identifier hs-var">alt1</span></a></span><span class="hs-special">)</span><span>
-</span><span id="line-142"></span><span>    </span><span class="annot"><a href="#local-6989586621679241863"><span class="hs-identifier hs-var">junct'</span></a></span><span> </span><span id="local-6989586621679241882"><span class="annot"><span class="annottext">as :: [String]
-</span><a href="#local-6989586621679241882"><span class="hs-keyword hs-var">as</span></a></span></span><span class="hs-glyph">@</span><span class="hs-special">(</span><span id="local-6989586621679241883"><span class="annot"><span class="annottext">String
-</span><a href="#local-6989586621679241883"><span class="hs-identifier hs-var">alt</span></a></span></span><span class="annot"><span class="hs-glyph hs-type">:</span></span><span id="local-6989586621679241884"><span class="annot"><span class="annottext">[String]
-</span><a href="#local-6989586621679241884"><span class="hs-identifier hs-var">alts</span></a></span></span><span class="hs-special">)</span><span>
+</span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">[Char] -&gt; StringBuilder
+forall a. IsString a =&gt; [Char] -&gt; a
+</span><span class="hs-identifier hs-var">fromString</span></span><span> </span><span class="annot"><span class="annottext">[Char]
+</span><a href="#local-6989586621679259004"><span class="hs-identifier hs-var">alt1</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-142"></span><span>    </span><span class="annot"><a href="#local-6989586621679258987"><span class="hs-identifier hs-var">junct'</span></a></span><span> </span><span id="local-6989586621679259006"><span class="annot"><span class="annottext">as :: [[Char]]
+</span><a href="#local-6989586621679259006"><span class="hs-keyword hs-var">as</span></a></span></span><span class="hs-glyph">@</span><span class="hs-special">(</span><span id="local-6989586621679259007"><span class="annot"><span class="annottext">[Char]
+</span><a href="#local-6989586621679259007"><span class="hs-identifier hs-var">alt</span></a></span></span><span class="annot"><span class="hs-glyph hs-type">:</span></span><span id="local-6989586621679259008"><span class="annot"><span class="annottext">[[Char]]
+</span><a href="#local-6989586621679259008"><span class="hs-identifier hs-var">alts</span></a></span></span><span class="hs-special">)</span><span>
 </span><span id="line-143"></span><span>      </span><span class="hs-comment">-- use a semi-colon here, it is more correct</span><span>
-</span><span id="line-144"></span><span>      </span><span class="hs-glyph">|</span><span> </span><span class="annot"><span class="annottext">(String -&gt; Bool) -&gt; [String] -&gt; Bool
+</span><span id="line-144"></span><span>      </span><span class="hs-glyph">|</span><span> </span><span class="annot"><span class="annottext">([Char] -&gt; Bool) -&gt; [[Char]] -&gt; Bool
 forall (t :: * -&gt; *) a. Foldable t =&gt; (a -&gt; Bool) -&gt; t a -&gt; Bool
-</span><span class="hs-identifier hs-var">any</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Char -&gt; String -&gt; Bool
+</span><span class="hs-identifier hs-var">any</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Char -&gt; [Char] -&gt; Bool
 forall a. Eq a =&gt; a -&gt; [a] -&gt; Bool
 forall (t :: * -&gt; *) a. (Foldable t, Eq a) =&gt; a -&gt; t a -&gt; Bool
 </span><span class="hs-identifier hs-var">elem</span></span><span> </span><span class="annot"><span class="annottext">Char
-</span><span class="hs-char">','</span></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">[String]
-</span><a href="#local-6989586621679241882"><span class="hs-keyword hs-var">as</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">StringBuilder -&gt; Maybe StringBuilder
+</span><span class="hs-char">','</span></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">[[Char]]
+</span><a href="#local-6989586621679259006"><span class="hs-keyword hs-var">as</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">StringBuilder -&gt; Maybe StringBuilder
 forall a. a -&gt; Maybe a
-</span><span class="hs-identifier hs-var">Just</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">[String] -&gt; String -&gt; String -&gt; StringBuilder
-</span><a href="#local-6989586621679241887"><span class="hs-identifier hs-var">junct''</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">[String] -&gt; [String]
+</span><span class="hs-identifier hs-var">Just</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">[[Char]] -&gt; [Char] -&gt; [Char] -&gt; StringBuilder
+</span><a href="#local-6989586621679259011"><span class="hs-identifier hs-var">junct''</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">[[Char]] -&gt; [[Char]]
 forall a. [a] -&gt; [a]
-</span><span class="hs-identifier hs-var">reverse</span></span><span> </span><span class="annot"><span class="annottext">[String]
-</span><a href="#local-6989586621679241884"><span class="hs-identifier hs-var">alts</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">String
-</span><a href="#local-6989586621679241883"><span class="hs-identifier hs-var">alt</span></a></span><span> </span><span class="annot"><span class="annottext">String
+</span><span class="hs-identifier hs-var">reverse</span></span><span> </span><span class="annot"><span class="annottext">[[Char]]
+</span><a href="#local-6989586621679259008"><span class="hs-identifier hs-var">alts</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">[Char]
+</span><a href="#local-6989586621679259007"><span class="hs-identifier hs-var">alt</span></a></span><span> </span><span class="annot"><span class="annottext">[Char]
 </span><span class="hs-string">&quot;; &quot;</span></span><span class="hs-special">)</span><span>
 </span><span id="line-145"></span><span>      </span><span class="hs-glyph">|</span><span> </span><span class="annot"><span class="annottext">Bool
 </span><span class="hs-identifier hs-var">otherwise</span></span><span>         </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">StringBuilder -&gt; Maybe StringBuilder
 forall a. a -&gt; Maybe a
-</span><span class="hs-identifier hs-var">Just</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">[String] -&gt; String -&gt; String -&gt; StringBuilder
-</span><a href="#local-6989586621679241887"><span class="hs-identifier hs-var">junct''</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">[String] -&gt; [String]
+</span><span class="hs-identifier hs-var">Just</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">[[Char]] -&gt; [Char] -&gt; [Char] -&gt; StringBuilder
+</span><a href="#local-6989586621679259011"><span class="hs-identifier hs-var">junct''</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">[[Char]] -&gt; [[Char]]
 forall a. [a] -&gt; [a]
-</span><span class="hs-identifier hs-var">reverse</span></span><span> </span><span class="annot"><span class="annottext">[String]
-</span><a href="#local-6989586621679241884"><span class="hs-identifier hs-var">alts</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">String
-</span><a href="#local-6989586621679241883"><span class="hs-identifier hs-var">alt</span></a></span><span> </span><span class="annot"><span class="annottext">String
+</span><span class="hs-identifier hs-var">reverse</span></span><span> </span><span class="annot"><span class="annottext">[[Char]]
+</span><a href="#local-6989586621679259008"><span class="hs-identifier hs-var">alts</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">[Char]
+</span><a href="#local-6989586621679259007"><span class="hs-identifier hs-var">alt</span></a></span><span> </span><span class="annot"><span class="annottext">[Char]
 </span><span class="hs-string">&quot;, &quot;</span></span><span class="hs-special">)</span><span>
 </span><span id="line-146"></span><span>
-</span><span id="line-147"></span><span>    </span><span id="local-6989586621679241887"><span class="annot"><span class="annottext">junct'' :: [String] -&gt; String -&gt; String -&gt; StringBuilder
-</span><a href="#local-6989586621679241887"><span class="hs-identifier hs-var hs-var">junct''</span></a></span></span><span> </span><span id="local-6989586621679241890"><span class="annot"><span class="annottext">[String]
-</span><a href="#local-6989586621679241890"><span class="hs-identifier hs-var">is</span></a></span></span><span> </span><span id="local-6989586621679241891"><span class="annot"><span class="annottext">String
-</span><a href="#local-6989586621679241891"><span class="hs-identifier hs-var">l</span></a></span></span><span> </span><span id="local-6989586621679241892"><span class="annot"><span class="annottext">String
-</span><a href="#local-6989586621679241892"><span class="hs-identifier hs-var">delim</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">StringBuilder
-</span><a href="#local-6989586621679241893"><span class="hs-identifier hs-var">front</span></a></span><span> </span><span class="annot"><span class="annottext">StringBuilder -&gt; StringBuilder -&gt; StringBuilder
+</span><span id="line-147"></span><span>    </span><span id="local-6989586621679259011"><span class="annot"><span class="annottext">junct'' :: [[Char]] -&gt; [Char] -&gt; [Char] -&gt; StringBuilder
+</span><a href="#local-6989586621679259011"><span class="hs-identifier hs-var hs-var">junct''</span></a></span></span><span> </span><span id="local-6989586621679259014"><span class="annot"><span class="annottext">[[Char]]
+</span><a href="#local-6989586621679259014"><span class="hs-identifier hs-var">is</span></a></span></span><span> </span><span id="local-6989586621679259015"><span class="annot"><span class="annottext">[Char]
+</span><a href="#local-6989586621679259015"><span class="hs-identifier hs-var">l</span></a></span></span><span> </span><span id="local-6989586621679259016"><span class="annot"><span class="annottext">[Char]
+</span><a href="#local-6989586621679259016"><span class="hs-identifier hs-var">delim</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">StringBuilder
+</span><a href="#local-6989586621679259017"><span class="hs-identifier hs-var">front</span></a></span><span> </span><span class="annot"><span class="annottext">StringBuilder -&gt; StringBuilder -&gt; StringBuilder
 forall a. Semigroup a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">StringBuilder
-</span><a href="#local-6989586621679241894"><span class="hs-identifier hs-var">back</span></a></span><span>
-</span><span id="line-148"></span><span>      </span><span class="hs-keyword">where</span><span> </span><span id="local-6989586621679241893"><span class="annot"><span class="annottext">front :: StringBuilder
-</span><a href="#local-6989586621679241893"><span class="hs-identifier hs-var hs-var">front</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">StringBuilder -&gt; [StringBuilder] -&gt; StringBuilder
+</span><a href="#local-6989586621679259018"><span class="hs-identifier hs-var">back</span></a></span><span>
+</span><span id="line-148"></span><span>      </span><span class="hs-keyword">where</span><span> </span><span id="local-6989586621679259017"><span class="annot"><span class="annottext">front :: StringBuilder
+</span><a href="#local-6989586621679259017"><span class="hs-identifier hs-var hs-var">front</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">StringBuilder -&gt; [StringBuilder] -&gt; StringBuilder
 forall m. Monoid m =&gt; m -&gt; [m] -&gt; m
-</span><a href="Text.Gigaparsec.Errors.DefaultErrorBuilder.html#intercalate"><span class="hs-identifier hs-var">intercalate</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">String -&gt; StringBuilder
-forall a. IsString a =&gt; String -&gt; a
-</span><span class="hs-identifier hs-var">fromString</span></span><span> </span><span class="annot"><span class="annottext">String
-</span><a href="#local-6989586621679241892"><span class="hs-identifier hs-var">delim</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">(String -&gt; StringBuilder) -&gt; [String] -&gt; [StringBuilder]
+</span><a href="Text.Gigaparsec.Errors.DefaultErrorBuilder.html#intercalate"><span class="hs-identifier hs-var">intercalate</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">[Char] -&gt; StringBuilder
+forall a. IsString a =&gt; [Char] -&gt; a
+</span><span class="hs-identifier hs-var">fromString</span></span><span> </span><span class="annot"><span class="annottext">[Char]
+</span><a href="#local-6989586621679259016"><span class="hs-identifier hs-var">delim</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">([Char] -&gt; StringBuilder) -&gt; [[Char]] -&gt; [StringBuilder]
 forall a b. (a -&gt; b) -&gt; [a] -&gt; [b]
-</span><span class="hs-identifier hs-var">map</span></span><span> </span><span class="annot"><span class="annottext">String -&gt; StringBuilder
-forall a. IsString a =&gt; String -&gt; a
-</span><span class="hs-identifier hs-var">fromString</span></span><span> </span><span class="annot"><span class="annottext">[String]
-</span><a href="#local-6989586621679241890"><span class="hs-identifier hs-var">is</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Errors.DefaultErrorBuilder.html#StringBuilder"><span class="hs-identifier hs-type">StringBuilder</span></a></span><span>
-</span><span id="line-149"></span><span>            </span><span id="local-6989586621679241894"><span class="annot"><span class="annottext">back :: StringBuilder
-</span><a href="#local-6989586621679241894"><span class="hs-identifier hs-var hs-var">back</span></a></span></span><span>
+</span><span class="hs-identifier hs-var">map</span></span><span> </span><span class="annot"><span class="annottext">[Char] -&gt; StringBuilder
+forall a. IsString a =&gt; [Char] -&gt; a
+</span><span class="hs-identifier hs-var">fromString</span></span><span> </span><span class="annot"><span class="annottext">[[Char]]
+</span><a href="#local-6989586621679259014"><span class="hs-identifier hs-var">is</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Errors.DefaultErrorBuilder.html#StringBuilder"><span class="hs-identifier hs-type">StringBuilder</span></a></span><span>
+</span><span id="line-149"></span><span>            </span><span id="local-6989586621679259018"><span class="annot"><span class="annottext">back :: StringBuilder
+</span><a href="#local-6989586621679259018"><span class="hs-identifier hs-var hs-var">back</span></a></span></span><span>
 </span><span id="line-150"></span><span>              </span><span class="hs-glyph">|</span><span> </span><span class="annot"><span class="annottext">Bool
-</span><a href="#local-6989586621679241860"><span class="hs-identifier hs-var">oxford</span></a></span><span>    </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">String -&gt; StringBuilder
-forall a. IsString a =&gt; String -&gt; a
-</span><span class="hs-identifier hs-var">fromString</span></span><span> </span><span class="annot"><span class="annottext">String
-</span><a href="#local-6989586621679241892"><span class="hs-identifier hs-var">delim</span></a></span><span> </span><span class="annot"><span class="annottext">StringBuilder -&gt; StringBuilder -&gt; StringBuilder
+</span><a href="#local-6989586621679258984"><span class="hs-identifier hs-var">oxford</span></a></span><span>    </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">[Char] -&gt; StringBuilder
+forall a. IsString a =&gt; [Char] -&gt; a
+</span><span class="hs-identifier hs-var">fromString</span></span><span> </span><span class="annot"><span class="annottext">[Char]
+</span><a href="#local-6989586621679259016"><span class="hs-identifier hs-var">delim</span></a></span><span> </span><span class="annot"><span class="annottext">StringBuilder -&gt; StringBuilder -&gt; StringBuilder
 forall a. Semigroup a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">StringBuilder
-</span><a href="#local-6989586621679241864"><span class="hs-identifier hs-var">j</span></a></span><span> </span><span class="annot"><span class="annottext">StringBuilder -&gt; StringBuilder -&gt; StringBuilder
+</span><a href="#local-6989586621679258988"><span class="hs-identifier hs-var">j</span></a></span><span> </span><span class="annot"><span class="annottext">StringBuilder -&gt; StringBuilder -&gt; StringBuilder
 forall a. Semigroup a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">StringBuilder
 </span><span class="hs-string">&quot; &quot;</span></span><span> </span><span class="annot"><span class="annottext">StringBuilder -&gt; StringBuilder -&gt; StringBuilder
 forall a. Semigroup a =&gt; a -&gt; a -&gt; a
-</span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">String -&gt; StringBuilder
-forall a. IsString a =&gt; String -&gt; a
-</span><span class="hs-identifier hs-var">fromString</span></span><span> </span><span class="annot"><span class="annottext">String
-</span><a href="#local-6989586621679241891"><span class="hs-identifier hs-var">l</span></a></span><span>
+</span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">[Char] -&gt; StringBuilder
+forall a. IsString a =&gt; [Char] -&gt; a
+</span><span class="hs-identifier hs-var">fromString</span></span><span> </span><span class="annot"><span class="annottext">[Char]
+</span><a href="#local-6989586621679259015"><span class="hs-identifier hs-var">l</span></a></span><span>
 </span><span id="line-151"></span><span>              </span><span class="hs-glyph">|</span><span> </span><span class="annot"><span class="annottext">Bool
 </span><span class="hs-identifier hs-var">otherwise</span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">StringBuilder
 </span><span class="hs-string">&quot; &quot;</span></span><span> </span><span class="annot"><span class="annottext">StringBuilder -&gt; StringBuilder -&gt; StringBuilder
 forall a. Semigroup a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">StringBuilder
-</span><a href="#local-6989586621679241864"><span class="hs-identifier hs-var">j</span></a></span><span> </span><span class="annot"><span class="annottext">StringBuilder -&gt; StringBuilder -&gt; StringBuilder
+</span><a href="#local-6989586621679258988"><span class="hs-identifier hs-var">j</span></a></span><span> </span><span class="annot"><span class="annottext">StringBuilder -&gt; StringBuilder -&gt; StringBuilder
 forall a. Semigroup a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">StringBuilder
 </span><span class="hs-string">&quot; &quot;</span></span><span> </span><span class="annot"><span class="annottext">StringBuilder -&gt; StringBuilder -&gt; StringBuilder
 forall a. Semigroup a =&gt; a -&gt; a -&gt; a
-</span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">String -&gt; StringBuilder
-forall a. IsString a =&gt; String -&gt; a
-</span><span class="hs-identifier hs-var">fromString</span></span><span> </span><span class="annot"><span class="annottext">String
-</span><a href="#local-6989586621679241891"><span class="hs-identifier hs-var">l</span></a></span><span>
+</span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">[Char] -&gt; StringBuilder
+forall a. IsString a =&gt; [Char] -&gt; a
+</span><span class="hs-identifier hs-var">fromString</span></span><span> </span><span class="annot"><span class="annottext">[Char]
+</span><a href="#local-6989586621679259015"><span class="hs-identifier hs-var">l</span></a></span><span>
 </span><span id="line-152"></span><span>
 </span><span id="line-153"></span><span class="annot"><span class="hs-comment">{-|
 Filters out any empty messages and returns the rest.
 -}</span></span><span>
 </span><span id="line-156"></span><span class="hs-pragma">{-# INLINABLE</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Errors.DefaultErrorBuilder.html#combineMessagesDefault"><span class="hs-pragma hs-type">combineMessagesDefault</span></a></span><span> </span><span class="hs-pragma">#-}</span><span>
-</span><span id="line-157"></span><span id="local-6989586621679241697"><span class="annot"><a href="Text.Gigaparsec.Errors.DefaultErrorBuilder.html#combineMessagesDefault"><span class="hs-identifier hs-type">combineMessagesDefault</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Foldable</span></span><span> </span><span class="annot"><a href="#local-6989586621679241697"><span class="hs-identifier hs-type">t</span></a></span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><a href="#local-6989586621679241697"><span class="hs-identifier hs-type">t</span></a></span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-special">[</span><span class="annot"><a href="Text.Gigaparsec.Errors.DefaultErrorBuilder.html#StringBuilder"><span class="hs-identifier hs-type">StringBuilder</span></a></span><span class="hs-special">]</span></span><span>
-</span><span id="line-158"></span><span id="combineMessagesDefault"><span class="annot"><span class="annottext">combineMessagesDefault :: forall (t :: * -&gt; *). Foldable t =&gt; t String -&gt; [StringBuilder]
-</span><a href="Text.Gigaparsec.Errors.DefaultErrorBuilder.html#combineMessagesDefault"><span class="hs-identifier hs-var hs-var">combineMessagesDefault</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">(String -&gt; Maybe StringBuilder) -&gt; [String] -&gt; [StringBuilder]
+</span><span id="line-157"></span><span id="local-6989586621679258821"><span class="annot"><a href="Text.Gigaparsec.Errors.DefaultErrorBuilder.html#combineMessagesDefault"><span class="hs-identifier hs-type">combineMessagesDefault</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Foldable</span></span><span> </span><span class="annot"><a href="#local-6989586621679258821"><span class="hs-identifier hs-type">t</span></a></span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><a href="#local-6989586621679258821"><span class="hs-identifier hs-type">t</span></a></span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-special">[</span><span class="annot"><a href="Text.Gigaparsec.Errors.DefaultErrorBuilder.html#StringBuilder"><span class="hs-identifier hs-type">StringBuilder</span></a></span><span class="hs-special">]</span></span><span>
+</span><span id="line-158"></span><span id="combineMessagesDefault"><span class="annot"><span class="annottext">combineMessagesDefault :: forall (t :: * -&gt; *). Foldable t =&gt; t [Char] -&gt; [StringBuilder]
+</span><a href="Text.Gigaparsec.Errors.DefaultErrorBuilder.html#combineMessagesDefault"><span class="hs-identifier hs-var hs-var">combineMessagesDefault</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">([Char] -&gt; Maybe StringBuilder) -&gt; [[Char]] -&gt; [StringBuilder]
 forall a b. (a -&gt; Maybe b) -&gt; [a] -&gt; [b]
-</span><span class="hs-identifier hs-var">mapMaybe</span></span><span> </span><span class="hs-special">(</span><span class="hs-glyph">\</span><span id="local-6989586621679241916"><span class="annot"><span class="annottext">String
-</span><a href="#local-6989586621679241916"><span class="hs-identifier hs-var">msg</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-keyword">if</span><span> </span><span class="annot"><span class="annottext">String -&gt; Bool
+</span><span class="hs-identifier hs-var">mapMaybe</span></span><span> </span><span class="hs-special">(</span><span class="hs-glyph">\</span><span id="local-6989586621679259040"><span class="annot"><span class="annottext">[Char]
+</span><a href="#local-6989586621679259040"><span class="hs-identifier hs-var">msg</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-keyword">if</span><span> </span><span class="annot"><span class="annottext">[Char] -&gt; Bool
 forall a. [a] -&gt; Bool
 forall (t :: * -&gt; *) a. Foldable t =&gt; t a -&gt; Bool
-</span><span class="hs-identifier hs-var">null</span></span><span> </span><span class="annot"><span class="annottext">String
-</span><a href="#local-6989586621679241916"><span class="hs-identifier hs-var">msg</span></a></span><span> </span><span class="hs-keyword">then</span><span> </span><span class="annot"><span class="annottext">Maybe StringBuilder
+</span><span class="hs-identifier hs-var">null</span></span><span> </span><span class="annot"><span class="annottext">[Char]
+</span><a href="#local-6989586621679259040"><span class="hs-identifier hs-var">msg</span></a></span><span> </span><span class="hs-keyword">then</span><span> </span><span class="annot"><span class="annottext">Maybe StringBuilder
 forall a. Maybe a
 </span><span class="hs-identifier hs-var">Nothing</span></span><span> </span><span class="hs-keyword">else</span><span> </span><span class="annot"><span class="annottext">StringBuilder -&gt; Maybe StringBuilder
 forall a. a -&gt; Maybe a
-</span><span class="hs-identifier hs-var">Just</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">String -&gt; StringBuilder
-forall a. IsString a =&gt; String -&gt; a
-</span><span class="hs-identifier hs-var">fromString</span></span><span> </span><span class="annot"><span class="annottext">String
-</span><a href="#local-6989586621679241916"><span class="hs-identifier hs-var">msg</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">([String] -&gt; [StringBuilder])
--&gt; (t String -&gt; [String]) -&gt; t String -&gt; [StringBuilder]
+</span><span class="hs-identifier hs-var">Just</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">[Char] -&gt; StringBuilder
+forall a. IsString a =&gt; [Char] -&gt; a
+</span><span class="hs-identifier hs-var">fromString</span></span><span> </span><span class="annot"><span class="annottext">[Char]
+</span><a href="#local-6989586621679259040"><span class="hs-identifier hs-var">msg</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">([[Char]] -&gt; [StringBuilder])
+-&gt; (t [Char] -&gt; [[Char]]) -&gt; t [Char] -&gt; [StringBuilder]
 forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
-</span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">t String -&gt; [String]
+</span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">t [Char] -&gt; [[Char]]
 forall a. t a -&gt; [a]
 forall (t :: * -&gt; *) a. Foldable t =&gt; t a -&gt; [a]
 </span><span class="hs-identifier hs-var">toList</span></span><span>
@@ -481,19 +481,19 @@ Forms an error with the given header followed by a colon, a newline, then the re
 </span><span id="line-163"></span><span class="hs-pragma">{-# INLINABLE</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Errors.DefaultErrorBuilder.html#blockError"><span class="hs-pragma hs-type">blockError</span></a></span><span> </span><span class="hs-pragma">#-}</span><span>
 </span><span id="line-164"></span><span class="annot"><a href="Text.Gigaparsec.Errors.DefaultErrorBuilder.html#blockError"><span class="hs-identifier hs-type">blockError</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Errors.DefaultErrorBuilder.html#StringBuilder"><span class="hs-identifier hs-type">StringBuilder</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-special">[</span><span class="annot"><a href="Text.Gigaparsec.Errors.DefaultErrorBuilder.html#StringBuilder"><span class="hs-identifier hs-type">StringBuilder</span></a></span><span class="hs-special">]</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Int</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Errors.DefaultErrorBuilder.html#StringBuilder"><span class="hs-identifier hs-type">StringBuilder</span></a></span><span>
 </span><span id="line-165"></span><span id="blockError"><span class="annot"><span class="annottext">blockError :: StringBuilder -&gt; [StringBuilder] -&gt; Int -&gt; StringBuilder
-</span><a href="Text.Gigaparsec.Errors.DefaultErrorBuilder.html#blockError"><span class="hs-identifier hs-var hs-var">blockError</span></a></span></span><span> </span><span id="local-6989586621679241918"><span class="annot"><span class="annottext">StringBuilder
-</span><a href="#local-6989586621679241918"><span class="hs-identifier hs-var">header</span></a></span></span><span> </span><span id="local-6989586621679241919"><span class="annot"><span class="annottext">[StringBuilder]
-</span><a href="#local-6989586621679241919"><span class="hs-identifier hs-var">lines</span></a></span></span><span> </span><span id="local-6989586621679241920"><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679241920"><span class="hs-identifier hs-var">indent</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">StringBuilder
-</span><a href="#local-6989586621679241918"><span class="hs-identifier hs-var">header</span></a></span><span> </span><span class="annot"><span class="annottext">StringBuilder -&gt; StringBuilder -&gt; StringBuilder
+</span><a href="Text.Gigaparsec.Errors.DefaultErrorBuilder.html#blockError"><span class="hs-identifier hs-var hs-var">blockError</span></a></span></span><span> </span><span id="local-6989586621679259042"><span class="annot"><span class="annottext">StringBuilder
+</span><a href="#local-6989586621679259042"><span class="hs-identifier hs-var">header</span></a></span></span><span> </span><span id="local-6989586621679259043"><span class="annot"><span class="annottext">[StringBuilder]
+</span><a href="#local-6989586621679259043"><span class="hs-identifier hs-var">lines</span></a></span></span><span> </span><span id="local-6989586621679259044"><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679259044"><span class="hs-identifier hs-var">indent</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">StringBuilder
+</span><a href="#local-6989586621679259042"><span class="hs-identifier hs-var">header</span></a></span><span> </span><span class="annot"><span class="annottext">StringBuilder -&gt; StringBuilder -&gt; StringBuilder
 forall a. Semigroup a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">StringBuilder
 </span><span class="hs-string">&quot;:\n&quot;</span></span><span> </span><span class="annot"><span class="annottext">StringBuilder -&gt; StringBuilder -&gt; StringBuilder
 forall a. Semigroup a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">[StringBuilder] -&gt; Int -&gt; StringBuilder
 </span><a href="Text.Gigaparsec.Errors.DefaultErrorBuilder.html#indentAndUnlines"><span class="hs-identifier hs-var">indentAndUnlines</span></a></span><span> </span><span class="annot"><span class="annottext">[StringBuilder]
-</span><a href="#local-6989586621679241919"><span class="hs-identifier hs-var">lines</span></a></span><span> </span><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679241920"><span class="hs-identifier hs-var">indent</span></a></span><span>
+</span><a href="#local-6989586621679259043"><span class="hs-identifier hs-var">lines</span></a></span><span> </span><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679259044"><span class="hs-identifier hs-var">indent</span></a></span><span>
 </span><span id="line-166"></span><span>
 </span><span id="line-167"></span><span class="annot"><span class="hs-comment">{-|
 Indents and concatenates the given lines by the given depth.
@@ -501,28 +501,28 @@ Indents and concatenates the given lines by the given depth.
 </span><span id="line-170"></span><span class="hs-pragma">{-# INLINABLE</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Errors.DefaultErrorBuilder.html#indentAndUnlines"><span class="hs-pragma hs-type">indentAndUnlines</span></a></span><span> </span><span class="hs-pragma">#-}</span><span>
 </span><span id="line-171"></span><span class="annot"><a href="Text.Gigaparsec.Errors.DefaultErrorBuilder.html#indentAndUnlines"><span class="hs-identifier hs-type">indentAndUnlines</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-special">[</span><span class="annot"><a href="Text.Gigaparsec.Errors.DefaultErrorBuilder.html#StringBuilder"><span class="hs-identifier hs-type">StringBuilder</span></a></span><span class="hs-special">]</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Int</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Errors.DefaultErrorBuilder.html#StringBuilder"><span class="hs-identifier hs-type">StringBuilder</span></a></span><span>
 </span><span id="line-172"></span><span id="indentAndUnlines"><span class="annot"><span class="annottext">indentAndUnlines :: [StringBuilder] -&gt; Int -&gt; StringBuilder
-</span><a href="Text.Gigaparsec.Errors.DefaultErrorBuilder.html#indentAndUnlines"><span class="hs-identifier hs-var hs-var">indentAndUnlines</span></a></span></span><span> </span><span id="local-6989586621679241922"><span class="annot"><span class="annottext">[StringBuilder]
-</span><a href="#local-6989586621679241922"><span class="hs-identifier hs-var">lines</span></a></span></span><span> </span><span id="local-6989586621679241923"><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679241923"><span class="hs-identifier hs-var">indent</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">String -&gt; StringBuilder
-forall a. IsString a =&gt; String -&gt; a
-</span><span class="hs-identifier hs-var">fromString</span></span><span> </span><span class="annot"><span class="annottext">String
-</span><a href="#local-6989586621679241924"><span class="hs-identifier hs-var">pre</span></a></span><span> </span><span class="annot"><span class="annottext">StringBuilder -&gt; StringBuilder -&gt; StringBuilder
+</span><a href="Text.Gigaparsec.Errors.DefaultErrorBuilder.html#indentAndUnlines"><span class="hs-identifier hs-var hs-var">indentAndUnlines</span></a></span></span><span> </span><span id="local-6989586621679259046"><span class="annot"><span class="annottext">[StringBuilder]
+</span><a href="#local-6989586621679259046"><span class="hs-identifier hs-var">lines</span></a></span></span><span> </span><span id="local-6989586621679259047"><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679259047"><span class="hs-identifier hs-var">indent</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">[Char] -&gt; StringBuilder
+forall a. IsString a =&gt; [Char] -&gt; a
+</span><span class="hs-identifier hs-var">fromString</span></span><span> </span><span class="annot"><span class="annottext">[Char]
+</span><a href="#local-6989586621679259048"><span class="hs-identifier hs-var">pre</span></a></span><span> </span><span class="annot"><span class="annottext">StringBuilder -&gt; StringBuilder -&gt; StringBuilder
 forall a. Semigroup a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">StringBuilder -&gt; [StringBuilder] -&gt; StringBuilder
 forall m. Monoid m =&gt; m -&gt; [m] -&gt; m
-</span><a href="Text.Gigaparsec.Errors.DefaultErrorBuilder.html#intercalate"><span class="hs-identifier hs-var">intercalate</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">String -&gt; StringBuilder
-forall a. IsString a =&gt; String -&gt; a
+</span><a href="Text.Gigaparsec.Errors.DefaultErrorBuilder.html#intercalate"><span class="hs-identifier hs-var">intercalate</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">[Char] -&gt; StringBuilder
+forall a. IsString a =&gt; [Char] -&gt; a
 </span><span class="hs-identifier hs-var">fromString</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Char
-</span><span class="hs-char">'\n'</span></span><span> </span><span class="annot"><span class="annottext">Char -&gt; String -&gt; String
+</span><span class="hs-char">'\n'</span></span><span> </span><span class="annot"><span class="annottext">Char -&gt; [Char] -&gt; [Char]
 forall a. a -&gt; [a] -&gt; [a]
-</span><span class="hs-glyph hs-var">:</span></span><span> </span><span class="annot"><span class="annottext">String
-</span><a href="#local-6989586621679241924"><span class="hs-identifier hs-var">pre</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">[StringBuilder]
-</span><a href="#local-6989586621679241922"><span class="hs-identifier hs-var">lines</span></a></span><span>
-</span><span id="line-173"></span><span>  </span><span class="hs-keyword">where</span><span> </span><span id="local-6989586621679241924"><span class="annot"><span class="annottext">pre :: String
-</span><a href="#local-6989586621679241924"><span class="hs-identifier hs-var hs-var">pre</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Int -&gt; Char -&gt; String
+</span><span class="hs-glyph hs-var">:</span></span><span> </span><span class="annot"><span class="annottext">[Char]
+</span><a href="#local-6989586621679259048"><span class="hs-identifier hs-var">pre</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">[StringBuilder]
+</span><a href="#local-6989586621679259046"><span class="hs-identifier hs-var">lines</span></a></span><span>
+</span><span id="line-173"></span><span>  </span><span class="hs-keyword">where</span><span> </span><span id="local-6989586621679259048"><span class="annot"><span class="annottext">pre :: [Char]
+</span><a href="#local-6989586621679259048"><span class="hs-identifier hs-var hs-var">pre</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Int -&gt; Char -&gt; [Char]
 forall a. Int -&gt; a -&gt; [a]
 </span><span class="hs-identifier hs-var">replicate</span></span><span> </span><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679241923"><span class="hs-identifier hs-var">indent</span></a></span><span> </span><span class="annot"><span class="annottext">Char
+</span><a href="#local-6989586621679259047"><span class="hs-identifier hs-var">indent</span></a></span><span> </span><span class="annot"><span class="annottext">Char
 </span><span class="hs-char">' '</span></span><span>
 </span><span id="line-174"></span><span>
 </span><span id="line-175"></span><span class="annot"><span class="hs-comment">{-|
@@ -531,63 +531,63 @@ underneath the focus line, line, where the error occurs.
 -}</span></span><span>
 </span><span id="line-179"></span><span class="hs-pragma">{-# INLINABLE</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Errors.DefaultErrorBuilder.html#lineInfoDefault"><span class="hs-pragma hs-type">lineInfoDefault</span></a></span><span> </span><span class="hs-pragma">#-}</span><span>
 </span><span id="line-180"></span><span class="annot"><a href="Text.Gigaparsec.Errors.DefaultErrorBuilder.html#lineInfoDefault"><span class="hs-identifier hs-type">lineInfoDefault</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-special">[</span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span class="hs-special">]</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-special">[</span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span class="hs-special">]</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Word</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Word</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Word</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-special">[</span><span class="annot"><a href="Text.Gigaparsec.Errors.DefaultErrorBuilder.html#StringBuilder"><span class="hs-identifier hs-type">StringBuilder</span></a></span><span class="hs-special">]</span><span>
-</span><span id="line-181"></span><span id="lineInfoDefault"><span class="annot"><span class="annottext">lineInfoDefault :: String
--&gt; [String] -&gt; [String] -&gt; Word -&gt; Word -&gt; Word -&gt; [StringBuilder]
-</span><a href="Text.Gigaparsec.Errors.DefaultErrorBuilder.html#lineInfoDefault"><span class="hs-identifier hs-var hs-var">lineInfoDefault</span></a></span></span><span> </span><span id="local-6989586621679241927"><span class="annot"><span class="annottext">String
-</span><a href="#local-6989586621679241927"><span class="hs-identifier hs-var">curLine</span></a></span></span><span> </span><span id="local-6989586621679241928"><span class="annot"><span class="annottext">[String]
-</span><a href="#local-6989586621679241928"><span class="hs-identifier hs-var">beforeLines</span></a></span></span><span> </span><span id="local-6989586621679241929"><span class="annot"><span class="annottext">[String]
-</span><a href="#local-6989586621679241929"><span class="hs-identifier hs-var">afterLines</span></a></span></span><span> </span><span id="local-6989586621679241930"><span class="annot"><span class="annottext">Word
-</span><a href="#local-6989586621679241930"><span class="hs-identifier hs-var">_line</span></a></span></span><span> </span><span id="local-6989586621679241931"><span class="annot"><span class="annottext">Word
-</span><a href="#local-6989586621679241931"><span class="hs-identifier hs-var">pointsAt</span></a></span></span><span> </span><span id="local-6989586621679241932"><span class="annot"><span class="annottext">Word
-</span><a href="#local-6989586621679241932"><span class="hs-identifier hs-var">width</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
+</span><span id="line-181"></span><span id="lineInfoDefault"><span class="annot"><span class="annottext">lineInfoDefault :: [Char]
+-&gt; [[Char]] -&gt; [[Char]] -&gt; Word -&gt; Word -&gt; Word -&gt; [StringBuilder]
+</span><a href="Text.Gigaparsec.Errors.DefaultErrorBuilder.html#lineInfoDefault"><span class="hs-identifier hs-var hs-var">lineInfoDefault</span></a></span></span><span> </span><span id="local-6989586621679259051"><span class="annot"><span class="annottext">[Char]
+</span><a href="#local-6989586621679259051"><span class="hs-identifier hs-var">curLine</span></a></span></span><span> </span><span id="local-6989586621679259052"><span class="annot"><span class="annottext">[[Char]]
+</span><a href="#local-6989586621679259052"><span class="hs-identifier hs-var">beforeLines</span></a></span></span><span> </span><span id="local-6989586621679259053"><span class="annot"><span class="annottext">[[Char]]
+</span><a href="#local-6989586621679259053"><span class="hs-identifier hs-var">afterLines</span></a></span></span><span> </span><span id="local-6989586621679259054"><span class="annot"><span class="annottext">Word
+</span><a href="#local-6989586621679259054"><span class="hs-identifier hs-var">_line</span></a></span></span><span> </span><span id="local-6989586621679259055"><span class="annot"><span class="annottext">Word
+</span><a href="#local-6989586621679259055"><span class="hs-identifier hs-var">pointsAt</span></a></span></span><span> </span><span id="local-6989586621679259056"><span class="annot"><span class="annottext">Word
+</span><a href="#local-6989586621679259056"><span class="hs-identifier hs-var">width</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
 </span><span id="line-182"></span><span>  </span><span class="annot"><span class="annottext">[[StringBuilder]] -&gt; [StringBuilder]
 forall (t :: * -&gt; *) a. Foldable t =&gt; t [a] -&gt; [a]
-</span><span class="hs-identifier hs-var">concat</span></span><span> </span><span class="hs-special">[</span><span class="annot"><span class="annottext">(String -&gt; StringBuilder) -&gt; [String] -&gt; [StringBuilder]
+</span><span class="hs-identifier hs-var">concat</span></span><span> </span><span class="hs-special">[</span><span class="annot"><span class="annottext">([Char] -&gt; StringBuilder) -&gt; [[Char]] -&gt; [StringBuilder]
 forall a b. (a -&gt; b) -&gt; [a] -&gt; [b]
-</span><span class="hs-identifier hs-var">map</span></span><span> </span><span class="annot"><span class="annottext">String -&gt; StringBuilder
-</span><a href="#local-6989586621679241934"><span class="hs-identifier hs-var">inputLine</span></a></span><span> </span><span class="annot"><span class="annottext">[String]
-</span><a href="#local-6989586621679241928"><span class="hs-identifier hs-var">beforeLines</span></a></span><span class="hs-special">,</span><span> </span><span class="hs-special">[</span><span class="annot"><span class="annottext">String -&gt; StringBuilder
-</span><a href="#local-6989586621679241934"><span class="hs-identifier hs-var">inputLine</span></a></span><span> </span><span class="annot"><span class="annottext">String
-</span><a href="#local-6989586621679241927"><span class="hs-identifier hs-var">curLine</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">StringBuilder
-</span><a href="#local-6989586621679241935"><span class="hs-identifier hs-var">caretLine</span></a></span><span class="hs-special">]</span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">(String -&gt; StringBuilder) -&gt; [String] -&gt; [StringBuilder]
+</span><span class="hs-identifier hs-var">map</span></span><span> </span><span class="annot"><span class="annottext">[Char] -&gt; StringBuilder
+</span><a href="#local-6989586621679259058"><span class="hs-identifier hs-var">inputLine</span></a></span><span> </span><span class="annot"><span class="annottext">[[Char]]
+</span><a href="#local-6989586621679259052"><span class="hs-identifier hs-var">beforeLines</span></a></span><span class="hs-special">,</span><span> </span><span class="hs-special">[</span><span class="annot"><span class="annottext">[Char] -&gt; StringBuilder
+</span><a href="#local-6989586621679259058"><span class="hs-identifier hs-var">inputLine</span></a></span><span> </span><span class="annot"><span class="annottext">[Char]
+</span><a href="#local-6989586621679259051"><span class="hs-identifier hs-var">curLine</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">StringBuilder
+</span><a href="#local-6989586621679259059"><span class="hs-identifier hs-var">caretLine</span></a></span><span class="hs-special">]</span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">([Char] -&gt; StringBuilder) -&gt; [[Char]] -&gt; [StringBuilder]
 forall a b. (a -&gt; b) -&gt; [a] -&gt; [b]
-</span><span class="hs-identifier hs-var">map</span></span><span> </span><span class="annot"><span class="annottext">String -&gt; StringBuilder
-</span><a href="#local-6989586621679241934"><span class="hs-identifier hs-var">inputLine</span></a></span><span> </span><span class="annot"><span class="annottext">[String]
-</span><a href="#local-6989586621679241929"><span class="hs-identifier hs-var">afterLines</span></a></span><span class="hs-special">]</span><span>
-</span><span id="line-183"></span><span>  </span><span class="hs-keyword">where</span><span> </span><span class="annot"><a href="#local-6989586621679241934"><span class="hs-identifier hs-type">inputLine</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Errors.DefaultErrorBuilder.html#StringBuilder"><span class="hs-identifier hs-type">StringBuilder</span></a></span><span>
-</span><span id="line-184"></span><span>        </span><span id="local-6989586621679241934"><span class="annot"><span class="annottext">inputLine :: String -&gt; StringBuilder
-</span><a href="#local-6989586621679241934"><span class="hs-identifier hs-var hs-var">inputLine</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">String -&gt; StringBuilder
-forall a. IsString a =&gt; String -&gt; a
-</span><span class="hs-identifier hs-var">fromString</span></span><span> </span><span class="annot"><span class="annottext">(String -&gt; StringBuilder)
--&gt; (String -&gt; String) -&gt; String -&gt; StringBuilder
+</span><span class="hs-identifier hs-var">map</span></span><span> </span><span class="annot"><span class="annottext">[Char] -&gt; StringBuilder
+</span><a href="#local-6989586621679259058"><span class="hs-identifier hs-var">inputLine</span></a></span><span> </span><span class="annot"><span class="annottext">[[Char]]
+</span><a href="#local-6989586621679259053"><span class="hs-identifier hs-var">afterLines</span></a></span><span class="hs-special">]</span><span>
+</span><span id="line-183"></span><span>  </span><span class="hs-keyword">where</span><span> </span><span class="annot"><a href="#local-6989586621679259058"><span class="hs-identifier hs-type">inputLine</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Errors.DefaultErrorBuilder.html#StringBuilder"><span class="hs-identifier hs-type">StringBuilder</span></a></span><span>
+</span><span id="line-184"></span><span>        </span><span id="local-6989586621679259058"><span class="annot"><span class="annottext">inputLine :: [Char] -&gt; StringBuilder
+</span><a href="#local-6989586621679259058"><span class="hs-identifier hs-var hs-var">inputLine</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">[Char] -&gt; StringBuilder
+forall a. IsString a =&gt; [Char] -&gt; a
+</span><span class="hs-identifier hs-var">fromString</span></span><span> </span><span class="annot"><span class="annottext">([Char] -&gt; StringBuilder)
+-&gt; ([Char] -&gt; [Char]) -&gt; [Char] -&gt; StringBuilder
 forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
 </span><span class="hs-operator hs-var">.</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Char
-</span><span class="hs-char">'&gt;'</span></span><span> </span><span class="annot"><span class="annottext">Char -&gt; String -&gt; String
+</span><span class="hs-char">'&gt;'</span></span><span> </span><span class="annot"><span class="annottext">Char -&gt; [Char] -&gt; [Char]
 forall a. a -&gt; [a] -&gt; [a]
 </span><span class="hs-glyph hs-var">:</span></span><span class="hs-special">)</span><span>
-</span><span id="line-185"></span><span>        </span><span class="annot"><a href="#local-6989586621679241935"><span class="hs-identifier hs-type">caretLine</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Errors.DefaultErrorBuilder.html#StringBuilder"><span class="hs-identifier hs-type">StringBuilder</span></a></span><span>
-</span><span id="line-186"></span><span>        </span><span id="local-6989586621679241935"><span class="annot"><span class="annottext">caretLine :: StringBuilder
-</span><a href="#local-6989586621679241935"><span class="hs-identifier hs-var hs-var">caretLine</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">String -&gt; StringBuilder
-forall a. IsString a =&gt; String -&gt; a
-</span><span class="hs-identifier hs-var">fromString</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Int -&gt; Char -&gt; String
+</span><span id="line-185"></span><span>        </span><span class="annot"><a href="#local-6989586621679259059"><span class="hs-identifier hs-type">caretLine</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Errors.DefaultErrorBuilder.html#StringBuilder"><span class="hs-identifier hs-type">StringBuilder</span></a></span><span>
+</span><span id="line-186"></span><span>        </span><span id="local-6989586621679259059"><span class="annot"><span class="annottext">caretLine :: StringBuilder
+</span><a href="#local-6989586621679259059"><span class="hs-identifier hs-var hs-var">caretLine</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">[Char] -&gt; StringBuilder
+forall a. IsString a =&gt; [Char] -&gt; a
+</span><span class="hs-identifier hs-var">fromString</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Int -&gt; Char -&gt; [Char]
 forall a. Int -&gt; a -&gt; [a]
 </span><span class="hs-identifier hs-var">replicate</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Word -&gt; Int
 forall a b. (Integral a, Num b) =&gt; a -&gt; b
 </span><span class="hs-identifier hs-var">fromIntegral</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Word
-</span><a href="#local-6989586621679241931"><span class="hs-identifier hs-var">pointsAt</span></a></span><span> </span><span class="annot"><span class="annottext">Word -&gt; Word -&gt; Word
+</span><a href="#local-6989586621679259055"><span class="hs-identifier hs-var">pointsAt</span></a></span><span> </span><span class="annot"><span class="annottext">Word -&gt; Word -&gt; Word
 forall a. Num a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">+</span></span><span> </span><span class="annot"><span class="annottext">Word
 </span><span class="hs-number">1</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">Char
 </span><span class="hs-char">' '</span></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">StringBuilder -&gt; StringBuilder -&gt; StringBuilder
 forall a. Semigroup a =&gt; a -&gt; a -&gt; a
-</span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">String -&gt; StringBuilder
-forall a. IsString a =&gt; String -&gt; a
-</span><span class="hs-identifier hs-var">fromString</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Int -&gt; Char -&gt; String
+</span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">[Char] -&gt; StringBuilder
+forall a. IsString a =&gt; [Char] -&gt; a
+</span><span class="hs-identifier hs-var">fromString</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Int -&gt; Char -&gt; [Char]
 forall a. Int -&gt; a -&gt; [a]
 </span><span class="hs-identifier hs-var">replicate</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Word -&gt; Int
 forall a b. (Integral a, Num b) =&gt; a -&gt; b
 </span><span class="hs-identifier hs-var">fromIntegral</span></span><span> </span><span class="annot"><span class="annottext">Word
-</span><a href="#local-6989586621679241932"><span class="hs-identifier hs-var">width</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">Char
+</span><a href="#local-6989586621679259056"><span class="hs-identifier hs-var">width</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">Char
 </span><span class="hs-char">'^'</span></span><span class="hs-special">)</span><span>
 </span><span id="line-187"></span><span>
 </span><span id="line-188"></span><span class="annot"><span class="hs-comment">{-|
@@ -596,16 +596,16 @@ Pairs the line and column up in the form @(line m, column n)@.
 </span><span id="line-191"></span><span class="hs-pragma">{-# INLINABLE</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Errors.DefaultErrorBuilder.html#posDefault"><span class="hs-pragma hs-type">posDefault</span></a></span><span> </span><span class="hs-pragma">#-}</span><span>
 </span><span id="line-192"></span><span class="annot"><a href="Text.Gigaparsec.Errors.DefaultErrorBuilder.html#posDefault"><span class="hs-identifier hs-type">posDefault</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Word</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Word</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Errors.DefaultErrorBuilder.html#StringBuilder"><span class="hs-identifier hs-type">StringBuilder</span></a></span><span>
 </span><span id="line-193"></span><span id="posDefault"><span class="annot"><span class="annottext">posDefault :: Word -&gt; Word -&gt; StringBuilder
-</span><a href="Text.Gigaparsec.Errors.DefaultErrorBuilder.html#posDefault"><span class="hs-identifier hs-var hs-var">posDefault</span></a></span></span><span> </span><span id="local-6989586621679241938"><span class="annot"><span class="annottext">Word
-</span><a href="#local-6989586621679241938"><span class="hs-identifier hs-var">line</span></a></span></span><span> </span><span id="local-6989586621679241939"><span class="annot"><span class="annottext">Word
-</span><a href="#local-6989586621679241939"><span class="hs-identifier hs-var">col</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">StringBuilder
+</span><a href="Text.Gigaparsec.Errors.DefaultErrorBuilder.html#posDefault"><span class="hs-identifier hs-var hs-var">posDefault</span></a></span></span><span> </span><span id="local-6989586621679259062"><span class="annot"><span class="annottext">Word
+</span><a href="#local-6989586621679259062"><span class="hs-identifier hs-var">line</span></a></span></span><span> </span><span id="local-6989586621679259063"><span class="annot"><span class="annottext">Word
+</span><a href="#local-6989586621679259063"><span class="hs-identifier hs-var">col</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">StringBuilder
 </span><span class="hs-string">&quot;(line &quot;</span></span><span>
 </span><span id="line-194"></span><span>                   </span><span class="annot"><span class="annottext">StringBuilder -&gt; StringBuilder -&gt; StringBuilder
 forall a. Semigroup a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">Word -&gt; StringBuilder
 forall a. Show a =&gt; a -&gt; StringBuilder
 </span><a href="Text.Gigaparsec.Errors.DefaultErrorBuilder.html#from"><span class="hs-identifier hs-var">from</span></a></span><span> </span><span class="annot"><span class="annottext">Word
-</span><a href="#local-6989586621679241938"><span class="hs-identifier hs-var">line</span></a></span><span>
+</span><a href="#local-6989586621679259062"><span class="hs-identifier hs-var">line</span></a></span><span>
 </span><span id="line-195"></span><span>                   </span><span class="annot"><span class="annottext">StringBuilder -&gt; StringBuilder -&gt; StringBuilder
 forall a. Semigroup a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">StringBuilder
@@ -615,22 +615,22 @@ forall a. Semigroup a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">Word -&gt; StringBuilder
 forall a. Show a =&gt; a -&gt; StringBuilder
 </span><a href="Text.Gigaparsec.Errors.DefaultErrorBuilder.html#from"><span class="hs-identifier hs-var">from</span></a></span><span> </span><span class="annot"><span class="annottext">Word
-</span><a href="#local-6989586621679241939"><span class="hs-identifier hs-var">col</span></a></span><span>
+</span><a href="#local-6989586621679259063"><span class="hs-identifier hs-var">col</span></a></span><span>
 </span><span id="line-197"></span><span>                   </span><span class="annot"><span class="annottext">StringBuilder -&gt; StringBuilder -&gt; StringBuilder
 forall a. Semigroup a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">StringBuilder
 </span><span class="hs-string">&quot;)&quot;</span></span><span>
 </span><span id="line-198"></span><span>
 </span><span id="line-199"></span><span class="hs-pragma">{-# INLINABLE</span><span> </span><span class="annot"><a href="Text.Gigaparsec.Errors.DefaultErrorBuilder.html#intercalate"><span class="hs-pragma hs-type">intercalate</span></a></span><span> </span><span class="hs-pragma">#-}</span><span>
-</span><span id="line-200"></span><span id="local-6989586621679241694"><span class="annot"><a href="Text.Gigaparsec.Errors.DefaultErrorBuilder.html#intercalate"><span class="hs-identifier hs-type">intercalate</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Monoid</span></span><span> </span><span class="annot"><a href="#local-6989586621679241694"><span class="hs-identifier hs-type">m</span></a></span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><a href="#local-6989586621679241694"><span class="hs-identifier hs-type">m</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-special">[</span><span class="annot"><a href="#local-6989586621679241694"><span class="hs-identifier hs-type">m</span></a></span><span class="hs-special">]</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="#local-6989586621679241694"><span class="hs-identifier hs-type">m</span></a></span></span><span>
+</span><span id="line-200"></span><span id="local-6989586621679258818"><span class="annot"><a href="Text.Gigaparsec.Errors.DefaultErrorBuilder.html#intercalate"><span class="hs-identifier hs-type">intercalate</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Monoid</span></span><span> </span><span class="annot"><a href="#local-6989586621679258818"><span class="hs-identifier hs-type">m</span></a></span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><a href="#local-6989586621679258818"><span class="hs-identifier hs-type">m</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-special">[</span><span class="annot"><a href="#local-6989586621679258818"><span class="hs-identifier hs-type">m</span></a></span><span class="hs-special">]</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="#local-6989586621679258818"><span class="hs-identifier hs-type">m</span></a></span></span><span>
 </span><span id="line-201"></span><span id="intercalate"><span class="annot"><span class="annottext">intercalate :: forall m. Monoid m =&gt; m -&gt; [m] -&gt; m
-</span><a href="Text.Gigaparsec.Errors.DefaultErrorBuilder.html#intercalate"><span class="hs-identifier hs-var hs-var">intercalate</span></a></span></span><span> </span><span id="local-6989586621679241942"><span class="annot"><span class="annottext">m
-</span><a href="#local-6989586621679241942"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span id="local-6989586621679241943"><span class="annot"><span class="annottext">[m]
-</span><a href="#local-6989586621679241943"><span class="hs-identifier hs-var">xs</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">[m] -&gt; m
+</span><a href="Text.Gigaparsec.Errors.DefaultErrorBuilder.html#intercalate"><span class="hs-identifier hs-var hs-var">intercalate</span></a></span></span><span> </span><span id="local-6989586621679259066"><span class="annot"><span class="annottext">m
+</span><a href="#local-6989586621679259066"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span id="local-6989586621679259067"><span class="annot"><span class="annottext">[m]
+</span><a href="#local-6989586621679259067"><span class="hs-identifier hs-var">xs</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">[m] -&gt; m
 forall a. Monoid a =&gt; [a] -&gt; a
 </span><span class="hs-identifier hs-var">mconcat</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">m -&gt; [m] -&gt; [m]
 forall a. a -&gt; [a] -&gt; [a]
 </span><span class="hs-identifier hs-var">intersperse</span></span><span> </span><span class="annot"><span class="annottext">m
-</span><a href="#local-6989586621679241942"><span class="hs-identifier hs-var">x</span></a></span><span> </span><span class="annot"><span class="annottext">[m]
-</span><a href="#local-6989586621679241943"><span class="hs-identifier hs-var">xs</span></a></span><span class="hs-special">)</span><span>
+</span><a href="#local-6989586621679259066"><span class="hs-identifier hs-var">x</span></a></span><span> </span><span class="annot"><span class="annottext">[m]
+</span><a href="#local-6989586621679259067"><span class="hs-identifier hs-var">xs</span></a></span><span class="hs-special">)</span><span>
 </span><span id="line-202"></span></pre></body></html>
