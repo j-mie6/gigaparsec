@@ -1,5 +1,5 @@
-{-# LANGUAGE Safe #-}
-{-# LANGUAGE OverloadedLists #-}
+{-# LANGUAGE Trustworthy #-}
+{-# LANGUAGE OverloadedLists, MagicHash #-}
 {-# OPTIONS_GHC -Wno-all-missed-specialisations -Wno-overflowed-literals #-}
 {-|
 Module      : Text.Gigaparsec.Char
@@ -49,7 +49,7 @@ import Text.Gigaparsec (Parsec, atomic)
 import Text.Gigaparsec.Combinator (skipMany)
 import Text.Gigaparsec.Errors.Combinator ((<?>))
 -- We want to use this to make the docs point to the right definition for users.
-import Text.Gigaparsec.Internal qualified as Internal (Parsec(Parsec, unParsec), State(..), expectedErr, useHints)
+import Text.Gigaparsec.Internal qualified as Internal (Parsec(Parsec, unParsec), State(..), expectedErr, useHints, unconsInput, InputOps)
 import Text.Gigaparsec.Internal.Errors qualified as Internal (ExpectItem(ExpectRaw), Error)
 import Text.Gigaparsec.Internal.Require (require)
 
@@ -71,22 +71,42 @@ import Data.Map qualified as Map (fromSet, toAscList, member)
 -------------------------------------------------
 
 _satisfy :: Set Internal.ExpectItem -> (Char -> Bool) -> Parsec Char
-_satisfy expecteds test = Internal.Parsec $ \st ok bad ->
-  case Internal.input st of
-    c:cs | test c -> ok c (updateState st c cs)
-    _             -> Internal.useHints bad (Internal.expectedErr st expecteds 1) st
+_satisfy expecteds test = Internal.Parsec $ \st@(Internal.State {..}) ok bad ->
+  case Internal.unconsInput input inputOps of
+    Just (c, cs) | test c  -> ok c (updateState st c cs inputOps)
+    _ -> Internal.useHints bad (Internal.expectedErr st expecteds 1) st
   where
+  -- Update the state depending on which character we have parsed. 
+  -- Newlines and tabs affect the lines/columns differently to standard characters.
+  updateState :: Internal.State -> Char -> s -> Internal.InputOps s -> Internal.State
+  updateState st '\n' cs ops = updateStateHelper st cs ops True  (const 1)
+  updateState st '\t' cs ops = updateStateHelper st cs ops False (\col -> ((col + 3) .&. (-4)) .|. 1)
+  updateState st _    cs ops = updateStateHelper st cs ops False (+ 1)
+
   -- The duplicated input & consumed update avoids double allocation
   -- that occurs if they were done separately to the line and col updates.
-  updateState st '\n' cs = st
-    { Internal.line = Internal.line st + 1, Internal.col = 1,
-      Internal.input = cs, Internal.consumed = Internal.consumed st + 1 }
-  updateState st '\t' cs = st
-    { Internal.col = ((Internal.col st + 3) .&. (-4)) .|. 1,
-      Internal.input = cs, Internal.consumed = Internal.consumed st + 1 }
-  updateState st _ cs = st
-    { Internal.col = Internal.col st + 1,
-      Internal.input = cs, Internal.consumed = Internal.consumed st + 1 }
+  -- 
+  -- In GHC < 9.8 (and maybe 9.6), record updates typechecking cannot handle records with existentials.
+  -- Sadly, this means we must reconstruct the entire state.
+  updateStateHelper 
+    :: Internal.State         -- old state
+    -> s                      -- input
+    -> Internal.InputOps s    -- inputOps
+    -> Bool                   -- increaseLine?
+    -> (Word -> Word)         -- how to update the column
+    -> Internal.State
+  updateStateHelper (Internal.State {..}) cs ops increaseLine colUpdate = 
+    Internal.State {
+      Internal.input = cs
+    , Internal.line = if increaseLine then line + 1 else line
+    , Internal.col  = colUpdate col
+    , Internal.consumed = consumed + 1
+      -- Unchanged
+    , Internal.inputOps = ops
+    , Internal.hintsValidOffset = hintsValidOffset
+    , Internal.hints = hints
+    , Internal.debugLevel = debugLevel
+    }
 
 {-|
 This combinator tries to parse a single character from the input that matches the given predicate.

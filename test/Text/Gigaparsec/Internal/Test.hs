@@ -7,6 +7,7 @@ module Text.Gigaparsec.Internal.Test where
 import Test.Tasty.HUnit
 
 import Text.Gigaparsec.Internal.TestError
+import Text.Gigaparsec.Internal.Input (Input(..))
 
 import Text.Gigaparsec
 import Text.Gigaparsec.Internal
@@ -33,7 +34,7 @@ pureParseWith (Parsec p) inp = do
   run (initSt { consumed = 1 })
   run (initSt { line = 10, col = 20 })
   run (initSt { consumed = 200, line = 10, col = 20 })
-  where initSt = emptyState inp
+  where initSt = emptyState (stringInput inp)
         run :: State -> Assertion
         run st = do
           let st' = runRT (p st (\ !_ s -> return (Lifted s)) (\ _ s -> return (Lifted s)))
@@ -57,7 +58,7 @@ impureParseWith p inp = do
   --run (initSt { consumed = True })
   run (initSt { line = 10, col = 20 })
   --run (initSt { consumed = True, line = 10, col = 20 })
-  where initSt = emptyState inp
+  where initSt = emptyState (stringInput inp)
         run :: State -> Assertion
         run st = do
           let st' = parseState p st
@@ -96,7 +97,7 @@ notThrow x = catch (evaluate (rnf x)) $ \(SomeException ex) ->
 (~~) :: HasCallStack => Parsec a -> Parsec a -> [String] -> Assertion
 (p ~~ q) inps =
   forM_ inps $ \inp -> do
-    let st = emptyState inp
+    let st = emptyState (stringInput inp)
         pSt = parseState p st
         qSt = parseState q st
     unless (pSt == qSt) $
@@ -113,15 +114,17 @@ deriving anyclass instance (NFData e, NFData a) => NFData (Result e a)
 -- don't @ me
 instance Eq LiftedState where
   (==) :: LiftedState -> LiftedState -> Bool
-  Lifted (State input1 consumed1 line1 col1 _hintValidOffset1 _hints1 _debugLevel1) ==
-    Lifted (State input2 consumed2 line2 col2 _hintValidOffset2 _hints2 _debugLevel2) =
-       consumed1 == consumed2 && line1 == line2 && col1 == col2 && input1 == input2
+  Lifted (State input1 ops1 consumed1 line1 col1 _hintValidOffset1 _hints1 _debugLevel1) ==
+    Lifted (State input2 ops2 consumed2 line2 col2 _hintValidOffset2 _hints2 _debugLevel2) =
+      consumed1 == consumed2 && line1 == line2 && col1 == col2
+      -- Maybe there is a more efficient test here? 
+      && (inputToString (Input input1 ops1)) == (inputToString (Input input2 ops2))
     -- this throws off a whole bunch of tests, understandably
     -- && hintValidOffset1 == hintValidOffset2 && hints1 == hints2
 instance Show LiftedState where
   showsPrec :: Int -> LiftedState -> ShowS
   showsPrec p (Lifted State{..}) = showParen (p > 10) $ showString "State { input = "
-                                                      . shows input
+                                                      . showString (inputToString (Input input inputOps))
                                                       . showString ", consumed = "
                                                       . shows consumed
                                                       . showString ", line = "

@@ -2,6 +2,7 @@
 {-# LANGUAGE DeriveFunctor, StandaloneDeriving, NamedFieldPuns, CPP #-}
 #include "portable-unlifted.h"
 {-# OPTIONS_HADDOCK hide #-}
+{-# LANGUAGE ExistentialQuantification, UnicodeSyntax #-}
 {-|
 Module      : Text.Gigaparsec.Internal
 Description : Internals of Gigaparsec
@@ -15,14 +16,16 @@ own risk.
 
 @since 0.1.0.0
 -}
-module Text.Gigaparsec.Internal (module Text.Gigaparsec.Internal) where
+module Text.Gigaparsec.Internal (module Text.Gigaparsec.Internal, module Input) where
 
 import Control.Monad.RT (RT)
 import Text.Gigaparsec.Internal.Errors (Error, Hints, ExpectItem, CaretWidth)
 import Text.Gigaparsec.Internal.Errors qualified as Errors (
     emptyErr, expectedErr, specialisedErr, mergeErr, unexpectedErr,
-    isExpectedEmpty, presentationOffset, useHints, DefuncHints(Blank), addError
+    isExpectedEmpty, presentationOffset, useHints, DefuncHints(Blank), addError,
   )
+import Text.Gigaparsec.Internal.Input (Input, inputToString, stringInput, unconsInput, InputOps)
+import Text.Gigaparsec.Internal.Input qualified as Input
 
 import Control.Applicative (Applicative(liftA2), Alternative(empty, (<|>), many, some)) -- liftA2 required until 9.6
 import Control.Selective (Selective(select))
@@ -218,14 +221,20 @@ instance Monoid m => Monoid (Parsec m) where
   {-# INLINE mempty #-}
 
 {-|
-The 'State' of the parser, containing position information, the input being parsed, and more.
+The 'State' of a parser describes its current position and what input is left to be processed, among other things.
 
-@since 0.1.0.0
+'State' is existentially quantified over the input type.
+This can make 'State' tricky to work with when using the fields 'input' and 'inputOps', as they cannot be used as projections;
+instead, access them via pattern matching.
+
+See also 'useInput' and 'useState', which provide recursors on 'State' in a CPS form.
 -}
 type State :: UnliftedDatatype
-data State = State {
-    -- | the input string, in future this may be generalised
-    input :: !String,
+data State = ∀ s . State {
+    -- | the input stream, in future this may be generalised
+    input :: !s,
+    -- | the operations which process the 'input' stream
+    inputOps :: {-# UNPACK #-} !(InputOps s),
     -- | has the parser consumed input since the last relevant handler?
     consumed :: {-# UNPACK #-} !Word,
     -- | the current line number (incremented by \n)
@@ -240,8 +249,28 @@ data State = State {
     debugLevel :: {-# UNPACK #-} !Int
   }
 
-emptyState :: String -> State
-emptyState !str = State { input = str
+{-|
+Apply the given function to the 'input' of the 'State', which may use the 'inputOps'.
+-}
+useInput :: State -> (∀ s . (Input s -> r)) -> r
+useInput (State {input, inputOps}) f = f (Input.Input input inputOps)
+
+{-|
+A recursor for the 'State' type.
+
+This is sometimes preferable to using record projections, as the latter tend not to work for the fields referencing the existentially bound type in 'State'.
+In particular, if 'input' and/or 'inputOps' are to be updated, one cannot use projections to get their old values.
+-}
+useState :: State 
+  -> (∀ s . s -> InputOps s -> Word -> Word -> Word -> Word -> Hints -> Int -> r) -> r
+useState (State {..}) f = f input inputOps consumed line col hintsValidOffset hints debugLevel
+stInputToString :: State -> String
+stInputToString st = useInput st $ \inp -> Input.inputToString inp
+
+emptyState :: (Input s) -> State
+emptyState !(Input.Input str inputStream) = State { 
+                          input = str
+                        , inputOps = inputStream
                         , consumed = 0
                         , line = 1
                         , col = 1
