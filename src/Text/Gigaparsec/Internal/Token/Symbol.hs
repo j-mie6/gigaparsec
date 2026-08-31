@@ -122,7 +122,7 @@ _softOperator :: Set String -> CharPredicate -> String -> ErrorConfig -> Parsec 
 _softOperator !hardOperators !letter !op !err = label [op] $
   if Set.null ends then atomic (string op *> notFollowedBy letter')
   else atomic (string op *> (notFollowedBy (void letter' <|> void (strings ends)) <?> [labelSymbolEndOfOperator err op]))
-  where ends = Set.fromList (mapMaybe (flip strip op) (Set.toList hardOperators))
+  where ends = Set.fromList (mapMaybe (strip op) (Set.toList hardOperators))
         letter' = maybe empty satisfy letter
         strip []      str@(:){}          = Just str
         strip (c:pre) (c':str) | c == c' = strip pre str
